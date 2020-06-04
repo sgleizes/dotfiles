@@ -1,0 +1,18 @@
+# Prompt at the top by default.
+--reverse
+
+# Disable the mouse (prevents selection) and enable top/bottom cycling.
+--no-mouse
+--cycle
+
+# Move cursor to the top whenever the query is changed.
+--bind change:top
+
+# Change the characters in the fzf layout.
+--prompt="❯ "
+--pointer="❯"
+--marker="✔"
+
+# Set the color theme.
+--color=bg:-1,bg+:-1,fg:-1,fg+:12,hl:10,hl+:10
+--color=prompt:76,spinner:11,info:11,pointer:9,marker:76

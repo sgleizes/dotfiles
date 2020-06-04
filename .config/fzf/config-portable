@@ -1,0 +1,9 @@
+# Prompt at the top by default.
+--reverse
+
+# Disable the mouse (prevents selection) and enable top/bottom cycling.
+--no-mouse
+--cycle
+
+# Move cursor to the top whenever the query is changed.
+--bind change:top
