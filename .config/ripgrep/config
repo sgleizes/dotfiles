@@ -1,0 +1,13 @@
+# Don't let ripgrep vomit really long lines to my terminal, and show a preview.
+#--max-columns=200
+#--max-columns-preview
+
+# Because who cares about case.
+--smart-case
+
+# Slightly longer context separator to ease parsing.
+--context-separator=---
+
+# Color settings.
+--colors=path:fg:blue
+--colors=path:style:bold
