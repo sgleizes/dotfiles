@@ -1,0 +1,5 @@
+# Set the theme.
+--theme="OneHalfDark"
+
+# Never wrap and let the pager do its job.
+--wrap=never
