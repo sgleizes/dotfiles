@@ -1,0 +1,2 @@
+# Turn on warnings for unassigned uppercase variables.
+enable=check-unassigned-uppercase
