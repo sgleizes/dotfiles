@@ -1,0 +1,35 @@
+#
+# Display a party parrot. Very important.
+#
+
+if (( ! $+commands[terminal-parrot] )) {
+  if (( ! $+commands[go] )) {
+    print "A go installation is required to install terminal-parrot"
+    return 1
+  }
+
+  go get -u github.com/jmhobbs/terminal-parrot
+}
+
+local args
+local delay=50
+local xpanes count=25
+
+while (( $# > 0 )) {
+  case $1 in
+    -x|--xpanes)
+      xpanes=1
+      [[ "$2" ]] && count="$2" && shift ;;
+    *)
+      args+=("$1")
+      ;;
+  esac
+  shift
+}
+
+if [[ "$xpanes" && $+commands[xpanes] == 1 ]] {
+  yes "terminal-parrot -delay $delay $args[@]" | head -n $count \
+    | xpanes -B 'INDEX=$(tmux display -pt "${TMUX_PANE}" "#{pane_index}")' -B 'sleep 0.$INDEX' -sse
+} else {
+  terminal-parrot -delay $delay $args[@]
+}

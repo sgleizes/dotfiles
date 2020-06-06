@@ -1,0 +1,23 @@
+#
+# Fetch information about a public IP address.
+#
+
+local ip_address="$1"
+while (( $# > 0 )) {
+  case $1 in
+    -h|--help)
+      print "Usage: ip-info [-p|--public] [addr]"
+      print '\nOptions:'
+      print '  -p, --public  Show public IP address only'
+      return
+      ;;
+    -p|--public)
+      curl -s ipinfo.io/ip
+      return
+      ;;
+  esac
+  shift
+}
+
+curl -s ipinfo.io/$ip_address
+print

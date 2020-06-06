@@ -1,0 +1,32 @@
+#
+# Fetch a weather forecast using the awesome wttr.in.
+#
+
+local location=''
+local lang="${LANG%_*}"
+local rich=''
+
+while (( $# > 0 )) {
+  case $1 in
+    -h|--help)
+      print 'Usage: weather [-r|--rich] [location] [language]'
+      print '\nOptions:'
+      print '  -r, --rich  Use experimental data-rich format'
+      print '\nService help follows...'
+      curl -s wttr.in/:help
+      return
+      ;;
+    -r|--rich)
+      rich=1
+      ;;
+    *)
+      [[ ! $location ]] && location="$1" || lang="$1"
+      ;;
+  esac
+  shift
+}
+
+local request="wttr.in/$location?F"
+(( $COLUMNS < 125 )) && request+='n'
+[[ $rich ]] && request+='&format=v2'
+curl -s -H "Accept-Language: $lang" --compressed $request

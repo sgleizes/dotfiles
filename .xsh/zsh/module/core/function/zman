@@ -1,0 +1,6 @@
+#
+# Search zshall for a special keyword.
+# Usage: zman <keyword>
+#
+
+PAGER="less '+/^       $1'" command man zshall
