@@ -1,0 +1,54 @@
+diff --git i/scripts/restore.sh w/scripts/restore.sh
+index c1a4e49..cd9390e 100755
+--- i/scripts/restore.sh
++++ w/scripts/restore.sh
+@@ -112,7 +112,7 @@ tmux_default_command() {
+ }
+ 
+ pane_creation_command() {
+-	echo "cat '$(pane_contents_file "restore" "${1}:${2}.${3}")'; exec $(tmux_default_command)"
++	echo "cat '$(pane_contents_file "restore" "${1}:${2}.${3}")'; sleep 0.5; exec $(tmux_default_command)"
+ }
+ 
+ new_window() {
+@@ -367,7 +367,6 @@ main() {
+ 		restore_active_and_alternate_sessions
+ 		execute_hook "post-restore-all"
+ 		stop_spinner
+-		display_message "Tmux restore complete!"
+ 	fi
+ }
+ main
+diff --git i/scripts/save.sh w/scripts/save.sh
+index 9d80af7..ca9a8da 100755
+--- i/scripts/save.sh
++++ w/scripts/save.sh
+@@ -315,7 +315,6 @@ main() {
+ 		save_all
+ 		if show_output; then
+ 			stop_spinner
+-			display_message "Tmux environment saved!"
+ 		fi
+ 	fi
+ }
+diff --git i/scripts/tmux_spinner.sh w/scripts/tmux_spinner.sh
+index 9b1b979..76586cf 100755
+--- i/scripts/tmux_spinner.sh
++++ w/scripts/tmux_spinner.sh
+@@ -14,14 +14,14 @@
+ 
+ MESSAGE="$1"
+ END_MESSAGE="$2"
+-SPIN='-\|/'
++SPIN='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+ 
+ trap "tmux display-message '$END_MESSAGE'; exit" SIGINT SIGTERM
+ 
+ main() {
+ 	local i=0
+ 	while true; do
+-	  i=$(( (i+1) %4 ))
++	  i=$(( (i+1) % 10 ))
+ 	  tmux display-message " ${SPIN:$i:1} $MESSAGE"
+ 	  sleep 0.1
+ 	done

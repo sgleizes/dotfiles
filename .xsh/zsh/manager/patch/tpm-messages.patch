@@ -1,0 +1,124 @@
+diff --git i/bindings/clean_plugins w/bindings/clean_plugins
+index 9a0d5d7..b5adbb2 100755
+--- i/bindings/clean_plugins
++++ w/bindings/clean_plugins
+@@ -12,8 +12,9 @@ source "$HELPERS_DIR/tmux_utils.sh"
+ 
+ main() {
+ 	reload_tmux_environment
+-	"$SCRIPTS_DIR/clean_plugins.sh" --tmux-echo >/dev/null 2>&1
++	"$SCRIPTS_DIR/clean_plugins.sh" --tmux-echo >/dev/null 2>&1 &&
++		tmux_echo "Plugins cleaned" ||
++		tmux_echo "Failed to clean plugins"
+ 	reload_tmux_environment
+-	end_message
+ }
+ main
+diff --git i/bindings/install_plugins w/bindings/install_plugins
+index 3ade3c4..2274eb5 100755
+--- i/bindings/install_plugins
++++ w/bindings/install_plugins
+@@ -12,8 +12,9 @@ source "$HELPERS_DIR/tmux_utils.sh"
+ 
+ main() {
+ 	reload_tmux_environment
+-	"$SCRIPTS_DIR/install_plugins.sh" --tmux-echo >/dev/null 2>&1
++	"$SCRIPTS_DIR/install_plugins.sh" --tmux-echo >/dev/null 2>&1 &&
++		tmux_echo "Plugins installed" ||
++		tmux_echo "Failed to install plugins"
+ 	reload_tmux_environment
+-	end_message
+ }
+ main
+diff --git i/bindings/update_plugins w/bindings/update_plugins
+index 28cc281..99eae64 100755
+--- i/bindings/update_plugins
++++ w/bindings/update_plugins
+@@ -15,24 +15,28 @@ source "$HELPERS_DIR/plugin_functions.sh"
+ source "$HELPERS_DIR/tmux_echo_functions.sh"
+ source "$HELPERS_DIR/tmux_utils.sh"
+ 
++tmux_print() {
++  tmux run-shell "echo '$1'"
++}
++
+ display_plugin_update_list() {
+ 	local plugins="$(tpm_plugins_list_helper)"
+-	tmux_echo "Installed plugins:"
+-	tmux_echo ""
++	tmux_print "Installed plugins:"
++	tmux_print ""
+ 
+ 	for plugin in $plugins; do
+ 		# displaying only installed plugins
+ 		if plugin_already_installed "$plugin"; then
+ 			local plugin_name="$(plugin_name_helper "$plugin")"
+-			tmux_echo "  $plugin_name"
++			tmux_print "  $plugin_name"
+ 		fi
+ 	done
+ 
+-	tmux_echo ""
+-	tmux_echo "Type plugin name to update it."
+-	tmux_echo ""
+-	tmux_echo "- \"all\" - updates all plugins"
+-	tmux_echo "- ENTER - cancels"
++	tmux_print ""
++	tmux_print "Type a plugin name to update it."
++	tmux_print ""
++	tmux_print "- \"all\" - updates all plugins"
++	tmux_print "- ENTER - cancels"
+ }
+ 
+ update_plugin_prompt() {
+diff --git i/scripts/helpers/tmux_echo_functions.sh w/scripts/helpers/tmux_echo_functions.sh
+index 7a6ef0a..3187e6f 100644
+--- i/scripts/helpers/tmux_echo_functions.sh
++++ w/scripts/helpers/tmux_echo_functions.sh
+@@ -4,7 +4,7 @@ _has_emacs_mode_keys() {
+ 
+ tmux_echo() {
+ 	local message="$1"
+-	tmux run-shell "echo '$message'"
++	tmux display-message "$message"
+ }
+ 
+ echo_ok() {
+@@ -13,6 +13,7 @@ echo_ok() {
+ 
+ echo_err() {
+ 	tmux_echo "$*"
++	FAIL="true"
+ }
+ 
+ end_message() {
+diff --git i/scripts/update_plugin.sh w/scripts/update_plugin.sh
+index 7d856ee..585c47c 100755
+--- i/scripts/update_plugin.sh
++++ w/scripts/update_plugin.sh
+@@ -33,8 +33,7 @@ update() {
+ }
+ 
+ update_all() {
+-	echo_ok "Updating all plugins!"
+-	echo_ok ""
++	echo_ok "Updating all plugins..."
+ 	local plugins="$(tpm_plugins_list_helper)"
+ 	for plugin in $plugins; do
+ 		local plugin_name="$(plugin_name_helper "$plugin")"
+diff --git i/scripts/update_plugin_prompt_handler.sh w/scripts/update_plugin_prompt_handler.sh
+index 5e1f7d9..81ea981 100755
+--- i/scripts/update_plugin_prompt_handler.sh
++++ w/scripts/update_plugin_prompt_handler.sh
+@@ -11,8 +11,9 @@ source "$HELPERS_DIR/tmux_echo_functions.sh"
+ source "$HELPERS_DIR/tmux_utils.sh"
+ 
+ main() {
+-	"$CURRENT_DIR/update_plugin.sh" --tmux-echo "$*"
++	"$CURRENT_DIR/update_plugin.sh" --tmux-echo "$*" &&
++		tmux_echo "Plugins updated" ||
++		tmux_echo "Failed to update plugins"
+ 	reload_tmux_environment
+-	end_message
+ }
+ main "$*"

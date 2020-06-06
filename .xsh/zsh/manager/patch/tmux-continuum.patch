@@ -1,0 +1,26 @@
+diff --git i/scripts/continuum_restore.sh w/scripts/continuum_restore.sh
+index 27afbc4..062bafa 100755
+--- i/scripts/continuum_restore.sh
++++ w/scripts/continuum_restore.sh
+@@ -12,7 +12,7 @@ auto_restore_enabled() {
+ 
+ fetch_and_run_tmux_resurrect_restore_script() {
+ 	# give tmux some time to start and source all the plugins
+-	sleep 1
++	sleep 0.2
+ 	local resurrect_restore_script_path="$(get_tmux_option "$resurrect_restore_path_option" "")"
+ 	if [ -n "$resurrect_restore_script_path" ]; then
+ 		"$resurrect_restore_script_path"
+diff --git i/scripts/handle_tmux_automatic_start/systemd_enable.sh w/scripts/handle_tmux_automatic_start/systemd_enable.sh
+index d37c889..a82e548 100755
+--- i/scripts/handle_tmux_automatic_start/systemd_enable.sh
++++ w/scripts/handle_tmux_automatic_start/systemd_enable.sh
+@@ -21,7 +21,7 @@ template() {
+ 	Environment=DISPLAY=:0
+ 	ExecStart=/usr/bin/tmux ${systemd_tmux_server_start_cmd}
+ 
+-	ExecStop=${HOME}/.tmux/plugins/tmux-resurrect/scripts/save.sh
++	ExecStop=${TMUX_PLUGIN_MANAGER_PATH}/tmux-resurrect/scripts/save.sh
+ 	ExecStop=/usr/bin/tmux kill-server
+ 	KillMode=none
+ 
