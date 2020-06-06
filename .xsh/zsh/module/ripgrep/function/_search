@@ -1,0 +1,3 @@
+#compdef search search-interactive search-interactive-sorted
+
+_rg
