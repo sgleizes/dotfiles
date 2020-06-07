@@ -1,0 +1,4 @@
+[General]
+AlarmTypes=application/x-vnd.kde.alarm.active
+DisplayName=Active Alarms
+Path[$e]=file:$HOME/.local/share/kalarm/calendar.ics
