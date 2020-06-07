@@ -157,7 +157,8 @@ zinit ice wait'0b' lucid depth=1 reset \
   atclone'sed -i "/DIR/c\DIR 38;5;39;1" LS_COLORS
           sed -i "/EXEC/c\EXEC 38;5;214;1" LS_COLORS
           dircolors -b LS_COLORS > .dircolors.sh' \
-  atpull'%atclone' pick'.dircolors.sh' nocompile'!' \
+  atpull'%atclone' nocompile'!' \
+  pick'.dircolors.sh' \
   atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}'
 zinit light trapd00r/LS_COLORS
 

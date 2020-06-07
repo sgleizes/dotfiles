@@ -1,0 +1,17 @@
+#
+# Delta integration for git.
+# https://github.com/dandavison/delta
+#
+
+# Assuming 24-bit color support.
+[core]
+  pager = delta --tabs=2 --theme="OneHalfDark" \
+    --commit-style=box --commit-color=247 \
+    --file-style=box --file-color=12 --hunk-color=12 \
+    --plus-color=22 --plus-emph-color=28 \
+    --minus-color=52 --minus-emph-color=88 \
+    --keep-plus-minus-markers
+[interactive]
+  diffFilter = delta --color-only --theme="OneHalfDark" \
+    --plus-color=22 --plus-emph-color=28 \
+    --minus-color=52 --minus-emph-color=88

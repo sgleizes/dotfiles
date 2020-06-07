@@ -1,40 +1,19 @@
+#
+# Global configuration for git.
+#
+
 [user]
   name = sgleizes
   email = stephane.gleizes@gmail.com
-  signingKey = 8C727B8390A6C01241223297BEFFDEABF816BAF3
-[alias]
-  # Command shortcuts.
-  br = branch
-  ci = commit
-  co = checkout
-  st = status
-  # Edit last commit message.
-  reword = commit --amend
-  # Edit the contents of the last commit, keeping the message.
-  commend = commit --amend --no-edit
-  # Politely stomp the upstream branch.
-  please = push --force-with-lease
-  # Remove file(s) from Git but not from disk.
-  untrack = rm -r --cached --
-  # Unstage changes from the index.
-  unstage = reset HEAD --
-  # Show the full log for local commits that were not pushed to the remote tracking branch.
-  review = log --stat --patch --full-diff @{push}..
-  # Graphical log using a custom format (see below).
-  glog = log --topo-order --all --graph --pretty=brief
-  # These aliases bypass the `hub` commands that conflict with `git-extras` commands.
-  # They allow the completion system to recognize the command, but the `hub` command
-  # will be executed anyway. To address this, a shell function must wrap the git
-  # command to bypass `hub` for these aliases.
-  make-release = release
+
 [core]
   # Restore appropriate default pager options in case the LESS parameter is set.
   pager = less -FR
+
 [commit]
-  # Sign all commits.
-  gpgSign = true
   # Show the unified diff in the commit message template.
   verbose = true
+
 [diff]
   # Use better, descriptive initials (c, i, w) instead of a/b.
   mnemonicPrefix = true
@@ -47,22 +26,7 @@
 [difftool]
   # Do not prompt before each invocation.
   prompt = false
-[fetch]
-  # Before fetching, remove any remote-tracking references that no longer exist on the remote.
-  prune = true
-[format]
-  # Use a custom pretty format, defined below.
-  pretty = default
-[grep]
-  # Show line numbers.
-  lineNumber = true
-  # Use extended regexp by default.
-  patternType = extended
-[log]
-  # Show only partial commit object names.
-  abbrevCommit = true
-  # Continue listing the history of a file beyond renames (works only for a single file).
-  follow = true
+
 [merge]
   # Disable fast-forward merges as default merge strategy.
   # Force explicit call of `git merge --ff`.
@@ -74,6 +38,16 @@
   prompt = false
   # Do not preserve the original file with conflict markers.
   keepBackup = false
+
+[grep]
+  # Show line numbers.
+  lineNumber = true
+  # Use extended regexp by default.
+  patternType = extended
+
+[format]
+  # Use a custom pretty format, defined below.
+  pretty = default
 [pretty]
   # Custom default pretty format.
   # NOTE: In order for delta to recognize the commit section, it _must_ start with `commit `.
@@ -84,19 +58,12 @@
 %w(0,4,4)%+s%n%+b%n%+N%-(trailers)%n"
   # Custom oneline pretty format.
   brief = "%C(yellow)%h %C(9)%G? %C(blue)%<(15,mtrunc)%an %C(177)%<(12,trunc)%cr %C(reset)%s%C(auto)%d%C(reset)"
-[pull]
-  # Include local merge commits in the rebase. See 'REBASING MERGES' in git-rebase(1).
-  rebase = merges
-[push]
-  # When pushing, also push tags whose commits are now reachable upstream
-  followTags = true
-  # Sign pushes if the remote supports it.
-  gpgSign = if-asked
-[rebase]
-  # Automatically push/apply stash before/after a rebase on a dirty worktree.
-  autoStash = true
-  # Use abbreviated command names for interactive rebases (faster to edit).
-  abbreviateCommands = true
+
+[log]
+  # Show only partial commit object names.
+  abbrevCommit = true
+  # Continue listing the history of a file beyond renames (works only for a single file).
+  follow = true
 [status]
   # Use the short format by default.
   short = true
@@ -104,21 +71,26 @@
   # Show the diffstat and patch of the stash entry by default.
   showPatch = true
 [tag]
-  # Sign all tags.
-  gpgSign = true
   # Sort tags as version numbers in descending order whenever applicable.
   sort = -version:refname
 
-# Delta integration: https://github.com/dandavison/delta.
-# Assuming 24-bit color support.
-[core]
-  pager = delta --tabs=2 --theme="OneHalfDark" \
-    --commit-style=box --commit-color=247 \
-    --file-style=box --file-color=12 --hunk-color=12 \
-    --plus-color=22 --plus-emph-color=28 \
-    --minus-color=52 --minus-emph-color=88 \
-    --keep-plus-minus-markers
-[interactive]
-  diffFilter = delta --color-only --theme="OneHalfDark" \
-    --plus-color=22 --plus-emph-color=28 \
-    --minus-color=52 --minus-emph-color=88
+[fetch]
+  # Before fetching, remove any remote-tracking references that no longer exist on the remote.
+  prune = true
+[pull]
+  # Include local merge commits in the rebase. See 'REBASING MERGES' in git-rebase(1).
+  rebase = merges
+[rebase]
+  # Automatically push/apply stash before/after a rebase on a dirty worktree.
+  autoStash = true
+  # Use abbreviated command names for interactive rebases (faster to edit).
+  abbreviateCommands = true
+[push]
+  # When pushing, also push tags whose commits are now reachable upstream
+  followTags = true
+
+# Include more specific configuration files.
+[include]
+  path = alias
+  path = delta
+  path = gpg

@@ -1,0 +1,16 @@
+#
+# GPG configuration for git.
+#
+
+[user]
+  signingKey = 8C727B8390A6C01241223297BEFFDEABF816BAF3
+
+# Sign all commits and tags.
+[commit]
+  gpgSign = true
+[tag]
+  gpgSign = true
+
+# Sign pushes if the remote supports it.
+[push]
+  gpgSign = if-asked

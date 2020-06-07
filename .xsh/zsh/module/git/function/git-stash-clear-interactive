@@ -15,8 +15,9 @@ local stashed
 if [[ -f "$(git-dir)/refs/stash" ]]; then
   stashed="$(command git stash list 2> /dev/null | wc -l | awk '{print $1}')"
   if (( $stashed > 0 )); then
-    if read -q "?Clear $stashed stashed state(s) [y/N]? "; then
+    if read -sq "?Clear $stashed stashed state(s) [y/N]? "; then
       command git stash clear
     fi
+    print
   fi
 fi

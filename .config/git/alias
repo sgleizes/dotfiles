@@ -1,0 +1,128 @@
+#
+# Alias configuration for git.
+#
+
+# Named aliases, creativity zone.
+[alias]
+  # Edit last commit message.
+  reword = commit --amend
+  # Edit the contents of the last commit, keeping the message.
+  commend = commit --amend --no-edit
+  # Politely stomp the upstream branch.
+  please = push --force-with-lease
+
+  # Remove file(s) from Git but not from disk.
+  untrack = rm -r --cached --
+  # Unstage changes from the index.
+  unstage = reset HEAD --
+
+  # Show the full log for local commits that were not pushed to the remote tracking branch.
+  review = log --stat --patch --full-diff @{push}..
+
+  # These aliases bypass the `hub` commands that conflict with `git-extras` commands.
+  # They allow the completion system to recognize the command, but the `hub` command
+  # will be executed anyway. To address this, a shell function must wrap the git
+  # command to bypass `hub` for these aliases.
+  make-release = release
+
+# Shortcut aliases, productivity zone.
+# NOTE: Loads of possible aliases, cherry pick as needed from:
+# https://github.com/sorin-ionescu/prezto/blob/master/modules/git/alias.zsh
+[alias]
+  # Branch (b)
+  b   = branch
+  ba  = branch --all
+  bl  = branch --all --verbose
+  bc  = checkout -b
+  bs  = -p show-branch
+  bsa = -p show-branch --all
+  br  = reset
+  brs = reset --soft
+  brh = reset --hard
+  bx  = branch --delete
+  bb  = switch
+
+  # Commit (c)
+  c   = commit
+  ca  = commit --all
+  cm  = commit --message
+  cam = commit --all --message
+  co  = checkout
+  cr  = revert
+  cs  = show
+  cp  = cherry-pick --ff
+  cpa = cherry-pick --no-commit
+
+  # Fetch (f)
+  f  = fetch
+  fa = fetch --all
+  fc = clone
+  ff = pull
+  fr = pull --rebase
+
+  # Index (i)
+  ia  = add
+  iap = add --patch
+  iu  = add --update
+  id  = diff --cached
+  idd = -c core.pager='less -FR' diff --cached --word-diff # override delta for word-diff
+  ir  = restore --staged
+  irp = restore --staged --patch
+  ix = rm -r --cached
+
+  # Log (l)
+  l  = log --topo-order
+  ls = log --topo-order --stat
+  ld = log --topo-order --stat --patch --full-diff
+  lo = log --topo-order --pretty=brief
+  lg = log --topo-order --pretty=brief --all --graph
+  ll = review
+
+  # Merge (m)
+  m  = merge
+  mt = mergetool
+
+  # Push (p)
+  p   = push
+  pf  = push --force-with-lease
+  pa  = push --all
+  pt  = push --tags
+  pat = !git push --all && git push --tags
+  pc  = !push --set-upstream origin "$(git symbolic-ref --short HEAD)"
+  pp  = !pull origin "$(git symbolic-ref --short HEAD)" && git push origin "$(git symbolic-ref --short HEAD)"
+
+  # Rebase (r)
+  r  = rebase
+  ri = rebase --interactive
+  ra = rebase --abort
+  rc = rebase --continue
+  rs = rebase --skip
+
+  # Stash (s)
+  s   = stash
+  sk  = stash push --keep-index
+  ss  = stash push --include-untracked
+  sp  = stash push --patch --no-keep-index
+  sd  = stash show --patch --stat
+  sl  = stash list
+  sa  = stash apply
+  sax = stash pop
+  sx  = stash drop
+
+  # Tag (t)
+  t  = tag
+  tl = tag --list
+  tv = verify-tag
+
+  # Working Copy (w)
+  ws  = -p status
+  wss = -p status --no-short
+  wd  = diff
+  wdd = -c core.pager='less -FR' diff --word-diff # override delta for word-diff
+  wr  = restore --staged --worktree
+  wrp = restore --staged --worktree --patch
+  wc  = clean
+  wx = rm -r
+
+  # Miscellaneous
+  rem = remote --verbose
