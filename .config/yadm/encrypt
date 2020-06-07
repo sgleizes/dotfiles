@@ -1,0 +1,4 @@
+.ssh/config
+.ssh/authorized_keys
+.gnupg/gpg.conf
+.gnupg/gpg-agent.conf

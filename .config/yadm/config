@@ -1,2 +1,3 @@
 [yadm]
 	git-program = hub
+	gpg-recipient = 8C727B8390A6C01241223297BEFFDEABF816BAF3
