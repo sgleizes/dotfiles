@@ -1,0 +1,10 @@
+[General]
+JPEGQuality=10612
+SideBarPage=folders
+ViewBackgroundValue=27
+
+[ImageView]
+AlphaBackgroundMode=AbstractImageView::AlphaBackgroundCheckBoard
+
+[SideBar]
+IsVisible ViewMode=false
