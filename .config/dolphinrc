@@ -1,0 +1,32 @@
+MenuBar=Disabled
+
+[CompactMode]
+FontWeight=50
+PreviewSize=32
+
+[Desktop Entry]
+DefaultProfile=
+
+[DetailsMode]
+FontWeight=50
+PreviewSize=32
+
+[Favorite Profiles]
+Favorites=
+
+[General]
+Version=200
+ViewPropsTimestamp=2020,4,9,0,27,3
+
+[IconsMode]
+FontWeight=50
+
+[Open-with settings]
+CompletionMode=1
+
+[PreviewSettings]
+Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,svgthumbnail,ffmpegthumbs
+
+[VersionControl]
+enabledPlugins=Dropbox,Git
+
