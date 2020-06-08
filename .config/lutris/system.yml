@@ -1,0 +1,5 @@
+system:
+  disable_compositor: false
+  env: {}
+  gamemode: true
+  pulse_latency: false

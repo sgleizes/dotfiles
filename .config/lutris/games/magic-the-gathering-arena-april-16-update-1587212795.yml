@@ -1,0 +1,9 @@
+game:
+  arch: win32
+  exe: /home/psydev/Games/MTGA/drive_c/Program Files/Wizards of the Coast/MTGA/MTGA.exe
+  prefix: /home/psydev/Games/MTGA
+system: {}
+wine:
+  Desktop: true
+  dxvk_version: 1.6L-ce3d0ab
+  version: lutris-mtga-4.21-x86_64

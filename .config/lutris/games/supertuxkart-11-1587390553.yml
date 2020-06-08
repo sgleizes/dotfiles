@@ -1,0 +1,5 @@
+game:
+  exe: run_game.sh
+linux: {}
+system:
+  prefix_command: gamemoderun
