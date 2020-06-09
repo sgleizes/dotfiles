@@ -220,7 +220,6 @@ multiplier=1000
 
 [Containments][2][Applets][52][Configuration][sources]
 colors=#55aa7f,#ff557f,#55aa7f,#55aaff
-guessed_max_value=2697143
 labels=\\0
 last_filter=disk/sda
 names=sys.disk/sda1_(8:1)/Rate/rblk,sys.disk/sda1_(8:1)/Rate/wblk,sys.disk/sda3_(8:3)/Rate/rblk,sys.disk/sda3_(8:3)/Rate/wblk
@@ -366,7 +365,6 @@ monitor_type=3
 multiplier=1000
 
 [Containments1Appletsts][51][Configuration][sources]
-guessed_max_value=1909
 
 [Containments2Appletsts][27][Configuration][General]
 cacheDirtyColor=85,170,255
@@ -415,7 +413,6 @@ multiplier=1024
 multiplier=1000
 
 [Containments2Appletsts][52][Configuration][sources]
-guessed_max_value=824431.411858
 
 [Containments2Appletsts][53][Configuration][Appearance]
 layoutRow=false
