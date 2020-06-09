@@ -1,0 +1,21 @@
+[Editor]
+
+[GPG Settings]
+gpg_config_path[$e]=$HOME/.gnupg/gpg.conf
+
+[General Options]
+First run=false
+
+[Key Colors]
+color_revoked=170,0,255
+color_unknown=35,38,41
+
+[KeyView]
+SortAscending=false
+SortColumn=0
+
+[TipOfDay]
+RunOnStart=false
+
+[User Interface]
+AutoStart=true
