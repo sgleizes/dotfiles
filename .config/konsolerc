@@ -1,0 +1,15 @@
+[Desktop Entry]
+DefaultProfile=Dark Unlimited.profile
+
+[Favorite Profiles]
+Favorites=Dark Unlimited.profile,Light Unlimited.profile
+
+[KonsoleWindow]
+RemoveWindowTitleBarAndFrame=true
+ShowMenuBarByDefault=false
+
+[TabBar]
+CloseTabButton=None
+CloseTabOnMiddleMouseButton=true
+ExpandTabWidth=true
+TabBarPosition=Top
