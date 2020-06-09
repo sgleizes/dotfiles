@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE KSysGuardWorkSheet>
+<WorkSheet rows="3" interval="0.5" columns="1" locked="1" title="System Load">
+ <host name="localhost" port="-1" shell="" command="ksysguardd"/>
+ <display stacked="0" labels="1" class="FancyPlotter" rowSpan="1" autoRange="0" column="0" title="CPU History" unit="" vLines="0" fontSize="8" hLines="1" svgBackground="widgets/plot-background" vDistance="30" columnSpan="1" row="0" manualRange="0" showUnit="0" version="1" vScroll="0" hScale="6">
+  <beam color="0xffff8000,0xffe20800,0xfff3c300,0xffff0000,0xff00a900,0xff0028a9,0xffa92928,0xff28a929" sensorType="float" regexpSensorName="cpu/cpu.*/TotalLoad" hostName="localhost"/>
+ </display>
+ <display stacked="0" labels="1" class="FancyPlotter" rowSpan="1" autoRange="0" column="0" title="Memory and Swap History" unit="" vLines="0" fontSize="8" hLines="1" svgBackground="widgets/plot-background" vDistance="30" columnSpan="1" row="1" manualRange="0" showUnit="0" version="1" vScroll="0" hScale="6">
+  <beam color="0xffc000c0" sensorType="integer" hostName="localhost" summationName="Memory" sensorName="mem/physical/application"/>
+  <beam color="0xff00c000" sensorType="integer" hostName="localhost" summationName="Swap" sensorName="mem/swap/used"/>
+ </display>
+ <display stacked="0" labels="1" class="FancyPlotter" max="20" rowSpan="1" autoRange="1" column="0" title="Network History" unit="" vLines="0" fontSize="8" hLines="1" svgBackground="widgets/plot-background" vDistance="30" columnSpan="1" min="0" row="2" manualRange="1" showUnit="0" version="1" vScroll="0" hScale="6">
+  <beam color="0xffb3a52d" sensorType="float" regexpSensorName="network/interfaces/(?!lo|bridge|usbus|bond).*/receiver/data" hostName="localhost" summationName="Receiving"/>
+  <beam color="0xff844798" sensorType="float" regexpSensorName="network/interfaces/(?!lo|bridge|usbus|bond).*/transmitter/data" hostName="localhost" summationName="Sending"/>
+ </display>
+</WorkSheet>
