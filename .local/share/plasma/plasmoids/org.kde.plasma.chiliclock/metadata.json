@@ -1,0 +1,38 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "mklapetek@kde.org",
+                "Name": "Martin Klapetek"
+            },
+            {
+                "Email": "marianarlt@icloud.com",
+                "Name": "Marian Arlt"
+            }
+        ],
+        "Category": "Date and Time",
+        "Description": "The hottest clock on a single line!",
+        "Description[de]": "Die schärfste Uhr in einer Zeile!",
+        "Description[es]": "La hora más picosa en una sola linea!",
+        "Icon": "org.kde.plasma.digitalclock",
+        "Id": "org.kde.plasma.chiliclock",
+        "License": "GPL-3.0-or-later",
+        "Name": "Chili Clock",
+        "Name[de]": "Chili Uhr",
+        "Name[en_GB]": "Chili Clock",
+        "Name[es]": "Reloj Chili",
+        "Name[x-test]": "xxChili Clockxx",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "2.0",
+        "Website": "plasma.kde.org"
+    },
+    "X-KDE-ParentApp": "",
+    "X-Plasma-API": "declarativeappletscript",
+    "X-Plasma-MainScript": "ui/main.qml",
+    "X-Plasma-Provides": [
+        "org.kde.plasma.time",
+        "org.kde.plasma.date"
+    ]
+}

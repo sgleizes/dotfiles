@@ -1,0 +1,20 @@
+[Desktop Entry]
+Name=Weather Widget
+Name[lt]=Orų valdiklis
+Comment=Plasmoid showing weather information from yr.no server
+Comment[lt]=Plasma valdiklis, rodantis orų informaciją iš yr.no serverio
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=Kotelnik
+X-KDE-PluginInfo-Email=clearmartin@seznam.cz
+X-KDE-PluginInfo-License=GPL2
+X-KDE-PluginInfo-Name=org.kde.weatherWidget
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://github.com/kotelnik/plasma-applet-weather-widget
+X-KDE-ServiceTypes=Plasma/Applet
+X-Plasma-NotificationArea=true
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
+X-Plasma-RemoteLocation=
+X-KDE-PluginInfo-Category=Environment and Weather
+Icon=/usr/share/plasma/plasmoids/org.kde.weatherWidget/contents/images/weather-widget.svg
