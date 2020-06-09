@@ -1,5 +1,5 @@
 [Added Associations]
-application/pdf=org.kde.okular.desktop;
+application/pdf=masterpdfeditor4.desktop;org.kde.okular.desktop;
 application/x-mswinurl=org.kde.kate.desktop;firefox.desktop;
 
 [Default Applications]
