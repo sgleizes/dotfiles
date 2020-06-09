@@ -1,0 +1,126 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Expense Over Time", based on template "b1f15b2052c149df93e698fe85a81ea6"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Accounts
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Width")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1500.0)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 750.0)))) option))
+
+
+; Section: General
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Expense Over Time"
+    'report-guid "d2c7772cd9dd47cb81c636d31719a4b2"
+    'parent-type "b1f15b2052c149df93e698fe85a81ea6"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Income Over Time", based on template "44f81bee049b4b3ea908f8dac9a9474e"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Accounts
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Width")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1500.0)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 750.0)))) option))
+
+
+; Section: General
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Income Over Time"
+    'report-guid "29e4e6d5754941149123419e8079ff1e"
+    'parent-type "44f81bee049b4b3ea908f8dac9a9474e"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Income & Expense Linechart", based on template "e533c998186b11e1b2e2001558291366"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "e533c998186b11e1b2e2001558291366" "Income & Expense Linechart"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Accounts
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Width")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1500.0)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 750.0)))) option))
+
+
+; Section: General
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Income & Expense Linechart"
+    'report-guid "397e550fcbe94b04af98665d04812fad"
+    'parent-type "e533c998186b11e1b2e2001558291366"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "e533c998186b11e1b2e2001558291366" "Income & Expense Linechart")
+  )
+)
+
