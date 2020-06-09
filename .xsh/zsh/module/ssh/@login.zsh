@@ -7,6 +7,9 @@ if (( ! $+commands[ssh-agent] )) {
   return 1
 }
 
+# Define the client hostname to forward to SSH connections.
+: ${SSH_CLIENT_HOST:=$HOST}
+
 # Define the default askpass program.
 export SSH_ASKPASS="/usr/bin/ksshaskpass"
 

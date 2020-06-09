@@ -262,9 +262,15 @@ keys=(
 # For consistency, the generated files needs to be edited to use the parameter
 # name `keys` instead of `key`. Specific overrides for keys not supported by
 # zkbd but referenced above can also be added.
-zkbd_config="$ZDATADIR/zkbd/$TERM.${HOST//-/.}"
-[[ -r $zkbd_config ]] && source $zkbd_config
-unset zkbd_config
+function _load_zkbd_config {
+  local zkbd_config="$ZDATADIR/zkbd/$TERM.${1//-/.}"
+  [[ -r $zkbd_config ]] && source $zkbd_config
+}
+
+# Load the configuration of the SSH client host if that exists.
+[[ "$SSH_CLIENT_HOST" ]] \
+  && _load_zkbd_config $SSH_CLIENT_HOST \
+  || _load_zkbd_config $HOST
 
 # Set empty $keys values to an invalid UTF-8 sequence to induce silent
 # bindkey failure.
