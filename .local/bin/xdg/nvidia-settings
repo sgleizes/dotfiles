@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+mkdir -p "$XDG_CONFIG_HOME/nvidia"
+exec /usr/bin/nvidia-settings --config="$XDG_CONFIG_HOME/nvidia/settings" "$@"

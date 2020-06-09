@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# Workaround zoom unconfigurability.
+
+# Use re-homing to containerize zoom and keep a clean home.
+HOME="$XDG_DATA_HOME/zoom"
+
+mkdir -p $HOME
+exec /usr/bin/zoom "$@"

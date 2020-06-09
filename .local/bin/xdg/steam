@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# Workaround steam difficulties to transition to XDG or even keep a clean structure.
+# https://github.com/ValveSoftware/steam-for-linux/issues/1890
+# https://github.com/ValveSoftware/steam-for-linux/issues/5245
+
+# Use re-homing to containerize steam-garbage and keep a clean home.
+HOME="$XDG_DATA_HOME/steam"
+
+mkdir -p $HOME
+exec /usr/bin/steam "$@"
