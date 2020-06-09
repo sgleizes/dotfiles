@@ -5,7 +5,7 @@ FontWeight=50
 PreviewSize=32
 
 [Desktop Entry]
-DefaultProfile=
+DefaultProfile=Dark Unlimited.profile
 
 [DetailsMode]
 FontWeight=50
@@ -13,6 +13,9 @@ PreviewSize=32
 
 [Favorite Profiles]
 Favorites=
+
+[FoldersPanel]
+HiddenFilesShown=true
 
 [General]
 Version=200
@@ -24,9 +27,11 @@ FontWeight=50
 [Open-with settings]
 CompletionMode=1
 
+[PlacesPanel]
+IconSize=22
+
 [PreviewSettings]
 Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,djvuthumbnail,ebookthumbnail,exrthumbnail,directorythumbnail,fontthumbnail,imagethumbnail,jpegthumbnail,kraorathumbnail,windowsexethumbnail,windowsimagethumbnail,opendocumentthumbnail,gsthumbnail,rawthumbnail,svgthumbnail,ffmpegthumbs
 
 [VersionControl]
 enabledPlugins=Dropbox,Git
-
