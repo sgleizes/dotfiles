@@ -1,0 +1,15 @@
+[Show]
+ShareWithSkype=false
+compressfileitemaction=true
+decrypt-view=true
+encrypt=true
+extractfileitemaction=true
+installFont=true
+kactivitymanagerd_fileitem_linking_plugin=true
+kompare=true
+openTerminalHere=true
+rename=true
+runInKonsole=true
+sharefileitemaction=true
+slideshow=true
+tagsfileitemaction=true

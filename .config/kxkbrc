@@ -1,0 +1,13 @@
+[Layout]
+DisplayNames=,fr
+LayoutList=us,us(alt-intl)
+LayoutLoopCount=-1
+Model=pc101
+Options=caps:swapescape,grp_led:caps
+ResetOldOptions=true
+ShowFlag=false
+ShowLabel=true
+ShowLayoutIndicator=true
+ShowSingle=false
+SwitchMode=Global
+Use=true
