@@ -1,0 +1,32 @@
+<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
+<gui version="3" name="kipiplugin_googleservices">
+ <MenuBar>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="googledriveexport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="googledriveexport"/>
+  </Menu>
+  <Menu name="Import">
+   <text>&amp;Import</text>
+   <Action group="kipi_import_group" name="googlephotoimport"/>
+  </Menu>
+  <Menu name="Import">
+   <text>&amp;Import</text>
+   <Action group="kipi_import_group" name="googlephotoimport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="googlephotoexport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="googlephotoexport"/>
+  </Menu>
+ </MenuBar>
+ <ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+ </ToolBar>
+</gui>

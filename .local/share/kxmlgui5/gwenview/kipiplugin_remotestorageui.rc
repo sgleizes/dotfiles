@@ -1,0 +1,24 @@
+<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
+<gui version="2" name="kipiplugin_remotestorage">
+ <MenuBar>
+  <Menu name="Import">
+   <text>&amp;Import</text>
+   <Action group="kipi_import_group" name="remotestorageimport"/>
+  </Menu>
+  <Menu name="Import">
+   <text>&amp;Import</text>
+   <Action group="kipi_import_group" name="remotestorageimport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="remotestorageexport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="remotestorageexport"/>
+  </Menu>
+ </MenuBar>
+ <ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+ </ToolBar>
+</gui>

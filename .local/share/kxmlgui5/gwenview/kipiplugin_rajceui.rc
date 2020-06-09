@@ -1,0 +1,16 @@
+<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
+<gui version="2" name="kipiplugin_rajce">
+ <MenuBar>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="rajceexport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="rajceexport"/>
+  </Menu>
+ </MenuBar>
+ <ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+ </ToolBar>
+</gui>

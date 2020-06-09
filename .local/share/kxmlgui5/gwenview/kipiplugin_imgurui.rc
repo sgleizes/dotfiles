@@ -1,0 +1,16 @@
+<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
+<gui version="2" name="kipiplugin_imgur">
+ <MenuBar>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="imgurexport"/>
+  </Menu>
+  <Menu name="Export">
+   <text>&amp;Export</text>
+   <Action group="kipi_export_group" name="imgurexport"/>
+  </Menu>
+ </MenuBar>
+ <ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+ </ToolBar>
+</gui>

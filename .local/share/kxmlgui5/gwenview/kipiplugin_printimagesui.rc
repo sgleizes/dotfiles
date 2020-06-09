@@ -1,0 +1,18 @@
+<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
+<gui version="2" name="kipiplugin_printimages">
+ <MenuBar>
+  <Menu name="Image">
+   <text>&amp;Image</text>
+   <Action group="kipi_image_group" name="printimages"/>
+   <Action group="kipi_image_group" name="printassistant"/>
+  </Menu>
+  <Menu name="Image">
+   <text>&amp;Image</text>
+   <Action group="kipi_image_group" name="printimages"/>
+   <Action group="kipi_image_group" name="printassistant"/>
+  </Menu>
+ </MenuBar>
+ <ToolBar name="mainToolBar">
+  <text>Main Toolbar</text>
+ </ToolBar>
+</gui>
