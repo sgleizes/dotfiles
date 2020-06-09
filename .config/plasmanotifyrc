@@ -1,0 +1,11 @@
+[Applications][electron]
+Seen=true
+
+[Applications][firefox]
+Seen=true
+
+[Applications][mailspring]
+Seen=true
+
+[Notifications]
+PopupPosition=TopRight
