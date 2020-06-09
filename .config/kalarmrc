@@ -1,0 +1,33 @@
+[Defaults]
+CopyKOrg=true
+SoundFile[$e]=/usr/share/sounds/freedesktop/stereo/window-attention.oga
+SoundType=File
+
+[General]
+AskResource=false
+AutoStart=true
+Backend=Akonadi
+CmdXTerm=konsole --noclose -p tabtitle=%t -e ${SHELL:-sh} -c %c
+EmailClient=sendmail
+EmailFrom=@SystemSettings
+HolidayRegion=lu_fr
+MessageBackgroundColour=77,31,36
+MessageFont=Noto Sans,16,-1,5,75,0,0,0,0,0,Bold
+ModalMessages=false
+Version=2.13.3
+WorkDayEnd=1900,1,1,18,0,0
+WorkDayStart=1900,1,1,9,0,0
+
+[Migratekde4]
+Version=1
+
+[Notification Messages]
+ConfirmAlarmDeletion=true
+EmailQueuedNotify=false
+QuitWarn=
+
+[ShowOpts]
+EditMore=true
+
+[View]
+ShowResources=false

@@ -1,0 +1,20 @@
+[Agenda View]
+agendaViewItemIcons=\x01\x01\x00\x01\x01\x01\x00\x00\x00\x00
+
+[Month View]
+monthViewItemIcons=\x01\x01\x01\x00\x00\x01\x00\x00\x00\x00
+
+[Resources Colors]
+11=193,212,231
+12=164,99,52
+13=161,177,193
+14=208,231,193
+2=231,193,230
+28=112,191,162
+8=227,231,193
+
+[Timescale]
+Timescale Timezones=
+
+[Todo View]
+Full View Todo=false
