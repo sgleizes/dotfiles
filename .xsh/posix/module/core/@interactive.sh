@@ -14,9 +14,6 @@ HISTFILE=        # in-memory history only
 set -o noclobber # do not allow '>' to truncate existing files, use '>|'
 set -o notify    # report the status of background jobs immediately
 
-# XDG path to readline configuration file.
-export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
-
 # Elementary.
 alias reload='exec "$XSHELL"' # reload the current shell configuration
 alias sudo='sudo '            # preserve aliases when running sudo
@@ -57,7 +54,6 @@ alias mkdir='mkdir -pv'
 alias mkd='mkdir'
 alias rmd='rmdir'
 mkcd() { mkd $@ && cd ${@:$#}; } # ${@:$#} is a bashism
-alias take='mkcd'
 
 # Systemd convenience.
 alias sc='systemctl'
@@ -79,9 +75,6 @@ alias o='open'
 alias e='${VISUAL:-$EDITOR}'
 alias p='$PAGER'
 alias b='$BROWSER'
-
-# Print columns 1 2 3 ... n.
-slit() { awk "{ print ${(j:,:):-\$${^@}} }"; }
 
 # Serve a directory via HTTP.
 alias http-serve='python3 -m http.server'
