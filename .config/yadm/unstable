@@ -6,6 +6,3 @@
 # NOTE: These files will be marked with the assume-unchanged bit in the git index,
 # meaning that any interesting change might be unnoticed. Use with caution.
 #
-
-.config/fontconfig/fonts.conf
-.local/share/ksysguard/*.sgrd
