@@ -7,3 +7,27 @@
   relativePaths = false
   # Restore the default git behavior, assuming uninteresting files are ignored.
   showUntrackedFiles = normal
+
+[filter "kde-interface-state"]
+  clean = "sed -E '\
+/\\s*\\[.*(\\$Version|MainWindow|Dialog|Session|Viewer|Desktops|ScreenConnectors|Recent).*\\]/,/^\\s*$/d;\
+/^(Height|Width|State|[Hh]istory|ToolBarsMovable|LaunchCounts|\\w*WindowSize|\\w*SplitterSizes|\\w*ColumnWidth|Latitude|Longitude)/d;\
+'"
+
+[filter "plasma-applets-state"]
+  clean = "sed -E '/\\s*\\[.*Dialog.*\\]/,/^\\s*$/d;/^(PreloadWeight|lastReloaded|guessed_max_value)/d'"
+
+[filter "plasma-gtk-gen"]
+  clean = "sed 's/# created by KDE Plasma.*/# created by KDE Plasma/'"
+
+[filter "filelight-interface-state"]
+  clean = "sed -n '/\\[filelight_part\\]/,/^\\s*$/p'"
+
+[filter "spectacle-interface-state"]
+  clean = "sed -E '/^(last|cropRegion|window-position)/d'"
+
+[filter "lutris-interface-state"]
+  clean = "sed -E '/(width|height)/d'"
+
+[filter "vlc-interface-state"]
+  clean = "sed -n '/\\[.*Profiles\\]/,/^\\s*$/p'"

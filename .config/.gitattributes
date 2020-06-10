@@ -1,0 +1,15 @@
+#
+# Attributes for interesting files in XDG_CONFIG_HOME.
+#
+
+# Filters for KDE configuration files.
+*rc                    filter=kde-interface-state
+kdeglobals             filter=kde-interface-state
+*desktop-appletsrc     filter=plasma-applets-state
+gtkrc*                 filter=plasma-gtk-gen
+
+# Filters for application-specific configuration files.
+filelightrc            filter=filelight-interface-state
+spectaclerc            filter=spectacle-interface-state
+lutris.conf            filter=lutris-interface-state
+vlc-qt-interface.conf  filter=vlc-interface-state

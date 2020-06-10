@@ -9,7 +9,6 @@ save-filename-format=Screenshot_%Y%M%D_%H%m%S
 [GuiConfig]
 alwaysRememberRegion=false
 compressionQuality=90
-cropRegion=495,131,1186,894
 includePointer=false
 printKeyActionRunning=0
 quitAfterSaveCopyExport=true
