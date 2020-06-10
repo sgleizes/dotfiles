@@ -32,6 +32,10 @@ if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
     # See also https://github.com/tmux-plugins/tpm/issues/57.
     [[ $TMUX_CONFIG ]] && sed -i "s,~/.tmux.conf.*,-q $TMUX_CONFIG," \
       $TMUX_PLUGIN_MANAGER_PATH/tpm/scripts/helpers/tmux_utils.sh
+
+    # Install tmux plugins.
+    print -P "%F{33}▓▒░ Installing tmux plugins...%f"
+    $TMUX_PLUGIN_MANAGER_PATH/tpm/bin/install_plugins
   }
 }
 
