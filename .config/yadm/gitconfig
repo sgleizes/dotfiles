@@ -1,0 +1,9 @@
+#
+# Local git configuration for the dotfiles repository.
+#
+
+[status]
+  # Always show paths relative to the repository root.
+  relativePaths = false
+  # Restore the default git behavior, assuming uninteresting files are ignored.
+  showUntrackedFiles = normal

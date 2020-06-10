@@ -1,0 +1,58 @@
+#!/usr/bin/env zsh
+#
+# Bootstrap program for the dotfiles repository.
+#
+
+set -o errexit  # exit the script if any statement returns a non-true valu
+set -o pipefail # unveil hidden pipeline command errors
+
+# Deduce the path to the parent directory.
+YADM_DIR="${0:h}"
+
+# Paths to repository configuration files.
+: ${YADM_GITCONFIG:=$YADM_DIR/gitconfig}
+: ${YADM_GITIGNORE:=$YADM_DIR/gitignore}
+: ${YADM_UNSTABLE:=$YADM_DIR/unstable}
+
+# Configure the local yadm repository.
+function configure_repo {
+  # Hook the local git configuration and ignore patterns.
+  yadm gitconfig include.path $YADM_GITCONFIG
+  ln -sfn $YADM_GITIGNORE $YADM_DIR/repo.git/info/exclude
+
+  # Enable per-worktree configuration.
+  yadm gitconfig extensions.worktreeConfig true
+
+  # Move core.worktree to the main worktree configuration file.
+  yadm gitconfig --worktree core.worktree $(yadm gitconfig core.worktree)
+  yadm gitconfig --unset core.worktree
+
+  # Enable and set sparse checkout patterns for the main worktree.
+  yadm sparse-checkout set '/*' '!/README' '!/LICENSE'
+}
+
+# Set the assume-unchanged bit for unstable files.
+function mark_unstable_files {
+  local files
+
+  setopt localoptions nullglob
+  files=($HOME/${^~$(<$YADM_UNSTABLE | sed '/^#/d')})
+
+  yadm update-index --assume-unchanged -- $files[@]
+}
+
+# Create symlinks to shell runcoms in $HOME.
+function bootstrap_xsh {
+  # Backup existing shell runcoms or remove existing symlinks.
+  for rc in $HOME/.(profile|shrc|bash*|z*)(N); {
+    [[ -L $rc ]] && rm -f $rc || mv $rc $rc.bak
+  }
+
+  # Bootstrap xsh for all supported shells.
+  source "${XSH_DIR:-$HOME/.xsh}/xsh.sh"
+  xsh bootstrap -s posix:bash:zsh
+}
+
+configure_repo
+mark_unstable_files
+bootstrap_xsh
