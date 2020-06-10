@@ -1,0 +1,121 @@
+#compdef yadm
+# Rewrite of yadm zsh completion, heavily inspired from 'hub' completion.
+
+# Zsh will source this file when attempting to autoload the "_yadm" function,
+# typically on the first attempt to complete the yadm command.  We define two new
+# setup helper routines (one for the zsh-distributed version, one for the
+# git-distributed, bash-based version).  Then we redefine the "_yadm" function to
+# call "_git" after some other interception.
+#
+# This is pretty fragile, if you think about it.  Any number of implementation
+# changes in the "_git" scripts could cause problems down the road.  It would be
+# better if the stock git completions were just a bit more permissive about how
+# it allowed third-party commands to be added.
+
+(( $+functions[__yadm_setup_zsh_fns] )) ||
+function __yadm_setup_zsh_fns {
+  # Stash the "real" command for later.
+  functions[_yadm_orig_git_commands]=$functions[_git_commands]
+
+  # Replace it with our own wrapper.
+  declare -f _git_commands >& /dev/null && unfunction _git_commands
+  function _git_commands {
+    local ret=1
+    # Call the original routine.
+    _call_function ret _yadm_orig_git_commands
+
+    # Effectively "append" our yadm commands to the behavior of the original
+    # _git_commands function.  Using this wrapper function approach ensures
+    # that we only offer the user the yadm subcommands when the user is
+    # actually trying to complete subcommands.
+    yadm_commands=(
+      help:'display yadm command help'
+      init:'initialize an empty dotfiles repository'
+      clone:'clone a remote dotfiles repository'
+      bootstrap:'execute .config/yadm/bootstrap'
+      config:'get and set yadm options'
+      gitconfig:'get and set git options'
+      encrypt:'encrypt files matching patterns from .config/yadm/encrypt'
+      decrypt:'decrypt files stored in .config/yadm/files.gpg'
+      git-crypt:'use git-crypt with the yadm repository'
+      list:'list files managed by yadm'
+      enter:'run a sub-shell with all git variables set to the yadm repository'
+      alt:'create links and process templates for alternate files'
+      perms:'fix permissions for private files'
+    )
+    _describe -t yadm-commands 'yadm command' yadm_commands && ret=0
+
+    return ret
+  }
+}
+
+(( $+functions[__yadm_setup_bash_fns] )) ||
+function __yadm_setup_bash_fns {
+  # Duplicate and rename the 'list_all_commands' function.
+  eval "$(declare -f __git_list_all_commands | \
+        sed 's/__git_list_all_commands/__git_list_all_commands_without_yadm/')"
+
+  # Wrap the 'list_all_commands' function with extra yadm commands.
+  function __git_list_all_commands {
+    command yadm introspect commands | grep -vE 'clean|instrospect|upgrade'
+    __git_list_all_commands_without_yadm
+  }
+
+  # Ensure cached commands are cleared.
+  __git_all_commands=""
+}
+
+# Redefine _yadm to a much smaller function in the steady state.
+function _yadm {
+  # Only attempt to intercept the normal "_git" helper functions once.
+  (( $+__yadm_func_replacement_done )) ||
+    () {
+      # At this stage in the shell's execution the "_git" function has not yet
+      # been autoloaded, so the "_git_commands" or "__git_list_all_commands"
+      # functions will not be defined.  Call it now (with a bogus no-op service
+      # to prevent premature completion) so that we can wrap them.
+      if declare -f _git >& /dev/null ; then
+        _yadm_noop() { __yadm_zsh_provided=1 }       # zsh-provided will call this one
+        __yadm_noop_main() { __yadm_git_provided=1 } # git-provided will call this one
+        local service=yadm_noop
+        _git
+        unfunction _yadm_noop
+        unfunction __yadm_noop_main
+        service=git
+      fi
+
+      if (( $__yadm_zsh_provided )) ; then
+        __yadm_setup_zsh_fns
+      elif (( $__yadm_git_provided )) ; then
+        __yadm_setup_bash_fns
+      fi
+
+      __yadm_func_replacement_done=1
+    }
+
+  # Describe root yadm options.
+  yadm_options=(
+    --yadm-dir:'location of the yadm directory'
+    --yadm-repo:'location of the yadm repository'
+    --yadm-config:'location of the yadm configuration file'
+    --yadm-encypt:'location of the yadm encryption configuration file'
+    --yadm-archive:'location of the yadm encrypted files archive'
+    --yadm-bootstrap:'location of the yadm bootstrap program'
+  )
+  _describe -o 'yadm options' yadm_options
+
+  # Set the path to the yadm repository so that it is picked up by _git.
+  # NOTE: This is undesirable if a proper gitignore file is not configured for the yadm
+  # repository, as the git completion attempts to list all untracked files.
+  local -x GIT_DIR=$(command yadm introspect repo)
+
+  # Now perform the actual completion, allowing the "_git" function to call our
+  # replacement "_git_commands" function as needed.  Both versions expect
+  # service=git or they will call nonexistent routines or end up in an infinite
+  # loop.
+  service=git
+  declare -f _git >& /dev/null && _git
+}
+
+# Make sure we actually attempt to complete on the first "tab" from the user.
+_yadm
