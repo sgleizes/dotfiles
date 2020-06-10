@@ -1,3 +1,10 @@
+#
+# Configuration for yadm.
+# The format is the same than git-config(1), but this is not the place for
+# configuring the yadm repository. See the gitconfig file.
+#
+
 [yadm]
-	git-program = hub
-	gpg-recipient = 8C727B8390A6C01241223297BEFFDEABF816BAF3
+  git-program = hub
+  gpg-recipient = 8C727B8390A6C01241223297BEFFDEABF816BAF3
+  auto-exclude = false

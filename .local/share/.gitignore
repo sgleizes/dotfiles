@@ -1,0 +1,23 @@
+#
+# Patterns of interesting paths in XDG_DATA_HOME.
+#
+
+# Ignore everything by default and add specific files to track.
+/*
+!/.git*
+
+# Interesting KDE paths.
+!/knewstuff3/
+!/konsole/*.profile
+!/konsole/*.keytab
+!/konsole/*.colorscheme
+!/ksysguard/*.sgrd
+!/kxmlgui5/
+!/plasma/
+
+# Keymap configurations for zsh.
+!/zsh/zkbd/
+
+# Gnucash reports configuration.
+!/gnucash/saved-reports-2.8
+!/gnucash/stylesheets-2.0

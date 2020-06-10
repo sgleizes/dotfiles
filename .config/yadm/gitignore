@@ -1,0 +1,35 @@
+#
+# Patterns of paths to ignore for the dotfiles repository.
+# This is NOT the global gitignore file, which is .config/git/ignore.
+#
+
+# Non-hidden directories at worktree root.
+/*/
+!/.*/
+
+# Path to the yadm repository.
+.config/yadm/repo.git/
+
+# Private toplevel dotfiles.
+/.ssh/
+/.gnupg/
+
+# Toplevel dotfiles of applications not supporting XDG at all.
+/.dropbox*/
+/.mozilla/
+/.pki/
+
+# XDG cache directory.
+/.cache/
+
+# Toplevel shell dotfiles, linked to xsh runcoms.
+/.profile
+/.shrc
+/.bash*
+/.z*
+
+# Miscellaneous uninteresting files.
+*.log
+*.dat
+*.db
+*.zwc

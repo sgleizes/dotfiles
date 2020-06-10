@@ -1,0 +1,92 @@
+#
+# Patterns of uninteresting paths in XDG_CONFIG_HOME.
+# This approach is preferred over using status.showUntrackedFiles=no, so that
+# potentially new interesting files can be spotted. It also avoids tracking
+# uninteresting files by mistake.
+#
+
+# Uninteresting subdirectories.
+/Code Industry/
+/Electron/
+/GIMP/
+/KDE/
+/Mailspring/
+/Master PDF Editorrc
+/PlasmaUserFeedback
+/QtProject.conf
+/QtProject/
+/Riot/
+/autostart/
+/cef_user_data/
+/dconf/
+/elinks/
+/kde.org/
+/kde4/
+/libaccounts-glib/
+/libreoffice/
+/neofetch/
+/nvidia/
+/optimus-manager/
+/procps/
+/pulse/
+/retroarch/
+/session/
+/signond/
+/sinew.in/
+/skypeforlinux/
+/subversion/
+/supertuxkart/
+/sweeperrc
+/systemd/
+/tutanota-desktop/
+/unity3d/
+
+# Exceptions for directories with uninteresting contents.
+!/elinks/elinks.conf
+
+# Exceptions for directories with interesting contents.
+/gtk-2.0/gtkfilechooser.ini
+/jesseduffield/lazygit/state.yml
+/latte/.multiple-layouts_hidden.layout.latte
+
+# Uninteresting files.
+/bluedevilglobalrc
+/device_automounter_kcmrc
+/drkonqirc
+/email*
+/filetypesrc
+/hub
+/importwizardrc
+/incidenceeditorrc
+/kactivitymanagerd*
+/kate*
+/kcharselectrc
+/kconf_updaterc
+/kded_device_automounterrc
+/kdiff3*
+/kfontinstuirc
+/kfontviewrc
+/kgammarc
+/kinfocenterrc
+/kioclientrc
+/kmail2rc
+/korgacrc
+/korganizerrc
+/kprivacyrc
+/krenamerc
+/ksysguardrc
+/ktrashrc
+/kwalletmanager5rc
+/kwalletrc
+/phishingurlrc
+/plasma-nm
+/plasma.emojierrc
+/plasmashellrc
+/plasmoidviewer*
+/soffice.binrc
+/specialmailcollectionsrc
+/systemmonitorrc
+/systemsettingsrc
+/webengineurlinterceptoradblockrc
+/xdg-desktop-portal-kderc
+/zoomus.conf

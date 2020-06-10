@@ -1,0 +1,11 @@
+#
+# Patterns of paths to unstable files for the dotfiles repository.
+# A file is considered unstable if it can change in a way that does not affect
+# its semantic meaning, e.g. if the order of XML attributes changes but not the values.
+#
+# NOTE: These files will be marked with the assume-unchanged bit in the git index,
+# meaning that any interesting change might be unnoticed. Use with caution.
+#
+
+.config/fontconfig/fonts.conf
+.local/share/ksysguard/*.sgrd
