@@ -276,7 +276,7 @@ run -b 'tmux unbind -a -T copy-mode-vi 2>/dev/null || true' # ignore error if mi
 
 # Copy the current selection to a new buffer or start one if none is active.
 bind -T copy-mode 'Space' {
-  if -F '#{selection_active}' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
     send -X copy-pipe
   } {
     send -X begin-selection
@@ -285,7 +285,7 @@ bind -T copy-mode 'Space' {
 
 # Copy the current selection to a new buffer and exit copy mode, or start one if none is active.
 bind -T copy-mode 'C-Space' {
-  if -F '#{selection_active}' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
     send -X copy-pipe-and-cancel
   } {
     send -X begin-selection
