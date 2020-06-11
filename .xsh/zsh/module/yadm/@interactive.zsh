@@ -27,7 +27,7 @@ autoload_dir ${0:h}/function
 # all staged files in the main worktree.
 function yadm-sync {
   local main master
-  local rsync_opts=(-axu --no-implied-dirs --info=name)
+  local rsync_opts=(-axu --no-implied-dirs --ignore-missing-args --info=name)
 
   # List of files which are tracked on both branches and should not be auto-synced.
   local sync_ignore=(
@@ -54,30 +54,19 @@ function yadm-sync {
 }
 
 # This function is intended to be used from the 'desktop' branch to merge
-# the changes committed on the master worktree. For convenience, it offers
-# to discard changes to the files that prevent the merge from succeeding.
-# This will not discard changes to untracked files which have not been staged.
+# the changes committed on the master worktree. It behaves similarly to yadm-sync,
+# stashing files which are tracked on the master branch and all staged files in the
+# main worktree.
 function yadm-merge {
-  local main merge_out ans conflicting_files
+  local master
 
-  main="$(yadm rev-parse --show-toplevel)"
-  if [[ ! "$main" ]] {
-    print -P ':: %F{red}ERROR%f: main worktree does not exist'
+  master="$(yadm worktree list | grep master | awk '{print $1}')"
+  if [[ ! "$master" ]] {
+    print -P ':: %F{red}ERROR%f: master worktree does not exist'
     return 1
   }
 
-  merge_out=$(mktemp)
-  trap "command rm -f $merge_out" EXIT
-
-  setopt localoptions pipefail
-  if { ! yadm merge master |& tee $merge_out } {
-    print -Pn ':: %F{yellow}WARNING%f: discard changes for conflicting files? [y/N] '
-    read -sq ans; print
-
-    if [[ $ans == 'y' ]] {
-      conflicting_files=( $(cat $merge_out | grep -E '^\s' | cut -f2-) )
-      yadm -C $main restore --staged --worktree $conflicting_files[@]
-      yadm merge master
-    }
-  }
+  yadm stash push -- $(git -C $master ls-files) $(yadm diff --name-only --cached)
+  yadm merge master
+  yadm stash pop
 }
