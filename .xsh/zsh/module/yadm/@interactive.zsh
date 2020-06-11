@@ -27,7 +27,7 @@ autoload_dir ${0:h}/function
 # all staged files in the main worktree.
 function yadm-sync {
   local main master
-  local rsync_opts=(-axu --no-implied-dirs --info=name)
+  local rsync_opts=(-axu --no-implied-dirs --ignore-missing-args --info=name)
 
   # List of files which are tracked on both branches and should not be auto-synced.
   local sync_ignore=(
