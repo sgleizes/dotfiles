@@ -77,6 +77,13 @@ if (( $+commands[delta] )) {
   }
 }
 
+# List all git wrapper commands and aliases.
+function _list_git_wrappers {
+  local -U git_commands=(git $_git_wrapper_commands)
+  git_commands+=($(alias | grep -E "=(git|${(j:|:)_git_wrapper_commands})" | cut -d= -f1))
+  print $git_commands[@]
+}
+
 # Update the git user-commands style for git wrappers.
 # This allows user-defined commands to show up in completion when using git wrappers.
 function _update_git_user_commands {
@@ -133,19 +140,12 @@ if (( $+commands[git-extras] )) {
   zinit snippet "https://github.com/tj/git-extras/raw/$(git-extras -v)/etc/git-extras-completion.zsh"
 }
 
-# Patch zsh-git-escape-magic to work for git wrappers and aliases.
-function _add_git_escape_magic_alternatives {
-  local -U git_commands=(git $_git_wrapper_commands)
-  git_commands+=($(alias | grep -E "=(git|${(j:|:)_git_wrapper_commands})" | cut -d= -f1))
-  sed -i "s;(\*/|)git;(*/|)(${(j:|:)git_commands});g" git-escape-magic
-  unfunction _add_git_escape_magic_alternatives
-}
-
 # Automatically detect and escape zsh globbing meta-characters when used with
 # git refspec characters like `[^~{}]`. NOTE: This must be loaded _after_
 # url-quote-magic, which is the motivation for the zinit 'wait slot'.
+# The plugin is patched to work with all defined git wrappers and aliases.
 zinit ice wait'0b' lucid depth=1 reset \
-  atclone'_add_git_escape_magic_alternatives' \
+  atclone'sed -i "s;(\*/|)git;(*/|)("${(j:|:)$(_list_git_wrappers)}");g" git-escape-magic' \
   atpull'%atclone' nocompile'!' \
   pick'git-escape-magic'
 zinit light knu/zsh-git-escape-magic

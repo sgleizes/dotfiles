@@ -45,12 +45,13 @@ xsh module completion interactive
 xsh module zle        interactive # load after completion
 
 # Load additional application-specific modules that provide and bind ZLE widgets.
-xsh module browser interactive:env
-xsh module editor  interactive:env
-xsh module git     interactive
-xsh module fzf     interactive
-xsh module fasd    interactive
-xsh module jq      interactive
+xsh module browser        interactive:env
+xsh module editor         interactive:env
+xsh module fzf            interactive
+xsh module fasd           interactive
+xsh module git            interactive
+xsh module jq             interactive
+xsh module you-should-use interactive # load after git
 
 # Load the modules that wrap ZLE widgets after all widgets have been defined.
 xsh module syntax-highlighting      interactive
