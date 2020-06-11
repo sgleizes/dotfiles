@@ -25,7 +25,7 @@ function configure_repo {
 
   # Move core.worktree to the main worktree configuration file.
   yadm gitconfig --worktree core.worktree $(yadm gitconfig core.worktree)
-  yadm gitconfig --unset core.worktree
+  yadm gitconfig --unset core.worktree || true
 
   # Enable and set sparse checkout patterns for the main worktree.
   yadm sparse-checkout set '/*' '!/LICENSE' '!/README.md'
