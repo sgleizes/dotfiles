@@ -47,17 +47,7 @@ plugin=org.kde.plasma.panelspacer
 [Containments][2][Applets][21][Configuration]
 
 [Containments][2][Applets][21][Configuration][General]
-length=380
-
-[Containments][2][Applets][22]
-immutability=1
-plugin=org.kde.plasma.panelspacer
-
-[Containments][2][Applets][22][Configuration]
-
-[Containments][2][Applets][22][Configuration][General]
-expanding=false
-length=626
+length=385
 
 [Containments][2][Applets][30]
 immutability=1
@@ -120,7 +110,8 @@ plugin=org.kde.plasma.panelspacer
 [Containments][2][Applets][45][Configuration]
 
 [Containments][2][Applets][45][Configuration][General]
-length=12
+expanding=false
+length=14
 
 [Containments][2][Applets][47]
 immutability=1
@@ -255,6 +246,14 @@ labels=\\0
 last_filter=acpi/Thermal_Zone
 names=sys.acpi/Thermal_Zone/6-pch_skylake/Temperature,sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
 
+[Containments][2][Applets][55]
+immutability=1
+plugin=org.kde.plasma.panelspacer
+
+[Containments][2][Applets][55][Configuration][General]
+expanding=false
+length=620
+
 [Containments][2][Applets][6]
 immutability=1
 plugin=org.kde.plasma.systemtray
@@ -271,7 +270,7 @@ plugin=org.kde.plasma.showdesktop
 [Containments][2][Configuration]
 
 [Containments][2][General]
-AppletOrder=35;47;54;48;49;52;50;51;22;33;45;30;53;21;6;36;9
+AppletOrder=35;47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;9
 
 [Containments][34]
 activityId=871efd5a-b1dc-415f-af64-86aceebafb29
@@ -364,8 +363,6 @@ max_value=2000
 monitor_type=3
 multiplier=1000
 
-[Containments1Appletsts][51][Configuration][sources]
-
 [Containments2Appletsts][27][Configuration][General]
 cacheDirtyColor=85,170,255
 cacheWritebackColor=255,255,127
@@ -411,8 +408,6 @@ multiplier=1024
 
 [Containments2Appletsts][52][Configuration][config]
 multiplier=1000
-
-[Containments2Appletsts][52][Configuration][sources]
 
 [Containments2Appletsts][53][Configuration][Appearance]
 layoutRow=false
