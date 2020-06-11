@@ -164,15 +164,3 @@ zinit ice wait'0b' lucid depth=1 reset \
   pick'.dircolors.sh' \
   atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}'
 zinit light trapd00r/LS_COLORS
-
-# Configure you-should-use.
-export YSU_MESSAGE_POSITION="after"
-export YSU_MESSAGE_FORMAT="$fg_bold[yellow]\
-Found existing %alias_type for '$fg[green]%command$fg[yellow]'. \
-You should use: '$fg[green]%alias$fg[yellow]'$reset_color"
-
-# Setup you-should-use, without global aliases support.
-zinit ice wait'0b' lucid depth=1 reset \
-  atclone'sed -i "/preexec _check_global_aliases/d" you-should-use.plugin.zsh' \
-  atpull'%atclone' nocompile'!'
-zinit light MichaelAquilina/zsh-you-should-use
