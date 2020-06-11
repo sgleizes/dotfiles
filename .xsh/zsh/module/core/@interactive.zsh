@@ -101,6 +101,9 @@ alias zcalc='ZDOTDIR=$ZDATADIR zcalc' # use the XDG data dir for history
 alias calc='ZDOTDIR=$ZDATADIR noglob zcalc -e'
 aliases[=]='calc'
 
+# Print columns 1 2 3 ... n.
+function slit { awk "{ print ${(j:,:):-\$${^@}} }"; }
+
 # Autoload all appropriate functions from a directory.
 # This was totally stolen from prezto.
 # Usage: autoload_dir <dir>

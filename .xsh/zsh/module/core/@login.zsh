@@ -26,10 +26,11 @@ export ZDATADIR=${ZDATADIR:-$XDG_DATA_HOME/zsh}
 export ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
 command mkdir -p $ZDATADIR $ZCACHEDIR
 
-# Setup XDG paths for applications supporting environment overrides.
+# Setup XDG paths for programs supporting environment overrides.
 export ELINKS_CONFDIR="$XDG_CONFIG_HOME/elinks"
 export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 export KDEHOME="$XDG_CONFIG_HOME/kde4" # legacy way for KDE4 applications
 export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
 export PSQL_HISTORY="$XDG_DATA_HOME/psql/history"

@@ -88,8 +88,8 @@
   pa  = push --all
   pt  = push --tags
   pat = !git push --all && git push --tags
-  pc  = !push --set-upstream origin "$(git symbolic-ref --short HEAD)"
-  pp  = !pull origin "$(git symbolic-ref --short HEAD)" && git push origin "$(git symbolic-ref --short HEAD)"
+  pc  = !git push --set-upstream origin "$(git symbolic-ref --short HEAD)"
+  pp  = !git pull origin "$(git symbolic-ref --short HEAD)" && git push origin "$(git symbolic-ref --short HEAD)"
 
   # Rebase (r)
   r  = rebase

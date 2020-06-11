@@ -28,7 +28,7 @@ function configure_repo {
   yadm gitconfig --unset core.worktree
 
   # Enable and set sparse checkout patterns for the main worktree.
-  yadm sparse-checkout set '/*' '!/README' '!/LICENSE'
+  yadm sparse-checkout set '/*' '!/LICENSE' '!/README.md'
 }
 
 # Set the assume-unchanged bit for unstable files.
