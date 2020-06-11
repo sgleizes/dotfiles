@@ -70,22 +70,23 @@ set -g @resurrect-save 'C-s'
 set -g @resurrect-restore 'M-s'
 
 # Hooks for tmux-resurrect.
-set -g @resurrect-hook-pre-restore-all {
+set -g @resurrect-hook-pre-restore-all '
   # Prevent activity notifications while restoring.
   tmux set -g monitor-activity off
-}
-set -g @resurrect-hook-post-restore-all {
+'
+set -g @resurrect-hook-post-restore-all '
   # Restore automatic-rename after environment restore.
   # See https://github.com/tmux-plugins/tmux-resurrect/issues/57.
-  for session_window in $(tmux list-windows -a -F '#{session_name}:#{window_index}'); do
-    tmux set -t $session_window automatic-rename on
-  done
+  for session_window in $(tmux list-windows -a -F "#{session_name}:#{window_index}"); do \
+    tmux set -t $session_window automatic-rename on;
+  done;
+
   # Restore monitor-activity after a delay to avoid the spurious notifications.
   # NOTE If the session is started in the background, for some reason attaching after
   # monitor-activity is restored will still mark all windows with the activity flag.
   # This is the reason for the sensibly high delay.
   { sleep 15; tmux set -g monitor-activity on; } &
-}
+'
 
 #
 # tmux-continuum
