@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<kpartgui version="27" name="dolphin">
+<kpartgui version="30" name="dolphin">
  <MenuBar>
   <Menu name="file">
    <Action name="new_menu"/>
@@ -11,6 +11,7 @@
    <Action name="add_to_places"/>
    <Separator/>
    <Action name="renamefile"/>
+   <Action name="duplicate"/>
    <Action name="movetotrash"/>
    <Action name="deletefile"/>
    <Separator/>
@@ -54,11 +55,28 @@
   </Menu>
   <Menu name="tools">
    <Action name="show_filter_bar"/>
+   <Action name="open_preferred_search_tool"/>
    <Action name="open_terminal"/>
+   <Action name="focus_terminal_panel"/>
    <Action name="compare_files"/>
    <Action name="change_remote_encoding"/>
   </Menu>
  </MenuBar>
+ <ToolBar noMerge="1" name="mainToolBar">
+  <text context="@title:menu">Main Toolbar</text>
+  <Action name="go_back"/>
+  <Action name="go_forward"/>
+  <Separator name="separator_1"/>
+  <Action name="icons"/>
+  <Action name="compact"/>
+  <Action name="details"/>
+  <Separator name="separator_0"/>
+  <Action name="sort"/>
+  <Spacer name="spacer_0"/>
+  <Action name="split_view"/>
+  <Action name="split_stash"/>
+  <Action name="toggle_search"/>
+ </ToolBar>
  <State name="new_file">
   <disable>
    <Action name="edit_undo"/>
@@ -79,6 +97,7 @@
    <Action name="edit_cut"/>
    <Action name="edit_copy"/>
    <Action name="renamefile"/>
+   <Action name="duplicate"/>
    <Action name="movetotrash"/>
    <Action name="deletefile"/>
    <Action name="invert_selection"/>
@@ -89,47 +108,33 @@
    <Action name="edit_cut"/>
    <Action name="edit_copy"/>
    <Action name="renamefile"/>
+   <Action name="duplicate"/>
    <Action name="movetotrash"/>
    <Action name="deletefile"/>
    <Action name="delete_shortcut"/>
    <Action name="invert_selection"/>
   </disable>
  </State>
- <ToolBar noMerge="1" name="mainToolBar">
-  <text context="@title:menu">Main Toolbar</text>
-  <Action name="go_back"/>
-  <Action name="go_forward"/>
-  <Separator name="separator_1"/>
-  <Action name="icons"/>
-  <Action name="compact"/>
-  <Action name="details"/>
-  <Separator name="separator_0"/>
-  <Action name="sort"/>
-  <Spacer name="spacer_0"/>
-  <Action name="split_view"/>
-  <Action name="split_stash"/>
-  <Action name="toggle_search"/>
- </ToolBar>
  <ActionProperties scheme="Default">
+  <Action priority="0" name="compact"/>
+  <Action shortcut="Ctrl+Shift+N" name="create_dir"/>
+  <Action priority="0" name="details"/>
+  <Action priority="0" name="edit_copy"/>
+  <Action shortcut="Ctrl+X" priority="0" name="edit_cut"/>
+  <Action priority="0" name="edit_paste"/>
   <Action priority="0" name="go_back"/>
   <Action priority="0" name="go_forward"/>
-  <Action priority="0" name="go_up"/>
   <Action priority="0" name="go_home"/>
-  <Action priority="0" name="stop"/>
+  <Action priority="0" name="go_up"/>
   <Action priority="0" name="icons"/>
-  <Action priority="0" name="compact"/>
-  <Action priority="0" name="details"/>
-  <Action priority="0" name="view_zoom_in"/>
-  <Action priority="0" name="view_zoom_reset"/>
-  <Action priority="0" name="view_zoom_out"/>
-  <Action shortcut="Ctrl+X" priority="0" name="edit_cut"/>
-  <Action priority="0" name="edit_copy"/>
-  <Action priority="0" name="edit_paste"/>
-  <Action priority="0" name="toggle_search"/>
-  <Action shortcut="Ctrl+Shift+N" name="create_dir"/>
   <Action shortcut="Ctrl+T; " name="new_tab"/>
   <Action shortcut="Shift+F4; Ctrl+Shift+T" name="open_terminal"/>
-  <Action shortcut="" name="undo_close_tab"/>
   <Action shortcut="F4; Shift+T" name="show_terminal_panel"/>
+  <Action priority="0" name="stop"/>
+  <Action priority="0" name="toggle_search"/>
+  <Action shortcut="" name="undo_close_tab"/>
+  <Action priority="0" name="view_zoom_in"/>
+  <Action priority="0" name="view_zoom_out"/>
+  <Action priority="0" name="view_zoom_reset"/>
  </ActionProperties>
 </kpartgui>
