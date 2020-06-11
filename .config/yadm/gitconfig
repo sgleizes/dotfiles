@@ -24,7 +24,7 @@
   clean = "sed -n '/\\[filelight_part\\]/,/^\\s*$/p'"
 
 [filter "spectacle-interface-state"]
-  clean = "sed -E '/^(last|cropRegion|window-position)/d'"
+  clean = "sed -E '/\\s*\\[\\$Version\\]/,/^\\s*$/d;/^(last|cropRegion|window-position)/d'"
 
 [filter "lutris-interface-state"]
   clean = "sed -E '/(width|height)/d'"
