@@ -105,8 +105,7 @@
   sp  = stash push --patch --no-keep-index
   sd  = stash show --patch --stat
   sl  = stash list
-  sa  = stash apply
-  sax = stash pop
+  sa  = stash pop
   sx  = stash drop
 
   # Tag (t)
