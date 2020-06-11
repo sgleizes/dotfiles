@@ -32,6 +32,7 @@ function yadm-sync {
   # List of files which are tracked on both branches and should not be auto-synced.
   local sync_ignore=(
     .config/yadm/gitconfig
+    .config/yadm/unstable
   )
 
   main="$(yadm rev-parse --show-toplevel)"
