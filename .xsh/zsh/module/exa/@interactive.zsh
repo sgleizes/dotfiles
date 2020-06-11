@@ -7,9 +7,9 @@ if (( ! $+commands[exa] )) {
   return 1
 }
 
-# Make git support opt-out.
-# To disable, `export EXA_NOGIT=` and reload the shell.
-alias exa="exa ${EXA_NOGIT---git}"
+# Quick switch to opt-in git support.
+# To enable set `EXA_GIT` to any value.
+alias exa='exa ${EXA_GIT+--git}'
 
 # Override original aliases with similar, yet improved behavior.
 alias ls='exa --group-directories-first' # list directories first by default

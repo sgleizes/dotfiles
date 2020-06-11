@@ -81,13 +81,13 @@ set -g word-separators " ._-~=+:;?!@&*()[]{}|<>/"
 #
 
 # Import all command aliases from the command directory.
-run {
-  export TMUX_COMMAND_LOAD=100
-  for cmd in "$TMUX_COMMAND_DIR"/*; do
-    "$cmd"
-    TMUX_COMMAND_LOAD=$(( TMUX_COMMAND_LOAD + 10 ))
+run '
+  export TMUX_COMMAND_LOAD=100;
+  for cmd in "$TMUX_COMMAND_DIR"/*; do \
+    "$cmd";
+    TMUX_COMMAND_LOAD=$(( TMUX_COMMAND_LOAD + 10 ));
   done
-}
+'
 
 #
 # Configuration modules
