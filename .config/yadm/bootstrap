@@ -16,7 +16,7 @@ YADM_DIR="${0:h}"
 
 # Configure the local yadm repository.
 function configure_repo {
-  print -P "%F{blue}::%f configuring the local yadm repository"
+  print -P "%F{blue}::%f Configuring the local yadm repository"
 
   # Hook the local git configuration and ignore patterns.
   yadm gitconfig include.path $YADM_GITCONFIG
@@ -35,8 +35,8 @@ function configure_repo {
 
 # Set the assume-unchanged bit for unstable files.
 function mark_unstable_files {
-  print -P "%F{blue}::%f marking unstable files with the 'assume-unchanged' bit"
   local files
+  print -P "%F{blue}::%f Marking unstable files with the 'assume-unchanged' bit"
 
   setopt localoptions nullglob
   files=($HOME/${^~$(<$YADM_UNSTABLE | sed '/^#/d')})
@@ -46,7 +46,7 @@ function mark_unstable_files {
 
 # Create symlinks to shell runcoms in $HOME.
 function bootstrap_xsh {
-  print -P "%F{blue}::%f linking shell runcoms to xsh runcoms"
+  print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms"
 
   # Backup existing shell runcoms or remove existing symlinks.
   for rc in $HOME/.(profile|shrc|bash*|z*)(N); {
@@ -57,6 +57,27 @@ function bootstrap_xsh {
   # Bootstrap xsh for all supported shells.
   source "${XSH_DIR:-$HOME/.xsh}/xsh.sh"
   xsh bootstrap -s posix:bash:zsh
+}
+
+# Change the default login shell for the current user.
+function change_login_shell {
+  if [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]] {
+    return
+  }
+
+  print -P "%F{blue}::%f Changing the login shell to /bin/zsh"
+  chsh $USER --shell=/bin/zsh
+}
+
+# Prompt the user to logout from the current session.
+function prompt_logout {
+  local ans session
+  print -Pn "%F{green}::%f It is recommended to relogin using the new shell configuration"
+  print -Pn "%F{green}::%f Logout now? [Y/n] " && read -sk ans; print
+  if [[ $ans == ('y'|$'\n') ]] {
+    session=$(loginctl session-status | head -n 1 | awk '{print $1}')
+    loginctl terminate-session $session
+  }
 }
 
 # Fallback to using git directly if hub is not installed.
@@ -74,3 +95,5 @@ if (( ! $+commands[delta] )) {
 configure_repo
 mark_unstable_files
 bootstrap_xsh
+change_login_shell
+prompt_logout

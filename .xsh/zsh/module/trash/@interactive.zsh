@@ -16,7 +16,7 @@ if (( ! $+commands[trash] )) {
 # Note that this approach also disables the trash when using `sudo`.
 function rm {
   local bye
-  echo -n 'delete permanently? ' && read -sq bye; echo
+  print -n 'delete permanently? [y/N] ' && read -sq bye; print
   if [[ $bye == 'y' ]] {
     command rm -rv $@
   } else {

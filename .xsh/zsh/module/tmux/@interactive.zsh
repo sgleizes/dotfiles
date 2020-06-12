@@ -91,7 +91,7 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
 
       # Interactively ask to enter tmux or a regular shell.
       local ans
-      print -n ':: Attach to tmux session? [Y/n] ' && read -sk ans; echo
+      print -n ':: Attach to tmux session? [Y/n] ' && read -sk ans; print
       [[ $ans == ('y'|$'\n') ]] && attach=true
     }
 
