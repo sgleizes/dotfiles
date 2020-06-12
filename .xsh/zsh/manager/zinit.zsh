@@ -9,11 +9,11 @@ ZPFX="$ZINIT[HOME_DIR]/prefix"
 
 # Install zinit if necessary.
 if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
-  print -P "%F{33}▓▒░ Installing zdharma/zinit...%f"
+  print -P "%F{33}:: Installing zdharma/zinit...%f"
   command mkdir -p $ZINIT[HOME_DIR]
   command git clone 'https://github.com/zdharma/zinit' $ZINIT[HOME_DIR]/bin \
-    && print -P "%F{34}▓▒░ Installation successful.%f%b" \
-    || print -P "%F{160}▓▒░ The clone has failed.%f%b"
+    && print -P "%F{34}:: Installation successful%f%b" \
+    || { print -P "%F{160}:: The clone has failed%f%b" && return 1 }
 
   # Patch scope: apply available patches to zinit.
   patch_dir="${0:h}/patch"

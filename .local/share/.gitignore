@@ -8,15 +8,17 @@
 
 # Interesting KDE paths.
 !/knewstuff3/
-!/konsole/*.profile
-!/konsole/*.keytab
-!/konsole/*.colorscheme
-!/ksysguard/*.sgrd
+!/konsole/
+/konsole/bookmarks*
+!/ksysguard/
+/ksysguard/QtWebEngine
 !/kxmlgui5/
 !/plasma/
 
 # Keymap configurations for zsh.
-!/zsh/zkbd/
+!/zsh/
+/zsh/zmark/
+/zsh/*history
 
 # Gnucash reports configuration.
 !/gnucash/saved-reports-2.8

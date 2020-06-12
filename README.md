@@ -34,7 +34,9 @@ I do not try to support Mac OS. I don't use that.
 - [zsh](zsh.sourceforge.net/) - The most powerful shell for interactive and scripting use.
 - [git](https://git-scm.com/) - To not be stuck with your own code.
 - [yadm](https://yadm.io/) - A `git` wrapper for dotfiles management.
-- [svn](https://subversion.apache.org/) - To checkout specific parts of github repositories.
+
+You can also optionally install [svn](https://subversion.apache.org/),
+it is used by the zsh configuration to checkout specific parts of github repositories.
 
 ## Integrated terminal programs
 

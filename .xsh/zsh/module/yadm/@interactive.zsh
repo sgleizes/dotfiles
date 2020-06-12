@@ -48,7 +48,7 @@ function yadm-sync {
   }
 
   # Sync files which are tracked on the master branch.
-  rsync $rsync_opts[@] --files-from=<(git -C $master ls-files | grep -v ${(j:|:)sync_ignore}) $main $master
+  rsync $rsync_opts[@] --files-from=<(git -C $master ls-files | grep -Ev ${(j:|:)sync_ignore}) $main $master
   # Sync staged files from the main worktree.
   rsync $rsync_opts[@] --files-from=<(yadm diff --name-only --cached) $main $master
 }

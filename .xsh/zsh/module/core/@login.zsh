@@ -42,7 +42,8 @@ export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
 
 # This must match the display manager setting.
 # It should be located in XDG_RUNTIME_DIR but sddm does not allow that.
-export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
+[[ -f "$XDG_CACHE_HOME/Xauthority" ]] \
+  && export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
 
 # Create parent directories for programs requiring it.
 command mkdir -p \

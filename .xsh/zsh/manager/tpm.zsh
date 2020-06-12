@@ -2,6 +2,11 @@
 # Installation module for the tmux plugin manager.
 #
 
+# Abort if requirements are not met.
+if (( ! $+commands[tmux] )) {
+  return 1
+}
+
 # Path to the tpm plugin directory.
 export TMUX_PLUGIN_MANAGER_PATH="${0:h}/tpm"
 
@@ -10,11 +15,11 @@ export TMUX_PLUGIN_MANAGER_PATCH_DIR="${0:h}/patch"
 
 # Install tpm if necessary.
 if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
-  print -P "%F{33}▓▒░ Installing tmux-plugins/tpm...%f"
+  print -P "%F{33}:: Installing tmux-plugins/tpm...%f"
   command mkdir -p $TMUX_PLUGIN_MANAGER_PATH
   command git clone 'https://github.com/tmux-plugins/tpm' $TMUX_PLUGIN_MANAGER_PATH/tpm \
-    && print -P "%F{34}▓▒░ Installation successful.%f%b" \
-    || print -P "%F{160}▓▒░ The clone has failed.%f%b"
+    && print -P "%F{34}:: Installation successful%f%b" \
+    || { print -P "%F{160}:: The clone has failed%f%b" && return 1 }
 
   # Patch scope: apply available patches to tpm.
   function {
@@ -30,11 +35,12 @@ if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
 
     # Patch the hardcoded helper function to reload the config file with our custom path.
     # See also https://github.com/tmux-plugins/tpm/issues/57.
-    [[ $TMUX_CONFIG ]] && sed -i "s,~/.tmux.conf.*,-q $TMUX_CONFIG," \
-      $TMUX_PLUGIN_MANAGER_PATH/tpm/scripts/helpers/tmux_utils.sh
+    local patch="$TMUX_PLUGIN_MANAGER_PATCH_DIR/tpm-config.patch"
+    patch -d $TMUX_PLUGIN_MANAGER_PATH/tpm -p1 -r- -suN <$patch |& grep -q 'FAILED' \
+      && print -P ":: %F{red}ERROR%f: failed to apply $patch"
 
     # Install tmux plugins.
-    print -P "%F{33}▓▒░ Installing tmux plugins...%f"
+    print -P "%F{33}:: Installing tmux plugins...%f"
     $TMUX_PLUGIN_MANAGER_PATH/tpm/bin/install_plugins
   }
 }
