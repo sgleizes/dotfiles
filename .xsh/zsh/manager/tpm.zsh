@@ -2,6 +2,11 @@
 # Installation module for the tmux plugin manager.
 #
 
+# Abort if requirements are not met.
+if (( ! $+commands[tmux] )) {
+  return 1
+}
+
 # Path to the tpm plugin directory.
 export TMUX_PLUGIN_MANAGER_PATH="${0:h}/tpm"
 
