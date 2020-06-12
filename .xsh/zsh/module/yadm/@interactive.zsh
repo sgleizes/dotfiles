@@ -56,9 +56,9 @@ function yadm-sync {
 # This function is intended to be used from the 'desktop' branch to merge
 # the changes committed on the master worktree. It behaves similarly to yadm-sync,
 # stashing files which are tracked on the master branch and all staged files in the
-# main worktree.
+# main worktree. The intent is to avoid checking out filtered version of desktop files.
 function yadm-merge {
-  local master
+  local master files
 
   master="$(yadm worktree list | grep master | awk '{print $1}')"
   if [[ ! "$master" ]] {
@@ -66,7 +66,8 @@ function yadm-merge {
     return 1
   }
 
-  yadm stash push -- $(git -C $master ls-files) $(yadm diff --name-only --cached)
+  files=( $(git -C $master ls-files) $(yadm diff --name-only --cached) )
+  yadm stash push -- ':/:'${^files} || return 1
   yadm merge master
   yadm stash pop
 }
