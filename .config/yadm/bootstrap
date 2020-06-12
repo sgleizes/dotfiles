@@ -50,7 +50,8 @@ function bootstrap_xsh {
 
   # Backup existing shell runcoms or remove existing symlinks.
   for rc in $HOME/.(profile|shrc|bash*|z*)(N); {
-    [[ -L $rc ]] && rm -f $rc || mv $rc $rc.bak
+    [[ -L $rc ]] && rm -f $rc
+    [[ -f $rc ]] && mv $rc $rc.bak
   }
 
   # Bootstrap xsh for all supported shells.
