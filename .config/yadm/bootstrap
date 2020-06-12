@@ -16,6 +16,8 @@ YADM_DIR="${0:h}"
 
 # Configure the local yadm repository.
 function configure_repo {
+  print -P "%F{blue}::%f configuring the local yadm repository"
+
   # Hook the local git configuration and ignore patterns.
   yadm gitconfig include.path $YADM_GITCONFIG
   ln -sfn $YADM_GITIGNORE $YADM_DIR/repo.git/info/exclude
@@ -33,6 +35,7 @@ function configure_repo {
 
 # Set the assume-unchanged bit for unstable files.
 function mark_unstable_files {
+  print -P "%F{blue}::%f marking unstable files with the 'assume-unchanged' bit"
   local files
 
   setopt localoptions nullglob
@@ -43,6 +46,8 @@ function mark_unstable_files {
 
 # Create symlinks to shell runcoms in $HOME.
 function bootstrap_xsh {
+  print -P "%F{blue}::%f linking shell runcoms to xsh runcoms"
+
   # Backup existing shell runcoms or remove existing symlinks.
   for rc in $HOME/.(profile|shrc|bash*|z*)(N); {
     [[ -L $rc ]] && rm -f $rc || mv $rc $rc.bak
@@ -51,6 +56,18 @@ function bootstrap_xsh {
   # Bootstrap xsh for all supported shells.
   source "${XSH_DIR:-$HOME/.xsh}/xsh.sh"
   xsh bootstrap -s posix:bash:zsh
+}
+
+# Fallback to using git directly if hub is not installed.
+if (( ! $+commands[hub] )) {
+  print -P "%F{yellow}::%f 'hub' is not installed: using 'git' as yadm.git-program"
+  yadm config yadm.git-program git
+}
+
+# Remove integration with git if delta is not installed.
+if (( ! $+commands[delta] )) {
+  print -P "%F{yellow}::%f 'delta' is not installed: commenting integration with 'git'"
+  sed -Ei 's/(path = delta)/# \1/' $HOME/.config/git/config
 }
 
 configure_repo
