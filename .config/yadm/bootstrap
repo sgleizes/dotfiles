@@ -75,7 +75,7 @@ function prompt_logout {
   print -P "%F{green}::%f It is recommended to relogin using the new shell configuration"
   print -Pn "%F{green}::%f Logout now? [Y/n] " && read -sk ans; print
   if [[ $ans == ('y'|$'\n') ]] {
-    session=$(loginctl session-status | head -n 1 | awk '{print $1}')
+    session=$(loginctl session-status | head -n 1 | awk '{print $1}' || true)
     loginctl terminate-session $session
   }
 }
