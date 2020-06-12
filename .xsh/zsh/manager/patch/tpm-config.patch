@@ -1,0 +1,35 @@
+diff --git i/scripts/helpers/plugin_functions.sh w/scripts/helpers/plugin_functions.sh
+index 14721c2..846684a 100644
+--- i/scripts/helpers/plugin_functions.sh
++++ w/scripts/helpers/plugin_functions.sh
+@@ -24,9 +24,10 @@ _get_user_tmux_conf() {
+ 	default_location="$HOME/.tmux.conf"
+ 
+ 	# Search for the correct configuration file by priority.
+-	if [ -f "$xdg_location" ]; then
++	if [ -f "$TMUX_CONFIG" ]; then
++		echo "$TMUX_CONFIG"
++	elif [ -f "$xdg_location" ]; then
+ 		echo "$xdg_location"
+-
+ 	else
+ 		echo "$default_location"
+ 	fi
+@@ -70,7 +71,7 @@ tpm_path() {
+ 
+ tpm_plugins_list_helper() {
+ 	# lists plugins from @tpm_plugins option
+-	echo "$(tmux start-server\; show-option -gqv "$tpm_plugins_variable_name")"
++	echo "$(tmux -f "$(_get_user_tmux_conf)" start-server\; show-option -gqv "$tpm_plugins_variable_name")"
+ 
+ 	# read set -g @plugin "tmux-plugins/tmux-example-plugin" entries
+ 	_tmux_conf_contents "full" |
+diff --git i/scripts/helpers/tmux_utils.sh w/scripts/helpers/tmux_utils.sh
+index e39946a..dc43f75 100644
+--- i/scripts/helpers/tmux_utils.sh
++++ w/scripts/helpers/tmux_utils.sh
+@@ -1,3 +1,3 @@
+ reload_tmux_environment() {
+-	tmux source-file ~/.tmux.conf >/dev/null 2>&1
++	tmux source-file -q "$TMUX_CONFIG"
+ }

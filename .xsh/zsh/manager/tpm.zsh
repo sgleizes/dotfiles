@@ -35,8 +35,9 @@ if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
 
     # Patch the hardcoded helper function to reload the config file with our custom path.
     # See also https://github.com/tmux-plugins/tpm/issues/57.
-    [[ $TMUX_CONFIG ]] && sed -i "s,~/.tmux.conf.*,-q $TMUX_CONFIG," \
-      $TMUX_PLUGIN_MANAGER_PATH/tpm/scripts/helpers/tmux_utils.sh
+    local patch="$TMUX_PLUGIN_MANAGER_PATCH_DIR/tpm-config.patch"
+    patch -d $TMUX_PLUGIN_MANAGER_PATH/tpm -p1 -r- -suN <$patch |& grep -q 'FAILED' \
+      && print -P ":: %F{red}ERROR%f: failed to apply $patch"
 
     # Install tmux plugins.
     print -P "%F{33}:: Installing tmux plugins...%f"
