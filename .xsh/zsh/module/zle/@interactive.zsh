@@ -267,10 +267,11 @@ function _load_zkbd_config {
   [[ -r $zkbd_config ]] && source $zkbd_config
 }
 
-# Load the configuration of the SSH client host if that exists.
+# Load the configuration of the SSH client host or the current host if that exists.
 [[ "$SSH_CLIENT_HOST" ]] \
   && _load_zkbd_config $SSH_CLIENT_HOST \
-  || _load_zkbd_config $HOST
+  || _load_zkbd_config $HOST \
+  || _load_zkbd_config default
 
 # Set empty $keys values to an invalid UTF-8 sequence to induce silent
 # bindkey failure.
