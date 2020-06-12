@@ -3,8 +3,12 @@
 # Bootstrap program for the dotfiles repository.
 #
 
-set -o errexit  # exit the script if any statement returns a non-true valu
-set -o pipefail # unveil hidden pipeline command errors
+# Enable the default zsh options.
+emulate zsh
+
+setopt errexit      # exit the script if any statement returns a non-true valu
+setopt pipefail     # unveil hidden pipeline command errors
+setopt extendedglob # enable '#', '~', '^' operators and flags in patterns
 
 # Deduce the path to the parent directory.
 YADM_DIR="${0:h}"
@@ -49,7 +53,7 @@ function bootstrap_xsh {
   print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms"
 
   # Backup existing shell runcoms or remove existing symlinks.
-  for rc in $HOME/.(profile|shrc|bash*|z*)(N); {
+  for rc in $HOME/.(profile|shrc|bash*|z*)~*.bak(N); {
     [[ -L $rc ]] && rm -f $rc
     [[ -f $rc ]] && mv $rc $rc.bak
   }
