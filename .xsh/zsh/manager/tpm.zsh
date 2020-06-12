@@ -15,11 +15,11 @@ export TMUX_PLUGIN_MANAGER_PATCH_DIR="${0:h}/patch"
 
 # Install tpm if necessary.
 if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
-  print -P "%F{33}▓▒░ Installing tmux-plugins/tpm...%f"
+  print -P "%F{33}:: Installing tmux-plugins/tpm...%f"
   command mkdir -p $TMUX_PLUGIN_MANAGER_PATH
   command git clone 'https://github.com/tmux-plugins/tpm' $TMUX_PLUGIN_MANAGER_PATH/tpm \
-    && print -P "%F{34}▓▒░ Installation successful.%f%b" \
-    || print -P "%F{160}▓▒░ The clone has failed.%f%b"
+    && print -P "%F{34}:: Installation successful%f%b" \
+    || { print -P "%F{160}:: The clone has failed%f%b" && return 1 }
 
   # Patch scope: apply available patches to tpm.
   function {
@@ -39,7 +39,7 @@ if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
       $TMUX_PLUGIN_MANAGER_PATH/tpm/scripts/helpers/tmux_utils.sh
 
     # Install tmux plugins.
-    print -P "%F{33}▓▒░ Installing tmux plugins...%f"
+    print -P "%F{33}:: Installing tmux plugins...%f"
     $TMUX_PLUGIN_MANAGER_PATH/tpm/bin/install_plugins
   }
 }
