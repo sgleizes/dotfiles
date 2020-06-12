@@ -72,7 +72,7 @@ function change_login_shell {
 # Prompt the user to logout from the current session.
 function prompt_logout {
   local ans session
-  print -Pn "%F{green}::%f It is recommended to relogin using the new shell configuration"
+  print -P "%F{green}::%f It is recommended to relogin using the new shell configuration"
   print -Pn "%F{green}::%f Logout now? [Y/n] " && read -sk ans; print
   if [[ $ans == ('y'|$'\n') ]] {
     session=$(loginctl session-status | head -n 1 | awk '{print $1}')
