@@ -66,7 +66,7 @@ if [[ ! $ZOPT_AUTORUN ]] {
 
 # Run the guard immediately or asynchronously.
 if (( ! $+functions[zinit] )) {
-  zkeyguard
+  zoptguard
 } else {
   # Handle asynchronous printing of the output.
   function _async_zoptguard {
