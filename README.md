@@ -52,10 +52,11 @@ For some programs, a configuration file is provided in [.config](.config).
 - [elinks](http://elinks.or.cz/) - Text-mode web browser
 - [expac](https://github.com/falconindy/expac) - Data extraction tool for alpm databases (`pacman`).
 - [exa](https://github.com/ogham/exa) - A modern version of `ls`.
-- [fd](https://github.com/sharkdp/fd) - A simple, fast and user-friendly alternative to `find`.
-- [fzf](https://github.com/junegunn/fzf) - A command line fuzzy finder.
 - [fasd](https://github.com/clvv/fasd) - Quick access to frecent files and directories.
+- [fd](https://github.com/sharkdp/fd) - A simple, fast and user-friendly alternative to `find`.
 - [fortune](https://github.com/shlomif/fortune-mod) / [ponysay](https://github.com/erkin/ponysay) - A courtesy of the terminal.
+- [fpp](https://github.com/facebook/pathpicker/) - Selecting files from command output.
+- [fzf](https://github.com/junegunn/fzf) - A command line fuzzy finder.
 - [git-extras](https://github.com/tj/git-extras) - Extra `git` commands from the community.
 - [gpg](https://gnupg.org/) - Hybrid encryption software suite.
 - [htop](https://github.com/hishamhm/htop) - Interactive process viewer and system monitor.
@@ -66,6 +67,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [rsync](https://github.com/WayneD/rsync) - Versatile file copying tool for remote and local files.
 - [ssh](https://www.openssh.com/) - OpenSSH remote login client.
 - [tldr](https://github.com/dbrgn/tealdeer/) - Simplified and community-driven man pages.
+- [tealdeer](https://github.com/dbrgn/tealdeer/) - A Rust client for `tldr`.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [tmux-xpanes](https://github.com/greymd/tmux-xpanes) - Awesome tmux-based terminal divider.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
