@@ -17,9 +17,16 @@
 
 # Keymap configurations for zsh.
 !/zsh/
-/zsh/zmark/
-/zsh/*history
+/zsh/**
+!/zsh/zkbd/
 
 # Gnucash reports configuration.
+!/gnucash/
+/gnucash/**
 !/gnucash/saved-reports-2.8
 !/gnucash/stylesheets-2.0
+
+# Lutris games database.
+!/lutris/
+/lutris/**
+!/lutris/pga.db
