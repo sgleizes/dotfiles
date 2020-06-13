@@ -18,9 +18,51 @@ YADM_DIR="${0:h}"
 : ${YADM_GITIGNORE:=$YADM_DIR/gitignore}
 : ${YADM_UNSTABLE:=$YADM_DIR/unstable}
 
+# List of packages to prompt for automatic installation.
+PACKAGE_LIST=(
+  bat
+  bashtop
+  expac
+  exa
+  fd
+  fzf
+  fasd
+  fortune-mod
+  htop
+  httpie
+  hub
+  imagemagick
+  jq
+  mlocate
+  neofetch
+  pacman-contrib
+  pastebinit
+  ripgrep
+  rsync
+  strace
+  subversion
+  trash-cli
+  tree
+  wget
+  xclip
+)
+
+# List of packages to hint for manual installation.
+AUR_PACKAGE_LIST=(
+  direnv
+  git-delta
+  git-extras
+  lazygit
+  fpp-git
+  ponysay-git
+  tealdeer-bin
+  tmux-git
+  tmux-xpanes
+)
+
 # Configure the local yadm repository.
 function configure_repo {
-  print -P "%F{blue}::%f Configuring the local yadm repository"
+  print -P "%F{blue}::%f Configuring the local yadm repository..."
 
   # Hook the local git configuration and ignore patterns.
   yadm gitconfig include.path $YADM_GITCONFIG
@@ -40,7 +82,7 @@ function configure_repo {
 # Set the assume-unchanged bit for unstable files.
 function mark_unstable_files {
   local files
-  print -P "%F{blue}::%f Marking unstable files with the 'assume-unchanged' bit"
+  print -P "%F{blue}::%f Marking unstable files with the 'assume-unchanged' bit..."
 
   setopt localoptions nullglob
   files=($HOME/${^~$(<$YADM_UNSTABLE | sed '/^#/d')})
@@ -50,7 +92,7 @@ function mark_unstable_files {
 
 # Create symlinks to shell runcoms in $HOME.
 function bootstrap_xsh {
-  print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms"
+  print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms..."
 
   # Backup existing shell runcoms or remove existing symlinks.
   for rc in $HOME/.(profile|shrc|bash*|z*)~*.bak(N); {
@@ -60,7 +102,36 @@ function bootstrap_xsh {
 
   # Bootstrap xsh for all supported shells.
   source "${XSH_DIR:-$HOME/.xsh}/xsh.sh"
-  xsh bootstrap -s posix:bash:zsh
+  xsh bootstrap -s posix:bash:zsh >/dev/null
+}
+
+# List packages that are missing among provided arguments.
+function missing_packages {
+  pacman -Sl | awk '{print $2,$4}' | grep -E "^(${(j:|:)@}) $" || true
+}
+
+# Install optional packages for the terminal environment.
+function install_packages {
+  local pkgs ans
+  (( ! $+commands[pacman] )) && return
+
+  pkgs=( $(missing_packages $PACKAGE_LIST[@]) )
+  [[ ! $pkgs ]] && return
+
+  print -P "%F{green}::%f The following optional packages can be automatically installed:"
+  print -f '  %s\n' $pkgs[@]
+  print -Pn "%F{green}::%f Proceed? [Y/n] "
+  read -sk ans; print
+
+  if [[ $ans == ('y'|$'\n') ]] {
+    sudo pacman -Sy $pkgs[@] || true
+  }
+
+  pkgs=( $(missing_packages $AUR_PACKAGE_LIST[@]) )
+  [[ ! $pkgs ]] && return
+
+  print -P "%F{yellow}::%f The following optional packages can be built manually from the AUR:"
+  print -f '  %s\n' $pkgs[@]
 }
 
 # Change the default login shell for the current user.
@@ -69,19 +140,19 @@ function change_login_shell {
     return
   }
 
-  print -P "%F{blue}::%f Changing the login shell to /bin/zsh"
+  print -P "%F{green}::%f Changing the login shell to /bin/zsh"
   chsh $USER --shell=/bin/zsh
 }
 
 # Prompt the user to logout from the current session.
 function prompt_logout {
   local ans session
-  print -P "%F{green}::%f It is recommended to relogin using the new shell configuration"
-  print -Pn "%F{green}::%f Logout now? [Y/n] " && read -sk ans; print
-  if [[ $ans == ('y'|$'\n') ]] {
-    session=$(loginctl session-status | head -n 1 | awk '{print $1}' || true)
-    loginctl terminate-session $session
-  }
+  print -Pn "%F{green}::%f It is recommended to relogin using the new shell configuration, logout now? [Y/n] "
+  read -sk ans; print
+  [[ $ans != ('y'|$'\n') ]] && return
+
+  session=$(loginctl session-status | head -n 1 | awk '{print $1}' || true)
+  loginctl terminate-session $session
 }
 
 # Fallback to using git directly if hub is not installed.
@@ -99,5 +170,6 @@ if (( ! $+commands[delta] )) {
 configure_repo
 mark_unstable_files
 bootstrap_xsh
+install_packages
 change_login_shell
 prompt_logout

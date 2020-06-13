@@ -16,7 +16,7 @@ alias pacs='pac -S'                 # install packages
 alias pacu='pac -Sy'                # synchronize package databases
 alias pacU='pac -Syu'               # upgrade installed packages
 alias pacrm='pac -Rns'              # remove packages
-alias pacrmo='pacrm "$(pac -Qqdt)"' # remove orphan packages
+alias pacrmo='pacrm $(pac -Qqdt)' # remove orphan packages
 
 #
 # Advanced pacman utilities
