@@ -47,6 +47,7 @@ xsh module zle        interactive # load after completion
 # Load additional application-specific modules that provide and bind ZLE widgets.
 xsh module browser        interactive:env
 xsh module editor         interactive:env
+xsh module kmon           interactive
 xsh module fzf            interactive
 xsh module fasd           interactive
 xsh module git            interactive

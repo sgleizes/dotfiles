@@ -52,6 +52,7 @@ AUR_PACKAGE_LIST=(
   direnv
   git-delta
   git-extras
+  kmon
   lazygit
   fpp-git
   ponysay-git
