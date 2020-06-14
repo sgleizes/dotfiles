@@ -49,7 +49,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [delta](https://github.com/dandavison/delta) - A syntax-highlighter for `git` and `diff` output.
 - [direnv](https://github.com/direnv/direnv) - Update the environment based on the current directory.
 - [docker](https://github.com/docker/cli) / [docker-compose](https://github.com/docker/compose) - Container management.
-- [elinks](http://elinks.or.cz/) - Text-mode web browser
+- [elinks](http://elinks.or.cz/) - Text-mode web browser.
 - [expac](https://github.com/falconindy/expac) - Data extraction tool for alpm databases (`pacman`).
 - [exa](https://github.com/ogham/exa) - A modern version of `ls`.
 - [fasd](https://github.com/clvv/fasd) - Quick access to frecent files and directories.
@@ -62,6 +62,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [htop](https://github.com/hishamhm/htop) - Interactive process viewer and system monitor.
 - [hub](https://hub.github.com/) - Github from the command line.
 - [jq](https://github.com/stedolan/jq) - Command line JSON processor.
+- [kmon](https://github.com/orhun/kmon) - Linux kernel manager and activity monitor.
 - [lazygit](https://github.com/jesseduffield/lazygit) - Simple terminal UI for `git` commands.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A modern version of `grep`.
 - [rsync](https://github.com/WayneD/rsync) - Versatile file copying tool for remote and local files.
