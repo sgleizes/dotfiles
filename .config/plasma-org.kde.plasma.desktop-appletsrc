@@ -428,6 +428,3 @@ labels=\\0
 last_filter=acpi/Thermal_Zone
 names=sys.acpi/Thermal_Zone/6-pch_skylake/Temperature,sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
 
-[ScreenMapping]
-itemsOnDisabledScreens=
-screenMapping=

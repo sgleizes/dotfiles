@@ -15,7 +15,7 @@
 '"
 
 [filter "plasma-applets-state"]
-  clean = "sed -E '/\\s*\\[.*Dialog.*\\]/,/^\\s*$/d;/^(PreloadWeight|lastReloaded|guessed_max_value)/d'"
+  clean = "sed -E '/\\s*\\[.*(Dialog|ScreenMapping).*\\]/,/^\\s*$/d;/^(PreloadWeight|lastReloaded|guessed_max_value)/d'"
 
 [filter "plasma-gtk-gen"]
   clean = "sed 's/# created by KDE Plasma.*/# created by KDE Plasma/'"
