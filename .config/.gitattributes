@@ -6,6 +6,7 @@
 *rc                    filter=kde-interface-state
 kdeglobals             filter=kde-interface-state
 *desktop-appletsrc     filter=plasma-applets-state
+*.layout.latte         filter=plasma-applets-state
 gtkrc*                 filter=plasma-gtk-gen
 
 # Filters for application-specific configuration files.
