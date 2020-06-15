@@ -72,6 +72,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [tmux-xpanes](https://github.com/greymd/tmux-xpanes) - Awesome tmux-based terminal divider.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
+- [unison](https://www.cis.upenn.edu/~bcpierce/unison/) - Bidirectional file synchronization.
 - [wget](https://www.gnu.org/software/wget/) - Downloading remote files.
 
 ## Zsh plugins

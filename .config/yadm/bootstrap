@@ -43,6 +43,7 @@ PACKAGE_LIST=(
   subversion
   trash-cli
   tree
+  unison
   wget
   xclip
 )

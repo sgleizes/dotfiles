@@ -68,6 +68,6 @@ function yadm-merge {
 
   files=( $(git -C $master ls-files) $(yadm diff --name-only --cached) )
   yadm stash push -- ':/:'${^files} || return 1
-  yadm merge master --no-edit
+  yadm merge --no-edit master
   yadm stash pop
 }
