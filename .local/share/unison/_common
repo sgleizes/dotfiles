@@ -1,0 +1,28 @@
+#
+# Common unison preferences.
+#
+
+# XDG path for the log file.
+logfile = /home/psydev/.local/share/unison/unison.log
+
+# Use the external rsync for files larger than 2MB.
+copythreshold = 2000
+
+# Use delta to prettify diff output, if available.
+diff = zsh -ic 'diff -u CURRENT2 CURRENT1 --color=always | { (( ${+commands[delta]} )) && delta || cat }'
+# Use kdiff3 as the external diff program.
+merge = Name {*,.*} -> kdiff3 -o NEW CURRENTARCHOPT CURRENT1 CURRENT2
+# merge = Name {*,.*} -> konsole -e emacs -nw -q --eval '(emerge-files nil "CURRENT1" "CURRENT2" "NEW")'
+
+# Propagate modification times.
+times = true
+
+# If any new preferences are added by Unison (e.g. 'ignore' preferences added
+# via the graphical UI), then store them in the file 'common' rather than in
+# the top-level preference file.
+addprefsto = _common
+
+# Names and paths to ignore.
+ignore = Name {*~,.*~}
+ignore = Name *.o
+ignore = Name *.tmp

@@ -1,0 +1,6 @@
+#
+# Unison profile for synchonizing documents.
+#
+
+# Paths to synchronize.
+path = Documents
