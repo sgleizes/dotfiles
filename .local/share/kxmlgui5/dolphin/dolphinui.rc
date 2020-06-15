@@ -1,7 +1,10 @@
-<!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<kpartgui version="30" name="dolphin">
- <MenuBar>
-  <Menu name="file">
+<!DOCTYPE gui>
+<gui name="dolphin" translationDomain="kxmlgui5" version="30">
+ <MenuBar alreadyVisited="1">
+  <Menu name="file" noMerge="1" alreadyVisited="1">
+   <text translationDomain="kxmlgui5">&amp;File</text>
+   <Action name="file_new"/>
+   <Separator weakSeparator="1"/>
    <Action name="new_menu"/>
    <Action name="file_new"/>
    <Action name="new_tab"/>
@@ -18,12 +21,33 @@
    <Action name="show_target"/>
    <Separator/>
    <Action name="properties"/>
+   <Separator weakSeparator="1"/>
+   <Action name="file_close"/>
+   <Separator weakSeparator="1"/>
+   <Action name="file_quit"/>
   </Menu>
-  <Menu name="edit">
+  <Menu name="edit" noMerge="1" alreadyVisited="1">
+   <text translationDomain="kxmlgui5">&amp;Edit</text>
+   <Action name="edit_undo"/>
+   <Separator weakSeparator="1"/>
+   <Action name="edit_cut"/>
+   <Action name="edit_copy"/>
+   <Action name="edit_paste"/>
+   <Separator weakSeparator="1"/>
+   <Action name="edit_select_all"/>
+   <Separator weakSeparator="1"/>
+   <Action name="edit_find"/>
+   <Separator weakSeparator="1"/>
    <Action name="edit_select_all"/>
    <Action name="invert_selection"/>
   </Menu>
-  <Menu name="view">
+  <Menu name="view" noMerge="1" alreadyVisited="1">
+   <text translationDomain="kxmlgui5">&amp;View</text>
+   <Action name="view_zoom_in"/>
+   <Action name="view_zoom_out"/>
+   <Separator weakSeparator="1"/>
+   <Action name="view_redisplay"/>
+   <Separator weakSeparator="1"/>
    <Action name="view_zoom_in"/>
    <Action name="view_zoom_reset"/>
    <Action name="view_zoom_out"/>
@@ -41,19 +65,26 @@
    <Action name="stop"/>
    <Separator/>
    <Action name="panels"/>
-   <Menu icon="edit-select-text" name="location_bar">
-    <text context="@title:menu">Location Bar</text>
+   <Menu name="location_bar" noMerge="1" icon="edit-select-text">
+    <text translationDomain="dolphin" context="@title:menu">Location Bar</text>
     <Action name="editable_location"/>
     <Action name="replace_location"/>
    </Menu>
    <Separator/>
    <Action name="view_properties"/>
   </Menu>
-  <Menu name="go">
+  <Menu name="go" noMerge="1" alreadyVisited="1">
+   <text translationDomain="kxmlgui5">&amp;Go</text>
+   <Action name="go_up"/>
+   <Action name="go_back"/>
+   <Action name="go_forward"/>
+   <Action name="go_home"/>
+   <Separator weakSeparator="1"/>
    <Action name="bookmarks"/>
    <Action name="closed_tabs"/>
   </Menu>
-  <Menu name="tools">
+  <Menu name="tools" noMerge="1" alreadyVisited="1">
+   <text translationDomain="kxmlgui5">&amp;Tools</text>
    <Action name="show_filter_bar"/>
    <Action name="open_preferred_search_tool"/>
    <Action name="open_terminal"/>
@@ -61,16 +92,42 @@
    <Action name="compare_files"/>
    <Action name="change_remote_encoding"/>
   </Menu>
+  <Menu name="settings" noMerge="1">
+   <text translationDomain="kxmlgui5">&amp;Settings</text>
+   <Action name="options_show_menubar"/>
+   <Merge name="StandardToolBarMenuHandler"/>
+   <Merge name="KMDIViewActions"/>
+   <Separator weakSeparator="1"/>
+   <Action name="options_configure_keybinding"/>
+   <Action name="options_configure_toolbars"/>
+   <Action name="options_configure"/>
+  </Menu>
+  <Separator weakSeparator="1"/>
+  <Menu name="help" noMerge="1">
+   <text translationDomain="kxmlgui5">&amp;Help</text>
+   <Action name="help_contents"/>
+   <Action name="help_whats_this"/>
+   <Separator weakSeparator="1"/>
+   <Action name="help_report_bug"/>
+   <Separator weakSeparator="1"/>
+   <Action name="help_donate"/>
+   <Separator weakSeparator="1"/>
+   <Action name="switch_application_language"/>
+   <Separator weakSeparator="1"/>
+   <Action name="help_about_app"/>
+   <Action name="help_about_kde"/>
+  </Menu>
  </MenuBar>
- <ToolBar noMerge="1" name="mainToolBar">
-  <text context="@title:menu">Main Toolbar</text>
+ <ToolBar name="mainToolBar" noMerge="1" alreadyVisited="1">
+  <text translationDomain="dolphin" context="@title:menu">Main Toolbar</text>
   <Action name="go_back"/>
   <Action name="go_forward"/>
-  <Separator name="separator_1"/>
+  <Action name="go_up"/>
+  <Separator name="separator_0"/>
   <Action name="icons"/>
   <Action name="compact"/>
   <Action name="details"/>
-  <Separator name="separator_0"/>
+  <Separator name="separator_1"/>
   <Action name="sort"/>
   <Spacer name="spacer_0"/>
   <Action name="split_view"/>
@@ -116,25 +173,25 @@
   </disable>
  </State>
  <ActionProperties scheme="Default">
-  <Action priority="0" name="compact"/>
-  <Action shortcut="Ctrl+Shift+N" name="create_dir"/>
-  <Action priority="0" name="details"/>
-  <Action priority="0" name="edit_copy"/>
-  <Action shortcut="Ctrl+X" priority="0" name="edit_cut"/>
-  <Action priority="0" name="edit_paste"/>
-  <Action priority="0" name="go_back"/>
-  <Action priority="0" name="go_forward"/>
-  <Action priority="0" name="go_home"/>
-  <Action priority="0" name="go_up"/>
-  <Action priority="0" name="icons"/>
-  <Action shortcut="Ctrl+T; " name="new_tab"/>
-  <Action shortcut="Shift+F4; Ctrl+Shift+T" name="open_terminal"/>
-  <Action shortcut="F4; Shift+T" name="show_terminal_panel"/>
-  <Action priority="0" name="stop"/>
-  <Action priority="0" name="toggle_search"/>
-  <Action shortcut="" name="undo_close_tab"/>
-  <Action priority="0" name="view_zoom_in"/>
-  <Action priority="0" name="view_zoom_out"/>
-  <Action priority="0" name="view_zoom_reset"/>
+  <Action name="compact" priority="0"/>
+  <Action name="create_dir" shortcut="Ctrl+Shift+N"/>
+  <Action name="details" priority="0"/>
+  <Action name="edit_copy" priority="0"/>
+  <Action name="edit_cut" priority="0" shortcut="Ctrl+X"/>
+  <Action name="edit_paste" priority="0"/>
+  <Action name="go_back" priority="0"/>
+  <Action name="go_forward" priority="0"/>
+  <Action name="go_home" priority="0"/>
+  <Action name="go_up" priority="0"/>
+  <Action name="icons" priority="0"/>
+  <Action name="new_tab" shortcut="Ctrl+T; "/>
+  <Action name="open_terminal" shortcut="Shift+F4; Ctrl+Shift+T"/>
+  <Action name="show_terminal_panel" shortcut="F4; Shift+T"/>
+  <Action name="stop" priority="0"/>
+  <Action name="toggle_search" priority="0"/>
+  <Action name="undo_close_tab" shortcut=""/>
+  <Action name="view_zoom_in" priority="0"/>
+  <Action name="view_zoom_out" priority="0"/>
+  <Action name="view_zoom_reset" priority="0"/>
  </ActionProperties>
-</kpartgui>
+</gui>
