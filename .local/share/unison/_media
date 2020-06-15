@@ -1,0 +1,10 @@
+#
+# Unison profile for synchonizing media files.
+#
+
+# Paths to synchronize.
+path = Audios
+path = Books
+path = Pictures
+path = Resources
+path = Videos

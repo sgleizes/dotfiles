@@ -1,0 +1,10 @@
+#
+# Unison profile for synchonizing media files with the Homeworld HDD.
+#
+
+include _homeworld
+include _media
+
+# Label and shortcut key for this profile in the graphical UI.
+label = Synchronize media files with the Homeworld HDD
+key = 4

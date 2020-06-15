@@ -1,0 +1,31 @@
+#
+# Unison profile for synchronizing with the Homeworld HDD.
+#
+
+include _common
+
+# Synchronization roots.
+root = /home/psydev
+root = /run/media/psydev/HOMEWORLD
+
+# Make sure not to do anything if the drive is not mounted.
+mountpoint = Documents
+
+# NTFS: Use modification time and length instead of reading the full contents of every file.
+fastcheck = true
+# NTFS: Do not propagate permissions.
+perms = 0
+
+# Do not delete anything from HOME.
+nodeletion = /home/psydev
+
+# Only sync new or updated media from HOME.
+nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /home/psydev
+noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /home/psydev
+nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /run/media/psydev/HOMEWORLD
+
+# Ignored projects.
+ignore = Path Projects/*/archive
+ignore = Path Projects/env/{aur,dotfiles}
+ignore = Path Projects/misc
+ignore = Path Projects/studies
