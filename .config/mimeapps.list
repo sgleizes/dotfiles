@@ -18,3 +18,4 @@ x-scheme-handler/http=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/https=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/mailspring=mailspring.desktop
 x-scheme-handler/mailto=mailspring.desktop;
+x-scheme-handler/sgnl=Electron.desktop
