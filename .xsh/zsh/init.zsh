@@ -36,6 +36,8 @@ xsh module exa     interactive
 xsh module gpg     interactive:login
 xsh module pacman  interactive
 xsh module pager   interactive:env
+xsh module rclone  interactive
+xsh module restic  interactive
 xsh module ripgrep interactive
 xsh module trash   interactive
 xsh module unison  interactive:login

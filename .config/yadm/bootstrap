@@ -37,6 +37,8 @@ PACKAGE_LIST=(
   neofetch
   pacman-contrib
   pastebinit
+  rclone
+  restic
   ripgrep
   rsync
   strace
