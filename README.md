@@ -64,6 +64,8 @@ For some programs, a configuration file is provided in [.config](.config).
 - [jq](https://github.com/stedolan/jq) - Command line JSON processor.
 - [kmon](https://github.com/orhun/kmon) - Linux kernel manager and activity monitor.
 - [lazygit](https://github.com/jesseduffield/lazygit) - Simple terminal UI for `git` commands.
+- [rclone](https://github.com/rclone/rclone) - Rsync for cloud storage.
+- [restic](https://github.com/restic/restic) - Fast, secure, efficient backup program.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A modern version of `grep`.
 - [rsync](https://github.com/WayneD/rsync) - Versatile file copying tool for remote and local files.
 - [ssh](https://www.openssh.com/) - OpenSSH remote login client.
