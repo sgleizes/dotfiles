@@ -33,7 +33,6 @@ export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 export KDEHOME="$XDG_CONFIG_HOME/kde4" # legacy way for KDE4 applications
 export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
-export PSQL_HISTORY="$XDG_DATA_HOME/psql/history"
 export WGETRC="$XDG_CONFIG_HOME/wget/config"
 export GOPATH="$XDG_DATA_HOME/go"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
