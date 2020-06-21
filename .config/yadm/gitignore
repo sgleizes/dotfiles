@@ -19,8 +19,9 @@
 /.mozilla/
 /.pki/
 
-# XDG cache directory.
+# XDG cache/lib directory.
 /.cache/
+/.local/lib/
 
 # Toplevel shell dotfiles, linked to xsh runcoms.
 /.profile
