@@ -16,8 +16,10 @@
 /QtProject.conf
 /QtProject/
 /Riot/
+/Signal/
 /autostart/
 /cef_user_data/
+/configstore/
 /dconf/
 /elinks/
 /kde.org/
