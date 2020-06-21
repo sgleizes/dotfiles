@@ -138,11 +138,23 @@ if (( $+commands[espeak-ng] )) {
 # Golang
 #
 
-# Add installed go binaries to PATH.
-path+=($GOPATH/bin)
+if (( $+commands[go] )) {
+  # Add installed go binaries to PATH.
+  path+=($GOPATH/bin)
 
-# Use the module-aware mode by default.
-export GO111MODULE='on'
+  # Use the module-aware mode by default.
+  export GO111MODULE='on'
+}
+
+
+#
+# Node
+#
+
+if (( $+commands[npm] )) {
+  # Add installed node binaries to PATH.
+  path+=($XDG_LIB_HOME/npm/bin)
+}
 
 #
 # External core plugins

@@ -26,21 +26,29 @@ export ZDATADIR=${ZDATADIR:-$XDG_DATA_HOME/zsh}
 export ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
 command mkdir -p $ZDATADIR $ZCACHEDIR
 
-# Setup XDG paths for programs supporting environment overrides.
+# XDG_LIB_HOME environment overrides for package managers.
+export CARGO_HOME="$XDG_LIB_HOME/cargo"
+export GOPATH="$XDG_LIB_HOME/go"
+export NPM_CONFIG_PREFIX="$XDG_LIB_HOME/npm"
+
+# XDG_CONFIG_HOME environment overrides.
 export ELINKS_CONFDIR="$XDG_CONFIG_HOME/elinks"
 export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 export KDEHOME="$XDG_CONFIG_HOME/kde4" # legacy way for KDE4 applications
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
-export PSQL_HISTORY="$XDG_DATA_HOME/psql/history"
 export WGETRC="$XDG_CONFIG_HOME/wget/config"
-export GOPATH="$XDG_DATA_HOME/go"
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
+
+# XDG_DATA_HOME environment overrides.
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node/repl_history"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+
+# XDG_CACHE_HOME environment overrides.
 export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
 
-# This must match the display manager setting.
+# XDG path to the X server auth cookie. This must match the display manager setting.
 # It should be located in XDG_RUNTIME_DIR but sddm does not allow that.
 [[ -f "$XDG_CACHE_HOME/Xauthority" ]] \
   && export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
@@ -48,6 +56,7 @@ export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
 # Create parent directories for programs requiring it.
 command mkdir -p \
   ${RANDFILE:h} \
+  ${NODE_REPL_HISTORY:h} \
   ${PSQLRC:h} \
   ${PSQL_HISTORY:h}
 
