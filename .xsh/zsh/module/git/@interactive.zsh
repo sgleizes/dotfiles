@@ -128,14 +128,11 @@ function git $_git_wrapper_commands {
 }
 
 # Load completions for git-extras.
-# TODO: Completion patch has been merged, remove when the next version is released
 # NOTE: These completions are not defined using `compdef`, they only extend
 # the _git completion function that ships with zsh by using the user-commands style.
 # Therefore, it does not have any loading order requirement.
 if (( $+commands[git-extras] )) {
-  zinit ice wait'0b' lucid id-as'tj/git-extras-completion' reset \
-    atclone"sed -i '/_git-release()/,+8s/'\''$/'\'' \\\\/' git-extras-completion" \
-    atpull'%atclone' nocompile'!' \
+  zinit ice wait'0b' lucid id-as'tj/git-extras-completion' \
     atload'_update_git_user_commands'
   zinit snippet "https://github.com/tj/git-extras/raw/$(git-extras -v)/etc/git-extras-completion.zsh"
 }
