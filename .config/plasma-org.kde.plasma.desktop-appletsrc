@@ -77,8 +77,8 @@ plugin=org.kde.weatherWidget
 layoutType=Compact
 
 [Containments][2][Applets][33][Configuration][General]
-placeIndex=1
-places=[{"providerId":"owm","placeIdentifier":"2960316","placeAlias":"Luxembourg"},{"providerId":"yrno","placeIdentifier":"Luxembourg/Luxembourg/Luxembourg","placeAlias":"Luxembourg"}]
+placeIndex=2
+places=[{"providerId":"yrno","placeIdentifier":"Luxembourg/Luxembourg/Luxembourg","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"2960316","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"6451007","placeAlias":"Annemasse"}]
 
 [Containments][2][Applets][35]
 immutability=1
