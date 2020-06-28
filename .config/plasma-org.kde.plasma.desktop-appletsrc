@@ -222,11 +222,15 @@ plugin=com.github.davide-sd.ipaddress
 [Containments][2][Applets][53][Configuration]
 
 [Containments][2][Applets][53][Configuration][Appearance]
+labelColor=#ffffff
 layoutRow=false
+linkColor=#38a0d5
 showHostname=true
+useLinkThemeColor=false
 
 [Containments][2][Applets][53][Configuration][General]
 showFlagInCompact=true
+showVPNIcon=true
 widgetIconSize=2
 
 [Containments][2][Applets][54]
