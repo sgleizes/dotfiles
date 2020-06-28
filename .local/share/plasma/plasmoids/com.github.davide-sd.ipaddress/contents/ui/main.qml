@@ -199,14 +199,14 @@ Item {
 	}
 
 	function abortTooLongConnection() {
-		if (loadingData) {
-			debug_print("### [abortTooLongConnection]: Still loading data")
-			return
-		}
+//		if (loadingData) {
+//			debug_print("### [abortTooLongConnection]: Still loading data")
+//			return
+//		}
 
 		var now = (new Date()).getTime()
 		debug_print("### [abortTooLongConnection]: loadingDataSinceTime: " + loadingDataSinceTime + " - loadingDataTimeoutMs: " + loadingDataTimeoutMs + " - now: " + now)
-		if (loadingDataSinceTime + loadingDataTimeoutMs < nowTime) {
+		if (loadingDataSinceTime + loadingDataTimeoutMs < now) {
 			debug_print("### [abortTooLongConnection]: Time out reached. Aborting request.")
 			request.abort()
 			loadingData = false
