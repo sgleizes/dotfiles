@@ -41,19 +41,33 @@ Item {
     readonly property bool showHostname: plasmoid.configuration.showHostname
     readonly property int mapSize: plasmoid.configuration.mapSize
     readonly property int mapZoomLevel: plasmoid.configuration.mapZoomLevel
+    readonly property bool useLabelThemeColor: plasmoid.configuration.useLabelThemeColor
+    readonly property string labelColor: plasmoid.configuration.labelColor
+    readonly property bool useLinkThemeColor: plasmoid.configuration.useLinkThemeColor
+    readonly property string linkColor: theme.linkColor // plasmoid.configuration.linkColor
 
-    property string mapLink: "https://www.openstreetmap.org/#map=" + mapZoomLevel + "/" + latitude + "/" + longitude
+    // property string mapLink: "https://www.openstreetmap.org/#map=" + mapZoomLevel + "/" + latitude + "/" + longitude
+    property string mapLink: "https://www.openstreetmap.org/?mlat=" + latitude + "&mlon=" + longitude + "#map=" + mapZoomLevel + "/" + latitude + "/" + longitude
 
-    PlasmaCore.DataSource {
-		id: executable
-		engine: "executable"
-		connectedSources: []
-		function exec(cmd) {
-			connectSource(cmd)
-		}
-		signal exited(int exitCode, int exitStatus, string stdout, string stderr)
+    function addMarker(latitude, longitude) {
+        debug_print("### addMarker init")
+        var component = Qt.createComponent("Marker.qml")
+        if( component.status != Component.Ready )
+        {
+            if( component.status == Component.Error )
+                debug_print("### Error creating Marker:"+ component.errorString() );
+            return; // or maybe throw
+        }
+        // removing previous markers
+        my_map.clearMapItems()
+        var item = component.createObject(
+                        grid, {
+                            coordinate: QtPositioning.coordinate(latitude, longitude)
+                        })
+        my_map.addMapItem(item)
+        debug_print("### Added Marker: lat=" + latitude + "; long=" + longitude)
     }
-
+    
     GridLayout {
         id: grid
         rowSpacing: 10
@@ -63,7 +77,9 @@ Item {
         Item {
             width: mapSize
             height: width
-            anchors.horizontalCenter: layoutRow ? undefined : parent.horizontalCenter
+            // // Fix issue https://github.com/Davide-sd/ip_address/issues/8
+            Layout.alignment: layoutRow ? undefined : Qt.AlignHCenter
+            // anchors.horizontalCenter: layoutRow ? undefined : parent.horizontalCenter
 
             Plugin {
                 id: mapPlugin
@@ -78,11 +94,17 @@ Item {
             }
 
             Map {
+                id: my_map
                 anchors.fill: parent
-                // width: mapSize
-                // height: width
                 plugin: mapPlugin
-                center: jsonData !== undefined ? QtPositioning.coordinate(latitude, longitude) : QtPositioning.coordinate(41.8902, 12.4922) // Rome
+                center: {
+                    if (jsonData !== undefined) {
+                        addMarker(latitude, longitude)
+                        return QtPositioning.coordinate(latitude, longitude)
+                    }
+                    addMarker(41.8902, 12.4922)
+                    returnQtPositioning.coordinate(41.8902, 12.4922) // Rome
+                }
                 zoomLevel: mapZoomLevel
             }
         }
@@ -97,6 +119,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("IP address:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -105,6 +128,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("Country:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -113,6 +137,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("Region:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -121,6 +146,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("Postal Code:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -129,6 +155,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("City:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -137,6 +164,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("Coordinates:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
             }
 
             LabelDelegate {
@@ -145,6 +173,7 @@ Item {
 
             QtControls.Label {
                 text: i18n("Hostname:")
+                color: useLabelThemeColor ? theme.textColor : labelColor
                 visible: showHostname
             }
 
@@ -155,8 +184,10 @@ Item {
 
             QtControls.Label {
                 Layout.columnSpan: 2
-                anchors.horizontalCenter: parent.horizontalCenter
-                color: theme.linkColor
+                // Fix issue https://github.com/Davide-sd/ip_address/issues/8
+                Layout.alignment: Qt.AlignHCenter
+                // anchors.horizontalCenter: parent.horizontalCenter
+                color: useLinkThemeColor ? theme.highlightColor : linkColor
                 font.bold: true
                 wrapMode: Text.Wrap
                 text: jsonData !== undefined ? i18n("Open map in the browser") : "N/A"
@@ -167,6 +198,20 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                     hoverEnabled: false
                     onClicked: Qt.openUrlExternally(mapLink)
+                }
+            }
+
+            QtControls.Button {
+                Layout.columnSpan: 2
+                // Fix issue https://github.com/Davide-sd/ip_address/issues/8
+                Layout.alignment: Qt.AlignHCenter
+                // anchors.horizontalCenter: parent.horizontalCenter
+                Layout.preferredWidth: parent.width
+                text: i18n("Update")
+                onClicked: {
+                    debug_print("### ['Update Infos' onClicked]")
+                    reloadData()
+                    abortTooLongConnection()
                 }
             }
         }
