@@ -231,6 +231,7 @@ useLinkThemeColor=false
 [Containments][2][Applets][53][Configuration][General]
 showFlagInCompact=true
 showVPNIcon=true
+showWidgetLabel=false
 widgetIconSize=2
 
 [Containments][2][Applets][54]
