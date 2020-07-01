@@ -31,3 +31,6 @@
 
 [filter "vlc-interface-state"]
   clean = "sed -n '/\\[.*Profiles\\]/,/^\\s*$/p'"
+
+[filter "bleachbit-interface-state"]
+  clean = "sed -E '/^(window_|hashsalt)/d'"

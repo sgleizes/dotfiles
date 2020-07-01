@@ -14,3 +14,4 @@ filelightrc            filter=filelight-interface-state
 spectaclerc            filter=spectacle-interface-state
 lutris.conf            filter=lutris-interface-state
 vlc-qt-interface.conf  filter=vlc-interface-state
+bleachbit.ini          filter=bleachbit-interface-state
