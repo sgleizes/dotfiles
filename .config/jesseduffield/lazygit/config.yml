@@ -19,10 +19,8 @@ gui:
 git:
   paging:
     colorArg: always
-    pager: delta --tabs 2 --paging=never --24-bit-color=never --theme="OneHalfDark"
-      --commit-style=box --commit-color=247
-      --file-style=box --file-color=12 --hunk-color=12
-      --plus-color=22 --plus-emph-color=28
-      --minus-color=52 --minus-emph-color=88
-      --keep-plus-minus-markers
+    pager: delta
+      --paging=never
+      --24-bit-color=never
+      --features "256color decorations line-numbers navigate"
     autoFetch: false
