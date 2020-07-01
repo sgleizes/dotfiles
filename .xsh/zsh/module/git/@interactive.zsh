@@ -56,27 +56,6 @@ if (( $+commands[lazygit] )) {
   bindkey "$keys[Control]O$keys[Control]G" open-lazygit
 }
 
-# Support for https://github.com/dandavison/delta.
-if (( $+commands[delta] )) {
-  function delta {
-    if (( $# > 0 )) {
-      command delta "$@"
-      return
-    }
-
-    # Default options for delta.
-    # NOTE: There is currently no way to set a default config, so this is duplicated
-    # in the git and lazygit configuration files for now.
-    command delta \
-      --tabs 2 --theme='OneHalfDark' \
-      --commit-style=box --commit-color=247 \
-      --file-style=box --file-color=12 --hunk-color=12 \
-      --plus-color=22 --plus-emph-color=28 \
-      --minus-color=52 --minus-emph-color=88 \
-      --keep-plus-minus-markers
-  }
-}
-
 # List all git wrapper commands and aliases.
 function _list_git_wrappers {
   local -U git_commands=(git $_git_wrapper_commands)

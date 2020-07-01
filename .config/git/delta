@@ -3,15 +3,58 @@
 # https://github.com/dandavison/delta
 #
 
-# Assuming 24-bit color support.
 [core]
-  pager = delta --tabs=2 --theme="OneHalfDark" \
-    --commit-style=box --commit-color=247 \
-    --file-style=box --file-color=12 --hunk-color=12 \
-    --plus-color=22 --plus-emph-color=28 \
-    --minus-color=52 --minus-emph-color=88 \
-    --keep-plus-minus-markers
+  pager = delta
+
 [interactive]
-  diffFilter = delta --color-only --theme="OneHalfDark" \
-    --plus-color=22 --plus-emph-color=28 \
-    --minus-color=52 --minus-emph-color=88
+  diffFilter = delta --color-only
+
+[delta]
+  features = truecolor decorations line-numbers navigate
+  syntax-theme = OneHalfDark
+  tabs = 2
+
+[delta "truecolor"]
+  zero-style = syntax
+  plus-style = syntax "#004200"
+  plus-non-emph-style = syntax "#004200"
+  plus-emph-style = normal "#007000"
+  plus-empty-line-marker-style = syntax "#004200"
+  minus-style = normal "#420000"
+  minus-non-emph-style = normal "#420000"
+  minus-emph-style = normal "#700000"
+  minus-empty-line-marker-style = normal "#420000"
+  whitespace-error-style = reverse brightyellow
+
+[delta "256color"]
+  zero-style = syntax
+  plus-style = normal 22
+  plus-non-emph-style = normal 22
+  plus-emph-style = normal 28
+  plus-empty-line-marker-style = normal 22
+  minus-style = normal 52
+  minus-non-emph-style = normal 52
+  minus-emph-style = normal 88
+  minus-empty-line-marker-style = normal 52
+  whitespace-error-style = reverse brightyellow
+
+[delta "decorations"]
+  commit-style = raw
+  commit-decoration-style = ul ol 250
+  file-style = bold normal
+  file-decoration-style = box brightblue
+  hunk-header-style = syntax
+  hunk-header-decoration-style = ul brightblue
+
+[delta "line-numbers"]
+  line-numbers = true
+  line-numbers-zero-style = 240
+  line-numbers-left-style = brightblue
+  line-numbers-right-style = brightblue
+
+[delta "navigate"]
+  navigate = false # disabled to avoid search error when no commit/file is found
+  file-modified-label = Δ
+  file-added-label = Δ added:
+  file-removed-label = Δ removed:
+  file-renamed-label = Δ renamed:

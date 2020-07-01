@@ -65,7 +65,7 @@
   iap = add --patch
   iu  = add --update
   id  = diff --cached
-  idd = -c core.pager='less -FR' diff --cached --word-diff # override delta for word-diff
+  idd = diff --cached --word-diff
   ir  = restore --staged
   irp = restore --staged --patch
   ix = rm -r --cached
@@ -117,7 +117,7 @@
   ws  = -p status
   wss = -p status --no-short
   wd  = diff
-  wdd = -c core.pager='less -FR' diff --word-diff # override delta for word-diff
+  wdd = diff --word-diff
   wr  = restore --staged --worktree
   wrp = restore --staged --worktree --patch
   wc  = clean

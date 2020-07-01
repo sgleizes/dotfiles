@@ -74,6 +74,16 @@ alias paclu='paclist-unrequired'
 alias pacf='pacfiles'
 alias pacw='pacweb'
 
+# Additional functions using `fd`.
+if (( $+commands[fd] )) {
+  # List pacnew and pacsave files.
+  function pacnew {
+    fd -HI ".+\.pac(new|save)" /etc
+  }
+
+  alias pacn='pacnew'
+}
+
 # Additional functions using the fuzzy finder.
 if (( $+commands[fzf] )) {
   # Browse installed packages with a preview of package information and files.
