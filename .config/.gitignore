@@ -60,7 +60,8 @@
 /hub
 /importwizardrc
 /incidenceeditorrc
-/kactivitymanagerd*
+/kactivitymanagerd-statsrc
+/kactivitymanagerd-switcher
 /kate*
 /kcalcrc
 /kcharselectrc
