@@ -14,8 +14,11 @@
 /^(Height|Width|State|[Hh]istory|ToolBarsMovable|LaunchCounts|\\w*WindowSize|\\w*SplitterSizes|\\w*ColumnWidth|Latitude|Longitude)/d;\
 '"
 
+[filter "kde-activities"]
+  clean = "sed -E '/\\s*\\[(main|.*VirtualDesktopSwitch)\\]/,/^\\s*$/d'"
+
 [filter "plasma-applets-state"]
-  clean = "sed -E '/\\s*\\[.*(Dialog|ScreenMapping).*\\]/,/^\\s*$/d;/^(PreloadWeight|lastReloaded|guessed_max_value)/d'"
+  clean = "sed -E '/\\s*\\[.*(Dialog|ScreenMapping).*\\]/,/^\\s*$/d;/^(PreloadWeight|lastReloaded|guessed_max_value|lastUsedActivity)/d'"
 
 [filter "plasma-gtk-gen"]
   clean = "sed 's/# created by KDE Plasma.*/# created by KDE Plasma/'"

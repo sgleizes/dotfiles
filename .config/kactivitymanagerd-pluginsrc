@@ -1,0 +1,5 @@
+[Plugin-org.kde.ActivityManager.Resources.Scoring]
+allowed-applications=dolphin,org.kde.kate,org.kde.krunner,org.kde.systemsettings
+blocked-applications=
+off-the-record-activities=
+

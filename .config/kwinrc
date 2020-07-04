@@ -44,7 +44,7 @@ BottomRight=None
 Left=None
 Right=None
 Top=None
-TopLeft=None
+TopLeft=ActivityManager
 TopRight=None
 
 [ModifierOnlyShortcuts]

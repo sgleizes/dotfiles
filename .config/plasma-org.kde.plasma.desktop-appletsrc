@@ -3,6 +3,24 @@ MidButton;NoModifier=org.kde.paste
 RightButton;NoModifier=org.kde.contextmenu
 wheel:Vertical;NoModifier=org.kde.switchdesktop
 
+[ActionPlugins][0][RightButton;NoModifier]
+_add panel=true
+_context=true
+_lock_screen=true
+_logout=true
+_run_command=true
+_sep1=true
+_sep2=true
+_sep3=true
+_wallpaper=true
+add widgets=true
+configure=true
+configure shortcuts=false
+edit mode=true
+manage activities=true
+remove=true
+run associated application=true
+
 [ActionPlugins][1]
 RightButton;NoModifier=org.kde.contextmenu
 
@@ -21,8 +39,10 @@ wallpaperplugin=org.kde.potd
 [Containments][1][General]
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=739
-ToolBoxButtonY=28
+arrangement=1
 filterMimeTypes=\\0
+iconSize=3
+textLines=1
 
 [Containments][1][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -100,8 +120,8 @@ dontOverrideOpacity=true
 indicatorColor=#1c9bf5
 invertIndicator=true
 invertWheelSwitch=true
+labelStyle=0
 plusButtonSymbol=⣿
-renameNewDesktop=true
 
 [Containments][2][Applets][45]
 immutability=1
@@ -266,27 +286,54 @@ plugin=org.kde.plasma.systemtray
 [Containments][2][Applets][6][Configuration]
 SystrayContainmentId=7
 
-[Containments][2][Applets][9]
+[Containments][2][Applets][60]
 immutability=1
-plugin=org.kde.plasma.showdesktop
+plugin=org.kde.plasma.showActivityManager
 
-[Containments][2][Applets][9][Configuration]
+[Containments][2][Applets][60][Configuration][General]
+showActivityName=false
 
 [Containments][2][Configuration]
 
 [Containments][2][General]
-AppletOrder=35;47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;9
+AppletOrder=35;47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;60
 
-[Containments][34]
-activityId=871efd5a-b1dc-415f-af64-86aceebafb29
+[Containments][61]
+activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
 formfactor=0
 immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.potd
+
+[Containments][61][General]
+arrangement=1
+iconSize=3
+textLines=1
+url=file:///home/psydev/Projects
+
+[Containments][61][Wallpaper][org.kde.potd][General]
+Category=1065376
+FillMode=2
+Provider=epod
+
+[Containments][63]
+activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
+formfactor=0
+immutability=1
+lastScreen=0
+location=0
+plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.image
 
-[Containments][34][Configuration]
+[Containments][63][General]
+ToolBoxButtonState=topcenter
+ToolBoxButtonX=739
+ToolBoxButtonY=28
+
+[Containments][63][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Autumn/contents/images/2560x1600.jpg
 
 [Containments][7]
 activityId=
@@ -435,4 +482,7 @@ colors=limegreen,#ff557f
 labels=\\0
 last_filter=acpi/Thermal_Zone
 names=sys.acpi/Thermal_Zone/6-pch_skylake/Temperature,sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
+
+[Containments2Appletsts][60][Configuration][General]
+showActivityName=false
 
