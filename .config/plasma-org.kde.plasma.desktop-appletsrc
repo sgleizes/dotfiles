@@ -305,13 +305,17 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][61][General]
 arrangement=1
 iconSize=3
 textLines=1
 url=file:///home/psydev/Projects
+
+[Containments][61][Wallpaper][org.kde.image][General]
+FillMode=1
+Image=file:///home/psydev/Pictures/Wallpapers/Work.jpg
 
 [Containments][61][Wallpaper][org.kde.potd][General]
 Category=1065376
