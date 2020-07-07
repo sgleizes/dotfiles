@@ -76,7 +76,6 @@
 /kmail2rc
 /korgacrc
 /korganizerrc
-/kprivacyrc
 /krenamerc
 /ksysguardrc
 /ktrashrc
@@ -94,4 +93,5 @@
 /trashrc
 /webengineurlinterceptoradblockrc
 /xdg-desktop-portal-kderc
+/YACReaderrc
 /zoomus.conf
