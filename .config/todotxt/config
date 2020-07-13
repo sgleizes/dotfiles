@@ -1,0 +1,31 @@
+#
+# Todo.txt configuration file.
+# https://github.com/todotxt/todo.txt-cli
+#
+
+# Default todotxt configuration options.
+export TODOTXT_DEFAULT_ACTION='ls'
+export TODOTXT_DATE_ON_ADD='1'
+export TODOTXT_PRIORITY_ON_ADD='D'
+
+# Add-on directory.
+export TODO_ACTIONS_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/todotxt/actions"
+
+# Todo directory and files.
+export TODO_DIR="$HOME/Desktop/Notes/todo"
+export TODO_FILE="$TODO_DIR/todo.txt"
+export DONE_FILE="$TODO_DIR/done.txt"
+export REPORT_FILE="$TODO_DIR/report.txt"
+
+# Highlighting for tasks with priorities.
+export PRI_A=$LIGHT_RED
+export PRI_B=$YELLOW
+export PRI_C=$LIGHT_GREEN
+export PRI_D=$LIGHT_BLUE
+
+# Highlighting for done tasks that haven't been archived yet.
+export COLOR_DONE=$LIGHT_GREY
+
+# Highlighting for projects and contexts.
+export COLOR_PROJECT=$BROWN
+export COLOR_CONTEXT=$CYAN

@@ -1,0 +1,108 @@
+#!/bin/bash
+#
+# Edit a single task in the default editor.
+# Source: https://github.com/severoraz/todotxt-cli-tedit/blob/master/tedit
+#
+
+# AUTHOR: severoraz@gmail.com
+# LICENSE: CC-BY-SA v3.0
+
+# Set self name
+self=$(basename $0)
+
+# Flags
+safecheck=0
+verbose=0
+
+case $1 in
+"usage")
+    echo "$self ITEM# [BASENAME]
+    Edit task ITEM# from \$TODO_DIR/BASENAME.txt in \$EDITOR.
+    If BASENAME is not given, defaults to 'todo'."
+    ;;
+*)
+    # Open up your heart and just let it begin
+    usagestr="usage: $TODO_SH $self ITEM# [BASENAME]
+parameter conditions:
+ * ITEM# must be an integer
+ * BASENAME.txt must exist in $TODO_DIR/"
+
+    # Get line number
+    if [[ -z $2 ]]; then
+        # $2 is unset, display usage (default action for wrong command
+        # parametrization
+        echo "$usagestr" && exit
+    else
+        line=$2
+        # Fail if $line is not an integer
+        [ "${line//[0-9]/}" ] && echo "$usagestr" && exit
+    fi
+
+    # Set source file
+    if [[ -z $3 ]]; then
+        srcfile="$TODO_FILE"
+    else
+        srcfile="$TODO_DIR/$3"
+    fi
+
+    # Make tmpfile at $TODO_DIR
+    tmpfile=$(mktemp -p "$TODO_DIR")
+
+    # Write line to tmpfile
+    origstr="$(sed -n ${line}p $srcfile)"
+    echo "$origstr" > $tmpfile
+
+    # Edit tmpfile in editor of choice
+    $(echo $EDITOR) $tmpfile
+    repstr="$(cat $tmpfile | sed -z 's/\n/\\n/g')"
+    repstr="${repstr::-2}"
+    # echo repstr: "$repstr"
+
+    # Compare lines (why proceed if they're equal?)
+    # If lines are equal,
+    if [ "$origstr" = "$repstr" ]; then
+        # notify
+        if [ $verbose -eq 1 ] || [ $safecheck -eq 1 ]; then
+            echo "$self: Lines are equal. No changes applied."
+        fi
+    # Otherwise, lines were indeed modified
+    else
+
+        # (optional) Prompt user to accept changes
+        choice=""
+        if [ $safecheck == 1 ]; then
+            # Ask for choice
+            echo "$self: Do you wish to replace this line:"
+            echo -e "\t$origstr"
+            echo "with this line?"
+            echo -e "\t$repstr"
+            echo -n "Y/n: "
+            # Read choice
+            read choice;
+        fi
+
+        # Interpret choice
+        # If choice is not empty or "n" or "N", exit without applying changes
+        if [ ! -z "${choice}" ] && [ "${choice,,}" == "n" ]; then
+            # Notify that changes were aborted
+            if [ $safecheck == 1 ] || [ $verbose == 1 ]; then
+                echo "$self: Changes aborted."
+            fi
+            # Skip modifying the file
+        # Otherwise, assume changes are to be applied, and apply them
+        else
+            # Replace original line with contents from tmpfile
+            sed -i "${line}c$repstr" $srcfile
+
+            # Notify that changes were applied
+            if [ $safecheck == 1 ] || [ $verbose == 1 ]; then
+                echo "$self: Changes applied."
+            fi
+        fi
+    fi
+
+    # Delete tmpfile
+    rm $tmpfile
+
+    ;;
+esac

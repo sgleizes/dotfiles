@@ -46,8 +46,8 @@ alias lta='lt -u' # list sorted by access time, most recent last
 command -v sl >/dev/null && alias sl='sl -al' # mystyping cure
 
 # Tree directory listing.
-alias t='tree --dirsfirst --filelimit=50'
-alias ta='t -a -I .git'
+alias tl='tree --dirsfirst --filelimit=50'
+alias tla='tl -a -I .git'
 
 # Making/Changing directories.
 alias mkdir='mkdir -pv'

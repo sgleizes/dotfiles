@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Clear terminal and repeat a todo command whenever the todo.txt file changes.
+# Inspired from: https://github.com/kynda/todot.txt-watch/blob/master/watch
+#
+
+# Get action
+action=$1
+shift
+
+# Get command
+cmd=$@
+
+function usage() {
+    echo "  $(basename $0) [COMMAND]"
+    echo "    Clear terminal and repeat a todo command whenever the todo.txt"
+    echo "    file changes."
+    echo ""
+    echo "    Usage"
+    echo "      \$ todo.sh $(basename $0) [COMMAND]"
+    echo ""
+    echo "    Examples"
+    echo "      \$ todo.sh $(basename $0) ls +project"
+    echo "      \$ todo.sh $(basename $0) lsp @contect"
+    echo ""
+    exit
+}
+
+function watch() {
+    clear ; $TODO_FULL_SH $cmd
+
+    watchmedo shell-command "$TODO_DIR" \
+        --pattern "$TODO_FILE" \
+        --command "clear ; $TODO_FULL_SH $cmd" \
+        --wait
+    exit
+}
+
+[ "$action" = "usage" ] && usage
+[ "$action" = "watch" ] && watch
