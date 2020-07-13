@@ -3,6 +3,7 @@ _k_friendly_name=Activity Manager
 switch-to-activity-81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Meta+Volume Mute,none,Switch to activity "Main"
 switch-to-activity-ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Meta+Microphone Mute,none,Switch to activity "Gaming"
 switch-to-activity-b6d870af-2af7-49fe-bce4-606e462b99c6=Meta+Volume Down,none,Switch to activity "Work"
+switch-to-activity-e1fb771e-29d1-4641-a442-b99b55616702=Meta+Volume Up,Meta+Volume Up,Switch to activity "Permaculture"
 
 [KDE Keyboard Layout Switcher]
 Switch keyboard layout to English (US)=none,none,Switch keyboard layout to English (US)

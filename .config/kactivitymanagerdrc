@@ -6,9 +6,11 @@ org.kde.ActivityManager.VirtualDesktopSwitchEnabled=true
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Main
 ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Gaming
 b6d870af-2af7-49fe-bce4-606e462b99c6=Work
+e1fb771e-29d1-4641-a442-b99b55616702=Permaculture
 
 [activities-icons]
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=preferences-desktop-default-applications
 ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=lutris
 b6d870af-2af7-49fe-bce4-606e462b99c6=codeblocks
+e1fb771e-29d1-4641-a442-b99b55616702=calligraflow
 
