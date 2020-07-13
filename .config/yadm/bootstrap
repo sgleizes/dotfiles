@@ -62,6 +62,7 @@ AUR_PACKAGE_LIST=(
   tealdeer-bin
   tmux-git
   tmux-xpanes
+  todotxt
 )
 
 # Configure the local yadm repository.
