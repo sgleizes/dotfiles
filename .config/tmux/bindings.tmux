@@ -151,13 +151,14 @@ bind -N 'Split the current window horizontally' '-' split-window -h -c "#{pane_c
 bind -N 'Split the current window vertically'   '_' split-window -v -c "#{pane_current_path}"
 
 # Window layouts.
-bind -N 'Select the next window layout'     'Space' next-layout
-bind -N 'Select the even-horizontal layout' 'M-1'   select-layout even-horizontal
-bind -N 'Select the even-vertical layout'   'M-2'   select-layout even-vertical
-bind -N 'Select the main-horizontal layout' 'M-3'   select-layout main-horizontal
-bind -N 'Select the main-vertical layout'   'M-4'   select-layout main-vertical
-bind -N 'Select the tiled layout'           'M-5'   select-layout tiled
-bind -N 'Spread the panes out evenly'       'C-e'   select-layout -E
+bind -N 'Select the next window layout'     -r '\' next-layout
+bind -N 'Select the previous window layout' -r '|' previous-layout
+bind -N 'Select the even-horizontal layout'  'M-1' select-layout even-horizontal
+bind -N 'Select the even-vertical layout'    'M-2' select-layout even-vertical
+bind -N 'Select the main-horizontal layout'  'M-3' select-layout main-horizontal
+bind -N 'Select the main-vertical layout'    'M-4' select-layout main-vertical
+bind -N 'Select the tiled layout'            'M-5' select-layout tiled
+bind -N 'Spread the panes out evenly'        'C-e' select-layout -E
 
 # Pane operations.
 bind -N 'Mark the current pane' 'm' select-pane -m
@@ -181,7 +182,7 @@ bind -N 'Select the pane to the left of the active pane'  -r 'Left'  select-pane
 bind -N 'Select the pane to the right of the active pane' -r 'Right' select-pane -R
 
 # Pane resizing.
-bind -N 'Zoom the current pane'                 'z'       resize-pane -Z
+bind -N 'Zoom the current pane'                 'Space'   resize-pane -Z
 bind -N 'Resize the current pane up'         -r 'C-Up'    resize-pane -U
 bind -N 'Resize the current pane down'       -r 'C-Down'  resize-pane -D
 bind -N 'Resize the current pane left'       -r 'C-Left'  resize-pane -L
@@ -237,7 +238,7 @@ bind -N 'Toggle pane synchronization in the current window' 'y' {
 }
 
 # Mouse support.
-bind -N 'Toggle mouse support' '\' {
+bind -N 'Toggle mouse support' 'M-m' {
   set mouse
   display 'mouse #{?mouse,on,off}'
 }
