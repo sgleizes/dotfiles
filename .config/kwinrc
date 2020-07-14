@@ -25,6 +25,9 @@ TouchBorderActivateSphere=9
 BorderActivate=1
 TouchBorderActivate=9
 
+[Effect-DimInactive]
+Strength=15
+
 [Effect-FlipSwitch]
 TabBox=false
 TabBoxAlternative=false
@@ -55,21 +58,41 @@ Active=true
 NightTemperature=4000
 
 [Plugins]
+blurEnabled=true
+contrastEnabled=true
 coverswitchEnabled=true
 desktopchangeosdEnabled=true
+diminactiveEnabled=true
 flipswitchEnabled=true
 highlightwindowEnabled=true
+krohnkiteEnabled=true
 kwin4_effect_fadeEnabled=false
 kwin4_effect_rubberband_maximizeEnabled=false
 kwin4_effect_scaleEnabled=true
 kwin4_effect_squashEnabled=false
 magiclampEnabled=true
+minimizeallEnabled=false
 sheetEnabled=true
 slidingtooltipsEnabled=false
+synchronizeskipswitcherEnabled=false
+videowallEnabled=false
 zoomEnabled=false
 
 [Script-desktopchangeosd]
 PopupHideDelay=500
+
+[Script-krohnkite]
+directionalKeyDwm=false
+directionalKeyFocus=true
+enableFloatingLayout=true
+enableQuarterLayout=true
+enableSpreadLayout=false
+enableStairLayout=false
+keepFloatAbove=false
+layoutPerActivity=true
+layoutPerDesktop=true
+maximizeSoleTile=true
+tileLayoutGap=5
 
 [TabBox]
 ActivitiesMode=1
