@@ -10,9 +10,11 @@
 !/knewstuff3/
 !/konsole/
 /konsole/bookmarks*
+!/kservices5/
 !/ksysguard/
 /ksysguard/QtWebEngine
 !/kxmlgui5/
+!/kwin/
 !/plasma/
 
 # Keymap configurations for zsh.
