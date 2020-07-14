@@ -48,7 +48,6 @@ Left=None
 Right=None
 Top=None
 TopLeft=ActivityManager
-TopRight=None
 
 [ModifierOnlyShortcuts]
 Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose

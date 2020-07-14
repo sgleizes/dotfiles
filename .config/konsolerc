@@ -2,7 +2,7 @@
 DefaultProfile=Dark Unlimited.profile
 
 [Favorite Profiles]
-Favorites=Light Unlimited.profile,Dark Unlimited.profile
+Favorites=Dark Unlimited.profile,Light Unlimited.profile
 
 [KonsoleWindow]
 RemoveWindowTitleBarAndFrame=true

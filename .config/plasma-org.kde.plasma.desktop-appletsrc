@@ -39,6 +39,7 @@ wallpaperplugin=org.kde.potd
 [Containments][1][General]
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=739
+ToolBoxButtonY=28
 arrangement=1
 filterMimeTypes=\\0
 iconSize=3
@@ -78,7 +79,7 @@ plugin=org.kde.plasma.chiliclock
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
 customOffsetY=1
-customSpacing=0.7870370370370371
+customSpacing=1.9444444444444444
 dateFormat=customDate
 enabledCalendarPlugins=/usr/lib/qt/plugins/plasmacalendarplugins/astronomicalevents.so,/usr/lib/qt/plugins/plasmacalendarplugins/holidaysevents.so,/usr/lib/qt/plugins/plasmacalendarplugins/pimevents.so
 fixedFont=true
@@ -86,6 +87,7 @@ fontFamily=Noto Sans Light
 fontSize=16
 showSeconds=true
 showWeekNumbers=true
+use24hFormat=2
 
 [Containments][2][Applets][33]
 immutability=1
@@ -130,7 +132,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][45][Configuration][General]
 expanding=false
-length=14
+length=18
 
 [Containments][2][Applets][47]
 immutability=1
@@ -276,7 +278,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=620
+length=612
 
 [Containments][2][Applets][6]
 immutability=1
