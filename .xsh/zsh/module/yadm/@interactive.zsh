@@ -22,6 +22,12 @@ autoload_dir ${0:h}/function
 # Create the worktree for the master branch with:
 # `yadm worktree add <path> master`
 
+# Refresh the status of configuration files to reapply filters.
+# This is needed because git marks files as modified even if the changes are filtered out.
+function yadm-refresh {
+  yadm add ':/:'.config && yadm reset HEAD
+}
+
 # Synchronize the master worktree with local changes in HOME.
 # This will synchronize files which are tracked on the master branch, and
 # all staged files in the main worktree.
