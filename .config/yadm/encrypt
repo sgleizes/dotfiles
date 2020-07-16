@@ -7,3 +7,4 @@
 .gnupg/gpg.conf
 .gnupg/gpg-agent.conf
 .config/rclone/rclone.conf
+.config/nordvpn/nordvpn.conf
