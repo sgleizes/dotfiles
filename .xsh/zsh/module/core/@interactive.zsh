@@ -125,6 +125,15 @@ function autoload_dir {
 autoload_dir ${0:h}/function
 
 #
+# VPN
+#
+
+if (( $+commands[nordvpn] )) {
+  alias vpn='nordvpn'
+  alias v='vpn'
+}
+
+#
 # Speech synthesizer
 #
 
