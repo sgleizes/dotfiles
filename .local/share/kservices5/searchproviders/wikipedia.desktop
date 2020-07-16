@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=wp,wiki
+Name=Wikipedia - The Free Encyclopedia
+Query=https://en.wikipedia.org/wiki/Special:Search?search=\\{@}&go=Go
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

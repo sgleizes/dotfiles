@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=technorati
+Name=Technorati
+Query=https://technorati.com/search?return=sites&authority=high&q=\\{@}
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

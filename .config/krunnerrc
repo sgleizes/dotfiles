@@ -30,5 +30,5 @@ recentdocumentsEnabled=false
 servicesEnabled=true
 shellEnabled=false
 unitconverterEnabled=true
-webshortcutsEnabled=false
+webshortcutsEnabled=true
 windowsEnabled=true

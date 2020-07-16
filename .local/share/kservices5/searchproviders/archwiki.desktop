@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=archwiki,arch,awiki
+Name=ArchWiki
+Query=https://wiki.archlinux.org/index.php?search=\\{@}
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

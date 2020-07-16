@@ -1,0 +1,6 @@
+[General]
+DefaultWebShortcut=
+EnableWebShortcuts=true
+KeywordDelimiter=:
+PreferredWebShortcuts=facebook,yahoo,gitlab,kde_apps,bug,youtube,rfc,ecosia,github,wikit,deepl,wikipedia,soundcloud,google_maps,archpkg,google,kde_forums,archwiki,amazon
+UsePreferredWebShortcutsOnly=true
