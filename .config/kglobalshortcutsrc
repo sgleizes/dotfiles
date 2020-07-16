@@ -38,7 +38,6 @@ display=Display\tMeta+P,Display\tMeta+P,Switch Display
 [khotkeys]
 _k_friendly_name=KDE Daemon
 {0a42811a-6f12-4541-b0ea-4026ebd6fa5c}=Meta+H,none,Open KSysGuard
-{1f2cedc5-02e5-4c60-a9b9-a1af958d9105}=Meta+E,none,Open Dolphin
 {5eadaaf5-a7d7-497b-be42-486b69eeb729}=Meta+V,none,Open Enpass
 {d8da2562-6a62-459a-b9bc-20de167ce312}=Meta+T,none,Launch Konsole
 {dce4f073-f3aa-434b-9784-160aaa41d763}=Meta+\\,\tTools,none,Open System Settings
@@ -311,7 +310,7 @@ stopmedia=Media Stop,Media Stop,Stop media playback
 
 [org.kde.dolphin.desktop]
 _k_friendly_name=Dolphin
-_launch=,Meta+E,Dolphin
+_launch=Meta+E,Meta+E,Dolphin
 
 [org.kde.plasma.emojier.desktop]
 _k_friendly_name=Emoji Selector
