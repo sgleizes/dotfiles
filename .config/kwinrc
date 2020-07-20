@@ -87,6 +87,7 @@ enableFloatingLayout=true
 enableQuarterLayout=true
 enableSpreadLayout=false
 enableStairLayout=false
+ignoreActivity=Main,Gaming
 keepFloatAbove=false
 layoutPerActivity=true
 layoutPerDesktop=true
