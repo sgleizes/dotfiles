@@ -3,7 +3,7 @@ DataCount=2
 
 [Data_1]
 Comment=KMenuEdit Global Shortcuts
-DataCount=4
+DataCount=5
 Enabled=true
 Name=KMenuEdit
 SystemGroup=1
@@ -14,7 +14,7 @@ Comment=
 ConditionsCount=0
 
 [Data_1_1]
-Comment=Global keyboard shortcut to launch Konsole
+Comment=Comment
 Enabled=true
 Name=Launch Konsole
 Type=MENUENTRY_SHORTCUT_ACTION_DATA
@@ -116,6 +116,32 @@ TriggersCount=1
 Key=Meta+,;Tools
 Type=SHORTCUT
 Uuid={dce4f073-f3aa-434b-9784-160aaa41d763}
+
+[Data_1_5]
+Comment=Comment
+Enabled=true
+Name=Open YAC Reader
+Type=SIMPLE_ACTION_DATA
+
+[Data_1_5Actions]
+ActionsCount=1
+
+[Data_1_5Actions0]
+CommandURL=YACReader.desktop
+Type=MENUENTRY
+
+[Data_1_5Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_5Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_1_5Triggers0]
+Key=Meta+Y
+Type=SHORTCUT
+Uuid={60caaefd-902d-44a0-9073-c5bfcaf39455}
 
 [Data_2]
 Comment=This group contains various examples demonstrating most of the features of KHotkeys. (Note that this group and all its actions are disabled by default.)
