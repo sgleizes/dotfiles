@@ -78,6 +78,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [unison](https://www.cis.upenn.edu/~bcpierce/unison/) - Bidirectional file synchronization.
 - [wget](https://www.gnu.org/software/wget/) - Downloading remote files.
+- [youtube-dl](https://github.com/ytdl-org/youtube-dl) - Download videos from various platforms.
 
 ## Zsh plugins
 
