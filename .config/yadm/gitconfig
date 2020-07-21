@@ -37,3 +37,6 @@
 
 [filter "bleachbit-interface-state"]
   clean = "sed -E '/^(window_|hashsalt)/d'"
+
+[filter "youtube-dlg-interface-state"]
+  clean = "sed -E '/"(.*_win_size|selected_format)"/d'"
