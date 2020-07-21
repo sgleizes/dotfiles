@@ -22,7 +22,6 @@
 /configstore/
 /dconf/
 /discord/
-/elinks/
 /kde.org/
 /kde4/
 /libaccounts-glib/
@@ -46,7 +45,10 @@
 /unity3d/
 
 # Exceptions for directories with uninteresting contents.
+/elinks/**
 !/elinks/elinks.conf
+/youtube-dlg/**
+!/youtube-dlg/settings.json
 
 # Exceptions for directories with interesting contents.
 /gtk-2.0/gtkfilechooser.ini

@@ -1,0 +1,21 @@
+# Save in ~/Downloads by default.
+--output ~/Downloads/%(title)s.%(ext)s
+
+# Continue on download errors, for example to skip unavailable videos in a playlist.
+--ignore-errors
+
+# Download only the video, if the URL refers to a video and a playlist.
+--no-playlist
+
+# Write metadata to the video file using XDG standards.
+--add-metadata
+--xattrs
+
+# Prefer free video formats unless a specific one is requested.
+--prefer-free-formats
+
+# Prefer 720p or lower resolutions.
+--format bestvideo[ext=webm][height<=720]+bestaudio[ext=webm]/bestvideo[ext=mp4][height<=720]+bestaudio[ext=m4a]/bestvideo[height<=720]+bestaudio/best[height<=720]/best
+
+# Convert to .ogg with --extract-audio by default.
+--audio-format vorbis
