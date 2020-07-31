@@ -53,7 +53,7 @@ alias tla='tl -a -I .git'
 alias mkdir='mkdir -pv'
 alias mkd='mkdir'
 alias rmd='rmdir'
-mkcd() { mkd $@ && cd ${@:$#}; } # ${@:$#} is a bashism
+mkcd() { mkd "$@" && cd "${@:$#}"; } # ${@:$#} is a bashism
 
 # Systemd convenience.
 alias sc='systemctl'
