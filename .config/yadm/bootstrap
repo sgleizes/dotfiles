@@ -48,6 +48,7 @@ PACKAGE_LIST=(
   unison
   wget
   xclip
+  youtube-dl
 )
 
 # List of packages to hint for manual installation.
