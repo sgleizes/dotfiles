@@ -8,6 +8,7 @@
 # Uninteresting subdirectories.
 /Code Industry/
 /Electron/
+/Element/
 /GIMP/
 /KDE/
 /Mailspring/
@@ -15,7 +16,6 @@
 /PlasmaUserFeedback
 /QtProject.conf
 /QtProject/
-/Riot/
 /Signal/
 /autostart/
 /cef_user_data/
@@ -95,6 +95,7 @@
 /systemmonitorrc
 /systemsettingsrc
 /trashrc
+/vlcrc
 /webengineurlinterceptoradblockrc
 /xdg-desktop-portal-kderc
 /YACReaderrc
