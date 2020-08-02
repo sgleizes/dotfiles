@@ -4351,7 +4351,7 @@ metadata-network-access=1
 #stats=1
 
 # Interface module (string)
-intf=skins2,any
+#intf=
 
 # Extra interface modules (string)
 #extraintf=
