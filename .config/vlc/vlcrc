@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.8
+###  vlc 3.0.11
 ###
 
 ###
@@ -932,6 +932,23 @@
 # Frame rate (float)
 #vdr-fps=25.000000
 
+[access_srt] # SRT input
+
+# SRT chunk size (bytes) (integer)
+#chunk-size=1316
+
+# Return poll wait after timeout milliseconds (-1 = infinite) (integer)
+#poll-timeout=-1
+
+# SRT latency (ms) (integer)
+#latency=125
+
+# Password for stream encryption (string)
+#passphrase=
+
+# Crypto key length in bytes (integer)
+#key-length=16
+
 [smb] # SMB input
 
 # Username (string)
@@ -1012,6 +1029,163 @@
 
 # Follow the mouse (boolean)
 #screen-follow-mouse=0
+
+[linsys_sdi] # SDI Input
+
+# Link # (integer)
+#linsys-sdi-link=0
+
+# Video ID (integer)
+#linsys-sdi-id-video=0
+
+# Aspect ratio (string)
+#linsys-sdi-aspect-ratio=
+
+# Audio configuration (string)
+#linsys-sdi-audio=0=1,1
+
+# Teletext configuration (string)
+#linsys-sdi-telx=
+
+# Teletext language (string)
+#linsys-sdi-telx-lang=
+
+[v4l2] # Video4Linux input
+
+# Video capture device (string)
+#v4l2-dev=/dev/video0
+
+# VBI capture device (string)
+#v4l2-vbidev=
+
+# Standard (string)
+#v4l2-standard=
+
+# Video input chroma format (string)
+#v4l2-chroma=
+
+# Input (integer)
+#v4l2-input=0
+
+# Audio input (integer)
+#v4l2-audio-input=-1
+
+# Width (integer)
+#v4l2-width=0
+
+# Height (integer)
+#v4l2-height=0
+
+# Picture aspect-ratio n:m (string)
+#v4l2-aspect-ratio=4:3
+
+# Frame rate (string)
+#v4l2-fps=60
+
+# Radio device (string)
+#v4l2-radio-dev=/dev/radio0
+
+# Frequency (integer)
+#v4l2-tuner-frequency=-1
+
+# Audio mode (integer)
+#v4l2-tuner-audio-mode=3
+
+# Reset controls (boolean)
+#v4l2-controls-reset=0
+
+# Brightness (integer)
+#v4l2-brightness=-1
+
+# Automatic brightness (integer)
+#v4l2-brightness-auto=-1
+
+# Contrast (integer)
+#v4l2-contrast=-1
+
+# Saturation (integer)
+#v4l2-saturation=-1
+
+# Hue (integer)
+#v4l2-hue=-1
+
+# Automatic hue (integer)
+#v4l2-hue-auto=-1
+
+# White balance temperature (K) (integer)
+#v4l2-white-balance-temperature=-1
+
+# Automatic white balance (integer)
+#v4l2-auto-white-balance=-1
+
+# Red balance (integer)
+#v4l2-red-balance=-1
+
+# Blue balance (integer)
+#v4l2-blue-balance=-1
+
+# Gamma (integer)
+#v4l2-gamma=-1
+
+# Automatic gain (integer)
+#v4l2-autogain=-1
+
+# Gain (integer)
+#v4l2-gain=-1
+
+# Sharpness (integer)
+#v4l2-sharpness=-1
+
+# Chroma gain (integer)
+#v4l2-chroma-gain=-1
+
+# Automatic chroma gain (integer)
+#v4l2-chroma-gain-auto=-1
+
+# Power line frequency (integer)
+#v4l2-power-line-frequency=-1
+
+# Backlight compensation (integer)
+#v4l2-backlight-compensation=-1
+
+# Band-stop filter (integer)
+#v4l2-band-stop-filter=-1
+
+# Horizontal flip (boolean)
+#v4l2-hflip=0
+
+# Vertical flip (boolean)
+#v4l2-vflip=0
+
+# Rotate (degrees) (integer)
+#v4l2-rotate=-1
+
+# Color killer (integer)
+#v4l2-color-killer=-1
+
+# Color effect (integer)
+#v4l2-color-effect=-1
+
+# Audio volume (integer)
+#v4l2-audio-volume=-1
+
+# Audio balance (integer)
+#v4l2-audio-balance=-1
+
+# Mute (boolean)
+#v4l2-audio-mute=0
+
+# Bass level (integer)
+#v4l2-audio-bass=-1
+
+# Treble level (integer)
+#v4l2-audio-treble=-1
+
+# Loudness mode (boolean)
+#v4l2-audio-loudness=0
+
+# v4l2 driver controls (string)
+#v4l2-set-ctrls=
 
 [sftp] # SFTP input
 
@@ -1132,7 +1306,7 @@
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.8 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.11 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=
@@ -1202,6 +1376,55 @@
 
 # Group packets (integer)
 #sout-udp-group=1
+
+[access_output_shout] # IceCAST output
+
+# Stream name (string)
+#sout-shout-name=VLC media player - Live stream
+
+# Stream description (string)
+#sout-shout-description=Live stream from VLC media player
+
+# Stream MP3 (boolean)
+#sout-shout-mp3=0
+
+# Genre description (string)
+#sout-shout-genre=Alternative
+
+# URL description (string)
+#sout-shout-url=http://www.videolan.org/vlc
+
+# Bitrate (string)
+#sout-shout-bitrate=
+
+# Samplerate (string)
+#sout-shout-samplerate=
+
+# Number of channels (string)
+#sout-shout-channels=
+
+# Ogg Vorbis Quality (string)
+#sout-shout-quality=
+
+# Stream public (boolean)
+#sout-shout-public=0
+
+[access_output_srt] # SRT stream output
+
+# SRT chunk size (bytes) (integer)
+#chunk-size=1316
+
+# Return poll wait after timeout milliseconds (-1 = infinite) (integer)
+#poll-timeout=100
+
+# SRT latency (ms) (integer)
+#latency=125
+
+# Password for stream encryption (string)
+#passphrase=
+
+# Crypto key length in bytes (integer)
+#key-length=16
 
 [http] # HTTP stream output
 
@@ -1441,6 +1664,20 @@ qt-privacy-ask=0
 
 # Podcast URLs list (string)
 #podcast-urls=
+
+[twolame] # Libtwolame audio encoder
+
+# Encoding quality (float)
+#sout-twolame-quality=0.000000
+
+# Stereo mode (integer)
+#sout-twolame-mode=0
+
+# VBR mode (boolean)
+#sout-twolame-vbr=0
+
+# Psycho-acoustic model (integer)
+#sout-twolame-psy=3
 
 [spudec] # DVD subtitles decoder
 
@@ -2101,6 +2338,23 @@ qt-privacy-ask=0
 # Encoding quality (integer)
 #sout-theora-quality=2
 
+[zvbi] # VBI and Teletext decoder
+
+# Teletext page (integer)
+#vbi-page=100
+
+# Opacity (boolean)
+#vbi-opaque=0
+
+# Teletext alignment (integer)
+#vbi-position=8
+
+# Teletext text subtitles (boolean)
+#vbi-text=0
+
+# Presentation Level (integer)
+#vbi-level=3
+
 [a52] # ATSC A/52 (AC-3) audio decoder
 
 # A/52 dynamic range compression (boolean)
@@ -2303,6 +2557,15 @@ qt-privacy-ask=0
 
 # Use regular HTTP modules (boolean)
 #adaptive-use-access=0
+
+# Live Playback delay (ms) (integer)
+#adaptive-livedelay=15000
+
+# Max buffering (ms) (integer)
+#adaptive-maxbuffer=30000
+
+# Low latency (integer)
+#adaptive-lowlatency=-1
 
 [image] # Image demuxer
 
@@ -3031,6 +3294,42 @@ qt-privacy-ask=0
 # Open GL/GLES hardware converter (string)
 #glconv=
 
+# Rendering intent for color conversion (integer)
+#rendering-intent=1
+
+# Display primaries (integer)
+#target-prim=0
+
+# Display gamma / transfer function (integer)
+#target-trc=0
+
+# Tone-mapping algorithm (integer)
+#tone-mapping=3
+
+# Tone-mapping parameter (float)
+#tone-mapping-param=0.000000
+
+# Highlight clipped pixels (boolean)
+#tone-mapping-warn=0
+
+# Dithering algorithm (integer)
+#dither-algo=-1
+
+# Dither depth override (0 = framebuffer depth) (integer)
+#dither-depth=0
+
+# Desaturation strength (float)
+#desat-strength=0.750000
+
+# Desaturation exponent (float)
+#desat-exponent=1.500000
+
+# Desaturation base (float)
+#desat-base=0.180000
+
+# Maximum brightness boost (float)
+#max-boost=0.000000
+
 [xcb_window] # X11 video window (XCB)
 
 # X11 display (string)
@@ -3149,6 +3448,32 @@ qt-privacy-ask=0
 # Password (string)
 #telnet-password=
 
+[projectm] # libprojectM effect
+
+# projectM preset path (string)
+#projectm-preset-path=/usr/share/projectM/presets
+
+# Title font (string)
+projectm-title-font=/usr/share/projectM/fonts/Vera.ttf
+
+# Font menu (string)
+projectm-menu-font=/usr/share/projectM/fonts/VeraMono.ttf
+
+# Video width (integer)
+projectm-width=1024
+
+# Video height (integer)
+projectm-height=576
+
+# Mesh width (integer)
+projectm-meshx=48
+
+# Mesh height (integer)
+projectm-meshy=36
+
+# Texture size (integer)
+projectm-texture-size=2048
+
 [visual] # Visualizer filter
 
 # Effects list (string)
@@ -3161,7 +3486,7 @@ qt-privacy-ask=0
 #effect-height=500
 
 # FFT window (string)
-#effect-fft-window=flat
+effect-fft-window=none
 
 # Kaiser window parameter (float)
 #effect-kaiser-param=3.000000
@@ -3215,6 +3540,17 @@ qt-privacy-ask=0
 
 # Video height (integer)
 #glspectrum-height=300
+
+[goom] # Goom effect
+
+# Goom display width (integer)
+#goom-width=800
+
+# Goom display height (integer)
+#goom-height=500
+
+# Goom animation speed (integer)
+#goom-speed=6
 
 [logo] # Logo sub source
 
@@ -3502,7 +3838,7 @@ qt-privacy-ask=0
 #audio-time-stretch=1
 
 # Audio output module (string)
-#aout=
+aout=any
 
 # Media role (string)
 #role=video
@@ -3511,7 +3847,7 @@ qt-privacy-ask=0
 #audio-filter=
 
 # Audio visualizations (string)
-#audio-visual=none
+audio-visual=any
 
 # Audio resampler (string)
 #audio-resampler=
@@ -3640,7 +3976,7 @@ qt-privacy-ask=0
 #deinterlace-mode=auto
 
 # Video output module (string)
-#vout=
+vout=any
 
 # Video filter module (string)
 #video-filter=
@@ -3805,7 +4141,7 @@ qt-privacy-ask=0
 #meta-url=
 
 # File caching (ms) (integer)
-#file-caching=300
+#file-caching=1000
 
 # Live capture caching (ms) (integer)
 #live-caching=300
@@ -3913,7 +4249,7 @@ qt-privacy-ask=0
 #packetizer=
 
 # VoD server module (string)
-#vod-server=
+vod-server=any
 
 # Use a plugins cache (boolean)
 #plugins-cache=1
@@ -4015,7 +4351,7 @@ metadata-network-access=1
 #stats=1
 
 # Interface module (string)
-#intf=
+intf=skins2,any
 
 # Extra interface modules (string)
 #extraintf=
