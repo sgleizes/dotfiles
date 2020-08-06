@@ -9,6 +9,12 @@
 [interactive]
   diffFilter = delta --color-only
 
+[color "diff"]
+  oldMoved = bold brightmagenta "#420000"
+  oldMovedAlternative = bold brightmagenta "#420000"
+  newMoved = bold brightblue "#004200"
+  newMovedAlternative = bold brightblue "#004200"
+
 [delta]
   features = truecolor decorations line-numbers navigate
   syntax-theme = OneHalfDark
