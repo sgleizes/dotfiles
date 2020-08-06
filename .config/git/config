@@ -20,7 +20,9 @@
   # When using `--word-diff`, assume `--word-diff-regex=.`.
   wordRegex = .
   # Color moved lines in diffs.
-  colorMoved = dimmed-zebra
+  colorMoved = zebra
+  # Allow indentation changes to be marked as moved lines.
+  colorMovedWS = allow-indentation-change
   # External diff and merge tool.
   tool = kdiff3
 [difftool]
