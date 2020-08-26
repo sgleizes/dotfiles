@@ -137,6 +137,7 @@ ElectricBorderDelay=150
 ElectricBorderMaximize=true
 ElectricBorderTiling=true
 ElectricBorders=1
+SeparateScreenFocus=true
 
 [org.kde.kdecoration2]
 library=org.kde.breeze
