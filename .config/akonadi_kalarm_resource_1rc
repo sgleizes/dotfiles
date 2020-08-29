@@ -1,4 +1,0 @@
-[General]
-AlarmTypes=application/x-vnd.kde.alarm.archived
-DisplayName=Archived Alarms
-Path[$e]=file:$HOME/.local/share/kalarm/expired.ics

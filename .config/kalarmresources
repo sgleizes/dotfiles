@@ -1,0 +1,45 @@
+[General]
+LastId=3
+
+[Resource_1]
+AlarmTypes=Active
+Colour=invalid
+CommandErrors=
+Enabled=Active
+Hash=3366366538363932653631623161663236396132393461326536646637626534
+Id=1
+KeepFormat=true
+Name=Active Alarms
+Path[$e]=$HOME/.local/share/kalarm/calendar.ics
+ReadOnly=false
+Standard=
+Type=File
+UpdateFormat=false
+
+[Resource_2]
+AlarmTypes=Archived
+Colour=invalid
+Enabled=Archived
+Hash=3935326134306664643338396661353361356235613134316232306530383139
+Id=2
+KeepFormat=true
+Name=Archived Alarms
+Path[$e]=$HOME/.local/share/kalarm/expired.ics
+ReadOnly=false
+Standard=Archived
+Type=File
+UpdateFormat=false
+
+[Resource_3]
+AlarmTypes=Template
+Colour=invalid
+Enabled=Template
+Hash=3935326134306664643338396661353361356235613134316232306530383139
+Id=3
+KeepFormat=true
+Name=Alarm Templates
+Path[$e]=$HOME/.local/share/kalarm/template.ics
+ReadOnly=false
+Standard=Template
+Type=File
+UpdateFormat=false

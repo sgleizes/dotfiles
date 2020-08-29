@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui version="11" name="konsole">
+<kpartgui name="konsole" version="12">
  <MenuBar>
   <Menu name="file">
    <text>File</text>
@@ -26,6 +26,7 @@
     <Action name="close-other-views"/>
     <Action name="expand-active-view"/>
     <Action name="shrink-active-view"/>
+    <Action name="toggle-maximize-current-view"/>
    </Menu>
    <Separator/>
    <Action name="detach-tab"/>
@@ -50,9 +51,9 @@
    <text>Help</text>
   </Menu>
  </MenuBar>
- <ActionProperties scheme="Default">
+ <ActionProperties>
   <Action shortcut="" name="clone-tab"/>
-  <Action shortcut="" name="help_contents"/>
   <Action shortcut="" name="fullscreen"/>
+  <Action shortcut="" name="help_contents"/>
  </ActionProperties>
 </kpartgui>

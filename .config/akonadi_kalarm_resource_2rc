@@ -1,4 +1,0 @@
-[General]
-AlarmTypes=application/x-vnd.kde.alarm.template
-DisplayName=Alarm Templates
-Path[$e]=file:$HOME/.local/share/kalarm/template.ics
