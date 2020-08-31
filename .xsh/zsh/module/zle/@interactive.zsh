@@ -588,14 +588,15 @@ if (( $+commands[htop] )) {
   bindkey "$keys[Control]Oh" open-htop
 }
 
-# Run bashtop.
-if (( $+commands[bashtop] )) {
-  function open-bashtop {
+# Run bpytop.
+if (( $+commands[bpytop] )) {
+  function open-bpytop {
     exec </dev/tty
-    bashtop
+    bpytop
+    zle redisplay
   }
-  zle -N open-bashtop
-  bindkey "$keys[Control]O$keys[Control]H" open-bashtop
+  zle -N open-bpytop
+  bindkey "$keys[Control]O$keys[Control]H" open-bpytop
 }
 
 #
