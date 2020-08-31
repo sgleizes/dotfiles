@@ -1,9 +1,15 @@
 [Appearance]
+AntiAliasFonts=true
+BoldIntense=true
 ColorScheme=BlackOnWhite
 Font=MesloLGS NF,9,-1,5,50,0,0,0,0,0
+UseFontLineChararacters=false
 
 [Cursor Options]
 CursorShape=1
+
+[Encoding Options]
+DefaultEncoding=UTF-8
 
 [General]
 Name=Light Unlimited
