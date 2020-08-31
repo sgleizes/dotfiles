@@ -21,7 +21,6 @@ YADM_DIR="${0:h}"
 # List of packages to prompt for automatic installation.
 PACKAGE_LIST=(
   bat
-  bashtop
   expac
   exa
   fd
@@ -53,6 +52,7 @@ PACKAGE_LIST=(
 
 # List of packages to hint for manual installation.
 AUR_PACKAGE_LIST=(
+  bpytop
   direnv
   fpp-git
   git-delta
