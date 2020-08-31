@@ -17,3 +17,4 @@ lutris.conf                filter=lutris-interface-state
 vlc-qt-interface.conf      filter=vlc-interface-state
 bleachbit.ini              filter=bleachbit-interface-state
 youtube-dlg/settings.json  filter=youtube-dlg-interface-state
+strawberry/strawberry.conf filter=strawberry-interface-state
