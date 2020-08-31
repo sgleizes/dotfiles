@@ -71,13 +71,15 @@ path=($XDG_BIN_HOME $XDG_BIN_HOME/xdg $path)
 # Various session environment variables
 #
 
-# Configure gamemode to run games on the Nvidia GPU (optimus-manager).
+# Configure gamemode to run games on the Nvidia GPU (optimus-manager) and with mangohud.
 # See https://github.com/Askannz/optimus-manager/wiki/Nvidia-GPU-offloading-for-%22hybrid%22-mode.
 if (( $+commands[optimus-manager] && $+commands[gamemoderun] )) {
   export GAMEMODERUNEXEC="env \
 __NV_PRIME_RENDER_OFFLOAD=1 \
 __GLX_VENDOR_LIBRARY_NAME=nvidia \
-__VK_LAYER_NV_optimus=NVIDIA_only"
+__VK_LAYER_NV_optimus=NVIDIA_only \
+MANGOHUD_DLSYM=1 \
+mangohud"
 }
 
 # Disable prompt for wine-gecko install.
