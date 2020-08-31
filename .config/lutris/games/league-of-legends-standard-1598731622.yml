@@ -1,0 +1,24 @@
+game:
+  exe: /home/psydev/Games/League of Legends/drive_c/Riot Games/League of Legends/LeagueClient.exe
+  prefix: /home/psydev/Games/League of Legends
+system:
+  disable_compositor: true
+  env:
+    DXVK_LOG_LEVEL: none
+    DXVK_STATE_CACHE_PATH: /home/psydev/Games/League of Legends
+    PBA_DISABLE: '1'
+    STAGING_SHARED_MEMORY: '1'
+    WINE_LARGE_ADDRESS_AWARE: '1'
+    __GL_SHADER_DISK_CACHE: '1'
+    __GL_SHADER_DISK_CACHE_PATH: /home/psydev/Games/League of Legends
+    pulse_latency: 'true'
+  prelaunch_command: /home/psydev/Games/League of Legends/syscall_check.sh
+wine:
+  MouseWarpOverride: enable
+  UseGLSL: disabled
+  custom_wine_path: /opt/wine-lol/bin/wine
+  dxvk: true
+  esync: true
+  overrides:
+    ucrtbase: b
+  version: custom
