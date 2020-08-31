@@ -427,6 +427,7 @@ _xsh_load_registered() {
       _xsh_load_unit "$unit"
     esac
   done
+  return 0
 }
 
 # Mark a manager or module runcom for loading in the current shell.
