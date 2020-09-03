@@ -27,12 +27,11 @@ function usage() {
 }
 
 function watch() {
-    clear ; $TODO_FULL_SH $cmd
-
-    watchmedo shell-command "$TODO_DIR" \
-        --pattern "$TODO_FILE" \
-        --command "clear ; $TODO_FULL_SH $cmd" \
-        --wait
+    watchexec -w "$TODO_DIR" \
+        --filter "$TODO_FILE" \
+        --clear --restart \
+        --no-environment --no-meta --no-shell \
+        $TODO_FULL_SH $cmd
     exit
 }
 
