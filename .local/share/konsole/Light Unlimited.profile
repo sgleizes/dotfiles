@@ -15,6 +15,7 @@ DefaultEncoding=UTF-8
 Name=Light Unlimited
 Parent=FALLBACK/
 RemoteTabTitleFormat=%U%H
+TerminalMargin=1
 
 [Interaction Options]
 AlternateScrolling=true
