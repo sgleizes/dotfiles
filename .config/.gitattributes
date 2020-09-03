@@ -5,6 +5,7 @@
 # Filters for KDE configuration files.
 *rc                    filter=kde-interface-state
 kdeglobals             filter=kde-interface-state
+kalarmresources        filter=kde-interface-state
 kactivitymanagerd*     filter=kde-activities
 *desktop-appletsrc     filter=plasma-applets-state
 *.layout.latte         filter=plasma-applets-state

@@ -11,7 +11,7 @@
 [filter "kde-interface-state"]
   clean = "sed -E '\
 /\\s*\\[.*(\\$Version|MainWindow|Dialog|Session|Viewer|Desktops|ScreenConnectors|Recent).*\\]/,/^\\s*$/d;\
-/^(Height|Width|State|[Hh]istory|ToolBarsMovable|LaunchCounts|\\w*WindowSize|\\w*SplitterSizes|\\w*ColumnWidth|Latitude|Longitude)/d;\
+/^(Hash|Height|Width|State|[Hh]istory|ToolBarsMovable|LaunchCounts|\\w*WindowSize|\\w*SplitterSizes|\\w*ColumnWidth|Latitude|Longitude)/d;\
 '"
 
 [filter "kde-activities"]
