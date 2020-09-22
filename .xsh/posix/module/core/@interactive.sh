@@ -29,6 +29,10 @@ alias df='df -h' du='du -h'
 
 # Verbose and safe file operations.
 alias cp='cp -vi' mv='mv -vi' ln='ln -vi' rm='rm -vI'
+# Use the patched progress bar version if available.
+if command -v advcp >/dev/null; then
+  alias cp='advcp -gvi' mv='advmv -gvi'
+fi
 
 # Directory listing.
 alias dud='du -d1' # show total disk usage for direct subdirectories only

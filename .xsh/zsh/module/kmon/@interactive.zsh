@@ -14,8 +14,8 @@ if (( $terminfo[colors] >= 256 )) {
   alias kmon='kmon -u -c lightyellow'
 }
 
-# Arrows not working?
 # Shortcut to open kmon.
+# BUG: Arrows not working
 function open-kmon {
   exec </dev/tty
   kmon
