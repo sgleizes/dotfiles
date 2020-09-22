@@ -52,6 +52,7 @@ PACKAGE_LIST=(
 
 # List of packages to hint for manual installation.
 AUR_PACKAGE_LIST=(
+  advcp
   bpytop
   direnv
   fpp-git
