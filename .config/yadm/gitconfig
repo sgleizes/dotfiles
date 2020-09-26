@@ -42,4 +42,4 @@
   clean = "sed -E '/"(.*_win_size|selected_format)"/d'"
 
 [filter "strawberry-interface-state"]
-  clean = "sed -E '/\\s*\\[.*(\\$Version|Dialog|Player).*\\]/,/^\\s*$/d;/(geometry|splitter_state|current_tab|file_path|state|last_\\w*_playlist)/d'"
+  clean = "sed -E '/\\s*\\[.*(\\$Version|Dialog|Player).*\\]/,/^\\s*$/d;/(geometry|splitter_state|current_tab|current_playlist|file_path|state|last_\\w*_playlist)/d'"
