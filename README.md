@@ -66,6 +66,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [kmon](https://github.com/orhun/kmon) - Linux kernel manager and activity monitor.
 - [lazygit](https://github.com/jesseduffield/lazygit) - Simple terminal UI for `git` commands.
 - [nordvpn](https://nordvpn.com/) - Private and secure internet access.
+- [pistol](https://github.com/doronbehar/pistol) - General purpose file previewer.
 - [rclone](https://github.com/rclone/rclone) - Rsync for cloud storage.
 - [restic](https://github.com/restic/restic) - Fast, secure, efficient backup program.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A modern version of `grep`.

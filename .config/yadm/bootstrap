@@ -61,6 +61,7 @@ AUR_PACKAGE_LIST=(
   kmon
   lazygit
   nordvpn-bin
+  pistol-git
   ponysay-git
   tealdeer-bin
   tmux-git

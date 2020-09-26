@@ -29,8 +29,12 @@ export LESS_TERMCAP_ue=$'\E[0m'        # ends underline
 # Create the XDG data directory if necessary.
 command mkdir -p ${LESSHISTFILE:h}
 
-# Use bat as input preprocessor.
+# Pager integration with bat.
 if (( $+commands[bat] )) {
   export BAT_PAGER='less -F'
-  export LESSOPEN='| bat --color=always --paging=never --style=numbers,changes %s 2>&-'
+}
+
+# Use pistol as input preprocessor.
+if (( $+commands[pistol] )) {
+  export LESSOPEN='| pistol %s 2>&-'
 }
