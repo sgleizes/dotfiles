@@ -176,10 +176,10 @@ bind -N 'Respawn the current pane' 'C-r' confirm-before -p "respawn-pane #P? (y/
 bind -N 'List and select a pane by index' 'p'   display-panes
 bind -N 'Select the next pane'         -r 'C-p' select-pane -t :.+
 bind -N 'Select the previous pane'     -r 'M-p' select-pane -t :.-
-bind -N 'Select the pane above the active pane'           -r 'Up'    select-pane -U
-bind -N 'Select the pane below the active pane'           -r 'Down'  select-pane -D
-bind -N 'Select the pane to the left of the active pane'  -r 'Left'  select-pane -L
-bind -N 'Select the pane to the right of the active pane' -r 'Right' select-pane -R
+bind -N 'Select the pane above the active pane'           'Up'    select-pane -U
+bind -N 'Select the pane below the active pane'           'Down'  select-pane -D
+bind -N 'Select the pane to the left of the active pane'  'Left'  select-pane -L
+bind -N 'Select the pane to the right of the active pane' 'Right' select-pane -R
 
 # Pane resizing.
 bind -N 'Zoom the current pane'                 'Space'   resize-pane -Z
