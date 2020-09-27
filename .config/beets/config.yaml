@@ -1,0 +1,92 @@
+#
+# Configuration of the main music library for beets.
+#
+
+# Library paths and structure
+
+library: ~/.local/share/beets/library.db
+directory: ~/Audios/Musique
+
+per_disc_numbering: no
+original_date: no
+artist_credit: no
+va_name: Various Artists
+art_filename: cover
+
+paths:
+  default: $albumartist/$album%aunique{}/$track $title
+  singleton: $artist/Singles/$title
+  comp: Compilations/$album%aunique{}/$track $title
+
+# Library import options
+
+import:
+  write: yes
+  move: no
+  languages: [fr, en]
+
+# Listing options
+
+format_item: $artist - $album - $title
+format_album: $albumartist - $album
+time_format: '%Y-%m-%d %H:%M:%S'
+sort_album: albumartist+ album+
+sort_item: artist+ album+ disc+ track+
+sort_case_insensitive: yes
+
+# User interface options
+
+ui:
+  color: yes
+  colors:
+    text_success: green
+    text_warning: yellow
+    text_error: red
+    text_highlight: darkyellow
+    text_highlight_minor: darkgray
+    action_default: cyan
+    action: darkblue
+
+# Plugins configuration
+
+plugins:
+  - discogs
+  - bandcamp
+  - info
+  - edit
+  - duplicates
+  - missing
+  - lastgenre
+  - fetchart
+  - mbsync
+  - convert
+  - playlist
+  - play
+
+bandcamp:
+  art: yes
+
+fetchart:
+  auto: yes
+  maxwidth: 1024
+  sources:
+    - filesystem
+    - coverart
+    - bandcamp
+    - itunes
+    - amazon
+    - albumart
+    - wikipedia
+
+convert:
+  album_art_maxwidth: 512
+  never_convert_lossy_files: yes
+
+playlist:
+  auto: yes
+  relative_to: ~/Audios/Musique
+  playlist_dir: ~/Audios/Playlists
+
+play:
+  command: strawberry --play --create=Beets
+  raw: yes

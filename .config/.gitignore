@@ -47,6 +47,8 @@
 /unity3d/
 
 # Exceptions for directories with uninteresting contents.
+/beets/**
+!/beets/config.yaml
 /elinks/**
 !/elinks/elinks.conf
 /nnn/**
