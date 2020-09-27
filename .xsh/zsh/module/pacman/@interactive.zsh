@@ -1,6 +1,9 @@
 #
 # Pacman configuration module for zsh.
 #
+# NOTE: This module defines additional ZLE widgets and bindings and
+# therefore should be loaded after the zle module.
+#
 
 # Abort if requirements are not met.
 if (( ! $+commands[pacman] || ! $+commands[expac] )) {
@@ -103,6 +106,12 @@ if (( $+commands[fzf] )) {
       --query "$*" \
       | awk '{print $2}' | xargs -ro sudo pacman -S
   }
+
+  # ZLE widgets.
+  zle -N pacview
+  zle -N pacbrowse
+  bindkey "$keys[Control]O$keys[Control]V" pacview
+  bindkey "$keys[Control]O$keys[Control]I" pacbrowse
 
   alias pacv='pacview'
   alias pacb='pacbrowse'

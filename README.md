@@ -44,6 +44,7 @@ These programs are all optional and can be selectively picked.
 The `zsh` configuration is organized into modules and will integrate the installed programs automatically.
 For some programs, a configuration file is provided in [.config](.config).
 
+- [atool](https://www.nongnu.org/atool/) - A script for managing file archives of various types.
 - [advcpmv](https://github.com/jarun/advcpmv) - A patch for GNU Core Utilities cp, mv to add progress bars.
 - [bat](https://github.com/sharkdp/bat) - A `cat` clone with wings.
 - [bashtop](https://github.com/aristocratos/bashtop) - Linux/OSX/FreeBSD resource monitor.
