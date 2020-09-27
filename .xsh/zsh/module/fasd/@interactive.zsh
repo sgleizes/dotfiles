@@ -46,21 +46,27 @@ function _fasd_pick {
 # Change to a frecent directory.
 # Usage: fasd-cd [query...]
 function fasd-cd {
-  local dir=$(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DIRS_OPTS +m" _fasd_pick d $@)
+  local dir=$(FZF_HEIGHT="${FZF_DIRS_HEIGHT:-${FZF_HEIGHT:-50%}}" \
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_DIRS_OPTS +m" \
+    _fasd_pick d $@)
   [[ -d $dir ]] && cd $dir || return 1
 }
 
 # Edit a frecent file.
 # Usage: fasd-edit [query...]
 function fasd-edit {
-  local file=$(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" _fasd_pick f $@)
+  local file=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" \
+    _fasd_pick f $@)
   [[ -f $file ]] && ${(z)VISUAL:-${(z)EDITOR}} $file || return 1
 }
 
 # Open a frecent file.
 # Usage: fasd-open [query...]
 function fasd-open {
-  local file=$(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" _fasd_pick f $@)
+  local file=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
+    FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" \
+    _fasd_pick f $@)
   [[ -f $file ]] && open $file || return 1
 }
 

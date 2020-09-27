@@ -83,7 +83,7 @@ if (( $+commands[pistol] )) {
 
 # Custom fzf options for ZLE widgets.
 FZF_HISTORY_OPTS="--no-reverse"
-FZF_DIRS_OPTS="--select-1 --exit-0 --preview '$fzf_dir_preview {} | head -200'"
+FZF_DIRS_OPTS="--select-1 --preview '$fzf_dir_preview {} | head -200'"
 FZF_FILES_OPTS="--no-height --preview '$fzf_file_preview {} 2>/dev/null | head -1000' --preview-window=wrap"
 FZF_FILES_HEIGHT='90%'
 
