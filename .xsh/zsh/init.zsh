@@ -57,6 +57,7 @@ xsh module fzf            interactive
 xsh module fasd           interactive
 xsh module git            interactive
 xsh module jq             interactive
+xsh module nnn            interactive
 xsh module you-should-use interactive # load after git
 
 # Load the modules that wrap ZLE widgets after all widgets have been defined.

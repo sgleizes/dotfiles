@@ -1,0 +1,17 @@
+#!/usr/bin/env zsh
+
+# Description: Run fzf and go to the selected frecent directory.
+#
+# Dependencies: fzf - https://github.com/junegunn/fzf
+#               fasd - https://github.com/clvv/fasd
+#
+# Shell: zsh
+# Author: Stéphane Gleizes
+
+. "$(dirname "$0")"/.nnn-plugin-helper
+. "$(dirname "$0")"/.nnn-fzf-helper
+
+FZF_DIRS_OPTS="--no-sort --select-1 --preview 'pistol {} | head -200'"
+sel=$(fzf_pick_dir "fasd -d -Rl")
+
+[[ $sel ]] && nnn_cd "$sel" 0

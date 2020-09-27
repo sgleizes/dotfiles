@@ -20,6 +20,7 @@ YADM_DIR="${0:h}"
 
 # List of packages to prompt for automatic installation.
 PACKAGE_LIST=(
+  atool
   bat
   expac
   exa
@@ -32,8 +33,10 @@ PACKAGE_LIST=(
   hub
   imagemagick
   jq
+  mediainfo
   mlocate
   neofetch
+  nnn
   pacman-contrib
   pastebinit
   rclone
@@ -53,11 +56,13 @@ PACKAGE_LIST=(
 # List of packages to hint for manual installation.
 AUR_PACKAGE_LIST=(
   advcp
+  archivemount
   bpytop
   direnv
   fpp-git
   git-delta
   git-extras
+  hex-git
   kmon
   lazygit
   nordvpn-bin

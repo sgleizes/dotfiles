@@ -1,0 +1,29 @@
+#!/usr/bin/env zsh
+
+# Description: Helper script for plugins using fzf
+#
+# Shell: zsh
+# Author: Stéphane Gleizes
+
+if [ ! command -v fzf >/dev/null 2>&1 ]; then
+  printf "fzf is not installed"
+  exit 1
+fi
+
+# Pick a directory from the output of the given command using fzf.
+# Usage: fzf_pick_dir <cmd...>
+fzf_pick_dir () {
+  setopt localoptions pipefail no_aliases 2>/dev/null
+
+  eval "$@" \
+    | FZF_DEFAULT_OPTS="--reverse $FZF_DEFAULT_OPTS $FZF_DIRS_OPTS" fzf +m
+}
+
+# Pick file(s) from the output of the given command using fzf.
+# Usage: fzf_pick_files <cmd...>
+fzf_pick_files () {
+  setopt localoptions pipefail no_aliases 2>/dev/null
+
+  eval "$@" \
+    | FZF_DEFAULT_OPTS="--reverse $FZF_DEFAULT_OPTS $FZF_FILES_OPTS" fzf -m \
+}

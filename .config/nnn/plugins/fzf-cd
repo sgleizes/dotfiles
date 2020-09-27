@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+# Description: Run fzf and go to the selected directory.
+#
+# Dependencies: fzf - https://github.com/junegunn/fzf
+#
+# Shell: zsh
+# Author: Stéphane Gleizes
+
+. "$(dirname "$0")"/.nnn-plugin-helper
+. "$(dirname "$0")"/.nnn-fzf-helper
+
+FZF_DIRS_OPTS="--select-1 --preview 'pistol {} | head -200'"
+sel=$(fzf_pick_dir "$FZF_DEFAULT_COMMAND --type d")
+
+[[ $sel ]] && nnn_cd "$(realpath $sel)" 0

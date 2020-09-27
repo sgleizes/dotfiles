@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+# Description: Run fzf and open the selected frecent files.
+#
+# Dependencies: fzf - https://github.com/junegunn/fzf
+#               fasd - https://github.com/clvv/fasd
+#
+# Shell: zsh
+# Author: Stéphane Gleizes
+
+. "$(dirname "$0")"/.nnn-fzf-helper
+
+FZF_FILES_OPTS="--no-sort --preview 'pistol {} 2>/dev/null | head -1000' --preview-window=wrap"
+selected=("${(@f)$(fzf_pick_files "fasd -f -Rl")}")
+
+if [[ ! $selected ]] {
+  exit 0
+}
+
+for sel in $selected; {
+  sel="$(realpath $sel)"
+  case "$(file -biL "$sel")" in
+    *text*)
+      "${VISUAL:-$EDITOR}" "$sel" ;;
+    *)
+      xdg-open "$sel" >/dev/null 2>&1 ;;
+  esac
+}
