@@ -18,7 +18,7 @@ wine:
   UseGLSL: disabled
   custom_wine_path: /opt/wine-lol/bin/wine
   dxvk: true
-  esync: true
+  esync: false
   overrides:
     ucrtbase: b
   version: custom
