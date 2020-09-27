@@ -60,12 +60,15 @@ For some programs, a configuration file is provided in [.config](.config).
 - [fzf](https://github.com/junegunn/fzf) - A command line fuzzy finder.
 - [git-extras](https://github.com/tj/git-extras) - Extra `git` commands from the community.
 - [gpg](https://gnupg.org/) - Hybrid encryption software suite.
+- [hex](https://github.com/sitkevij/hex) - Futuristic take on hexdump, made in Rust.
 - [htop](https://github.com/hishamhm/htop) - Interactive process viewer and system monitor.
 - [hub](https://hub.github.com/) - Github from the command line.
 - [jq](https://github.com/stedolan/jq) - Command line JSON processor.
 - [kmon](https://github.com/orhun/kmon) - Linux kernel manager and activity monitor.
 - [lazygit](https://github.com/jesseduffield/lazygit) - Simple terminal UI for `git` commands.
+- [nnn](https://github.com/jarun/nnn/) - n³ The unorthodox terminal file manager.
 - [nordvpn](https://nordvpn.com/) - Private and secure internet access.
+- [pistol](https://github.com/doronbehar/pistol) - General purpose file previewer.
 - [rclone](https://github.com/rclone/rclone) - Rsync for cloud storage.
 - [restic](https://github.com/restic/restic) - Fast, secure, efficient backup program.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A modern version of `grep`.

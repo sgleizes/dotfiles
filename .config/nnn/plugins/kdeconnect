@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# Description: Send the selected files to your Android device using kdeconnect-cli. You must have installed and configured kdeconnect both on the Android device and on the PC.
+#
+# Shell: NON POSIX compliant
+# Author: juacq97
+
+source "$(dirname "$0")"/.nnn-plugin-helper
+
+printf "(s)election/(c)urrent? [default=c] "
+read -r resp
+
+if [ "$resp" = "s" ]; then
+  readarray -t files < <(tr '\0' '\n' < "$selection")
+  set -- "${files[@]}"
+else
+  set -- "$1"
+fi
+
+id=$(kdeconnect-cli -a --id-only | awk '{print $1}')
+kdeconnect-cli -d "$id" --share "$@"

@@ -72,15 +72,19 @@ if (( $+commands[fd] )) {
   FZF_DIRS_COMMAND="$FZF_DEFAULT_COMMAND --type d"
 }
 
-# Use `bat` instead of `cat` if available.
-(( $+commands[bat] )) \
-  && fzf_file_preview='bat --color=always --style=numbers,changes' \
-  || fzf_file_preview='cat'
+# Use `pistol` if available.
+if (( $+commands[pistol] )) {
+  fzf_dir_preview='pistol'
+  fzf_file_preview='pistol'
+} else {
+  fzf_dir_preview='tree -C'
+  fzf_file_preview='cat'
+}
 
 # Custom fzf options for ZLE widgets.
 FZF_HISTORY_OPTS="--no-reverse"
-FZF_DIRS_OPTS="--select-1 --exit-0 --preview 'tree -C {} | head -200'"
-FZF_FILES_OPTS="--no-height --preview '$fzf_file_preview {} 2>/dev/null | head -500' --preview-window=wrap"
+FZF_DIRS_OPTS="--select-1 --preview '$fzf_dir_preview {} | head -200'"
+FZF_FILES_OPTS="--no-height --preview '$fzf_file_preview {} 2>/dev/null | head -1000' --preview-window=wrap"
 FZF_FILES_HEIGHT='90%'
 
 unset fzf_{config,completion,file_preview}

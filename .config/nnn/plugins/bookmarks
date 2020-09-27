@@ -1,0 +1,49 @@
+#!/usr/bin/env sh
+
+# Description: Use named bookmarks using symlinks
+#
+# Dependencies: fzf
+#
+# Usage:
+#   1. Create a $NNN_BMS_DIR directory
+#      By default, $NNN_BMS_DIR is set to: ${XDG_CACHE_HOME:-$HOME/.cache}/nnn/bookmarks
+#
+#   2. Create symlinks to directories
+#     `cd $NNN_BMS_DIR`
+#     `ln -s /path/to/useful/directory    bookmark_name`
+#     `ln -s $XDG_CONFIG_HOME/nnn/plugins nnn_plugins"
+#     `ln -s /path/to/documents           docs`
+#     `ln -s /path/to/media               media`
+#     `ln -s /path/to/movies              movies`
+#
+# Bonus tip: Add `$NNN_BMS_DIR` to your `$CDPATH`
+# https://linux.101hacks.com/cd-command/cdpath/
+#
+# TODO:
+#   1. Remove `fzf` dependency
+#
+# Shell: POSIX compliant
+# Author: Todd Yamakawa
+
+. "$(dirname "$0")"/.nnn-plugin-helper
+. "$(dirname "$0")"/.nnn-fzf-helper
+
+NNN_BMS_DIR="${NNN_BMS_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/nnn/bookmarks}"
+
+# Get all directory symlinks
+get_links() {
+  for entry in "$1"/*; do
+    # Skip unless directory symlink
+    [ -h "$entry" ] || continue
+    [ -d "$entry" ] || continue
+
+    printf "%-20s -> %s\n" "$(basename "$entry")" "$(readlink -f "$entry")"
+  done | fzf | awk 'END { print "'"$NNN_BMS_DIR"'/"$1 }'
+}
+
+# Choose symlink with fzf
+cddir="$(get_links "$NNN_BMS_DIR")"
+
+if [ "$cddir" != "$NNN_BMS_DIR/" ]; then
+  nnn_cd "$(readlink -f "$cddir")" 0
+fi

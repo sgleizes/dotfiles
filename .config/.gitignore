@@ -47,6 +47,9 @@
 # Exceptions for directories with uninteresting contents.
 /elinks/**
 !/elinks/elinks.conf
+/nnn/**
+!/nnn/plugins/
+!/nnn/plugins/**
 /youtube-dlg/**
 !/youtube-dlg/settings.json
 
