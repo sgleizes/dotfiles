@@ -12,7 +12,7 @@ alias ydl='youtube-dl'
 
 # Audio post-processing aliases.
 alias ydla='youtube-dl --extract-audio --format worstaudio' # for spoken audio
-alias ydlm='youtube-dl --extract-audio --format bestaudio --metadata-from-title "%(artist)s - %(title)s"' # for music
+alias ydlm='youtube-dl --extract-audio --format "bestaudio[ext=webm]/bestaudio" --metadata-from-title "%(artist)s - %(title)s"' # for music
 
 # List formats & prompt for one.
 function youtube-dl-interactive {
