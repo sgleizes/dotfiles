@@ -34,7 +34,6 @@ xsh module direnv     interactive
 xsh module docker     interactive
 xsh module exa        interactive
 xsh module gpg        interactive:login
-xsh module pacman     interactive
 xsh module pager      interactive:env
 xsh module rclone     interactive
 xsh module restic     interactive
@@ -58,6 +57,7 @@ xsh module fasd           interactive
 xsh module git            interactive
 xsh module jq             interactive
 xsh module nnn            interactive
+xsh module pacman         interactive
 xsh module you-should-use interactive # load after git
 
 # Load the modules that wrap ZLE widgets after all widgets have been defined.
