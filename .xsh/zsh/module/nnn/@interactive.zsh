@@ -75,7 +75,7 @@ function nnn {
 # Usability aliases.
 alias n='nnn'
 alias N='sudo -E nnn -dH'
-alias nsel="cat ${NNN_SEL:-${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.selection} | tr '\0' '\n'"
+alias nsel="cat ${NNN_SEL:-$XDG_CONFIG_HOME/nnn/.selection} | tr '\0' '\n'"
 
 # Shortcut to open nnn.
 # NOTE: cd on quit doesn't work.

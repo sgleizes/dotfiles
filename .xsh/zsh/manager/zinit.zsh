@@ -3,7 +3,7 @@
 #
 
 typeset -gAH ZINIT
-ZINIT[HOME_DIR]="${0:h}/zinit"
+ZINIT[HOME_DIR]="${XDG_CONFIG_HOME:-$HOME/.config}/zinit"
 ZINIT[ZCOMPDUMP_PATH]="$ZCACHEDIR/zcompdump"
 ZPFX="$ZINIT[HOME_DIR]/prefix"
 
