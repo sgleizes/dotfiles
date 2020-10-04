@@ -8,7 +8,7 @@ if (( ! $+commands[tmux] )) {
 }
 
 # Path to the tpm plugin directory.
-export TMUX_PLUGIN_MANAGER_PATH="${0:h}/tpm"
+export TMUX_PLUGIN_MANAGER_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugins"
 
 # Path to the tpm patch directory.
 export TMUX_PLUGIN_MANAGER_PATCH_DIR="${0:h}/patch"
