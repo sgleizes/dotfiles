@@ -7,8 +7,11 @@ if (( ! $+commands[emacs] )) {
   return 1
 }
 
+# XDG path to the spacemacs configuration directory.
+export SPACEMACSDIR="$XDG_CONFIG_HOME/spacemacs"
+
 # Path to the emacs configuration directory.
-export EMACS_CONFIG_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/emacs"
+EMACS_CONFIG_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/emacs"
 
 # Install spacemacs if necessary.
 if [[ ! -f $EMACS_CONFIG_PATH/init.el ]] {
