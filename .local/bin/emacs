@@ -1,0 +1,15 @@
+#!/bin/bash
+# Override the emacs command to use emacsclient instead (emacs server setup).
+# Change the default behavior to open a new frame if none exist, else
+# open the files in the active frame.
+
+XFRAME_TITLE="Emacs"
+
+emacsclient -e "(if (> (length (frame-list)) 1) 't)" | grep -q t
+if (( $? == 1 )); then
+  emacsclient -c --frame-parameters="(quote (name . \"$XFRAME_TITLE\"))" -n "$@"
+elif [[ ! "$@" ]] && command -v wmctrl >/dev/null; then
+  wmctrl -Fa "$XFRAME_TITLE"
+else
+  emacsclient -n "$@"
+fi
