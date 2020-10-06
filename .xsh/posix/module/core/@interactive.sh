@@ -72,7 +72,7 @@ alias curl='curl --progress-bar'
 alias wget='wget -q --show-progress'
 
 # Simple and silent desktop opener.
-alias open='nohup xdg-open >|$(mktemp --tmpdir nohup.XXXX)'
+alias open='nohup xdg-open </dev/null >|$(mktemp --tmpdir nohup.XXXX) 2>&1'
 alias o='open'
 
 # Preferred applications.
