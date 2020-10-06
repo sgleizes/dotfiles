@@ -52,6 +52,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [direnv](https://github.com/direnv/direnv) - Update the environment based on the current directory.
 - [docker](https://github.com/docker/cli) / [docker-compose](https://github.com/docker/compose) - Container management.
 - [elinks](http://elinks.or.cz/) - Text-mode web browser.
+- [emacs](https://www.gnu.org/software/emacs/) - An extensible, customizable, free/libre text editor.
 - [expac](https://github.com/falconindy/expac) - Data extraction tool for alpm databases (`pacman`).
 - [exa](https://github.com/ogham/exa) - A modern version of `ls`.
 - [fasd](https://github.com/clvv/fasd) - Quick access to frecent files and directories.
@@ -74,6 +75,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [restic](https://github.com/restic/restic) - Fast, secure, efficient backup program.
 - [ripgrep](https://github.com/BurntSushi/ripgrep) - A modern version of `grep`.
 - [rsync](https://github.com/WayneD/rsync) - Versatile file copying tool for remote and local files.
+- [spacemacs](https://github.com/syl20bnr/spacemacs) - A community-driven Emacs distribution.
 - [ssh](https://www.openssh.com/) - OpenSSH remote login client.
 - [tldr](https://github.com/dbrgn/tealdeer/) - Simplified and community-driven man pages.
 - [tealdeer](https://github.com/dbrgn/tealdeer/) - A Rust client for `tldr`.

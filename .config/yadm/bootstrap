@@ -22,6 +22,7 @@ YADM_DIR="${0:h}"
 PACKAGE_LIST=(
   atool
   bat
+  emacs
   expac
   exa
   fd
