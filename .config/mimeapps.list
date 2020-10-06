@@ -1,6 +1,7 @@
 [Added Associations]
 application/pdf=masterpdfeditor4.desktop;org.kde.okular.desktop;
 application/x-mswinurl=org.kde.kate.desktop;firefox.desktop;
+text/plain=emacs.desktop;org.kde.kate.desktop;libreoffice-writer.desktop;okularApplication_txt.desktop;wine-extension-txt.desktop;
 
 [Default Applications]
 application/pdf=org.kde.okular.desktop;
@@ -12,6 +13,7 @@ application/x-extension-xhtml=userapp-Firefox-D3SRI0.desktop
 application/x-mswinurl=org.kde.kate.desktop;
 application/xhtml+xml=userapp-Firefox-D3SRI0.desktop
 text/html=userapp-Firefox-D3SRI0.desktop
+text/plain=emacs.desktop;
 x-scheme-handler/chrome=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/ftp=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/http=userapp-Firefox-D3SRI0.desktop
