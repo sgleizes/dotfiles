@@ -20,7 +20,7 @@ FZF_RG_COMMAND='noglob rg --files-with-matches --no-messages'
 FZF_RG_PREVIEW='noglob rg --pretty --context=10 2>/dev/null'
 
 # Search file contents for the given pattern and preview matches.
-# Selected entries are opened with the default editor.
+# Selected entries are opened with the default opener.
 #
 # Usage: search <pattern> [rg-options...]
 function search {
@@ -36,12 +36,12 @@ function search {
       --preview-window=wrap
   ))
 
-  # Open selected files in editor.
-  [[ $selected ]] && ${(z)VISUAL:-${(z)EDITOR}} $selected[@]
+  # Open selected files.
+  [[ $selected ]] && for f in ${selected}; { open $f || return 1; }
 }
 
 # Search files interactively and preview matches.
-# Selected entries are opened with the default editor.
+# Selected entries are opened with the default opener.
 # NOTE: The optional directory MUST be given as first argument,
 # otherwise the behavior is undefined.
 #
@@ -62,8 +62,8 @@ function search-interactive {
     | cut -d":" -f1,2
   ))
 
-  # Open selected files in editor.
-  [[ $selected ]] && ${(z)VISUAL:-${(z)EDITOR}} $selected[@]
+  # Open selected files.
+  [[ $selected ]] && for f in ${selected}; { open $f || return 1; }
 }
 
 # Interactive search variant that sorts the results.

@@ -16,6 +16,9 @@ xsh manager zinit
 # Register the tmux plugin manager.
 # https://github.com/tmux-plugins/tpm/
 xsh manager tpm
+# Register the spacemacs package manager.
+# https://github.com/syl20bnr/spacemacs
+xsh manager spacemacs
 
 # Load the tmux module first in case autostart is enabled.
 xsh module tmux interactive:login

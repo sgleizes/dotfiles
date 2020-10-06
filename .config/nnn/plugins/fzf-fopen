@@ -19,10 +19,5 @@ if [[ ! $selected ]] {
 
 for sel in $selected; {
   sel="$(realpath $sel)"
-  case "$(file -biL "$sel")" in
-    *text*)
-      "${VISUAL:-$EDITOR}" "$sel" ;;
-    *)
-      xdg-open "$sel" >/dev/null 2>&1 ;;
-  esac
+  xdg-open "$sel" >/dev/null 2>&1
 }

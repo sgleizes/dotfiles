@@ -107,11 +107,17 @@ if (( $+commands[fzf] )) {
       | awk '{print $2}' | xargs -ro sudo pacman -S
   }
 
+
   # ZLE widgets.
+  function open-pacbrowse {
+    print
+    pacbrowse
+    zle redisplay
+  }
   zle -N pacview
-  zle -N pacbrowse
+  zle -N open-pacbrowse
   bindkey "$keys[Control]O$keys[Control]V" pacview
-  bindkey "$keys[Control]O$keys[Control]I" pacbrowse
+  bindkey "$keys[Control]O$keys[Control]I" open-pacbrowse
 
   alias pacv='pacview'
   alias pacb='pacbrowse'

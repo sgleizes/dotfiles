@@ -70,5 +70,5 @@ fi
 
 # edit the file
 #
-"$TODO_EDITOR_" $TODO_CURSOR_LINE_ "$TODO_EDIT_FILE_"
+$TODO_EDITOR_ $TODO_CURSOR_LINE_ "$TODO_EDIT_FILE_"
 exit

@@ -15,7 +15,7 @@ export NNN_ARCHIVE="\\.(7z|a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|l
 export NNN_BMS_DIR="$ZMARKDIR" # for bookmark plugin
 export NNN_COLORS='#040a0b05;4235'
 export NNN_FCOLORS='447127d6005d5cf9c67ec5c4'
-export NNN_OPTS="aerxF"
+export NNN_OPTS="aErxF"
 export NNN_SSHFS='sshfs -o reconnect,idmap=user'
 # export NNN_TRASH=1 # NOTE: Dangerous: no confirmation + triggers on failed ^X...
 
@@ -61,9 +61,10 @@ function nnn {
   # To cd on quit only on ^G, remove the "export" as in:
   #     NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
   # NOTE: NNN_TMPFILE is fixed, should not be modified
-  export NNN_TMPFILE="${XDG_CONFIG_HOME:-$HOME/.config}/nnn/.lastd"
+  export NNN_TMPFILE="$XDG_CONFIG_HOME/nnn/.lastd"
 
-  # Show hidden files on top.
+  # Run nnn with modified environment:
+  # - LC_COLLATE: Show hidden files on top.
   LC_COLLATE="C" command nnn "$@"
 
   if [[ -f $NNN_TMPFILE ]]; then

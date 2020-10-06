@@ -1,6 +1,8 @@
 #
 # Fasd configuration module for zsh
 #
+# NOTE: This module uses the open/edit aliases and therefore depends
+# on the core/editor modules.
 # NOTE: This module defines additional ZLE widgets and bindings and
 # therefore should be loaded after the zle module.
 #
@@ -52,22 +54,22 @@ function fasd-cd {
   [[ -d $dir ]] && cd $dir || return 1
 }
 
-# Edit a frecent file.
+# Edit frecent files.
 # Usage: fasd-edit [query...]
 function fasd-edit {
-  local file=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
+  local files=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" \
     _fasd_pick f $@)
-  [[ -f $file ]] && ${(z)VISUAL:-${(z)EDITOR}} $file || return 1
+  [[ $files ]] && edit ${(f)files} || return 1
 }
 
-# Open a frecent file.
+# Open frecent files.
 # Usage: fasd-open [query...]
 function fasd-open {
-  local file=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
+  local files=$(FZF_HEIGHT="${FZF_FILES_HEIGHT:-${FZF_HEIGHT:-50%}}" \
     FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_FILES_OPTS -m" \
     _fasd_pick f $@)
-  [[ -f $file ]] && open $file || return 1
+  [[ $files ]] && for f in ${(f)files}; { open $f || return 1; }
 }
 
 alias d='fasd -d'
