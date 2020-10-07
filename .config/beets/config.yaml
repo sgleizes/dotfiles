@@ -16,7 +16,7 @@ art_filename: cover
 paths:
   default: $albumartist/$album%aunique{}/$track $title
   singleton: $artist/Singles/$title
-  comp: Compilations/$album%aunique{}/$track $title
+  comp: Various Artists/$album%aunique{}/$track $title
 
 # Library import options
 
