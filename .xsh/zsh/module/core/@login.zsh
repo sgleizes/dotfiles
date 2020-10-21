@@ -68,12 +68,12 @@ command mkdir -p \
 path=($XDG_BIN_HOME $XDG_BIN_HOME/xdg $path)
 
 #
-# Various session environment variables
+# Session environment
 #
 
-# Configure gamemode to run games on the Nvidia GPU (optimus-manager) and with mangohud.
-# See https://github.com/Askannz/optimus-manager/wiki/Nvidia-GPU-offloading-for-%22hybrid%22-mode.
 if (( $+commands[optimus-manager] && $+commands[gamemoderun] )) {
+  # Configure gamemode to run games on the Nvidia GPU (optimus-manager) and with mangohud.
+  # See https://github.com/Askannz/optimus-manager/wiki/Nvidia-GPU-offloading-for-%22hybrid%22-mode.
   export GAMEMODERUNEXEC="env \
 __NV_PRIME_RENDER_OFFLOAD=1 \
 __GLX_VENDOR_LIBRARY_NAME=nvidia \
@@ -82,7 +82,20 @@ MANGOHUD_DLSYM=1 \
 mangohud"
 }
 
-# Disable prompt for wine-gecko install.
 if (( $+commands[wine] )) {
+  # Disable prompt for wine-gecko install.
   export WINEDLLOVERRIDES='mshtml=d'
+}
+
+if (( $+commands[go] )) {
+  # Add installed go binaries to PATH.
+  path+=($GOPATH/bin)
+
+  # Use the module-aware mode by default.
+  export GO111MODULE='on'
+}
+
+if (( $+commands[npm] )) {
+  # Add installed node binaries to PATH.
+  path+=($XDG_LIB_HOME/npm/bin)
 }
