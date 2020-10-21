@@ -64,11 +64,11 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
   function {
     # Start the tmux server, this is only useful if a session is created in the tmux config.
     # Otherwise the server will exit immediately (unless exit-empty is turned off).
-    tmux -f "$TMUX_CONFIG" start-server
+    command tmux -f "$TMUX_CONFIG" start-server
 
     # Create the default session if no session has been defined in tmux.conf.
     if ! tmux has-session 2>/dev/null; then
-      tmux -f "$TMUX_CONFIG" new-session -ds "$TMUX_DEFAULT_SESSION"
+      command tmux -f "$TMUX_CONFIG" new-session -ds "$TMUX_DEFAULT_SESSION"
     fi
 
     # Perform the action defined by the selected autostart mode.
@@ -96,7 +96,7 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
     }
 
     # Attach to the default session or to the most recently used unattached session.
-    [[ $attach ]] && exec tmux attach-session
+    [[ $attach ]] && exec command tmux attach-session
   }
 }
 
