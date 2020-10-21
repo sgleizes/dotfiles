@@ -125,7 +125,7 @@ function autoload_dir {
 autoload_dir ${0:h}/function
 
 #
-# VPN
+# Misc aliases
 #
 
 if (( $+commands[nordvpn] )) {
@@ -133,36 +133,9 @@ if (( $+commands[nordvpn] )) {
   alias v='vpn'
 }
 
-#
-# Speech synthesizer
-#
-
-# Usability aliases for espeak-ng.
 if (( $+commands[espeak-ng] )) {
   alias speak-en='speak-ng -v gmw/en-US'
   alias speak-fr='speak-ng -v roa/fr'
-}
-
-#
-# Golang
-#
-
-if (( $+commands[go] )) {
-  # Add installed go binaries to PATH.
-  path+=($GOPATH/bin)
-
-  # Use the module-aware mode by default.
-  export GO111MODULE='on'
-}
-
-
-#
-# Node
-#
-
-if (( $+commands[npm] )) {
-  # Add installed node binaries to PATH.
-  path+=($XDG_LIB_HOME/npm/bin)
 }
 
 #
