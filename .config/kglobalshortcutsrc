@@ -36,7 +36,7 @@ _k_friendly_name=KDE Daemon
 display=Display\tMeta+P,Display\tMeta+P,Switch Display
 
 [khotkeys]
-_k_friendly_name=KDE Daemon
+_k_friendly_name=Custom Shortcuts Service
 {0a42811a-6f12-4541-b0ea-4026ebd6fa5c}=Meta+H,none,Open KSysGuard
 {5eadaaf5-a7d7-497b-be42-486b69eeb729}=Meta+V,none,Open Enpass
 {60caaefd-902d-44a0-9073-c5bfcaf39455}=Meta+Y,none,Open YAC Reader
@@ -356,7 +356,7 @@ clipboard_action=Ctrl+Alt+X,Ctrl+Alt+X,Enable Clipboard Actions
 cycleNextAction=none,none,Next History Item
 cyclePrevAction=none,none,Previous History Item
 edit_clipboard=none,none,Edit Contents...
-manage activities=Meta+A,Meta+Q,Activities...
+manage activities=Meta+A,Meta+Q,Show Activity Switcher
 next activity=Meta+Tab,Meta+Tab,Walk through activities
 previous activity=Meta+Shift+Tab,Meta+Shift+Tab,Walk through activities (Reverse)
 repeat_action=Ctrl+Alt+R,Ctrl+Alt+R,Manually Invoke Action on Current Clipboard

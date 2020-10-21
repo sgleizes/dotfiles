@@ -41,7 +41,7 @@ ToolBoxButtonX=739
 ToolBoxButtonY=28
 arrangement=1
 filterMimeTypes=\\0
-iconSize=3
+iconSize=2
 textLines=1
 
 [Containments][1][Wallpaper][org.kde.image][General]
@@ -307,7 +307,7 @@ wallpaperplugin=org.kde.image
 
 [Containments][61][General]
 arrangement=1
-iconSize=3
+iconSize=2
 textLines=1
 url=file:///home/psydev/Projects
 
@@ -345,7 +345,7 @@ wallpaperplugin=org.kde.potd
 
 [Containments][64][General]
 arrangement=1
-iconSize=3
+iconSize=2
 textLines=1
 url=file:///home/psydev/Projects/perma
 
