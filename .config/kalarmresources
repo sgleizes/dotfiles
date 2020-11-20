@@ -11,7 +11,7 @@ KeepFormat=true
 Name=Active Alarms
 Path[$e]=$HOME/.local/share/kalarm/calendar.ics
 ReadOnly=false
-Standard=
+Standard=Active
 Type=File
 UpdateFormat=false
 
