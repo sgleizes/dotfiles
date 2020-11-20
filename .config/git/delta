@@ -18,6 +18,7 @@
 [delta]
   features = truecolor decorations line-numbers navigate
   syntax-theme = OneHalfDark
+  max-line-length = 4096
   tabs = 2
 
 [delta "truecolor"]
