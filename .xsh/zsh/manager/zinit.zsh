@@ -1,5 +1,6 @@
 #
 # Installation module for the zinit plugin manager.
+# https://github.com/zdharma/zinit
 #
 
 typeset -gAH ZINIT

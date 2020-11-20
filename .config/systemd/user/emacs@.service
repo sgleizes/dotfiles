@@ -1,0 +1,16 @@
+[Unit]
+Description=Emacs text editor (%i)
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+PartOf=emacs.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/emacs --fg-daemon=%i
+ExecStop=/usr/bin/emacsclient --socket-name=%i --eval "(kill-emacs)"
+# The location of the SSH auth socket varies by distribution, and some
+# set it from PAM, so don't override by default.
+# Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target

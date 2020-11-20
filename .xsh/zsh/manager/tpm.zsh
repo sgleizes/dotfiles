@@ -1,5 +1,6 @@
 #
 # Installation module for the tmux plugin manager.
+# https://github.com/tmux-plugins/tpm/
 #
 
 # Abort if requirements are not met.

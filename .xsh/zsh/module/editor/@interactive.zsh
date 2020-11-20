@@ -9,6 +9,26 @@
 alias edit='${(z)VISUAL:-${(z)EDITOR}}'
 alias e='edit'
 
+if (( $+commands[emacs] )) {
+  # An emacs 'alias' with the ability to read from stdin.
+  # Adopted from https://github.com/davidshepherd7/emacs-read-stdin/blob/master/emacs-read-stdin.sh
+  function edit {
+    # If the argument is - then write stdin to a tempfile and open the
+    # tempfile.
+    if (( $# >= 1 )) && [[ $1 == '-' ]]; then
+      tempfile="$(mktemp "emacs-stdin-$USER.XXXXXXX" --tmpdir)"
+      cat - >! $tempfile
+      edit --eval "(find-file \"$tempfile\")" \
+        --eval '(set-visited-file-name nil)' \
+        --eval '(rename-buffer "*stdin*" t)'
+    else
+      edit "$@"
+    fi
+  }
+
+  unalias edit
+}
+
 # Shortcut to open the default editor.
 function open-editor {
   exec </dev/tty

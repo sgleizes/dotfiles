@@ -11,14 +11,11 @@
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
 # Use zinit as the main plugin manager.
-# https://github.com/zdharma/zinit
 xsh manager zinit
 # Register the tmux plugin manager.
-# https://github.com/tmux-plugins/tpm/
 xsh manager tpm
-# Register the spacemacs package manager.
-# https://github.com/syl20bnr/spacemacs
-xsh manager spacemacs
+# Register the emacs package manager.
+xsh manager doom-emacs
 
 # Load the tmux module first in case autostart is enabled.
 xsh module tmux interactive:login
