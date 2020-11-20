@@ -4,4 +4,3 @@ linux: {}
 system:
   env:
     HOME: /home/psydev/.local/share/steam
-  prefix_command: gamemoderun
