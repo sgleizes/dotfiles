@@ -84,7 +84,7 @@ mangohud"
 
 if (( $+commands[wine] )) {
   # Disable prompt for wine-gecko install.
-  export WINEDLLOVERRIDES='mshtml=d'
+  export WINEDLLOVERRIDES='mshtml='
 }
 
 if (( $+commands[go] )) {
