@@ -1,0 +1,32 @@
+#!/usr/bin/bash
+# Wrap the emacsclient command to open a new graphical frame if none exist or if
+# no files are specified, else open the given files in the most-recent graphical
+# frame.
+
+# The command to use to contact the emacs server.
+EMACSCLIENT="emacsclient --socket-name graphical"
+
+# Elisp query to find the most recently opened graphical non-child frame.
+FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
+  (and (eq (framep f) 'x) \
+  (not (frame-parent f)))))"
+
+if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
+  $EMACSCLIENT --create-frame --no-wait "$@"
+else
+  DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
+  $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
+fi
+
+# Wrap the emacsclient command to open a new graphical frame if none exist, else
+# open the given files in the most-recent graphical frame.
+# If no files are specified, select and raise the existing frame.
+
+# if [[ "$($EMACSCLIENT --eval "($FRAME_QUERY)")" = 'nil' ]]; then
+#   $EMACSCLIENT --create-frame --no-wait "$@"
+# elif [[ "$@" ]]; then
+#   DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
+#   $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
+# else
+#   $EMACSCLIENT --eval "(select-frame-set-input-focus ($FRAME_QUERY))"
+# fi

@@ -1,0 +1,6 @@
+[Unit]
+Description=Emacs text editor daemons
+Wants=emacs@terminal.service emacs@graphical.service
+
+[Install]
+WantedBy=default.target
