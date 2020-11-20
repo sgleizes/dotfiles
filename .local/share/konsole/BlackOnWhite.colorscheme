@@ -102,7 +102,7 @@ RandomSaturationRange=100
 
 [General]
 Blur=false
-ColorRandomization=true
+ColorRandomization=false
 Description=Black on White
 Opacity=0.85
 Wallpaper=
