@@ -29,7 +29,7 @@ import:
 
 format_item: $artist - $album - $title
 format_album: $albumartist - $album
-time_format: '%Y-%m-%d %H:%M:%S'
+time_format: "%Y-%m-%d %H:%M:%S"
 sort_album: albumartist+ album+
 sort_item: artist+ album+ disc+ track+
 sort_case_insensitive: yes
