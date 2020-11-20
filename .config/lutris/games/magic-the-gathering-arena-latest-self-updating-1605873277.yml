@@ -1,0 +1,11 @@
+game:
+  arch: win64
+  exe: drive_c/Program Files/Wizards of the Coast/MTGA/MTGALauncher/MTGALauncher.exe
+  prefix: /home/psydev/Games/MTGA
+system:
+  env:
+    DXVK_LOG_LEVEL: none
+wine:
+  dxvk: true
+  esync: true
+  version: lutris-mtga-5.0-x86_64
