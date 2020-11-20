@@ -38,6 +38,7 @@ display=Display\tMeta+P,Display\tMeta+P,Switch Display
 [khotkeys]
 _k_friendly_name=Custom Shortcuts Service
 {0a42811a-6f12-4541-b0ea-4026ebd6fa5c}=Meta+H,none,Open KSysGuard
+{347f6366-9f4c-4cd3-8c95-6fbe45380e99}=Meta+C,none,Open GnuCash
 {5eadaaf5-a7d7-497b-be42-486b69eeb729}=Meta+V,none,Open Enpass
 {60caaefd-902d-44a0-9073-c5bfcaf39455}=Meta+Y,none,Open YAC Reader
 {d8da2562-6a62-459a-b9bc-20de167ce312}=Meta+T,none,Launch Konsole

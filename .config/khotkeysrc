@@ -3,7 +3,7 @@ DataCount=2
 
 [Data_1]
 Comment=KMenuEdit Global Shortcuts
-DataCount=5
+DataCount=6
 Enabled=true
 Name=KMenuEdit
 SystemGroup=1
@@ -142,6 +142,32 @@ TriggersCount=1
 Key=Meta+Y
 Type=SHORTCUT
 Uuid={60caaefd-902d-44a0-9073-c5bfcaf39455}
+
+[Data_1_6]
+Comment=Comment
+Enabled=true
+Name=Open GnuCash
+Type=SIMPLE_ACTION_DATA
+
+[Data_1_6Actions]
+ActionsCount=1
+
+[Data_1_6Actions0]
+CommandURL=gnucash.desktop
+Type=MENUENTRY
+
+[Data_1_6Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_6Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_1_6Triggers0]
+Key=Meta+C
+Type=SHORTCUT
+Uuid={347f6366-9f4c-4cd3-8c95-6fbe45380e99}
 
 [Data_2]
 Comment=This group contains various examples demonstrating most of the features of KHotkeys. (Note that this group and all its actions are disabled by default.)
