@@ -12,7 +12,7 @@
 # - ^O -> open terminal applications
 # - ^A -> tmux
 #
-# Available Control keys: Q T V B N
+# Available Control keys: Q T V N
 
 setopt no_beep         # do not fucking beep
 setopt combining_chars # combine accents with the base character
@@ -438,9 +438,9 @@ bindkey "$keys[Control]Y" yank
 bindkey "$keys[Alt]y" yank-pop
 
 # Push the current buffer onto the buffer stack and clear the buffer.
-bindkey "$keys[Control]J" push-line-or-edit
+bindkey "$keys[Control]U" push-line-or-edit
 # Pop the top line off the buffer stack and insert it at the cursor position.
-bindkey "$keys[Control]U" get-line
+bindkey "$keys[Control]B" get-line
 
 # Duplicate previous words in the current line.
 for key in "$keys[Control]P" "$keys[Alt]p"; {
@@ -527,7 +527,8 @@ bindkey "$keys[Alt] " expand-all
 #
 
 # Finish editing the buffer and execute it as a shell command.
-bindkey "$keys[Control]M" accept-line # Enter
+bindkey "$keys[Control]J" accept-line # Line Feed
+bindkey "$keys[Control]M" accept-line # Carriage Return
 # Push the contents of the buffer on the buffer stack and execute it.
 # During menu completion, accept the currently inserted match and continue
 # selection allowing to select the next match to insert into the line.
@@ -657,7 +658,6 @@ function _rebind_compsys_widgets {
 
   unfunction _rebind_compsys_widgets
 }
-
 
 # Rebind widgets immediately if compinit has been loaded.
 # During the initial zinit run, plugins are loaded synchronously, so compinit
