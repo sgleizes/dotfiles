@@ -1,0 +1,1020 @@
+#+TITLE: Doom Emacs Configuration
+#+AUTHOR: Stéphane Gleizes
+#+STARTUP: fold
+#+PROPERTY: header-args:elisp :tangle yes :cache yes :results silent :comments link
+#+PROPERTY: header-args :tangle no :results silent
+
+* System setup
+** Systemd daemons
+To avoid the loads of issues arising when using a single ~emacs~ daemon for both
+terminal and graphical frames, I decided to use dedicated daemons for each type
+of frame.
+
+To that purpose, I created a systemd /template unit file/, derived from the default
+one that ships with ~emacs~:
+#+begin_src systemd :tangle ~/.config/systemd/user/emacs@.service :mkdirp yes
+[Unit]
+Description=Emacs text editor (%i)
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+PartOf=emacs.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/emacs --fg-daemon=%i
+ExecStop=/usr/bin/emacsclient --socket-name=%i --eval "(kill-emacs)"
+# The location of the SSH auth socket varies by distribution, and some
+# set it from PAM, so don't override by default.
+# Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+This unit file is extended by the following /drop-in snippet/ that sets-up the
+right environment for ~emacs~ daemons:
+#+begin_src systemd :tangle ~/.config/systemd/user/emacs@.service.d/env.conf :mkdirp yes
+[Service]
+Environment=XAUTHORITY=%C/Xauthority
+Environment=DOOMDIR=%E/doom
+Environment=DOOMLOCALDIR=%h/.local/share/emacs
+#+end_src
+
+To define and manage all instances, I use a systemd /target file/:
+#+begin_src systemd :tangle ~/.config/systemd/user/emacs.target :mkdirp yes
+[Unit]
+Description=Emacs text editor daemons
+Wants=emacs@terminal.service emacs@graphical.service
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+Which is then enabled and started with:
+#+begin_src sh
+systemctl --user enable --now emacs.target
+#+end_src
+
+** Desktop launcher
+Since I don't want a new graphical frame to be created every time a file is
+opened, I wrote this launcher script to wrap ~emacsclient~:
+#+begin_src sh :tangle ~/.local/bin/emacs-xclient :tangle-mode (identity #o755)
+#!/usr/bin/bash
+# Wrap the emacsclient command to open a new graphical frame if none exist or if
+# no files are specified, else open the given files in the most-recent graphical
+# frame.
+
+# The command to use to contact the emacs server.
+EMACSCLIENT="emacsclient --socket-name graphical"
+
+# Elisp query to find the most recently opened graphical non-child frame.
+FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
+  (and (eq (framep f) 'x) \
+  (not (frame-parent f)))))"
+
+if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
+  $EMACSCLIENT --create-frame --no-wait "$@"
+else
+  DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
+  $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
+fi
+#+end_src
+
+Let's add a new desktop icon that represents well what ~emacs~ truly is: a black
+hole for the mind:
+#+attr_html: :class img :alt The doom emacs desktop icon
+[[file:./icon/black-hole.png]]
+
+Install the icon:
+#+begin_src sh
+for size in 16 24 32 48 64 96 128 192 256; do
+  orig="./icon/black-hole.png"
+  icon="./icon/black-hole-$size.png"
+  convert "$orig" -resize "${size}x${size}" "$icon"
+  xdg-icon-resource install --size "$size" "$icon" doom-emacs
+  rm -f "$icon"
+done
+#+end_src
+
+The desktop entry must now be modified to use the above script and icon:
+#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
+[Desktop Entry]
+Categories=Development;TextEditor;
+Comment=Edit text
+Exec=emacs-xclient %F
+GenericName=Text Editor
+Icon=doom-emacs
+Keywords=Text;Editor;
+MimeType=text/x-tex;text/x-pascal;text/x-moc;text/x-makefile;text/x-java;text/x-csrc;text/x-csrc;text/x-chdr;text/x-c++src;text/x-c++hdr;text/tcl;text/plain;application/x-shellscript;
+Name=Emacs
+StartupNotify=true
+StartupWMClass=Emacs
+Terminal=false
+Type=Application
+#+end_src
+
+* General configuration
+Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
+for more info).
+#+begin_src elisp :comments no
+;;; config.el -*- lexical-binding: t; -*-
+#+end_src
+
+** Personal information
+Some functionality uses this to identify you, e.g. GPG configuration, email
+clients, file templates and snippets.
+#+begin_src elisp
+(setq user-full-name "Stéphane Gleizes"
+      user-mail-address "stephane.gleizes@gmail.com")
+#+end_src
+
+** Doom configuration
+*** Modules
+:PROPERTIES:
+:header-args:elisp: :tangle no
+:END:
+Doom has this lovely /modular configuration base/ that takes a lot of work out
+of configuring Emacs. Each module (when enabled) can provide a list of packages
+to install (on ~doom sync~) and configuration to be applied. The modules can
+also have flags applied to tweak their behavior.
+
+See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#modules][doom documentation]] and the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][modules appendix]].
+
+**** Structure
+#+name: init.el
+#+begin_src elisp :tangle "init.el" :noweb no-export :comments none
+;;; init.el -*- lexical-binding: t; -*-
+
+;; This file controls what Doom modules are enabled and what order they load in.
+;; Press 'K' on a module to view its documentation, and 'gd' to browse its directory.
+
+(doom! :input
+       <<doom-input>>
+
+       :completion
+       <<doom-completion>>
+
+       :ui
+       <<doom-ui>>
+
+       :editor
+       <<doom-editor>>
+
+       :emacs
+       <<doom-emacs>>
+
+       :term
+       <<doom-term>>
+
+       :checkers
+       <<doom-checkers>>
+
+       :tools
+       <<doom-tools>>
+
+       :os
+       <<doom-os>>
+
+       :lang
+       <<doom-lang>>
+
+       :email
+       <<doom-email>>
+
+       :app
+       <<doom-app>>
+
+       :config
+       <<doom-config>>
+       )
+#+end_src
+
+**** Configuration
+#+name: doom-config
+#+begin_src elisp
+literate
+(default +bindings +smartparens)
+#+end_src
+
+#+name: doom-input
+#+begin_src elisp
+;;chinese
+;;japanese
+;;layout            ; auie,ctsrnm is the superior home row
+#+end_src
+
+**** Completion
+#+name: doom-completion
+#+begin_src elisp
+(company +childframe)         ; the ultimate code completion backend
+;;helm                        ; the *other* search engine for love and life
+;;ido                         ; the other *other* search engine...
+(ivy +prescient +icons)       ; a search engine for love and life
+#+end_src
+
+**** Interface
+#+name: doom-ui
+#+begin_src elisp
+;;deft                        ; notational velocity for Emacs
+doom                          ; what makes DOOM look the way it does
+doom-dashboard                ; a nifty splash screen for Emacs
+;;doom-quit                   ; DOOM quit-message prompts when you quit Emacs
+;;fill-column                 ; a `fill-column' indicator
+hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+;;hydra
+;;indent-guides               ; highlighted indent columns
+(ligatures +fira)             ; ligatures and symbols to make your code pretty again
+;;minimap                     ; show a map of the code on the side
+modeline                      ; snazzy, Atom-inspired modeline, plus API
+;;nav-flash                   ; blink cursor line after big motions
+;;neotree                     ; a project drawer, like NERDTree for vim
+ophints                       ; highlight the region an operation acts on
+(popup +all +defaults)        ; tame sudden yet inevitable temporary windows
+tabs                          ; a tab bar for Emacs
+treemacs                      ; a project drawer, like neotree but cooler
+unicode                       ; extended unicode support for various languages
+vc-gutter                     ; vcs diff in the fringe
+vi-tilde-fringe               ; fringe tildes to mark beyond EOB
+(window-select +numbers)      ; visually switch windows
+workspaces                    ; tab emulation, persistence & separate workspaces
+;;zen                         ; distraction-free coding or writing
+#+end_src
+
+**** Editor
+#+name: doom-editor
+#+begin_src elisp
+(evil +everywhere)            ; come to the dark side, we have cookies
+file-templates                ; auto-snippets for empty files
+fold                          ; (nigh) universal code folding
+(format +onsave)              ; automated prettiness
+;;god                         ; run Emacs commands without modifier keys
+;;lispy                       ; vim for lisp, for people who don't like vim
+multiple-cursors              ; editing in many places at once
+;;objed                       ; text object editing for the innocent
+;;parinfer                    ; turn lisp into python, sort of
+rotate-text                   ; cycle region at point between text candidates
+snippets                      ; my elves. They type so I don't have to
+;;word-wrap                   ; soft wrapping with language-aware indent
+#+end_src
+
+**** Builtins
+#+name: doom-emacs
+#+begin_src elisp
+(dired +ranger +icons)        ; making dired pretty [functional]
+electric                      ; smarter, keyword-based electric-indent
+(ibuffer +icons)              ; interactive buffer management
+(undo +tree)                  ; persistent, smarter undo for your inevitable mistakes
+vc                            ; version-control and Emacs, sitting in a tree
+#+end_src
+
+**** Terminal
+#+name: doom-term
+#+begin_src elisp
+;;eshell                      ; the elisp shell that works everywhere
+;;shell                       ; simple shell REPL for Emacs
+;;term                        ; basic terminal emulator for Emacs
+vterm                         ; the best terminal emulation in Emacs
+#+end_src
+
+**** Checkers
+#+name: doom-checkers
+#+begin_src elisp
+syntax                        ; tasing you for every semicolon you forget
+(spell +flyspell +enchant)    ; tasing you for misspelling mispelling
+;;grammar                     ; tasing grammar mistake every you make
+#+end_src
+
+**** Tools
+#+name: doom-tools
+#+begin_src elisp
+;;ansible                     ; a crucible for infrastructure as code
+;;debugger                    ; FIXME stepping through code, to help you add bugs
+;;direnv                      ; be direct about your environment
+docker                        ; port everything to containers
+editorconfig                  ; let someone else argue about tabs vs spaces
+;;ein                         ; tame Jupyter notebooks with emacs
+(eval +overlay)               ; run code, run (also, repls)
+;;gist                        ; interacting with github gists
+lookup                        ; navigate your code and its documentation
+lsp                           ; language server protocol
+magit                         ; a git porcelain for Emacs
+;;make                        ; run make tasks from Emacs
+;;pass                        ; password manager for nerds
+pdf                           ; pdf enhancements
+;;prodigy                     ; FIXME managing external services & code builders
+rgb                           ; creating color strings
+taskrunner                    ; taskrunner for all your projects
+;;terraform                   ; infrastructure as code
+;;tmux                        ; an API for interacting with tmux
+;;upload                      ; map local to remote projects via ssh/ftp
+#+end_src
+
+**** System
+#+name: doom-os
+#+begin_src elisp
+(:if IS-MAC macos)            ; improve compatibility with macOS
+tty                         ; improve the terminal Emacs experience
+#+end_src
+
+**** Language support
+We can be rather liberal with enabling support for languages as the associated
+packages/configuration are (usually) only loaded when first opening an
+associated file.
+
+#+name: doom-lang
+#+begin_src elisp
+;;agda                        ; types of types of types of types...
+(cc +lsp)                     ; C/C++/Obj-C madness
+;;clojure                     ; java with a lisp
+;;common-lisp                 ; if you've seen one lisp, you've seen them all
+;;coq                         ; proofs-as-programs
+;;crystal                     ; ruby at the speed of c
+;;csharp                      ; unity, .NET, and mono shenanigans
+data                          ; config/data formats
+;;(dart +flutter)             ; paint ui and not much else
+;;elixir                      ; erlang done right
+;;elm                         ; care for a cup of TEA?
+emacs-lisp                    ; drown in parentheses
+;;erlang                      ; an elegant language for a more civilized age
+;;ess                         ; emacs speaks statistics
+;;faust                       ; dsp, but you get to keep your soul
+;;fsharp                      ; ML stands for Microsoft's Language
+;;fstar                       ; (dependent) types and (monadic) effects and Z3
+;;gdscript                    ; the language you waited for
+(go +lsp)                     ; the hipster dialect
+;;(haskell +dante)            ; a language that's lazier than I am
+;;hy                          ; readability of scheme w/ speed of python
+;;idris                       ; a language you can depend on
+json                          ; At least it ain't XML
+;;(java +meghanada)           ; the poster child for carpal tunnel syndrome
+;;javascript                  ; all(hope(abandon(ye(who(enter(here))))))
+;;julia                       ; a better, faster MATLAB
+;;kotlin                      ; a better, slicker Java(Script)
+;;latex                       ; writing papers in Emacs has never been so fun
+;;lean                        ; proof that mathematicians need help
+;;factor                      ; for when scripts are stacked against you
+;;ledger                      ; an accounting system in Emacs
+;;lua                         ; one-based indices? one-based indices
+markdown                      ; writing docs for people to ignore
+;;nim                         ; python + lisp at the speed of c
+;;nix                         ; I hereby declare "nix geht mehr!"
+;;ocaml                       ; an objective camel
+(org +pretty)                 ; organize your plain life in plain text
+;;php                         ; perl's insecure younger brother
+;;plantuml                    ; diagrams for confusing people more
+;;purescript                  ; javascript, but functional
+;;python                      ; beautiful is better than ugly
+;;qt                          ; the 'cutest' gui framework ever
+;;racket                      ; a DSL for DSLs
+;;raku                        ; the artist formerly known as perl6
+;;rest                        ; Emacs as a REST client
+;;rst                         ; ReST in peace
+;;(ruby +rails)               ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+;;rust                        ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+;;scala                       ; java, but good
+;;scheme                      ; a fully conniving family of lisps
+(sh +lsp)                     ; she sells {ba,z,fi}sh shells on the C xor
+;;sml                         ; no, the /other/ ML
+;;solidity                    ; do you need a blockchain? No.
+;;swift                       ; who asked for emoji variables?
+;;terra                       ; Earth and Moon in alignment for performance.
+;;web                         ; the tubes
+yaml                          ; JSON, but readable
+#+end_src
+
+**** Applications
+#+name: doom-email
+#+begin_src elisp
+;;(mu4e +org +gmail)
+;;notmuch
+;;(wanderlust +gmail)
+#+end_src
+
+#+name: doom-app
+#+begin_src elisp
+;;calendar
+;;irc                        ; how neckbeards socialize
+;;(rss +org)                 ; emacs as an RSS reader
+;;twitter                    ; twitter client https://twitter.com/vnought
+#+end_src
+
+*** Appearance
+**** Fonts
+Doom exposes five (optional) variables for controlling fonts in Doom, they are:
++ doom-font
++ doom-variable-pitch-font
++ doom-serif-font
++ doom-unicode-font (the fallback font for unicode symbols that your default font doesn’t support)
++ doom-big-font (used for doom-big-font-mode)
+They all accept either a font-spec, font string (=”Input Mono-12”=), or [[https://wiki.archlinux.org/index.php/X_Logical_Font_Description][xlfd font string]].
+
+#+begin_src elisp
+(setq doom-font (font-spec :family "Fira Code" :size 12)
+      doom-variable-pitch-font (font-spec :family "Fira Sans")
+      doom-unicode-font (font-spec :family "Noto Sans Mono")
+      doom-big-font (font-spec :family "Fira Code" :size 18))
+#+end_src
+
+**** Theme and modeline
+#+begin_src elisp
+(setq doom-theme 'doom-tomorrow-night)
+(delq! t custom-theme-load-path) ; Remove default emacs theme from search path
+#+end_src
+
+Let's make graphical frames slightly transparent.
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+#+end_src
+
+While we're modifying the modeline, =LF UTF-8= is the default file encoding, and
+thus not worth noting in the modeline. So, let's conditionally hide it.
+#+begin_src elisp
+(defun doom-modeline-conditional-buffer-encoding ()
+  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
+  (setq-local doom-modeline-buffer-encoding
+              (unless (or (eq buffer-file-coding-system 'utf-8-unix)
+                          (eq buffer-file-coding-system 'utf-8)))))
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
+#+end_src
+
+**** Dashboard
+Customize the splash image of the doom dashboard.
+#+begin_src elisp
+(setq fancy-splash-image nil
+      +doom-dashboard-banner-dir (concat doom-private-dir "banner/")
+      +doom-dashboard-banner-file "black-hole.png")
+#+end_src
+
+Fix visually disturbing ~hl-line~ range in the dashboard.
+#+begin_src elisp
+(defun doom-dashboard-hl-button ()
+  (cons (- (point) 5) (line-end-position)))
+(add-hook! +doom-dashboard-mode
+           '(lambda () (setq-local hl-line-range-function #'doom-dashboard-hl-button)))
+#+end_src
+
+*** Terminal
+Disable minor modes that are undesired in terminal frames.
+#+begin_src elisp
+(defun +doom-disable-graphical-modes (&optional frame)
+  "Display the tab bar in FRAME (default: selected frame) if on a
+graphical display, but hide it if in terminal."
+  (interactive)
+  (unless (display-graphic-p frame)
+    (remove-hook! doom-first-file #'centaur-tabs-mode)
+    (remove-hook! doom-first-input #'evil-goggles-mode)
+    (remove-hook! '(org-mode-hook
+                    markdown-mode-hook
+                    TeX-mode-hook
+                    rst-mode-hook
+                    mu4e-compose-mode-hook
+                    message-mode-hook
+                    git-commit-mode-hook)
+      #'flyspell-mode)
+    (setq +ligatures-in-modes nil)))
+(add-hook! 'after-make-frame-functions '+doom-disable-graphical-modes)
+#+end_src
+
+** Better defaults
+*** General
+Tweak various general settings to more opinionated values.
+#+begin_src elisp
+(setq-default delete-by-moving-to-trash t  ; Delete files to trash
+              window-combination-resize t  ; take new window space from all other windows (not just current)
+              x-stretch-cursor t)          ; Stretch cursor to the glyph width
+
+(setq undo-limit 80000000                  ; Raise undo-limit to 80Mb
+      evil-want-fine-undo t                ; By default while in insert all changes are one big blob. Be more granular
+      auto-save-default t                  ; Nobody likes to loose work, I certainly don't
+      truncate-string-ellipsis "…"         ; Unicode ellispis are nicer than "...", and also save precious space
+      uniquify-buffer-name-style 'forward) ; Use path to uniquify buffer names
+
+(global-subword-mode 1)                    ; Iterate through CamelCase words
+#+end_src
+
+*** Indentation
+Set default values for the various indentation settings.
+Even though ~dtrt-indent~ will properly update these by analyzing existing
+files, it is still necessary to set the desired value for new files.
+#+begin_src elisp
+(setq-default tab-width 2
+              ;; List of language-specific variables from dtrt-indent
+              c-basic-offset          tab-width  ; C/C++/D/PHP/Java/...
+              js-indent-level         tab-width  ; JavaScript/JSON
+              js2-basic-offset        tab-width  ; JavaScript-IDE
+              js3-indent-level        tab-width  ; JavaScript-IDE
+              lua-indent-level        tab-width  ; Lua
+              perl-indent-level       tab-width  ; Perl
+              cperl-indent-level      tab-width  ; Perl
+              raku-indent-offset      tab-width  ; Perl6/Raku
+              erlang-indent-level     tab-width  ; Erlang
+              ada-indent              tab-width  ; Ada
+              sgml-basic-offset       tab-width  ; SGML
+              nxml-child-indent       tab-width  ; XML
+              pascal-indent-level     tab-width  ; Pascal
+              typescript-indent-level tab-width  ; Typescript
+              ;; Languages that use SMIE-based indent
+              sh-basic-offset         tab-width  ; Shell Script
+              ruby-indent-level       tab-width  ; Ruby
+              enh-ruby-indent-level   tab-width  ; Ruby
+              crystal-indent-level    tab-width  ; Crystal (Ruby)
+              css-indent-offset       tab-width  ; CSS
+              rust-indent-offset      tab-width  ; Rust
+              rustic-indent-offset    tab-width  ; Rust
+              scala-indent:step       tab-width  ; Scala
+              ;; Default fallback
+              standard-indent         tab-width
+              smie-indent-basic       tab-width)
+#+end_src
+
+*** Frames
+Automatically maximize new frames.
+#+begin_src elisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+*** Windows
+Focus the new window on vertical/horizontal splits.
+#+begin_src elisp
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+#+end_src
+
+Prompt for the workspace buffer to show on new window.
+#+begin_src elisp
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (+ivy/switch-workspace-buffer))
+#+end_src
+
+*** Line numbers
+Relative line numbers are fantastic for knowing how far away line numbers are,
+then =12 <UP>= gets you exactly where you think.
+#+begin_src elisp
+(setq display-line-numbers-type 'relative)
+#+end_src
+
+* Package configuration
+See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#configuring-doom][configuration instructions]] from the doom documentation.
+
+** General packages
+*** Ace window
+#+begin_src elisp
+(after! ace-window
+  (map! :leader :prefix "w"
+        "a" #'ace-window))
+#+end_src
+
+*** Better jumper
+Bind better-jumper functions to a doom-like alternative.
+#+begin_src elisp
+(map! :leader
+      :desc "Jump to previous location" "[" #'better-jumper-jump-backward
+      :desc "Jump to next location" "]" #'better-jumper-jump-forward)
+#+end_src
+
+*** Centaur tabs
+Configure centaur-tabs appearance and behavior. Define rules for buffer groups
+and restrict buffer list to workspace buffers.
+#+begin_src elisp
+(use-package! centaur-tabs
+  :config
+  (setq centaur-tabs-style "bar"
+        centaur-tabs-height 32
+        centaur-tabs-gray-out-icons nil
+        centaur-tabs-set-bar 'under
+        x-underline-at-descent-line t)
+  (centaur-tabs-headline-match)
+  ;; Override rules for grouping buffers.
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+Group centaur-tabs with mode if buffer is derived from `eshell-mode'
+`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+All buffer name start with * will group to \"Emacs\".
+Other buffer group by `centaur-tabs-get-group-name' with project name."
+    (list
+     (cond
+      ((or (string-equal "*" (substring (buffer-name) 0 1))
+           (memq major-mode '(magit-process-mode
+                              magit-status-mode
+                              magit-diff-mode
+                              magit-log-mode
+                              magit-file-mode
+                              magit-blob-mode
+                              magit-blame-mode
+                              )))
+       "Emacs")
+      ((derived-mode-p 'term-mode 'vterm-mode)
+       "Term")
+      ;; ((derived-mode-p 'prog-mode)
+      ;;  "Coding")
+      ((derived-mode-p 'dired-mode)
+       "Dired")
+      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
+       "Org")
+      (t
+       (centaur-tabs-get-group-name (current-buffer))))))
+  ;; Override centaur tabs to use workspace buffers as input list.
+  (defun centaur-tabs-buffer-list ()
+    "Return the list of buffers to show in tabs.
+Exclude buffers whose name starts with a space, when they are not
+visiting a file.  The current buffer is always included."
+    (centaur-tabs-filter-out
+     'centaur-tabs-hide-tab-cached
+     (delq nil
+           (cl-mapcar #'(lambda (b)
+                          (cond
+                           ;; Always include the current buffer.
+                           ((eq (current-buffer) b) b)
+                           ((buffer-file-name b) b)
+                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+                           ((buffer-live-p b) b)))
+                      (doom-buffer-list)))))
+  :hook
+  (doom-dashboard-mode . centaur-tabs-local-mode)
+  (term-mode . centaur-tabs-local-mode)
+  (vterm-mode . centaur-tabs-local-mode))
+
+#+end_src
+
+Provide additional bindings for centaur-tabs functions.
+#+begin_src elisp
+(map!
+ ;; Rebind buffer switching to tab switching commands.
+ :g [remap previous-buffer] #'centaur-tabs-backward
+ :g [remap next-buffer]     #'centaur-tabs-forward
+ ;; Tab manipulation
+ :g "C-<next>"    #'centaur-tabs-forward
+ :g "C-<prior>"   #'centaur-tabs-backward
+ :g "C-M-<next>"  #'centaur-tabs-forward-group
+ :g "C-M-<prior>" #'centaur-tabs-backward-group
+ :n "gt"   #'centaur-tabs-forward
+ :n "gb"   #'centaur-tabs-backward
+ :n "gT"   #'centaur-tabs-forward-group
+ :n "gB"   #'centaur-tabs-backward-group
+ :n "]B"   #'centaur-tabs-forward-group
+ :n "[B"   #'centaur-tabs-backward-group
+ :g "C-S-<prior>" #'centaur-tabs-move-current-tab-to-left
+ :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
+
+ :leader :prefix "b"
+ ;; Buffer group navigation
+ :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
+ :desc "Next buffer group"     "L" #'centaur-tabs-forward-group
+ :desc "Previous buffer group" "H" #'centaur-tabs-backward-group
+ ;; Tab movement
+ :desc "Move tab right"  "l" #'centaur-tabs-move-current-tab-to-right
+ :desc "Move tab left"   "h" #'centaur-tabs-move-current-tab-to-left
+ ;; Numbered buffer navigation
+ :desc "Select tab 1..9" "1" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "2" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "3" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "4" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "5" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "6" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "7" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "8" #'centaur-tabs-select-visible-tab
+ :desc "Select tab 1..9" "9" #'centaur-tabs-select-visible-tab
+ :desc "Select last tab" "0" #'centaur-tabs-select-end-tab
+ )
+#+end_src
+
+*** Company
+Make aborting completions less annoying.
+The ~evil-normal-state-entry-hook~ is triggered when the child frame opens to
+describe the selected element (with ~+childframe~), so it can't be used here.
+#+begin_src elisp
+(after! company
+  (add-hook 'evil-insert-state-exit-hook #'company-abort))
+#+end_src
+
+*** Evil
+Provide more consistent navigation bindings.
+Add the missing arrow-key variants of the window navigation commands.
+#+begin_src elisp
+(map!
+ ;; Use more consistent bindings for workspaces/window navigation
+ :m "] TAB"   #'+workspace/switch-right
+ :m "[ TAB"   #'+workspace/switch-left
+ :nm "]w"     #'evil-window-next
+ :nm "[w"     #'evil-window-prev
+ :map evil-window-map
+ ;; Navigation
+ "]"          #'evil-window-next
+ "["          #'evil-window-prev
+ "<left>"     #'evil-window-left
+ "<down>"     #'evil-window-down
+ "<up>"       #'evil-window-up
+ "<right>"    #'evil-window-right
+ ;; Moving windows
+ "C-<left>"   #'+evil/window-move-left
+ "C-<down>"   #'+evil/window-move-down
+ "C-<up>"     #'+evil/window-move-up
+ "C-<right>"  #'+evil/window-move-right
+ ;; Miscellaneous
+ "`"          #'evil-window-mru     ; Consistent with SPC `
+ "p"          #'+popup/other        ; Better than C-x p
+ "c"          nil                   ; Confusing, use 'd'
+ )
+#+end_src
+
+*** Evil goggles
+Customize evil-goggles visual hints.
+#+begin_src elisp
+(use-package! evil-goggles
+  :config
+  (custom-set-faces
+   '(evil-goggles-paste-face  ((t (:inherit custom-state))))
+   '(evil-goggles-indent-face ((t (:inherit custom-modified))))
+   '(evil-goggles-change-face ((t (:inherit custom-invalid))))
+   '(evil-goggles-delete-face ((t (:inherit custom-invalid)))))
+  (setq evil-goggles-enable-delete t
+        evil-goggles-enable-change t))
+#+end_src
+
+*** Flyspell
+Reduce delay before flyspell is ran on recent changes.
+#+begin_src elisp
+(after! flyspell
+  (setq flyspell-lazy-idle-seconds 2))
+#+end_src
+
+*** Format
+Override format-on-save default enabled modes to add emacs-lisp-mode.
+#+begin_src elisp
+(setq +format-on-save-enabled-modes
+      '(not sql-mode         ; sqlformat is currently broken
+            tex-mode         ; latexindent is broken
+            latex-mode))
+#+end_src
+
+Disable ~shfmt~ formatting for zsh buffers (not supported).
+#+begin_src elisp
+(add-hook! 'sh-set-shell-hook
+  (defun +sh-shell-zsh-no-format ()
+    (if (string= sh-shell "zsh")
+        (setq +format-with :none)
+      (setq +format-with nil))))
+#+end_src
+
+Redefine the ~shfmt~ formatter with consistent indent settings.
+Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
+#+begin_src elisp
+(set-formatter! 'shfmt
+  '("shfmt"
+    "-s"
+    ("-i" "%d" tab-width)
+    ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
+                              (boundp 'sh-shell)
+                              (symbol-value 'sh-shell))
+                  (zsh "bash")
+                  (bash "bash")
+                  (mksh "mksh")
+                  (t "posix"))))
+  :modes 'sh-mode)
+#+end_src
+
+*** Ivy
+Enable Ivy buffer previews. This only applies to workspace buffer switching,
+as it seems that previewing buffers from other workspaces adds them to the
+current workspace, which is totally unwanted behavior.
+#+begin_src elisp
+(setq +ivy-buffer-preview t)
+#+end_src
+
+Override doom's ~+ivy-format-function-line-or-arrow~ and use the line highlight,
+even in terminal mode.
+#+begin_src elisp
+(after! ivy
+  (setf (alist-get 't ivy-format-functions-alist)
+        #'ivy-format-function-line))
+#+end_src
+
+Use a cache for ivy-rich transformations on ~switch-buffer~.
+See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
+#+begin_src elisp
+(after! ivy-rich
+  (defvar ivy-rich--ivy-switch-buffer-cache
+    (make-hash-table :test 'equal))
+
+  (define-advice ivy-rich--ivy-switch-buffer-transformer
+      (:around (old-fn x) cache)
+    (let ((ret (gethash x ivy-rich--ivy-switch-buffer-cache)))
+      (unless ret
+        (setq ret (funcall old-fn x))
+        (puthash x ret ivy-rich--ivy-switch-buffer-cache))
+      ret))
+
+  (define-advice +ivy/switch-buffer
+      (:before (&rest _) ivy-rich-reset-cache)
+    (clrhash ivy-rich--ivy-switch-buffer-cache)))
+#+end_src
+
+*** Ligatures
+Remove annoying programming ligatures.
+#+begin_src elisp
+(setq +ligatures-fira-font-alist (delete '("[]" . 57609) +ligatures-fira-font-alist))
+#+end_src
+
+*** Ranger
+Configure ranger appearance and behavior.
+#+begin_src elisp
+(use-package! ranger
+  :config
+  (setq ranger-cleanup-eagerly t)
+  (setq ranger-show-hidden t)
+  (setq ranger-modify-header nil)
+  (setq ranger-hide-cursor t)
+  )
+#+end_src
+
+*** Terminal cursor
+Disable ~evil-terminal-cursor-changer~, the feature is nice but the performance hit is not worth it.
+#+begin_src elisp
+(remove-hook 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
+#+end_src
+
+*** Treemacs
+Configure treemacs appearance and behavior.
+#+begin_src elisp
+(use-package! treemacs
+  :init
+  (setq +treemacs-git-mode 'deferred)
+  (setq doom-themes-treemacs-theme "all-the-icons")
+  :config
+  (treemacs-follow-mode 1)
+  (custom-set-faces '(treemacs-fringe-indicator-face ((t (:inherit cursor))))))
+#+end_src
+
+*** Undo tree
+Customize undo-tree visualizer.
+#+begin_src elisp
+(use-package! undo-tree
+  :config
+  (setq undo-tree-visualizer-diff nil)
+  :bind (:map evil-normal-state-map
+         ("U" . undo-tree-visualize)))
+#+end_src
+
+*** Vterm
+Configure vterm buffer naming scheme.
+#+begin_src elisp
+(use-package! vterm
+  :config
+  (setq vterm-buffer-name-string "vterm %s"))
+#+end_src
+
+*** Which-key
+Reduce the delay before the which-key buffer is displayed.
+#+begin_src elisp
+(after! which-key
+  (setq which-key-idle-delay 0.5))
+#+end_src
+
+Replace =evil-= like prefixes by a unicode symbol to reduce verbosity.
+#+begin_src elisp
+(setq which-key-allow-multiple-replacements t)
+(after! which-key
+  (pushnew!
+   which-key-replacement-alist
+   '(("" . "\\`+?evil[-/:]?\\(?:a-\\)?\\(.*\\)") . (nil . "‹\\1"))
+   '(("\\`g s" . "\\`evilem--?motion-\\(.*\\)") . (nil . "«\\1"))
+   ))
+#+end_src
+
+*** YASnippet
+Nested snippets are good, enable that.
+#+begin_src elisp
+(use-package! yasnippet
+  :config
+  (setq yas-triggers-in-field t))
+#+end_src
+
+Rebind auto-yasnippet commands.
+#+begin_src elisp
+(use-package! auto-yasnippet
+  :config
+  (map!
+   :nvi [C-tab] nil
+   (:leader :prefix "c"
+    :desc "Expand auto-snippet" "y" #'aya-expand
+    :desc "Create auto-snippet" "Y" #'aya-create)))
+#+end_src
+
+** Language packages
+*** TODO Org Mode
+Change the default org directory.
+#+begin_src elisp
+(setq org-directory "~/org/")
+(remove-hook! org-mode #'+literate-enable-recompile-h)
+#+end_src
+
+* Additional packages
+:PROPERTIES:
+:header-args:elisp: :tangle "packages.el" :comments no
+:END:
+See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management][package management instructions]] from the doom documentation.
+
+This file shouldn't be byte compiled.
+#+begin_src elisp
+;;; packages.el -*- no-byte-compile: t; -*-
+#+end_src
+
+** General packages
+*** Command logging
+[[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
+#+begin_src elisp
+(package! command-log-mode)
+#+end_src
+
+*** FIXME Guess language
+Automatically detect language for Flyspell.
+BUG: Freezes emacs on language detection...
+#+begin_src elisp
+;; (package! guess-language)
+#+end_src
+
+#+begin_src elisp :tangle yes
+;; (use-package! guess-language
+;;   :after flyspell-lazy
+;;   :hook (text-mode . guess-language-mode)
+;;   ;; :defer t
+;;   ;; :init (add-hook 'text-mode-hook #'guess-language-mode)
+;;   :config
+;;   (setq guess-language-langcodes '((en . ("en_US" "English"))
+;;                                    (fr . ("fr_FR" "French")))
+;;         guess-language-languages '(en fr)
+;;         guess-language-min-paragraph-length 45))
+#+end_src
+
+*** Info colors
+[[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
+#+begin_src elisp
+(package! info-colors :pin "47ee73cc19")
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! info-colors
+  :after info
+  :hook (Info-selection . info-colors-fontify-node))
+#+end_src
+
+*** TODO Large files
+The [[https://github.com/m00natic/vlfi][/very large files/ mode]] loads large files in chunks, allowing one to open
+ridiculously large files.
+#+begin_src elisp
+;; (package! vlf
+;;   :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
+;;   :pin "cc02f25337" :disable t)
+#+end_src
+
+To make VLF available without delaying startup, just load it in quiet moments.
+#+begin_src elisp :tangle yes
+;; (use-package! vlf-setup
+;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+#+end_src
+
+*** TODO Magit delta
+[[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
+package to hook this into the magit diff view. This requires the ~delta~ binary.
+#+begin_src elisp
+;; (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta") :pin "0c7d8b2359")
+#+end_src
+
+*** Systemd
+[[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
+#+begin_src elisp
+(package! systemd :pin "51c148e09a")
+#+end_src
+
+*** Treemacs icons
+[[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
+#+begin_src elisp
+(package! treemacs-all-the-icons)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! treemacs-all-the-icons
+  :after treemacs)
+#+end_src
+
+*** Window layouts
+[[https://github.com/daichirata/emacs-rotate][This package]] allows rotating between window layouts.
+#+begin_src elisp
+(package! rotate :pin "091b5ac4fc")
+#+end_src
+
+#+begin_src elisp :tangle yes
+(map! :map evil-window-map
+ "\\" #'rotate-layout)
+#+end_src
+
+** Language packages
+*** TODO Org Mode
+I *need* this in my life. It take a URL to a recipe from a common site, and
+inserts an org-ified version at point. Isn't that just great.
+#+begin_src emacs-lisp
+;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
+#+end_src
+
