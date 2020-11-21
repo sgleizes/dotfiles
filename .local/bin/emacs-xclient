@@ -17,16 +17,3 @@ else
   DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
   $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
 fi
-
-# Wrap the emacsclient command to open a new graphical frame if none exist, else
-# open the given files in the most-recent graphical frame.
-# If no files are specified, select and raise the existing frame.
-
-# if [[ "$($EMACSCLIENT --eval "($FRAME_QUERY)")" = 'nil' ]]; then
-#   $EMACSCLIENT --create-frame --no-wait "$@"
-# elif [[ "$@" ]]; then
-#   DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
-#   $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
-# else
-#   $EMACSCLIENT --eval "(select-frame-set-input-focus ($FRAME_QUERY))"
-# fi
