@@ -2,8 +2,6 @@
 
 (package! command-log-mode)
 
-;; (package! guess-language)
-
 (package! info-colors :pin "47ee73cc19")
 
 ;; (package! vlf

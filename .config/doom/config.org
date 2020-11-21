@@ -734,10 +734,26 @@ Customize evil-goggles visual hints.
 #+end_src
 
 *** Flyspell
-Reduce delay before flyspell is ran on recent changes.
+Provide language cycling.
 #+begin_src elisp
-(after! flyspell
-  (setq flyspell-lazy-idle-seconds 2))
+(defvar-local lang-ring nil
+  "The list of available ispell languages.")
+
+(let ((langs '("fr_FR" "en_US")))
+  (let ((ring (make-ring (length langs))))
+    (dolist (elem langs) (ring-insert ring elem))
+    (setq-default lang-ring ring)))
+
+(defun +spell/cycle-languages ()
+  "Cycle between ispell languages for the current buffer."
+  (interactive)
+  (setq-local lang-ring (ring-copy lang-ring))
+  (let ((lang (ring-ref lang-ring -1)))
+    (ring-insert lang-ring lang)
+    (ispell-change-dictionary lang)))
+
+(map! :leader :prefix "n"
+      :desc "Cycle ispell languages" "L" #'+spell/cycle-languages)
 #+end_src
 
 *** Format
@@ -926,26 +942,6 @@ This file shouldn't be byte compiled.
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
 (package! command-log-mode)
-#+end_src
-
-*** FIXME Guess language
-Automatically detect language for Flyspell.
-BUG: Freezes emacs on language detection...
-#+begin_src elisp
-;; (package! guess-language)
-#+end_src
-
-#+begin_src elisp :tangle yes
-;; (use-package! guess-language
-;;   :after flyspell-lazy
-;;   :hook (text-mode . guess-language-mode)
-;;   ;; :defer t
-;;   ;; :init (add-hook 'text-mode-hook #'guess-language-mode)
-;;   :config
-;;   (setq guess-language-langcodes '((en . ("en_US" "English"))
-;;                                    (fr . ("fr_FR" "French")))
-;;         guess-language-languages '(en fr)
-;;         guess-language-min-paragraph-length 45))
 #+end_src
 
 *** Info colors
