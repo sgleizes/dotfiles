@@ -28,9 +28,10 @@ I do not try to support Mac OS. I don't use that.
 
 ## What's in there
 
-- A simple framework for shell configuration management: `xsh`, waiting for its own `HOME`.
-- Extensive `zsh` configuration.
-- Minimal `bash` and generic POSIX shell configurations.
+- Configuration for various shells [using `xsh`](https://github.com/sgleizes/xsh), including:
+  - Minimal `bash` and generic POSIX shell configurations.
+  - Extensive `zsh` configuration.
+- Extensive `tmux` configuration.
 - Configuration for various terminal programs.
 - On the `desktop` branch, configuration for my KDE desktop and various desktop applications.
 
