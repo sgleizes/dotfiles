@@ -6,14 +6,6 @@
 # ~/.bash_profile, ~/.zprofile, ...) to abstract away the subtleties/bashisms
 # and provide a coherent and uniform configuration interface.
 #
-# Supported shells:
-# - bash, zsh, and their `sh` emulations
-# - dash, ash
-#
-# References:
-# - https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html
-# - http://zsh.sourceforge.net/FAQ/zshfaq03.html#l19
-#
 # Known limitations:
 # - Command arguments containing spaces, tabs or newlines are split in separate arguments.
 #
@@ -68,7 +60,7 @@ XSHELL="${XSHELL#-}" # remove leading '-' for login shells
 #                      the loading time for each unit is printed.
 xsh() {
   # Restrict changes to global options to local scope.
-  local XSH_DIR="${XSH_DIR:-$HOME/.xsh}"
+  local XSH_DIR="${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}"
   local XSH_RUNCOM_PREFIX="${XSH_RUNCOM_PREFIX:-@}"
   local XSH_SHELLS="${XSH_SHELLS:-$XSHELL}"
   local XSH_BENCHMARK="${XSH_BENCHMARK}"
@@ -171,7 +163,7 @@ _xsh_run() {
 # Globals:
 #   XSH_SHELLS  Used as the list of shells to bootstrap.
 _xsh_bootstrap() {
-  local sh= rc= rcpath=
+  local err=0 sh= rcsh= rc= rcpath=
 
   # Assign the shells as positional parameters.
   # shellcheck disable=SC2086
@@ -184,16 +176,33 @@ _xsh_bootstrap() {
   }
 
   for sh in "$@"; do
-    if [ ! -d "$XSH_DIR/$sh" ]; then
-      echo "xsh: bootstrap: invalid shell '$sh'" >&2
-      continue
-    fi
+    rcsh="$sh"
 
-    for rc in "$XSH_DIR/$sh/runcom"/*; do
+    # If the shell directory doesn't exist, create it and fallback to posix runcoms.
+    if [ ! -d "$XSH_DIR/$sh" ]; then
+      command mkdir "$XSH_DIR/$sh" || { err=1; continue; }
+    fi
+    [ ! -d "$XSH_DIR/$sh/runcom" ] && rcsh='posix'
+
+    # Link shell runcoms to the user's home directory.
+    _xsh_log "[$sh] linking shell runcoms"
+    for rc in "$XSH_DIR/$rcsh/runcom"/*; do
+      if [ $rc = "$XSH_DIR/$rcsh/runcom/*" ]; then
+        echo "xsh: bootstrap: no runcoms found for shell '$rcsh'" >&2
+        continue 2
+      fi
+
       [ "$sh" = 'zsh' ] && rcpath="${ZDOTDIR:-$HOME}" || rcpath="$HOME"
-      command ln -vs "$rc" "$rcpath/.${rc##*/}"
+      if [ "$(readlink "$rcpath/.${rc##*/}")" != "$rc" ]; then
+        command ln -vs --backup=numbered "$rc" "$rcpath/.${rc##*/}" || err=1
+      fi
     done
+
+    # Create a default init file and module for the shell, if needed.
+    _xsh_bootstrap_init_file "$sh" || err=1
+    _xsh_bootstrap_module "$sh" || err=1
   done
+  return $err
 }
 
 # Display help information for xsh or a given command.
@@ -513,6 +522,66 @@ _xsh_source_unit() {
 
   XSH_LEVEL="${XSH_LEVEL%*+}"
   return $err
+}
+
+# Create a default init file for the given shell.
+#
+# Usage: _xsh_bootstrap_init_file <shell>
+# Arguments:
+#   shell  The target shell for the init file to create.
+_xsh_bootstrap_init_file() {
+  local sh="$1"
+  local init= desc=
+
+  if [ "$sh" = 'posix' ]; then
+    init="$XSH_DIR/$sh/init.sh"
+    desc='has no
+# dedicated initialization file'
+  else
+    init="$XSH_DIR/$sh/init.$sh"
+    desc="is \`$sh\`"
+  fi
+
+  if [ ! -f "$init" ]; then
+    _xsh_log "[$sh] creating default init file: ${init#$XSH_DIR/}"
+    command cat >"$init" <<EOF
+#
+# This file is sourced automatically by xsh if the current shell $desc.
+#
+# It should merely register the manager(s) and modules to be loaded by
+# each runcom (env, login, interactive, logout).
+# The order in which the modules are registered defines the order in which
+# they will be loaded. Try \`xsh help\` for more information.
+#
+
+xsh module core
+EOF
+  fi
+}
+
+# Create a default module for the given shell.
+#
+# Usage: _xsh_bootstrap_module <shell>
+# Arguments:
+#   shell  The target shell for the module to create.
+_xsh_bootstrap_module() {
+  local sh="$1"
+  local ext= rc=
+
+  [ "$sh" = 'posix' ] && ext='sh' || ext="$sh"
+  rc="$XSH_DIR/$sh/module/core/${XSH_RUNCOM_PREFIX}interactive.$ext"
+
+  if [ ! -d "$sh/module" ]; then
+    _xsh_log "[$sh] creating default module runcom: ${rc#$XSH_DIR/}"
+    command mkdir -p "${rc%/*}"
+    command cat >"$rc" <<EOF
+#
+# Core configuration module.
+#
+
+alias reload='exec "\$XSHELL"' # reload the current shell configuration
+EOF
+  fi
 }
 
 # Print a log message with a prefix corresponding to the xsh nesting level.
