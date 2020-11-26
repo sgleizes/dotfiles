@@ -109,14 +109,8 @@ function mark_unstable_files {
 function bootstrap_xsh {
   print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms..."
 
-  # Backup existing shell runcoms or remove existing symlinks.
-  for rc in $HOME/.(profile|shrc|bash*|z*)~*.bak(N); {
-    [[ -L $rc ]] && rm -f $rc
-    [[ -f $rc ]] && mv $rc $rc.bak
-  }
-
   # Bootstrap xsh for all supported shells.
-  source "${XSH_DIR:-$HOME/.xsh}/xsh.sh"
+  source "${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}/xsh.sh" 2>/dev/null
   xsh bootstrap -s posix:bash:zsh >/dev/null
 }
 
