@@ -125,3 +125,4 @@
 
   # Miscellaneous
   rem = remote --verbose
+  sb = subtree
