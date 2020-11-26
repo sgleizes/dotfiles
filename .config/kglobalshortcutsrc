@@ -312,7 +312,7 @@ stopmedia=Media Stop,Media Stop,Stop media playback
 
 [org.kde.dolphin.desktop]
 _k_friendly_name=Dolphin
-_launch=Meta+E,Meta+E,Dolphin
+_launch=Meta+N,Meta+E,Dolphin
 
 [org.kde.plasma.emojier.desktop]
 _k_friendly_name=Emoji Selector
