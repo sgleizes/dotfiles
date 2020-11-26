@@ -1,0 +1,5 @@
+#
+# This file is read by the pam_env module when the user logs in.
+#
+
+XSH_CONFIG_DIR  DEFAULT=@{HOME}/.config/shell
