@@ -109,8 +109,11 @@ function mark_unstable_files {
 function bootstrap_xsh {
   print -P "%F{blue}::%f Linking shell runcoms to xsh runcoms..."
 
+  # Source xsh with the appropriate configuration directory.
+  XSH_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
+  source "${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}/xsh.sh"
+
   # Bootstrap xsh for all supported shells.
-  source "${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}/xsh.sh" 2>/dev/null
   xsh bootstrap -s posix:bash:zsh >/dev/null
 }
 

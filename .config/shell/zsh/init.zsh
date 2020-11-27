@@ -60,7 +60,7 @@ xsh module nnn            interactive
 xsh module pacman         interactive
 xsh module you-should-use interactive # load after git
 
-# Load the modules that wrap ZLE widgets after all widgets have been defined.
+# Load the modules that wrap ZLE widgets after they have all been defined.
 xsh module syntax-highlighting      interactive
 xsh module history-substring-search interactive
 xsh module autosuggestion           interactive

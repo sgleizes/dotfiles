@@ -23,8 +23,9 @@ set -ga terminal-overrides ",xterm-256color:Tc"
 set -s escape-time 10
 
 # Do not pass focus events through to applications.
-# This is disabled for emacs in particular, where it echoes '719476737;719476736' in the buffer on focus-in.
-# I could not find any reference to this issue, and the terminal-focus-reporting emacs package did not help.
+# This is disabled for emacs in particular, where it echoes '719476737;719476736' in the buffer
+# on focus-in. I could not find any reference to this issue, and the terminal-focus-reporting emacs
+# package did not help.
 set -s focus-events off
 
 # Path to the history file for tmux commands.
