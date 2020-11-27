@@ -1,7 +1,7 @@
 #
 # You-should-use configuration module for zsh.
 #
-# NOTE: This plugins needs all git wrappers to be defined and should be loaded
+# NOTE: This module needs all git wrappers to be defined and should be loaded
 # after the git module.
 #
 

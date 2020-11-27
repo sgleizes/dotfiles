@@ -1,8 +1,8 @@
 #
 # Yadm configuration module for zsh.
 #
-# NOTE: This module defines an additional git wrapper command and as such,
-# it should be loaded before the git module.
+# NOTE: This module defines an additional git wrapper command and should be
+# loaded before the git module.
 #
 
 # Abort if requirements are not met.
