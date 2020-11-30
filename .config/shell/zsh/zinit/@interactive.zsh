@@ -39,7 +39,7 @@ if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
 # In the mean time this function does the job.
 function xcompile {
   zcompile $ZINIT[ZCOMPDUMP_PATH]
-  for rc in $XSH_CONFIG_DIR/zsh/module/**/*.zsh; { zcompile $rc; }
+  for rc in $XSH_CONFIG_DIR/zsh/**/*.zsh; { zcompile $rc; }
 }
 
 # Source zinit.
