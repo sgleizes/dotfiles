@@ -23,7 +23,6 @@ A simple framework for shell configuration management.
   - [Shells](#shells)
   - [Modules](#modules)
   - [Runcoms](#runcoms)
-  - [Managers](#managers)
 - [Installation](#installation)
   - [Clone the repository](#clone-the-repository)
   - [Bootstrap the desired shell(s)](#bootstrap-the-desired-shells)
@@ -32,7 +31,6 @@ A simple framework for shell configuration management.
 - [Usage](#usage)
   - [Initialization file](#initialization-file)
   - [Module runcoms](#module-runcoms)
-  - [Managers](#managers-1)
   - [Debugging & Benchmarking](#debugging--benchmarking)
   - [Tips & Tricks](#tips--tricks)
   - [Known limitations](#known-limitations)
@@ -87,8 +85,8 @@ Feel free to open an issue if you'd like another shell to be supported.
 
 ## Design & Concepts
 
-The design of xsh is built around four main concepts: **shells**, **modules**,
-**runcoms** and **managers**.
+The design of xsh is built around three main concepts: **shells**, **modules**
+and **runcoms**.
 
 ### Shells
 
@@ -108,7 +106,7 @@ that behavior.
 ### Modules
 
 Modules are simply pluggable pieces of configuration for a given shell.
-Practically speaking, modules are directories in `<shell>/module/`.
+Practically speaking, modules are directories in `<shell>/`.
 Each module directory contains the runcoms that should be loaded by xsh,
 as well as any additional files you would like to put there.
 
@@ -123,7 +121,8 @@ Shell runcoms are the shell-specific initialization files that are abstracted
 away by xsh. When a shell starts or exits, it will load these files according
 to its own set of rules, which xsh translates into a uniform and consistent
 behavior for all shells. You normally don't need to worry about these, but for
-reference the implementation for each shell can be found in `<shell>/runcom`.
+reference the implementation for each shell can be found in the `runcom`
+directory.
 
 Xsh runcoms, or simply runcoms in the context of this document, are the
 resulting abstract concept. They can be seen as layers of configuration that
@@ -167,7 +166,7 @@ role of these files in module directories, they must respect the following
 naming scheme: `@<runcom>.<ext>`.
 
 For example, the file representing the `login` runcom for the `core` module of
-the `bash` shell must be `bash/module/core/@login.bash`.
+the `bash` shell must be `bash/core/@login.bash`.
 Note that for the (somewhat special) `posix` shell, the extension is `.sh` and
 not `.posix`
 
@@ -176,37 +175,6 @@ variable `XSH_RUNCOM_PREFIX` (default `@`). Like `XSH_DIR` this should be set
 before you user's login shell is started. Alternatively, it can be set on a
 per-shell basis in the [xsh initialization file](#initialization-file)
 for that shell.
-
-### Managers
-
-Managers are meant to represent installation/configuration modules for external
-plugin managers. Technically, they are simply a special kind of module that
-are only registered for a single runcom (`interactive` by default).
-Managers are always loaded before the modules registered for that same runcom.
-Each manager is a single file with the path `<shell>/manager/<name>.<ext>`.
-
-Managers should only be used to:
-
-- Automatically install third-party plugin managers or frameworks.
-- Automatically patch the installed software, if needed.
-- Load and/or configure the installed software.
-
-The need for a differentiation between managers and modules emerged as it
-seemed wrong to integrate external plugin managers as regular modules, since
-they also provide their own concept of "modules" (or "plugins").
-As such, they are used to bring in third-party modules that can be loaded
-and/or configured by specific xsh modules as an additional configuration layer.
-
-This differentiation provides the following benefits:
-
-- Installed third-party plugin managers are made explicit.
-- Third-party modules can be loaded and/or configured in different xsh modules.
-- Modules can rely on the facilities from installed managers.
-
-Managers can also be used to automatically install plugin managers or frameworks
-for software other than your shell, such as the
-[tmux plugin manager](https://github.com/tmux-plugins/tpm/),
-[doom-emacs](https://github.com/hlissner/doom-emacs/), etc.
 
 ## Installation
 
@@ -270,24 +238,33 @@ default module by using commands from the following snippet:
 XSH_CONFIG_DIR="${XSH_CONFIG_DIR:-${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}}"
 
 # For POSIX shells
-mv "$HOME/.profile.~1~" "$XSH_CONFIG_DIR/posix/module/core/@login.sh"
-mv "$HOME/.shrc.~1~"    "$XSH_CONFIG_DIR/posix/module/core/@interactive.sh"
+mv "$HOME/.profile.~1~" "$XSH_CONFIG_DIR/posix/core/@login.sh"
+mv "$HOME/.shrc.~1~"    "$XSH_CONFIG_DIR/posix/core/@interactive.sh"
 
 # For bash
-mv "$HOME/.bash_profile.~1~" "$XSH_CONFIG_DIR/bash/module/core/@login.bash"
-mv "$HOME/.bashrc.~1~"       "$XSH_CONFIG_DIR/bash/module/core/@interactive.bash"
-mv "$HOME/.bash_logout.~1~"  "$XSH_CONFIG_DIR/bash/module/core/@logout.bash"
+mv "$HOME/.bash_profile.~1~" "$XSH_CONFIG_DIR/bash/core/@login.bash"
+mv "$HOME/.bashrc.~1~"       "$XSH_CONFIG_DIR/bash/core/@interactive.bash"
+mv "$HOME/.bash_logout.~1~"  "$XSH_CONFIG_DIR/bash/core/@logout.bash"
 
 # For zsh
-mv "${ZDOTDIR:-$HOME}/.zshenv.~1~"  "$XSH_CONFIG_DIR/zsh/module/core/@env.zsh"
-mv "${ZDOTDIR:-$HOME}/.zlogin.~1~"  "$XSH_CONFIG_DIR/zsh/module/core/@login.zsh"
-mv "${ZDOTDIR:-$HOME}/.zshrc.~1~"   "$XSH_CONFIG_DIR/zsh/module/core/@interactive.zsh"
-mv "${ZDOTDIR:-$HOME}/.zlogout.~1~" "$XSH_CONFIG_DIR/zsh/module/core/@logout.zsh"
+mv "${ZDOTDIR:-$HOME}/.zshenv.~1~"  "$XSH_CONFIG_DIR/zsh/core/@env.zsh"
+mv "${ZDOTDIR:-$HOME}/.zlogin.~1~"  "$XSH_CONFIG_DIR/zsh/core/@login.zsh"
+mv "${ZDOTDIR:-$HOME}/.zshrc.~1~"   "$XSH_CONFIG_DIR/zsh/core/@interactive.zsh"
+mv "${ZDOTDIR:-$HOME}/.zlogout.~1~" "$XSH_CONFIG_DIR/zsh/core/@logout.zsh"
 ```
 
 Note that this is not exactly equivalent to your original setup, as the subtle
 differences between the original runcoms are now abstracted away. This is only
 meant as a quick way to start.
+
+If you use one of the popular
+[zsh frameworks and plugin managers](https://gist.github.com/laggardkernel/4a4c4986ccdcaf47b91e8227f9868ded),
+they can certainly be integrated in xsh.
+Examples of such integration modules can be found here:
+
+- [prezto](https://github.com/sgleizes/dotfiles/tree/master/.config/shell/zsh/prezto)
+- [oh-my-zsh](https://github.com/sgleizes/dotfiles/tree/master/.config/shell/zsh/oh-my-zsh)
+- [zinit](https://github.com/sgleizes/dotfiles/tree/master/.config/shell/zsh/zinit)
 
 ### Start a new xsh-powered shell
 
@@ -328,8 +305,8 @@ at which point two things happen:
 Each type of shell must have a dedicated xsh initialization file located at
 `<shell>/init.<ext>`
 
-This file should merely register the manager(s) and modules to be loaded by
-each runcom (`env`, `login`, `interactive`, `logout`).
+This file should merely register the modules to be loaded for each runcom:
+`env`, `login`, `interactive` and `logout`.
 The order in which the modules are registered defines the order in which
 they will be loaded.
 
@@ -346,7 +323,7 @@ xsh module core
 
 This will simply register the `core` module for all runcoms of the current
 shell. For example, when xsh loads the `env` runcom, it will look for the
-corresponding runcom file `<shell>/module/core/@env.<ext>`.
+corresponding runcom file `<shell>/core/@env.<ext>`.
 
 You can also register a module from another shell, if that other shell's
 language can be properly interpreted by the executing shell (e.g. loading a zsh
@@ -358,16 +335,16 @@ module from a posix shell is not a good idea). For example:
 xsh module core -s posix
 ```
 
-This will look for the runcoms of the core module in `posix/module/core`
-instead of `bash/module/core`.
+This will look for the runcoms of the core module in `posix/core` instead of
+`bash/core`.
 
 Additionally, in the following situation:
 
 ```
-posix/module/core/
+posix/core/
   @env.sh
   @interactive.sh
-bash/module/core/
+bash/core/
   @login.bash
 ```
 
@@ -396,35 +373,6 @@ performing unnecessary file lookup every time a shell starts up.
 
 See also `xsh help` and `xsh help module`.
 
-#### Loading managers
-
-Managers can be registered using the `xsh manager` command.
-Since they are always loaded before the modules of the same runcom, for clarity
-they should be registered first in the initialization file.
-
-> File: **`zsh/init.zsh`**
-
-```sh
-xsh manager zinit
-xsh module core
-```
-
-This will register the `zinit` manager for the `interactive` runcom.
-When xsh loads the `interactive` runcom, it will look for the files to load in
-this order:
-
-- `zsh/manager/zinit.zsh`
-- `zsh/module/core/@interactive.zsh`.
-
-If you want to register a manager for a different runcom than the default
-`interactive`, the syntax is the same than for modules:
-
-```sh
-xsh manager doom-emacs login
-```
-
-See also `xsh help` and `xsh help manager`.
-
 ### Module runcoms
 
 The module contents and organization is entirely up to you. During this design
@@ -435,10 +383,10 @@ You can achieve this by using the `xsh load` command.
 For example, in the following situation:
 
 ```
-posix/module/core/
+posix/core/
   @env.sh
   @interactive.sh
-bash/module/core/
+bash/core/
   @interactive.bash
 ```
 
@@ -447,19 +395,19 @@ the interactive runcom of the posix module would not be loaded, as it is found
 in the bash module directory first.
 You can load that runcom from the bash module as a dependency:
 
-> File: **`bash/module/core/@interactive.bash`**
+> File: **`bash/core/@interactive.bash`**
 
 ```sh
 xsh load core -s posix
 ```
 
-This will load `posix/module/core/@interactive.sh` directly.
+This will load `posix/core/@interactive.sh` directly.
 
 That command can also be used to load a runcom of a different module as part
 of a module's configuration. This is usually needed if loading the dependee
 module is conditionally based on a predicate from the dependent module:
 
-> File: **`bash/module/core/@interactive.bash`**
+> File: **`bash/core/@interactive.bash`**
 
 ```sh
 if some_predicate; then
@@ -467,23 +415,13 @@ if some_predicate; then
 fi
 ```
 
-This will load `bash/module/other/@interactive.bash` directly.
+This will load `bash/other/@interactive.bash` directly.
 
 See also `xsh help` and `xsh help load`.
 
-### Managers
-
-The specific implementation for integrating each external plugin managers
-depends on their design and might be tricky in some cases.
-
-I might add a library of example managers to this repository in the future,
-for now you can refer to
-[the ones I use](https://github.com/sgleizes/dotfiles/tree/master/.config/shell/zsh/manager).
-
 ### Debugging & Benchmarking
 
-The list of managers and/or modules registered in the current shell can be
-displayed:
+The list of modules registered in the current shell can be displayed:
 
 ```sh
 xsh list
@@ -566,34 +504,17 @@ You can specify the location of your shell configuration using the
 `XSH_CONFIG_DIR` environment variable. Note that this must be set before your
 user's login shell is started (e.g. in `~/.pam_environment`).
 
-Setting it to `$XDG_CONFIG_HOME` or `$HOME/.config` will result in a
-XDG-compliant configuration structure, with the configuration for each shell
-residing in `~/.config/<shell>`.
-
-#### Removing unused shells from the directory tree
-
-If you use xsh as a configuration framework for a single shell, you might want
-to cleanup `XSH_DIR` and get rid of the unused shells. You could simply remove
-them, but they will then show-up in `git status`. A cleaner solution would be
-to use `git sparse-checkout`.
-
-Let's say, you are a `zsh` user and _never_ use any other shell (interactively).
-You can get rid of the `bash` and `posix` directories with the following:
-
-```sh
-git sparse-checkout set '/*' '!/bash' '!/posix'
-```
-
-You should make sure that none of these shells are bootstrapped first.
-Note that if you remove the `posix` shell, you won't be able to bootstrap any
-shell using the same runcoms (e.g. `dash`, `mksh`, ...).
+Setting it to `$HOME/.config` or `$HOME/.config/shell` will result in a
+[XDG-compliant](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
+configuration structure, with the configuration for each shell residing in
+`~/.config/<shell>` or `~/.config/shell/<shell>`.
 
 ### Known limitations
 
 #### Argument parsing
 
 - Command arguments containing spaces, tabs or newlines are split in separate arguments.
-- The module/manager names must not contain spaces, `:` or `;` characters.
+- The module names must not contain spaces, `:` or `;` characters.
 
 #### POSIX compatibility
 
@@ -626,10 +547,12 @@ distribution.
 
 ## Updating
 
-Xsh is not expected to go through any major updates at this point, and all
-changes will (try to) be non-breaking.
+This project is still in early development stage, depending on the received
+feedback I might introduce breaking changes. Please make sure to check the
+release notes before upgrading.
 
-Updating should only require to `git pull` from the xsh directory.
+Updating to the latest version only requires to `git pull` from the xsh
+directory. Use `git checkout <tag>` to use a specific version.
 
 ## Repositories using xsh
 
