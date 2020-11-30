@@ -1,8 +1,9 @@
 #
-# Installation module for the zinit plugin manager.
+# Zinit module for zsh.
 # https://github.com/zdharma/zinit
 #
 
+# Paths for the zinit installation.
 typeset -gAH ZINIT
 ZINIT[HOME_DIR]="${XDG_CONFIG_HOME:-$HOME/.config}/zinit"
 ZINIT[ZCOMPDUMP_PATH]="$ZCACHEDIR/zcompdump"

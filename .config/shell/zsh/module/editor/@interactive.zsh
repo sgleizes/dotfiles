@@ -28,6 +28,9 @@ if (( $+commands[emacs] )) {
       ${(z)VISUAL:-${(z)EDITOR}} "$@"
     fi
   }
+
+  # Install the emacs configuration framework.
+  source ${0:h}/doom-emacs.zsh
 }
 
 # Shortcut to open the default editor.
