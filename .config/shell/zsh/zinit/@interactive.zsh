@@ -1,8 +1,9 @@
 #
-# Installation module for the zinit plugin manager.
+# Zinit module for zsh.
 # https://github.com/zdharma/zinit
 #
 
+# Paths for the zinit installation.
 typeset -gAH ZINIT
 ZINIT[HOME_DIR]="${XDG_CONFIG_HOME:-$HOME/.config}/zinit"
 ZINIT[ZCOMPDUMP_PATH]="$ZCACHEDIR/zcompdump"
@@ -38,7 +39,7 @@ if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
 # In the mean time this function does the job.
 function xcompile {
   zcompile $ZINIT[ZCOMPDUMP_PATH]
-  for rc in $XSH_CONFIG_DIR/zsh/module/**/*.zsh; { zcompile $rc; }
+  for rc in $XSH_CONFIG_DIR/zsh/**/*.zsh; { zcompile $rc; }
 }
 
 # Source zinit.

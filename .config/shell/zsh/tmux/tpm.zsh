@@ -1,12 +1,7 @@
 #
-# Installation module for the tmux plugin manager.
+# Installation unit for the tmux plugin manager.
 # https://github.com/tmux-plugins/tpm/
 #
-
-# Abort if requirements are not met.
-if (( ! $+commands[tmux] )) {
-  return 1
-}
 
 # Path to the tpm plugin directory.
 export TMUX_PLUGIN_MANAGER_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugin"

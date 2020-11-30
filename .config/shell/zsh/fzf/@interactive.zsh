@@ -45,7 +45,7 @@ function fzf {
 fzf_completion='/usr/share/fzf/completion.zsh'
 if [[ -r $fzf_completion ]] {
   source $fzf_completion
-  source "${0:h}/completion.zsh"
+  source ${0:h}/completion.zsh
 
   # Use a dedicated key instead of a trigger sequence for fuzzy completion.
   FZF_COMPLETION_TRIGGER=''
@@ -59,7 +59,7 @@ if [[ -r $fzf_completion ]] {
 }
 
 # Additional ZLE widgets.
-source "${0:h}/widgets.zsh"
+source ${0:h}/widgets.zsh
 bindkey "$keys[Control]R" fzf-history
 bindkey "$keys[Alt]L" fzf-locate
 bindkey "$keys[Alt]F" fzf-files

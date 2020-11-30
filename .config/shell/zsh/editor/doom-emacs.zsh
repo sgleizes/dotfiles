@@ -1,5 +1,5 @@
 #
-# Installation module for doom emacs.
+# Installation unit for doom emacs.
 # https://github.com/hlissner/doom-emacs
 #
 

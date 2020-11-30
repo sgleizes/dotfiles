@@ -53,6 +53,9 @@ export TMUX_CONFIG_DIR="${TMUX_CONFIG:h}"
 # Create the XDG data directory if necessary.
 command mkdir -p ${TMUX_HISTORY:h}
 
+# Install the tmux plugin manager.
+source ${0:h}/tpm.zsh
+
 # Autostart tmux and attach to a session, if enabled and not already in tmux.
 # Attempt to detect whether the terminal is started from within another application.
 # In xterm (or terminals mimicking it), WINDOWID is set to 0 if the terminal is not

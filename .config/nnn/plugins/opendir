@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+# Description: Open the current directory in the default GUI application.
+#
+# Shell: POSIX compliant
+# Author: Stéphane Gleizes
+
+nohup xdg-open . </dev/null >"$(mktemp --tmpdir nohup.XXXX)" 2>&1

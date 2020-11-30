@@ -34,6 +34,7 @@ i:beets-import;\
 k:-kdeconnect;\
 l:-_git log -p*;\
 n:bulknew;\
+N:-opendir;\
 o:finder;\
 p:-_less \$nnn*;\
 P:-preview-tui;\
@@ -79,11 +80,10 @@ alias N='sudo -E nnn -dH'
 alias nsel="cat ${NNN_SEL:-$XDG_CONFIG_HOME/nnn/.selection} | tr '\0' '\n'"
 
 # Shortcut to open nnn.
-# NOTE: cd on quit doesn't work.
 function open-nnn {
   exec </dev/tty
   nnn
-  zle redisplay
+  zle send-break # redisplay or reset-prompt don't properly refresh the prompt
 }
 zle -N open-nnn
 bindkey "$keys[Control]O$keys[Control]N" open-nnn

@@ -1,7 +1,8 @@
 #
 # This file is sourced automatically by xsh if the current shell is `zsh`.
-# It should merely register the manager(s) and modules to be loaded by
-# each runcom (env, login, interactive, logout).
+# 
+# It should merely register the modules to be loaded for each runcom:
+# env, login, interactive and logout.
 # The order in which the modules are registered defines the order in which
 # they will be loaded. Try `xsh help` for more information.
 #
@@ -10,12 +11,8 @@
 #   ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
-# Use zinit as the main plugin manager.
-xsh manager zinit
-# Register the tmux plugin manager.
-xsh manager tpm
-# Register the emacs package manager.
-xsh manager doom-emacs
+# Install and load the zinit plugin manager.
+xsh module zinit interactive
 
 # Load the tmux module first in case autostart is enabled.
 xsh module tmux interactive:login
