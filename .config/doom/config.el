@@ -114,6 +114,11 @@ if in terminal."
 
 ;; [[file:config.org::*Frames][Frames:1]]
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(defun raise-frame-and-give-focus (&optional frame)
+  (when (display-graphic-p frame)
+    (raise-frame frame)
+    (x-focus-frame frame)))
+(add-hook 'after-make-frame-functions 'raise-frame-and-give-focus)
 ;; Frames:1 ends here
 
 ;; [[file:config.org::*Windows][Windows:1]]

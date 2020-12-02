@@ -532,9 +532,14 @@ files, it is still necessary to set the desired value for new files.
 #+end_src
 
 *** Frames
-Automatically maximize new frames.
+Automatically maximize and focus new graphical frames.
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(defun raise-frame-and-give-focus (&optional frame)
+  (when (display-graphic-p frame)
+    (raise-frame frame)
+    (x-focus-frame frame)))
+(add-hook 'after-make-frame-functions 'raise-frame-and-give-focus)
 #+end_src
 
 *** Windows
