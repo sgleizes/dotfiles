@@ -467,6 +467,12 @@ visiting a file.  The current buffer is always included."
 ;; (use-package! vlf-setup
 ;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
+(use-package! tldr
+  :config
+  (add-hook! tldr-mode '(lambda () (font-lock-mode 0)))
+  (map! :leader :prefix "h"
+        "h" #'tldr))
+
 (use-package! treemacs-all-the-icons
   :after treemacs)
 

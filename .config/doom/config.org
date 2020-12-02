@@ -1001,6 +1001,20 @@ package to hook this into the magit diff view. This requires the ~delta~ binary.
 #+begin_src elisp
 (package! systemd :pin "51c148e09a")
 #+end_src
+*** TLDR
+[[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
+#+begin_src elisp
+(package! tldr)
+#+end_src
+
+Disable font-lock mode in tldr-mode buffers.
+#+begin_src elisp :tangle yes
+(use-package! tldr
+  :config
+  (add-hook! tldr-mode '(lambda () (font-lock-mode 0)))
+  (map! :leader :prefix "h"
+        "h" #'tldr))
+#+end_src
 
 *** Treemacs icons
 [[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
