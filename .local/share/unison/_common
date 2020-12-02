@@ -11,9 +11,8 @@ copythreshold = 2000
 # Use delta to prettify diff output, if available.
 diff = delta CURRENT2 CURRENT1
 # diff = zsh -ic 'diff -u CURRENT2 CURRENT1 --color=always | { (( ${+commands[delta]} )) && delta || cat }'
-# Use kdiff3 as the external diff program.
-merge = Name {*,.*} -> kdiff3 -o NEW CURRENTARCHOPT CURRENT1 CURRENT2
-# merge = Name {*,.*} -> konsole -e emacs -nw -q --eval '(emerge-files nil "CURRENT1" "CURRENT2" "NEW")'
+# Use ediff as the external diff program.
+merge = Name {*,.*} -> ediff CURRENT1 CURRENT2 NEW CURRENTARCHOPT
 
 # Propagate modification times.
 times = true
