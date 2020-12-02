@@ -12,6 +12,8 @@
 
 (package! systemd :pin "51c148e09a")
 
+(package! tldr)
+
 (package! treemacs-all-the-icons)
 
 (package! rotate :pin "091b5ac4fc")

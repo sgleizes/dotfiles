@@ -26,7 +26,11 @@ view_dir() {
     count="$(listimages | grep -a -m 1 -ZznF "$target" | cut -d: -f1)"
 
     if [ -n "$count" ]; then
-        listimages | xargs -0 "$1" -n "$count" --
+        if [ "$1" = 'sxiv' ]; then
+            listimages | xargs -0 "$1" -an "$count" --
+        else
+            listimages | xargs -0 "$1" -n "$count" --
+        fi
     else
         shift
         "$1" -- "$@" # fallback
@@ -39,22 +43,28 @@ if [ -z "$1" ] || ! [ -s "$1" ]; then
     exit 1
 fi
 
-if command -v imvr >/dev/null 2>&1; then
+if uname | grep -q "Darwin"; then
+    if [ -f "$1" ]; then
+        open "$1" >/dev/null 2>&1 &
+    fi
+# `imvr` is often callable as `imv` on Linux distros
+# You might need to change the reference below
+elif which imvr >/dev/null 2>&1; then
     if [ -f "$1" ]; then
         view_dir imvr "$1" >/dev/null 2>&1 &
     elif [ -d "$1" ] || [ -h "$1" ]; then
         imvr "$1" >/dev/null 2>&1 &
     fi
-elif command -v sxiv >/dev/null 2>&1; then
+elif which sxiv >/dev/null 2>&1; then
     if [ -f "$1" ]; then
         view_dir sxiv "$1" >/dev/null 2>&1 &
     elif [ -d "$1" ] || [ -h "$1" ]; then
-        sxiv -qt "$1" >/dev/null 2>&1 &
+        sxiv -aqt "$1" >/dev/null 2>&1 &
     fi
-elif command -v viu >/dev/null 2>&1; then
+elif which viu >/dev/null 2>&1; then
     viu -n "$1" | less -R
 else
-    printf "install imv/sxiv/viu"
+    printf "Please install imv/sxiv/viu and check their callable names match the plugin source"
     read -r _
     exit 2
 fi

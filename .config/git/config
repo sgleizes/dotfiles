@@ -24,10 +24,13 @@
   # Allow indentation changes to be marked as moved lines.
   colorMovedWS = allow-indentation-change
   # External diff and merge tool.
-  tool = kdiff3
+  tool = ediff
 [difftool]
   # Do not prompt before each invocation.
   prompt = false
+[difftool "ediff"]
+  # Start a new ediff session.
+  cmd = ediff \"$LOCAL\" \"$REMOTE\"
 
 [merge]
   # Disable fast-forward merges as default merge strategy.
@@ -35,11 +38,18 @@
   ff = false
   # Enable 3-way merges.
   conflictStyle = diff3
+  # External merge tool.
+  tool = ediff
 [mergetool]
   # Do not prompt before each invocation.
   prompt = false
   # Do not preserve the original file with conflict markers.
   keepBackup = false
+[mergetool "ediff"]
+  # Start a new ediff merge session.
+  cmd = ediff \"$LOCAL\" \"$REMOTE\" \"$MERGED\" \"$BASE\"
+  # Do not prompt for merge resolution success and rely on the exit code.
+  trustExitCode = true
 
 [grep]
   # Show line numbers.

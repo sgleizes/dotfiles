@@ -27,5 +27,5 @@ nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /run/m
 # Ignored projects.
 ignore = Path Projects/*/archive
 ignore = Path Projects/env/{aur,dotfiles}
-ignore = Path Projects/misc
-ignore = Path Projects/studies
+ignore = Path Projects/ext
+ignore = Path Projects/school

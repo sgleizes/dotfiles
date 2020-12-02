@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Wrap the emacsclient command to open a new graphical frame if none exist or if
 # no files are specified, else open the given files in the most-recent graphical
 # frame.
@@ -12,7 +12,7 @@ FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
   (not (frame-parent f)))))"
 
 if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
-  $EMACSCLIENT --create-frame --no-wait "$@"
+  $EMACSCLIENT --create-frame --no-wait
 else
   DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
   $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"

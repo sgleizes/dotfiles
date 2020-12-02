@@ -59,7 +59,7 @@ systemctl --user enable --now emacs.target
 Since I don't want a new graphical frame to be created every time a file is
 opened, I wrote this launcher script to wrap ~emacsclient~:
 #+begin_src sh :tangle ~/.local/bin/emacs-xclient :tangle-mode (identity #o755)
-#!/usr/bin/bash
+#!/usr/bin/env bash
 # Wrap the emacsclient command to open a new graphical frame if none exist or if
 # no files are specified, else open the given files in the most-recent graphical
 # frame.
@@ -73,7 +73,7 @@ FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
   (not (frame-parent f)))))"
 
 if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
-  $EMACSCLIENT --create-frame --no-wait "$@"
+  $EMACSCLIENT --create-frame --no-wait
 else
   DISPLAY=$($EMACSCLIENT --eval "(frame-parameter ($FRAME_QUERY) 'display)")
   $EMACSCLIENT --display "${DISPLAY//\"/}" --no-wait "$@"
@@ -111,6 +111,65 @@ StartupNotify=true
 StartupWMClass=Emacs
 Terminal=false
 Type=Application
+#+end_src
+
+** Ediff launcher
+Add another launcher script to start an ~ediff~ session in a new graphical frame.
+
+Note that it depends on a ~+workspace/rename-frame~ function that automatically
+generates a unique name for the new perspective (workspace).
+#+begin_src sh :tangle ~/.local/bin/ediff :tangle-mode (identity #o755)
+#/usr/bin/env bash
+# Start an ediff session in a new emacs frame. Inspired by:
+# https://gist.github.com/ptrv/0b460291e14a4a3c6372
+#
+# This script can be used as a `git mergetool` and `git difftool`.
+# It automatically detects whether to run a diff/merge session
+# and also supports directories.
+
+# Abort if arguments are not provided.
+if [ ! ${#} -ge 2 ]; then
+  echo >&2 "Usage: ediff <local> <remote> [merged] [base]"
+  exit 1
+fi
+
+# Process arguments.
+LOCAL="$1"
+REMOTE="$2"
+[[ $3 ]] && MERGED="$3" || MERGED="$REMOTE"
+[[ -d $LOCAL && -d $REMOTE ]] && MODE='directories' || MODE='files'
+
+# Determine the emacs command to evaluate.
+if [[ $4 && -r $4 ]]; then
+  BASE="$4"
+  EVAL="ediff-merge-$MODE-with-ancestor \"$LOCAL\" \"$REMOTE\" \"$BASE\" nil \"$MERGED\""
+elif [[ $REMOTE != "$MERGED" ]]; then
+  EVAL="ediff-merge-$MODE \"$LOCAL\" \"$REMOTE\" nil \"$MERGED\""
+else
+  EVAL="ediff-$MODE \"$LOCAL\" \"$REMOTE\" nil"
+fi
+
+# Use a graphical frame except in the console.
+if [[ $TERM == 'linux' ]]; then
+  EMACSCLIENT_OPTS="--socket-name terminal --tty"
+else
+  EMACSCLIENT_OPTS="--socket-name graphical --create-frame"
+fi
+
+# Run emacsclient.
+emacsclient $EMACSCLIENT_OPTS --eval "
+  (progn
+    (+workspace/rename-frame \"ediff\")
+    ($EVAL))"
+
+# Check modified file for unresolved conflicts.
+if [[ $MODE == 'files' && ! $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") == 0 ]]; then
+  MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
+  cp "$MERGED" "$MERGEDSAVE"
+  echo >&2 "Oops! Conflict markers detected in $MERGED"
+  echo >&2 "Saved your changes to $MERGEDSAVE"
+  exit 1
+fi
 #+end_src
 
 * General configuration
@@ -457,12 +516,16 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 Disable minor modes that are undesired in terminal frames.
 #+begin_src elisp
 (defun +doom-disable-graphical-modes (&optional frame)
-  "Display the tab bar in FRAME (default: selected frame) if on a
-graphical display, but hide it if in terminal."
+  "Disable undesired minor-modes in FRAME (default: selected frame)
+if in terminal."
   (interactive)
   (unless (display-graphic-p frame)
     (remove-hook! doom-first-file #'centaur-tabs-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
+    (remove-hook! '(doom-dashboard-mode-hook
+                    term-mode-hook
+                    vterm-mode-hook)
+      #'centaur-tabs-local-mode)
     (remove-hook! '(org-mode-hook
                     markdown-mode-hook
                     TeX-mode-hook
@@ -475,12 +538,27 @@ graphical display, but hide it if in terminal."
 (add-hook! 'after-make-frame-functions '+doom-disable-graphical-modes)
 #+end_src
 
+*** Workspaces
+Add an API to create default workspace names for specific applications.
+#+begin_src elisp
+(defun +workspace--generate-named-id (&optional prefix)
+  (or (cl-loop for name in (+workspace-list-names)
+               when (string-match-p (format "^%s#[0-9]+$" prefix) name)
+               maximize (string-to-number (substring name (+ (length prefix) 1))) into max
+               finally return (if max (1+ max)))
+      1))
+(cl-defun +workspace/rename-frame (name &optional (frame (selected-frame)))
+  "Create a blank, new perspective and associate it with FRAME."
+  (when persp-mode
+    (+workspace/rename (format "%s#%s" name (+workspace--generate-named-id name)))
+    (set-frame-parameter frame 'workspace (+workspace-current-name))))
+#+end_src
+
 ** Better defaults
 *** General
 Tweak various general settings to more opinionated values.
 #+begin_src elisp
 (setq-default delete-by-moving-to-trash t  ; Delete files to trash
-              window-combination-resize t  ; take new window space from all other windows (not just current)
               x-stretch-cursor t)          ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                  ; Raise undo-limit to 80Mb
@@ -528,9 +606,14 @@ files, it is still necessary to set the desired value for new files.
 #+end_src
 
 *** Frames
-Automatically maximize new frames.
+Automatically maximize and focus new graphical frames.
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(defun raise-frame-and-give-focus (&optional frame)
+  (when (display-graphic-p frame)
+    (raise-frame frame)
+    (x-focus-frame frame)))
+(add-hook 'after-make-frame-functions 'raise-frame-and-give-focus)
 #+end_src
 
 *** Windows
@@ -589,8 +672,8 @@ and restrict buffer list to workspace buffers.
   (defun centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
-Group centaur-tabs with mode if buffer is derived from `eshell-mode'
-`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+Group centaur-tabs with mode if buffer is derived from `vterm-mode'
+`dired-mode' `org-mode' `magit-mode'.
 All buffer name start with * will group to \"Emacs\".
 Other buffer group by `centaur-tabs-get-group-name' with project name."
     (list
@@ -635,7 +718,6 @@ visiting a file.  The current buffer is always included."
   (doom-dashboard-mode . centaur-tabs-local-mode)
   (term-mode . centaur-tabs-local-mode)
   (vterm-mode . centaur-tabs-local-mode))
-
 #+end_src
 
 Provide additional bindings for centaur-tabs functions.
@@ -689,6 +771,83 @@ describe the selected element (with ~+childframe~), so it can't be used here.
   (add-hook 'evil-insert-state-exit-hook #'company-abort))
 #+end_src
 
+*** Ediff
+Automatically kill unmodified buffers at the end of an ~ediff~ session.
+In merge jobs, buffer C is never deleted. However, the side effect of using this
+function is that you may not be able to compare the same buffer in two separate
+~ediff~ sessions: quitting one of them will delete this buffer in another session
+as well.
+#+begin_src elisp
+(after! ediff
+  (setq-default ediff-keep-variants nil)
+  (add-hook! 'ediff-cleanup-hook
+    (defun ediff-kill-variants ()
+      (ediff-janitor nil ediff-keep-variants))))
+#+end_src
+
+Automatically delete dedicated frames when quitting ~ediff~.
+#+begin_src elisp
+(after! ediff
+  ;; Figure out if the session has a meta buffer during cleanup.
+  ;; ediff-cleanup-mess seems to remove all possibilities of figuring that out.
+  (defvar ediff--meta-session nil)
+  (add-hook! 'ediff-cleanup-hook
+    (defun ediff-mark-dedicated-frame-for-deletion ()
+      (setq ediff--meta-session ediff-meta-buffer)))
+  ;; Delete the current frame if it was dedicated to a simple ediff session.
+  ;; This should be done after ediff-cleanup-mess.
+  (add-hook! 'ediff-quit-hook :append
+    (defun ediff-delete-dedicated-frame ()
+      (unless ediff--meta-session
+        (ediff-group-delete-dedicated-frame))))
+  ;; Delete the current frame when quitting the last session group.
+  (add-hook! 'ediff-quit-session-group-hook :append
+    (defun ediff-group-delete-dedicated-frame ()
+      (unless ediff-meta-session-number
+        (when (string-match-p "^ediff#[0-9]+$" (frame-parameter nil 'workspace))
+          (delete-frame))))))
+#+end_src
+
+Add evil bindings for ~ediff-meta-mode~:
+#+begin_src elisp
+(defvar evil-collection-ediff-registry-bindings
+  '(("j" . ediff-next-meta-item)
+    ("n" . ediff-next-meta-item)
+    ("k" . ediff-previous-meta-item)
+    ("p" . ediff-previous-meta-item)
+    ("v" . ediff-registry-action)
+    ("q" . ediff-quit-meta-buffer))
+  "A list of bindings changed/added in evil-ediff-meta-buffer.")
+
+(defun evil-collection-ediff-meta-buffer-startup-hook ()
+  "Place evil-ediff-meta bindings in `ediff-meta-buffer-map'."
+  (evil-make-overriding-map ediff-meta-buffer-map 'normal)
+  (dolist (entry evil-collection-ediff-registry-bindings)
+    (define-key ediff-meta-buffer-map (car entry) (cdr entry)))
+  (evil-normalize-keymaps)
+  nil)
+
+(defun evil-collection-ediff-meta-buffer-setup ()
+  "Initialize evil-ediff-meta-buffer."
+  (interactive)
+  (evil-set-initial-state 'ediff-meta-mode 'normal)
+  (add-hook 'ediff-meta-buffer-keymap-setup-hook 'evil-collection-ediff-meta-buffer-startup-hook))
+(evil-collection-ediff-meta-buffer-setup)
+#+end_src
+
+Customize default doom-theme faces for ~ediff~.
+#+begin_src elisp
+(custom-set-faces!
+  '(ediff-even-diff-Ancestor    :inherit ediff-even-diff-A)
+  '(ediff-odd-diff-Ancestor     :inherit ediff-even-diff-A)
+  '(ediff-current-diff-Ancestor :inherit ediff-current-diff-A)
+  `(ediff-current-diff-A        :background ,(doom-color 'base3))
+  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
+  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
+  '(ediff-fine-diff-C           :inherit magit-diff-base-highlight)
+  `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
+#+end_src
+
 *** Evil
 Provide more consistent navigation bindings.
 Add the missing arrow-key variants of the window navigation commands.
@@ -724,11 +883,11 @@ Customize evil-goggles visual hints.
 #+begin_src elisp
 (use-package! evil-goggles
   :config
-  (custom-set-faces
-   '(evil-goggles-paste-face  ((t (:inherit custom-state))))
-   '(evil-goggles-indent-face ((t (:inherit custom-modified))))
-   '(evil-goggles-change-face ((t (:inherit custom-invalid))))
-   '(evil-goggles-delete-face ((t (:inherit custom-invalid)))))
+  (custom-set-faces!
+    '(evil-goggles-paste-face  :inherit custom-state)
+    '(evil-goggles-indent-face :inherit custom-modified)
+    '(evil-goggles-change-face :inherit custom-invalid)
+    '(evil-goggles-delete-face :inherit custom-invalid))
   (setq evil-goggles-enable-delete t
         evil-goggles-enable-change t))
 #+end_src
@@ -860,7 +1019,7 @@ Configure treemacs appearance and behavior.
   (setq doom-themes-treemacs-theme "all-the-icons")
   :config
   (treemacs-follow-mode 1)
-  (custom-set-faces '(treemacs-fringe-indicator-face ((t (:inherit cursor))))))
+  (custom-set-faces! '(treemacs-fringe-indicator-face :inherit cursor)))
 #+end_src
 
 *** Undo tree
@@ -922,8 +1081,18 @@ Rebind auto-yasnippet commands.
 *** TODO Org Mode
 Change the default org directory.
 #+begin_src elisp
-(setq org-directory "~/org/")
+(setq org-directory "~/Projects/org/")
+#+end_src
+
+Remove the tangle-on-save hook and add a manual binding.
+#+begin_src elisp
 (remove-hook! org-mode #'+literate-enable-recompile-h)
+(defun +literate-recompile ()
+  "Recompile literate config to `doom-private-dir"
+  (interactive)
+  (+literate-recompile-maybe-h))
+(map! :leader :prefix "m"
+      "R" #'+literate-recompile)
 #+end_src
 
 * Additional packages
@@ -982,6 +1151,20 @@ package to hook this into the magit diff view. This requires the ~delta~ binary.
 [[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
 #+begin_src elisp
 (package! systemd :pin "51c148e09a")
+#+end_src
+*** TLDR
+[[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
+#+begin_src elisp
+(package! tldr)
+#+end_src
+
+Disable font-lock mode in tldr-mode buffers.
+#+begin_src elisp :tangle yes
+(use-package! tldr
+  :config
+  (add-hook! tldr-mode '(lambda () (font-lock-mode 0)))
+  (map! :leader :prefix "h"
+        "h" #'tldr))
 #+end_src
 
 *** Treemacs icons

@@ -25,5 +25,5 @@ fzf_pick_files () {
   setopt localoptions pipefail no_aliases 2>/dev/null
 
   eval "$@" \
-    | FZF_DEFAULT_OPTS="--reverse $FZF_DEFAULT_OPTS $FZF_FILES_OPTS" fzf -m \
+    | FZF_DEFAULT_OPTS="--reverse $FZF_DEFAULT_OPTS $FZF_FILES_OPTS" fzf -m
 }

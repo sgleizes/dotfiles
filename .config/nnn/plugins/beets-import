@@ -11,7 +11,7 @@ printf "(s)election/(c)urrent? [default=c] "
 read -r resp
 
 if [ "$resp" = "s" ]; then
-  readarray -t files < <(tr '\0' '\n' < "$selection")
+  readarray -t files < <(tr '\0' '\n' <"$selection")
   set -- "${files[@]}"
 else
   set -- "$1"
