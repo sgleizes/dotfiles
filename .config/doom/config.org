@@ -930,8 +930,18 @@ Rebind auto-yasnippet commands.
 *** TODO Org Mode
 Change the default org directory.
 #+begin_src elisp
-(setq org-directory "~/org/")
+(setq org-directory "~/Projects/org/")
+#+end_src
+
+Remove the tangle-on-save hook and add a manual binding.
+#+begin_src elisp
 (remove-hook! org-mode #'+literate-enable-recompile-h)
+(defun +literate-recompile ()
+  "Recompile literate config to `doom-private-dir"
+  (interactive)
+  (+literate-recompile-maybe-h))
+(map! :leader :prefix "m"
+      "R" #'+literate-recompile)
 #+end_src
 
 * Additional packages

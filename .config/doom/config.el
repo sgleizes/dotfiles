@@ -447,20 +447,18 @@ visiting a file.  The current buffer is always included."
 ;; YASnippet:2 ends here
 
 ;; [[file:config.org::*Org Mode][Org Mode:1]]
-(setq org-directory "~/org/")
-(remove-hook! org-mode #'+literate-enable-recompile-h)
+(setq org-directory "~/Projects/org/")
 ;; Org Mode:1 ends here
 
-;; (use-package! guess-language
-;;   :after flyspell-lazy
-;;   :hook (text-mode . guess-language-mode)
-;;   ;; :defer t
-;;   ;; :init (add-hook 'text-mode-hook #'guess-language-mode)
-;;   :config
-;;   (setq guess-language-langcodes '((en . ("en_US" "English"))
-;;                                    (fr . ("fr_FR" "French")))
-;;         guess-language-languages '(en fr)
-;;         guess-language-min-paragraph-length 45))
+;; [[file:config.org::*Org Mode][Org Mode:2]]
+(remove-hook! org-mode #'+literate-enable-recompile-h)
+(defun +literate-recompile ()
+  "Recompile literate config to `doom-private-dir"
+  (interactive)
+  (+literate-recompile-maybe-h))
+(map! :leader :prefix "m"
+      "R" #'+literate-recompile)
+;; Org Mode:2 ends here
 
 (use-package! info-colors
   :after info
