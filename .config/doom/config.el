@@ -67,9 +67,22 @@ if in terminal."
 (add-hook! 'after-make-frame-functions '+doom-disable-graphical-modes)
 ;; Terminal:1 ends here
 
+;; [[file:config.org::*Workspaces][Workspaces:1]]
+(defun +workspace--generate-named-id (&optional prefix)
+  (or (cl-loop for name in (+workspace-list-names)
+               when (string-match-p (format "^%s#[0-9]+$" prefix) name)
+               maximize (string-to-number (substring name (+ (length prefix) 1))) into max
+               finally return (if max (1+ max)))
+      1))
+(cl-defun +workspace/rename-frame (name &optional (frame (selected-frame)))
+  "Create a blank, new perspective and associate it with FRAME."
+  (when persp-mode
+    (+workspace/rename (format "%s#%s" name (+workspace--generate-named-id name)))
+    (set-frame-parameter frame 'workspace (+workspace-current-name))))
+;; Workspaces:1 ends here
+
 ;; [[file:config.org::*General][General:1]]
 (setq-default delete-by-moving-to-trash t  ; Delete files to trash
-              window-combination-resize t  ; take new window space from all other windows (not just current)
               x-stretch-cursor t)          ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                  ; Raise undo-limit to 80Mb
@@ -255,6 +268,74 @@ visiting a file.  The current buffer is always included."
   (add-hook 'evil-insert-state-exit-hook #'company-abort))
 ;; Company:1 ends here
 
+;; [[file:config.org::*Ediff][Ediff:1]]
+(after! ediff
+  (setq-default ediff-keep-variants nil)
+  (add-hook! 'ediff-cleanup-hook
+    (defun ediff-kill-variants ()
+      (ediff-janitor nil ediff-keep-variants))))
+;; Ediff:1 ends here
+
+;; [[file:config.org::*Ediff][Ediff:2]]
+(after! ediff
+  ;; Figure out if the session has a meta buffer during cleanup.
+  ;; ediff-cleanup-mess seems to remove all possibilities of figuring that out.
+  (defvar ediff--meta-session nil)
+  (add-hook! 'ediff-cleanup-hook
+    (defun ediff-mark-dedicated-frame-for-deletion ()
+      (setq ediff--meta-session ediff-meta-buffer)))
+  ;; Delete the current frame if it was dedicated to a simple ediff session.
+  ;; This should be done after ediff-cleanup-mess.
+  (add-hook! 'ediff-quit-hook :append
+    (defun ediff-delete-dedicated-frame ()
+      (unless ediff--meta-session
+        (ediff-group-delete-dedicated-frame))))
+  ;; Delete the current frame when quitting the last session group.
+  (add-hook! 'ediff-quit-session-group-hook :append
+    (defun ediff-group-delete-dedicated-frame ()
+      (unless ediff-meta-session-number
+        (when (string-match-p "^ediff#[0-9]+$" (frame-parameter nil 'workspace))
+          (delete-frame))))))
+;; Ediff:2 ends here
+
+;; [[file:config.org::*Ediff][Ediff:3]]
+(defvar evil-collection-ediff-registry-bindings
+  '(("j" . ediff-next-meta-item)
+    ("n" . ediff-next-meta-item)
+    ("k" . ediff-previous-meta-item)
+    ("p" . ediff-previous-meta-item)
+    ("v" . ediff-registry-action)
+    ("q" . ediff-quit-meta-buffer))
+  "A list of bindings changed/added in evil-ediff-meta-buffer.")
+
+(defun evil-collection-ediff-meta-buffer-startup-hook ()
+  "Place evil-ediff-meta bindings in `ediff-meta-buffer-map'."
+  (evil-make-overriding-map ediff-meta-buffer-map 'normal)
+  (dolist (entry evil-collection-ediff-registry-bindings)
+    (define-key ediff-meta-buffer-map (car entry) (cdr entry)))
+  (evil-normalize-keymaps)
+  nil)
+
+(defun evil-collection-ediff-meta-buffer-setup ()
+  "Initialize evil-ediff-meta-buffer."
+  (interactive)
+  (evil-set-initial-state 'ediff-meta-mode 'normal)
+  (add-hook 'ediff-meta-buffer-keymap-setup-hook 'evil-collection-ediff-meta-buffer-startup-hook))
+(evil-collection-ediff-meta-buffer-setup)
+;; Ediff:3 ends here
+
+;; [[file:config.org::*Ediff][Ediff:4]]
+(custom-set-faces!
+  '(ediff-even-diff-Ancestor    :inherit ediff-even-diff-A)
+  '(ediff-odd-diff-Ancestor     :inherit ediff-even-diff-A)
+  '(ediff-current-diff-Ancestor :inherit ediff-current-diff-A)
+  `(ediff-current-diff-A        :background ,(doom-color 'base3))
+  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
+  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
+  '(ediff-fine-diff-C           :inherit magit-diff-base-highlight)
+  `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
+;; Ediff:4 ends here
+
 ;; [[file:config.org::*Evil][Evil:1]]
 (map!
  ;; Use more consistent bindings for workspaces/window navigation
@@ -285,11 +366,11 @@ visiting a file.  The current buffer is always included."
 ;; [[file:config.org::*Evil goggles][Evil goggles:1]]
 (use-package! evil-goggles
   :config
-  (custom-set-faces
-   '(evil-goggles-paste-face  ((t (:inherit custom-state))))
-   '(evil-goggles-indent-face ((t (:inherit custom-modified))))
-   '(evil-goggles-change-face ((t (:inherit custom-invalid))))
-   '(evil-goggles-delete-face ((t (:inherit custom-invalid)))))
+  (custom-set-faces!
+    '(evil-goggles-paste-face  :inherit custom-state)
+    '(evil-goggles-indent-face :inherit custom-modified)
+    '(evil-goggles-change-face :inherit custom-invalid)
+    '(evil-goggles-delete-face :inherit custom-invalid))
   (setq evil-goggles-enable-delete t
         evil-goggles-enable-change t))
 ;; Evil goggles:1 ends here
@@ -398,7 +479,7 @@ visiting a file.  The current buffer is always included."
   (setq doom-themes-treemacs-theme "all-the-icons")
   :config
   (treemacs-follow-mode 1)
-  (custom-set-faces '(treemacs-fringe-indicator-face ((t (:inherit cursor))))))
+  (custom-set-faces! '(treemacs-fringe-indicator-face :inherit cursor)))
 ;; Treemacs:1 ends here
 
 ;; [[file:config.org::*Undo tree][Undo tree:1]]
