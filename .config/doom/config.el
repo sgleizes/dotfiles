@@ -45,12 +45,16 @@
 
 ;; [[file:config.org::*Terminal][Terminal:1]]
 (defun +doom-disable-graphical-modes (&optional frame)
-  "Display the tab bar in FRAME (default: selected frame) if on a
-graphical display, but hide it if in terminal."
+  "Disable undesired minor-modes in FRAME (default: selected frame)
+if in terminal."
   (interactive)
   (unless (display-graphic-p frame)
     (remove-hook! doom-first-file #'centaur-tabs-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
+    (remove-hook! '(doom-dashboard-mode-hook
+                    term-mode-hook
+                    vterm-mode-hook)
+      #'centaur-tabs-local-mode)
     (remove-hook! '(org-mode-hook
                     markdown-mode-hook
                     TeX-mode-hook
@@ -152,8 +156,8 @@ graphical display, but hide it if in terminal."
   (defun centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
-Group centaur-tabs with mode if buffer is derived from `eshell-mode'
-`emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
+Group centaur-tabs with mode if buffer is derived from `vterm-mode'
+`dired-mode' `org-mode' `magit-mode'.
 All buffer name start with * will group to \"Emacs\".
 Other buffer group by `centaur-tabs-get-group-name' with project name."
     (list
