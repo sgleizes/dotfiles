@@ -66,6 +66,7 @@
   iu  = add --update
   id  = diff --cached
   idd = diff --cached --word-diff
+  idt = difftool --cached
   ir  = restore --staged
   irp = restore --staged --patch
   ix = rm -r --cached
@@ -118,6 +119,7 @@
   wss = -p status --no-short
   wd  = diff
   wdd = diff --word-diff
+  wdt = difftool
   wr  = restore --staged --worktree
   wrp = restore --staged --worktree --patch
   wc  = clean
