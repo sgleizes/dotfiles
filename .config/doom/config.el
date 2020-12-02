@@ -295,8 +295,24 @@ visiting a file.  The current buffer is always included."
 ;; Evil goggles:1 ends here
 
 ;; [[file:config.org::*Flyspell][Flyspell:1]]
-(after! flyspell
-  (setq flyspell-lazy-idle-seconds 2))
+(defvar-local lang-ring nil
+  "The list of available ispell languages.")
+
+(let ((langs '("fr_FR" "en_US")))
+  (let ((ring (make-ring (length langs))))
+    (dolist (elem langs) (ring-insert ring elem))
+    (setq-default lang-ring ring)))
+
+(defun +spell/cycle-languages ()
+  "Cycle between ispell languages for the current buffer."
+  (interactive)
+  (setq-local lang-ring (ring-copy lang-ring))
+  (let ((lang (ring-ref lang-ring -1)))
+    (ring-insert lang-ring lang)
+    (ispell-change-dictionary lang)))
+
+(map! :leader :prefix "n"
+      :desc "Cycle ispell languages" "L" #'+spell/cycle-languages)
 ;; Flyspell:1 ends here
 
 ;; [[file:config.org::*Format][Format:1]]
