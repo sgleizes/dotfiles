@@ -93,10 +93,11 @@ For some programs, a configuration file is provided in [.config](.config).
 
 ## Zsh plugins
 
-The `zsh` configuration is defined via [xsh](.xsh/zsh/init.zsh) and uses [zinit](https://github.com/zdharma/zinit)
-as plugin manager, allowing for asynchronous loading and lightning fast startup times.
-Some of the modules are inspired from [prezto](https://github.com/sorin-ionescu/prezto),
-and some prezto modules are also directly installed via `zinit`.
+The `zsh` configuration is defined via [xsh](.xsh/zsh/init.zsh) and uses
+[zinit](https://github.com/zdharma/zinit) as plugin manager, allowing for
+asynchronous loading and lightning fast startup times. Some of the modules are
+inspired from [prezto](https://github.com/sorin-ionescu/prezto), and some prezto
+modules are also directly installed via `zinit`.
 
 Here is a non exhaustive list of integrated external plugins:
 
