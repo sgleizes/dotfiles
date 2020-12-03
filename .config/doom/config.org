@@ -651,9 +651,9 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 *** Better jumper
 Bind better-jumper functions to a doom-like alternative.
 #+begin_src elisp
-(map! :leader
-      :desc "Jump to previous location" "[" #'better-jumper-jump-backward
-      :desc "Jump to next location" "]" #'better-jumper-jump-forward)
+(map!
+ :n "g[" #'better-jumper-jump-backward
+ :n "g]" #'better-jumper-jump-forward)
 #+end_src
 
 *** Centaur tabs
@@ -849,32 +849,61 @@ Customize default doom-theme faces for ~ediff~.
 #+end_src
 
 *** Evil
-Provide more consistent navigation bindings.
+Customize general evil options.
+#+begin_src elisp
+(setq evil-move-cursor-back nil) ; Leave cursor in place when exiting insert-mode
+(setq evil-cross-lines t)        ; Allow horizontal ops to move to the next
+#+end_src
+
+Customize options for evil extensions.
+#+begin_src elisp
+(after! evil-multiedit
+  (setq evil-multiedit-follow-matches t))
+#+end_src
+
+Provide more consistent navigation bindings and add missing evil bindings.
 Add the missing arrow-key variants of the window navigation commands.
 #+begin_src elisp
 (map!
+ ;; Bind missing evil bindings
+ :nv "gX"             #'evil-exchange-cancel
+ :nv "god"            #'evil-quick-diff
+ :nv "goD"            #'evil-quick-diff-cancel
+ :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+ ;; Rebind fold commands
+ :m "TAB"             #'+fold/toggle
+ :m "<backtab>"       #'+fold/close-all
+ :m "C-<iso-lefttab>" #'+fold/open-all
+ ;; Use M-/ to toggle comments (M-; for comment-dwim), rebind dabbrev-expand
+ :nv "M-/"            #'evilnc-comment-or-uncomment-lines
+ :g  "C-/"            #'dabbrev-expand
+ ;; Rebind evil-lion to ga (align) to avoids gl conflicts with org-mode
+ :nv "ga"             #'evil-lion-left
+ :nv "gA"             #'evil-lion-right
+ :nv "gl"             nil
+ :nv "gL"             nil
  ;; Use more consistent bindings for workspaces/window navigation
- :m "] TAB"   #'+workspace/switch-right
- :m "[ TAB"   #'+workspace/switch-left
- :nm "]w"     #'evil-window-next
- :nm "[w"     #'evil-window-prev
+ :m "] TAB"           #'+workspace/switch-right
+ :m "[ TAB"           #'+workspace/switch-left
+ :nm "]w"             #'evil-window-next
+ :nm "[w"             #'evil-window-prev
  :map evil-window-map
  ;; Navigation
- "]"          #'evil-window-next
- "["          #'evil-window-prev
- "<left>"     #'evil-window-left
- "<down>"     #'evil-window-down
- "<up>"       #'evil-window-up
- "<right>"    #'evil-window-right
+ "]"                  #'evil-window-next
+ "["                  #'evil-window-prev
+ "<left>"             #'evil-window-left
+ "<down>"             #'evil-window-down
+ "<up>"               #'evil-window-up
+ "<right>"            #'evil-window-right
  ;; Moving windows
- "C-<left>"   #'+evil/window-move-left
- "C-<down>"   #'+evil/window-move-down
- "C-<up>"     #'+evil/window-move-up
- "C-<right>"  #'+evil/window-move-right
+ "C-<left>"           #'+evil/window-move-left
+ "C-<down>"           #'+evil/window-move-down
+ "C-<up>"             #'+evil/window-move-up
+ "C-<right>"          #'+evil/window-move-right
  ;; Miscellaneous
- "`"          #'evil-window-mru     ; Consistent with SPC `
- "p"          #'+popup/other        ; Better than C-x p
- "c"          nil                   ; Confusing, use 'd'
+ "`"                  #'evil-window-mru     ; Consistent with SPC `
+ "p"                  #'+popup/other        ; Better than C-x p
+ "c"                  nil                   ; Confusing, use 'd'
  )
 #+end_src
 
@@ -1152,6 +1181,7 @@ package to hook this into the magit diff view. This requires the ~delta~ binary.
 #+begin_src elisp
 (package! systemd :pin "51c148e09a")
 #+end_src
+
 *** TLDR
 [[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
 #+begin_src elisp

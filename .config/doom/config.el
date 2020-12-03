@@ -156,9 +156,9 @@ if in terminal."
 ;; Ace window:1 ends here
 
 ;; [[file:config.org::*Better jumper][Better jumper:1]]
-(map! :leader
-      :desc "Jump to previous location" "[" #'better-jumper-jump-backward
-      :desc "Jump to next location" "]" #'better-jumper-jump-forward)
+(map!
+ :n "g[" #'better-jumper-jump-backward
+ :n "g]" #'better-jumper-jump-forward)
 ;; Better jumper:1 ends here
 
 ;; [[file:config.org::*Centaur tabs][Centaur tabs:1]]
@@ -337,31 +337,58 @@ visiting a file.  The current buffer is always included."
 ;; Ediff:4 ends here
 
 ;; [[file:config.org::*Evil][Evil:1]]
+(setq evil-move-cursor-back nil) ; Leave cursor in place when exiting insert-mode
+(setq evil-cross-lines t)        ; Allow horizontal ops to move to the next
+;; Evil:1 ends here
+
+;; [[file:config.org::*Evil][Evil:2]]
+(after! evil-multiedit
+  (setq evil-multiedit-follow-matches t))
+;; Evil:2 ends here
+
+;; [[file:config.org::*Evil][Evil:3]]
 (map!
+ ;; Bind missing evil bindings
+ :nv "gX"             #'evil-exchange-cancel
+ :nv "god"            #'evil-quick-diff
+ :nv "goD"            #'evil-quick-diff-cancel
+ :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+ ;; Rebind fold commands
+ :m "TAB"             #'+fold/toggle
+ :m "<backtab>"       #'+fold/close-all
+ :m "C-<iso-lefttab>" #'+fold/open-all
+ ;; Use M-/ to toggle comments (M-; for comment-dwim), rebind dabbrev-expand
+ :nv "M-/"            #'evilnc-comment-or-uncomment-lines
+ :g  "C-/"            #'dabbrev-expand
+ ;; Rebind evil-lion to ga (align) to avoids gl conflicts with org-mode
+ :nv "ga"             #'evil-lion-left
+ :nv "gA"             #'evil-lion-right
+ :nv "gl"             nil
+ :nv "gL"             nil
  ;; Use more consistent bindings for workspaces/window navigation
- :m "] TAB"   #'+workspace/switch-right
- :m "[ TAB"   #'+workspace/switch-left
- :nm "]w"     #'evil-window-next
- :nm "[w"     #'evil-window-prev
+ :m "] TAB"           #'+workspace/switch-right
+ :m "[ TAB"           #'+workspace/switch-left
+ :nm "]w"             #'evil-window-next
+ :nm "[w"             #'evil-window-prev
  :map evil-window-map
  ;; Navigation
- "]"          #'evil-window-next
- "["          #'evil-window-prev
- "<left>"     #'evil-window-left
- "<down>"     #'evil-window-down
- "<up>"       #'evil-window-up
- "<right>"    #'evil-window-right
+ "]"                  #'evil-window-next
+ "["                  #'evil-window-prev
+ "<left>"             #'evil-window-left
+ "<down>"             #'evil-window-down
+ "<up>"               #'evil-window-up
+ "<right>"            #'evil-window-right
  ;; Moving windows
- "C-<left>"   #'+evil/window-move-left
- "C-<down>"   #'+evil/window-move-down
- "C-<up>"     #'+evil/window-move-up
- "C-<right>"  #'+evil/window-move-right
+ "C-<left>"           #'+evil/window-move-left
+ "C-<down>"           #'+evil/window-move-down
+ "C-<up>"             #'+evil/window-move-up
+ "C-<right>"          #'+evil/window-move-right
  ;; Miscellaneous
- "`"          #'evil-window-mru     ; Consistent with SPC `
- "p"          #'+popup/other        ; Better than C-x p
- "c"          nil                   ; Confusing, use 'd'
+ "`"                  #'evil-window-mru     ; Consistent with SPC `
+ "p"                  #'+popup/other        ; Better than C-x p
+ "c"                  nil                   ; Confusing, use 'd'
  )
-;; Evil:1 ends here
+;; Evil:3 ends here
 
 ;; [[file:config.org::*Evil goggles][Evil goggles:1]]
 (use-package! evil-goggles
