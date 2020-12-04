@@ -23,9 +23,11 @@ if [[ ! -f $EMACSDIR/init.el ]]; then
     && print -P "%F{34}:: Installation successful%f%b" \
     || { print -P "%F{160}:: The clone has failed%f%b" && return 1 }
 
-  # Install emacs packages.
-  print -P "%F{33}:: Installing emacs packages...%f"
+  # Setup doom and install emacs packages.
+  print -P "%F{33}:: Setting up Doom Emacs...%f"
   $EMACSDIR/bin/doom install
+  print -P "%F{33}:: Synchronizing with literate config...%f"
+  $EMACSDIR/bin/doom sync
 fi
 
 # Add doom binaries to PATH.

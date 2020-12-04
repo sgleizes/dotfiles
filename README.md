@@ -28,16 +28,18 @@ I do not try to support Mac OS. I don't use that.
 
 ## What's in there
 
-- Configuration for various shells [using `xsh`](https://github.com/sgleizes/xsh), including:
-  - Minimal `bash` and generic POSIX shell configurations.
-  - Extensive `zsh` configuration.
-- Extensive `tmux` configuration.
+- Configuration for various shells [using `xsh`](https://github.com/sgleizes/xsh)
+  [(here)](.config/shell).
+- Extensive `tmux` configuration [(here)](.config/tmux).
+- Literate `emacs` configuration [(here)](.config/doom) based on
+  [doom-emacs](https://github.com/hlissner/doom-emacs).
 - Configuration for various terminal programs.
-- On the `desktop` branch, configuration for my KDE desktop and various desktop applications.
+- On the `desktop` branch, configuration for my KDE desktop and various desktop
+  applications.
 
 ## Requirements
 
-- [zsh](zsh.sourceforge.net/) - The most powerful shell for interactive and scripting use.
+- [zsh](http://zsh.sourceforge.net/) - The most powerful shell for interactive and scripting use.
 - [git](https://git-scm.com/) - To not be stuck with your own code.
 - [yadm](https://yadm.io/) - A `git` wrapper for dotfiles management.
 
