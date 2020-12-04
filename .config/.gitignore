@@ -5,7 +5,7 @@
 # uninteresting files by mistake.
 #
 
-# Uninteresting subdirectories.
+# Uninteresting directories.
 /Code Industry/
 /Electron/
 /Element/
@@ -60,6 +60,7 @@
 !/youtube-dlg/settings.json
 
 # Exceptions for directories with interesting contents.
+/doom/*.el
 /gtk-2.0/gtkfilechooser.ini
 /jesseduffield/lazygit/state.yml
 /latte/.multiple-layouts_hidden.layout.latte
