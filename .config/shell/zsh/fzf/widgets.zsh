@@ -28,7 +28,7 @@ function _fzf_pick_files {
 # Ensure precmds are run after cd.
 function fzf-redraw-prompt {
   local precmd
-  for precmd in $precmd_functions; { $precmd; }
+  for precmd in $precmd_functions; do $precmd; done
   zle reset-prompt
 }
 zle -N fzf-redraw-prompt
@@ -104,21 +104,21 @@ function fzf-history {
       fzf --query=$LBUFFER +m))
 
   ret=$?
-  if [[ $selected ]] {
+  if [[ $selected ]]; then
     # Figure out whether the entry should be accepted directly.
     accept=0
-    if [[ $selected[1] == 'alt-a' ]] {
+    if [[ $selected[1] == 'alt-a' ]]; then
       accept=1
       shift selected
-    }
+    fi
 
     # Fetch the entry from history and update buffer.
     num=$selected[1]
-    if [[ $num ]] {
+    if [[ $num ]]; then
       zle vi-fetch-history -n $num
       [[ $accept = 1 ]] && zle accept-line
-    }
-  }
+    fi
+  fi
 
   zle reset-prompt
   return $ret

@@ -10,7 +10,7 @@ export TMUX_PLUGIN_MANAGER_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/tmux/plugin"
 export TMUX_PLUGIN_MANAGER_PATCH_DIR="${0:h}/patch"
 
 # Install tpm if necessary.
-if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
+if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]]; then
   print -P "%F{33}:: Installing tmux-plugins/tpm...%f"
   command mkdir -p $TMUX_PLUGIN_MANAGER_PATH
   command git clone 'https://github.com/tmux-plugins/tpm' $TMUX_PLUGIN_MANAGER_PATH/tpm \
@@ -39,7 +39,7 @@ if [[ ! -f $TMUX_PLUGIN_MANAGER_PATH/tpm/tpm ]] {
     print -P "%F{33}:: Installing tmux plugins...%f"
     $TMUX_PLUGIN_MANAGER_PATH/tpm/bin/install_plugins
   }
-}
+fi
 
 # TPM commands.
 alias tpmi="$TMUX_PLUGIN_MANAGER_PATH/tpm/bin/install_plugins"

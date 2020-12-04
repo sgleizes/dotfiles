@@ -3,9 +3,9 @@
 #
 
 # Return if requirements are not met.
-if (( ! $+commands[ssh-agent] )) {
+if (( ! $+commands[ssh-agent] )); then
   return 1
-}
+fi
 
 # Define the client hostname to forward to SSH connections.
 : ${SSH_CLIENT_HOST:=$HOST}
@@ -38,7 +38,7 @@ if [[ -S $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $_ssh_agent_sock ]]; then
 fi
 
 # Load identities.
-if { ssh-add -l 2>&1 | grep -q 'The agent has no identities' } {
+if ssh-add -l 2>&1 | grep -q 'The agent has no identities'; then
   ssh_identities=($_ssh_dir/id_*(^AR))
 
   # From ssh-add(1):
@@ -50,6 +50,6 @@ if { ssh-add -l 2>&1 | grep -q 'The agent has no identities' } {
   [[ $DISPLAY && -x $SSH_ASKPASS ]] \
     && ssh-add -q $ssh_identities[@] </dev/null \
     || ssh-add -q $ssh_identities[@]
-}
+fi
 
 unset _ssh_{dir,identities} _ssh_agent_{env,sock}

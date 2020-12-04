@@ -8,9 +8,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   return 1
-}
+fi
 
 # Disable highlighting for terminals with 8-color or less.
 (( $terminfo[colors] <= 8 )) && ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=''

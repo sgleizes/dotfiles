@@ -39,10 +39,10 @@ function zopt {
 
 # Check the current option states for changes against the last dump.
 function zoptguard {
-  if [[ ! -r $_ZOPT_CACHE ]] {
+  if [[ ! -r $_ZOPT_CACHE ]]; then
     zoptdump
     return
-  }
+  fi
 
   local dump diff
   dump=${(f)"$(zopt)"}
@@ -60,14 +60,14 @@ function zoptdump {
 }
 
 # Return if autorun is not requested.
-if [[ ! $ZOPT_AUTORUN ]] {
+if [[ ! $ZOPT_AUTORUN ]]; then
   return 0
-}
+fi
 
 # Run the guard immediately or asynchronously.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   zoptguard
-} else {
+else
   # Handle asynchronous printing of the output.
   function _async_zoptguard {
     local out
@@ -81,4 +81,4 @@ if (( ! $+functions[zinit] )) {
     id-as'guard/zopt' \
     nocd atload'_async_zoptguard'
   zinit light zdharma/null
-}
+fi

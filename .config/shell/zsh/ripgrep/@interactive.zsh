@@ -3,17 +3,17 @@
 #
 
 # Abort of requirements are not met.
-if (( ! $+commands[rg] )) {
+if (( ! $+commands[rg] )); then
   return 1
-}
+fi
 
 # Path to configuration file.
 export RIPGREP_CONFIG_PATH="$XDG_CONFIG_HOME/ripgrep/config"
 
 # Check dependencies for interactive searches.
-if (( ! $+commands[fzf] )) {
+if (( ! $+commands[fzf] )); then
   return 2
-}
+fi
 
 # Default rg commands for integration with fzf.
 FZF_RG_COMMAND='noglob rg --files-with-matches --no-messages'
@@ -37,7 +37,7 @@ function search {
   ))
 
   # Open selected files.
-  [[ $selected ]] && for f in ${selected}; { open $f || return 1; }
+  [[ $selected ]] && for f in ${selected}; do open $f || return 1; done
 }
 
 # Search files interactively and preview matches.
@@ -63,7 +63,7 @@ function search-interactive {
   ))
 
   # Open selected files.
-  [[ $selected ]] && for f in ${selected}; { open $f || return 1; }
+  [[ $selected ]] && for f in ${selected}; do open $f || return 1; done
 }
 
 # Interactive search variant that sorts the results.

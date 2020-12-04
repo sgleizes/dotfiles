@@ -6,16 +6,16 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[fzf] )) {
+if (( ! $+commands[fzf] )); then
   return 1
-}
+fi
 
 # Import default fzf options.
 fzf_config="$XDG_CONFIG_HOME/fzf/config"
 (( $terminfo[colors] < 256 )) && fzf_config="${fzf_config}-portable"
-if [[ -r $fzf_config ]] {
+if [[ -r $fzf_config ]]; then
   export FZF_DEFAULT_OPTS="$(grep -vE '^$|^#' $fzf_config)"
-}
+fi
 
 # Additional bindings in fzf context.
 FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
@@ -34,16 +34,16 @@ FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 function fzf {
   local height="${FZF_HEIGHT:-50%}"
 
-  if [[ $TMUX_PANE && $FZF_TMUX ]] {
+  if [[ $TMUX_PANE && $FZF_TMUX ]]; then
     fzf-tmux -p $height -- "$@"
-  } else {
+  else
     command fzf --height $height "$@"
-  }
+  fi
 }
 
 # Add fzf-completion widget.
 fzf_completion='/usr/share/fzf/completion.zsh'
-if [[ -r $fzf_completion ]] {
+if [[ -r $fzf_completion ]]; then
   source $fzf_completion
   source ${0:h}/completion.zsh
 
@@ -56,7 +56,7 @@ if [[ -r $fzf_completion ]] {
   FZF_COMPLETION_OPTS="--select-1"
   # Add aliases to commands accepting directories.
   FZF_COMPLETION_DIR_COMMANDS=(cd pushd rmdir rmd)
-}
+fi
 
 # Additional ZLE widgets.
 source ${0:h}/widgets.zsh
@@ -66,20 +66,20 @@ bindkey "$keys[Alt]F" fzf-files
 bindkey "$keys[Alt]C" fzf-cd
 
 # Use `fd` instead of `find` if available.
-if (( $+commands[fd] )) {
+if (( $+commands[fd] )); then
   export FZF_DEFAULT_COMMAND='fd --follow --hidden --exclude .git --exclude dosdevices'
   FZF_FILES_COMMAND="$FZF_DEFAULT_COMMAND --type f"
   FZF_DIRS_COMMAND="$FZF_DEFAULT_COMMAND --type d"
-}
+fi
 
 # Use `pistol` if available.
-if (( $+commands[pistol] )) {
+if (( $+commands[pistol] )); then
   fzf_dir_preview='pistol'
   fzf_file_preview='pistol'
-} else {
+else
   fzf_dir_preview='tree -C'
   fzf_file_preview='cat'
-}
+fi
 
 # Custom fzf options for ZLE widgets.
 FZF_HISTORY_OPTS="--no-reverse"

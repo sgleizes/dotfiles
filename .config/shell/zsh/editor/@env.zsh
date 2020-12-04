@@ -3,9 +3,9 @@
 #
 
 # Define the default editor.
-if (( $+commands[emacs] )) {
+if (( $+commands[emacs] )); then
   export EDITOR='emacsclient -s terminal -t'
-} elif (( $+commands[nano] )) {
+elif (( $+commands[nano] )); then
   export EDITOR='nano'
-}
+fi
 export VISUAL="$EDITOR"

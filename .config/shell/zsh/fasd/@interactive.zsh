@@ -8,9 +8,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[fasd] )) {
+if (( ! $+commands[fasd] )); then
   return 1
-}
+fi
 
 # Configuration options.
 export _FASD_DATA="$XDG_DATA_HOME/recently-used.fasd"
@@ -32,17 +32,17 @@ function _fasd_pick {
   local qtype="${1:-a}"
   [[ $1 ]] && shift
 
-  if (( $# == 0 )) {
+  if (( $# == 0 )); then
     # Interactively select a file/directory.
-    if (( $+commands[fzf] )) {
+    if (( $+commands[fzf] )); then
       fasd -$qtype -Rl | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --no-sort" fzf
-    } else {
+    else
       fasd -$qtype -i
-    }
-  } else {
+    fi
+  else
     # Query fasd for a file/directory using the provided arguments.
     fasd -$qtype $@
-  }
+  fi
 }
 
 # Change to a frecent directory.
@@ -111,11 +111,11 @@ function _fasd_word_complete {
   [[ $qtype == (e|d) ]] && _fasd_compgen d "$cword" && continue=0
 
   # Add the original string as a match.
-  if (( $compstate[nmatches] > 1 )) || \
-    { zstyle -t ":completion:${curcontext}:" original } {
+  if (( $compstate[nmatches] > 1 )) \
+    || zstyle -t ":completion:${curcontext}:" original; then
     _description -V original expl original
     compadd $expl[@] -UQ - "$PREFIX$SUFFIX"
-  }
+  fi
 
   compstate[insert]='automenu' # no expand
   return $continue
@@ -149,9 +149,9 @@ _primary_completers+=(_fasd_word_complete_trigger)
 # Editor widgets
 #
 
-if (( ! $+commands[fzf] )) {
+if (( ! $+commands[fzf] )); then
   return 2
-}
+fi
 
 # Select a frecent directory using fzf to cd into.
 function fzf-fasd-cd {

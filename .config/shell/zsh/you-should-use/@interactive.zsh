@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   return 1
-}
+fi
 
 # Configure you-should-use.
 export YSU_MESSAGE_POSITION="after"

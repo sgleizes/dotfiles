@@ -6,13 +6,13 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[kmon] )) {
+if (( ! $+commands[kmon] )); then
   return 1
-}
+fi
 
-if (( $terminfo[colors] >= 256 )) {
+if (( $terminfo[colors] >= 256 )); then
   alias kmon='kmon -u -c lightyellow'
-}
+fi
 
 # Shortcut to open kmon.
 # BUG: Arrows not working

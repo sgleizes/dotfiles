@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[youtube-dl] )) {
+if (( ! $+commands[youtube-dl] )); then
   return 1
-}
+fi
 
 # Usability alias.
 alias ydl='youtube-dl'
@@ -20,8 +20,8 @@ function youtube-dl-interactive {
   youtube-dl --list-formats "$1" || return
 
   print -P "%F{blue}::%f Enter below one 'format code' listed above"
-  if { read -r fmt } {
+  if read -r fmt; then
     youtube-dl --format "$fmt" "$1"
-  }
+  fi
 }
 alias ydli='youtube-dl-interactive'

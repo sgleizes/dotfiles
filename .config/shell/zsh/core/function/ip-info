@@ -3,7 +3,7 @@
 #
 
 local ip_address="$1"
-while (( $# > 0 )) {
+while (( $# > 0 )); do
   case $1 in
     -h|--help)
       print "Usage: ip-info [-p|--public] [addr]"
@@ -17,7 +17,7 @@ while (( $# > 0 )) {
       ;;
   esac
   shift
-}
+done
 
 curl -s ipinfo.io/$ip_address
 print

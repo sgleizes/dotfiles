@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[git] )) {
+if (( ! $+commands[git] )); then
   return 1
-}
+fi
 
 # Autoload all module functions.
 autoload_dir ${0:h}/function
@@ -18,14 +18,14 @@ autoload_dir ${0:h}/function
 alias g='git'
 
 # Support for https://github.com/github/hub.
-if (( $+commands[hub] )) {
+if (( $+commands[hub] )); then
   # Extension for run-help to support 'hub' subcommands.
   function run-help-hub {
-    if (( $# == 0 ))  {
+    if (( $# == 0 )) ; then
       man hub
-    } else {
+    else
       man hub-$1
-    }
+    fi
   }
 
   # Register hub as a git wrapper command, see below.
@@ -33,10 +33,10 @@ if (( $+commands[hub] )) {
 
   # Explicit equivalent of `eval "$(hub alias -s)"`.
   alias git='hub'
-}
+fi
 
 # Support for https://github.com/jesseduffield/lazygit.
-if (( $+commands[lazygit] )) {
+if (( $+commands[lazygit] )); then
   # Change working directory to the repo in use when exiting lazygit.
   function lazygit {
     export LAZYGIT_NEW_DIR_FILE="$TMPDIR/lazygit-newdir"
@@ -54,7 +54,7 @@ if (( $+commands[lazygit] )) {
   # Laziest git.
   zle -N open-lazygit lazygit
   bindkey "$keys[Control]O$keys[Control]G" open-lazygit
-}
+fi
 
 # List all git wrapper commands and aliases.
 function _list_git_wrappers {
@@ -76,10 +76,10 @@ function _update_git_user_commands {
 }
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   _update_git_user_commands
   return 2
-}
+fi
 
 # Git entrypoint that wraps commands and deals with conflicts.
 # This also works if 'hub' is aliased to 'git'.
@@ -110,11 +110,11 @@ function git $_git_wrapper_commands {
 # NOTE: These completions are not defined using `compdef`, they only extend
 # the _git completion function that ships with zsh by using the user-commands style.
 # Therefore, it does not have any loading order requirement.
-if (( $+commands[git-extras] )) {
+if (( $+commands[git-extras] )); then
   zinit ice wait'0b' lucid id-as'tj/git-extras-completion' \
     atload'_update_git_user_commands'
   zinit snippet "https://github.com/tj/git-extras/raw/$(git-extras -v)/etc/git-extras-completion.zsh"
-}
+fi
 
 # Automatically detect and escape zsh globbing meta-characters when used with
 # git refspec characters like `[^~{}]`. NOTE: This must be loaded _after_

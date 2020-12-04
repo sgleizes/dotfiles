@@ -3,9 +3,9 @@
 #
 
 # Return if requirements are not met.
-if [[ $TERM == 'dumb' ]] {
+if [[ $TERM == 'dumb' ]]; then
   return 1
-}
+fi
 
 # Convenience aliases.
 alias p='${(z)PAGER}'
@@ -30,11 +30,11 @@ export LESS_TERMCAP_ue=$'\E[0m'        # ends underline
 command mkdir -p ${LESSHISTFILE:h}
 
 # Pager integration with bat.
-if (( $+commands[bat] )) {
+if (( $+commands[bat] )); then
   export BAT_PAGER='less -F'
-}
+fi
 
 # Use pistol as input preprocessor.
-if (( $+commands[pistol] )) {
+if (( $+commands[pistol] )); then
   export LESSOPEN='| pistol %s 2>&-'
-}
+fi

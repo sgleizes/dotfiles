@@ -13,11 +13,11 @@ _primary_completers=(_expand _complete _prefix)
 _secondary_completers=(_correct _approximate _complete:substring)
 zstyle -e ':completion:*' completer '
   reply=($_primary_completers[@])
-  if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]] {
+  if [[ $_last_try != "$HISTNO$BUFFER$CURSOR" ]]; then
     _last_try="$HISTNO$BUFFER$CURSOR"
-  } else {
+  else
     reply+=($_secondary_completers[@])
-  }
+  fi
 '
 
 # Define the matchers to use: regular, partial-word, then substring completion.
@@ -173,10 +173,10 @@ fpath+=('/usr/share/zsh/vendor-completions/')
 #
 
 # Abort if requirements are not met, run compinit synchronously in this case.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   autoload -Uz compinit && compinit -d "$ZCACHEDIR/zcompdump"
   return 0
-}
+fi
 
 # Additional completion definitions.
 # This will run compinit when the plugin is loaded and replay all previous

@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[restic] || ! $+commands[kwalletcli] )) {
+if (( ! $+commands[restic] || ! $+commands[kwalletcli] )); then
   return 1
-}
+fi
 
 # Location of the restic repository.
 export RESTIC_REPOSITORY='/run/media/psydev/HOMEWORLD/Backups/Restic'

@@ -4,7 +4,7 @@
 
 local n colors
 
-for n in {000..255}; {
+for n in {000..255}; do
   colors+=("%F{$n}$n%f")
-}
+done
 print -cP $colors

@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[yadm] )) {
+if (( ! $+commands[yadm] )); then
   return 1
-}
+fi
 
 # Register yadm as a git wrapper command, see the git module.
 _git_wrapper_commands+=(yadm)
@@ -42,16 +42,16 @@ function yadm-sync {
   )
 
   main="$(yadm rev-parse --show-toplevel)"
-  if [[ ! "$main" ]] {
+  if [[ ! "$main" ]]; then
     print -P ':: %F{red}ERROR%f: main worktree does not exist'
     return 1
-  }
+  fi
 
   master="$(yadm worktree list | grep master | awk '{print $1}')"
-  if [[ ! "$master" ]] {
+  if [[ ! "$master" ]]; then
     print -P ':: %F{red}ERROR%f: master worktree does not exist'
     return 1
-  }
+  fi
 
   # Sync files which are tracked on the master branch.
   rsync $rsync_opts[@] --files-from=<(git -C $master ls-files | grep -Ev ${(j:|:)sync_ignore}) $main $master
@@ -67,10 +67,10 @@ function yadm-merge {
   local master files
 
   master="$(yadm worktree list | grep master | awk '{print $1}')"
-  if [[ ! "$master" ]] {
+  if [[ ! "$master" ]]; then
     print -P ':: %F{red}ERROR%f: master worktree does not exist'
     return 1
-  }
+  fi
 
   files=( $(git -C $master ls-files) $(yadm diff --name-only --cached) )
   yadm stash push -- ':/:'${^files} || return 1

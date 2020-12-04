@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[fortune] )) {
+if (( ! $+commands[fortune] )); then
   return 1
-}
+fi
 
 # Fortune cookie selection settings.
 FORTUNE_LENGTH=420
@@ -47,9 +47,9 @@ function zfortune-pony {
 # Select the fortune to show according to the selected modes.
 fortune_mode="$FORTUNE_INTERACTIVE"
 [[ -o login ]] && fortune_mode="$FORTUNE_LOGIN"
-case $fortune_mode {
+case $fortune_mode in
   basic) zfortune ;;
   pony) zfortune-pony ;;
-}
+esac
 
 unset fortune_mode
