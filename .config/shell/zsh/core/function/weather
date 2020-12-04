@@ -6,7 +6,7 @@ local location=''
 local lang="${LANG%_*}"
 local rich=''
 
-while (( $# > 0 )) {
+while (( $# > 0 )); do
   case $1 in
     -h|--help)
       print 'Usage: weather [-r|--rich] [location] [language]'
@@ -24,7 +24,7 @@ while (( $# > 0 )) {
       ;;
   esac
   shift
-}
+done
 
 local request="wttr.in/$location?F"
 (( $COLUMNS < 125 )) && request+='n'

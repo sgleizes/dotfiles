@@ -9,7 +9,7 @@
 alias edit='${(z)VISUAL:-${(z)EDITOR}}'
 alias e='edit'
 
-if (( $+commands[emacs] )) {
+if (( $+commands[emacs] )); then
   unalias edit
 
   # An emacs 'alias' with the ability to read from stdin.
@@ -31,7 +31,7 @@ if (( $+commands[emacs] )) {
 
   # Install the emacs configuration framework.
   source ${0:h}/doom-emacs.zsh
-}
+fi
 
 # Shortcut to open the default editor.
 function open-editor {

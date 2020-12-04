@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[tmux] )) {
+if (( ! $+commands[tmux] )); then
   return 1
-}
+fi
 
 # Automatically start/attach to tmux. Possible values are:
 # - local   enable when starting zsh in a local terminal.
@@ -63,7 +63,7 @@ source ${0:h}/tpm.zsh
 if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
   [[   $SSH_TTY && $TMUX_AUTOSTART == (always|remote) ]] ||
   [[ ! $SSH_TTY && $TMUX_AUTOSTART == (always|local) ]]
-} {
+}; then
   function {
     # Start the tmux server, this is only useful if a session is created in the tmux config.
     # Otherwise the server will exit immediately (unless exit-empty is turned off).
@@ -76,9 +76,9 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
 
     # Perform the action defined by the selected autostart mode.
     local attach
-    if [[ $TMUX_AUTOSTART_MODE == 'attach' ]] {
+    if [[ $TMUX_AUTOSTART_MODE == 'attach' ]]; then
       attach=true
-    } elif [[ $TMUX_AUTOSTART_MODE == prompt* ]] {
+    elif [[ $TMUX_AUTOSTART_MODE == prompt* ]]; then
       # Convert the autostart mode to a fortune mode.
       local fortune_mode='none'
       case $TMUX_AUTOSTART_MODE in
@@ -87,21 +87,21 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
       esac
 
       # Display a fortune if requested.
-      if [[ $fortune_mode != 'none' ]] {
+      if [[ $fortune_mode != 'none' ]]; then
         FORTUNE_LOGIN="$fortune_mode" FORTUNE_INTERACTIVE="$fortune_mode" xsh load fortune
         print
-      }
+      fi
 
       # Interactively ask to enter tmux or a regular shell.
       local ans
       print -n ':: Attach to tmux session? [Y/n] ' && read -sk ans; print
       [[ $ans == ('y'|$'\n') ]] && attach=true
-    }
+    fi
 
     # Attach to the default session or to the most recently used unattached session.
     [[ $attach ]] && exec command tmux attach-session
   }
-}
+fi
 
 # Convenience aliases.
 alias tmux="tmux -f '$TMUX_CONFIG'"
@@ -111,15 +111,15 @@ alias txa="tmux new-session -As '$TMUX_DEFAULT_SESSION'"
 # Set the pane title to the current directory on every precmd.
 function _tmux_set_pane_title { print -Pn '\033]2;%~\033\\'; }
 typeset -ag precmd_functions
-if [[ ! ${precmd_functions[(r)_tmux_set_pane_title]} ]] {
+if [[ ! ${precmd_functions[(r)_tmux_set_pane_title]} ]]; then
   precmd_functions+=( _tmux_set_pane_title )
-}
+fi
 
 # Enable starting fzf in a tmux popup.
 (( $+commands[fzf] )) && export FZF_TMUX=1
 
 # Integration with https://github.com/greymd/tmux-xpanes.
-if (( $+commands[tmux-xpanes] )) {
+if (( $+commands[tmux-xpanes] )); then
   export TMUX_XPANES_LOG_DIRECTORY="$XDG_DATA_DIR/xpanes/"
   export TMUX_XPANES_LOG_FORMAT="[:ARG:].%Y-%m-%dT%H:%M:%S.log"
 
@@ -135,4 +135,4 @@ if (( $+commands[tmux-xpanes] )) {
   alias xp='xpanes'
   alias xpp='xpanes -B "set {}"'
   alias xpi='xpanes -B '\''INDEX=$(tmux display -pt "${TMUX_PANE}" "#{pane_index}")'\'''
-}
+fi

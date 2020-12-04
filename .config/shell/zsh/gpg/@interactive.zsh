@@ -3,9 +3,9 @@
 #
 
 # Return if requirements are not met.
-if (( ! $+commands[gpg-agent] )) {
+if (( ! $+commands[gpg-agent] )); then
   return 1
-}
+fi
 
 # Inform gpg-agent of the current TTY for user prompts.
 export GPG_TTY="$TTY"

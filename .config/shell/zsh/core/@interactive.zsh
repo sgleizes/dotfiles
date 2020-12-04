@@ -116,9 +116,9 @@ function autoload_dir {
   setopt local_options extended_glob
 
   fpath=($dir(-/FN) $fpath)
-  for func in $dir/$~skip_glob; {
+  for func in $dir/$~skip_glob; do
     autoload -Uz "$func"
-  }
+  done
 }
 
 # Autoload all module functions.
@@ -128,24 +128,24 @@ autoload_dir ${0:h}/function
 # Misc aliases
 #
 
-if (( $+commands[nordvpn] )) {
+if (( $+commands[nordvpn] )); then
   alias vpn='nordvpn'
   alias v='vpn'
-}
+fi
 
-if (( $+commands[espeak-ng] )) {
+if (( $+commands[espeak-ng] )); then
   alias speak-en='speak-ng -v gmw/en-US'
   alias speak-fr='speak-ng -v roa/fr'
-}
+fi
 
 #
 # External core plugins
 #
 
 # Abort if requirements are not met.
-if [[ $TERM == 'dumb' || $+functions[zinit] == 0 ]] {
+if [[ $TERM == 'dumb' || $+functions[zinit] == 0 ]]; then
   return 2
-}
+fi
 
 # Setup LS_COLORS.
 # Completion styles are configured with these colors in the completion module.

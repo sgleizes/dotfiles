@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[nnn] )) {
+if (( ! $+commands[nnn] )); then
   return 1
-}
+fi
 
 # nnn configuration: https://github.com/jarun/nnn/wiki/Usage#configuration.
 export NNN_ARCHIVE="\\.(7z|a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|rar|rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)$"
@@ -52,11 +52,11 @@ function nnn {
 
   # Generate bookmarks keys based on existing symlinks.
   unset NNN_BMS
-  for link in $NNN_BMS_DIR/*(N@); {
+  for link in $NNN_BMS_DIR/*(N@); do
     local markname="${link:t}"
     local markpath="${link:A}"
     export NNN_BMS="$NNN_BMS$markname[1]:$markpath;"
-  }
+  done
 
   # The default behavior is to cd on quit (nnn checks if NNN_TMPFILE is set)
   # To cd on quit only on ^G, remove the "export" as in:

@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if [[ $+commands[fortune] == 0 || ! -o interactive ]] {
+if [[ $+commands[fortune] == 0 || ! -o interactive ]]; then
   return 1
-}
+fi
 
 GOODBYES=(
   "So long and thanks for all the fish."

@@ -10,7 +10,7 @@ ZINIT[ZCOMPDUMP_PATH]="$ZCACHEDIR/zcompdump"
 ZPFX="$ZINIT[HOME_DIR]/prefix"
 
 # Install zinit if necessary.
-if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
+if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]]; then
   print -P "%F{33}:: Installing zdharma/zinit...%f"
   command mkdir -p $ZINIT[HOME_DIR]
   command git clone 'https://github.com/zdharma/zinit' $ZINIT[HOME_DIR]/bin \
@@ -26,7 +26,7 @@ if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
       && print -P ":: %F{red}ERROR%f: failed to apply $patch"
   }
   unset patch_dir
-}
+fi
 
 # Automatically compile sourced scripts.
 # To enable, run `zinit module build`.
@@ -39,7 +39,9 @@ if [[ ! -f $ZINIT[HOME_DIR]/bin/zinit.zsh ]] {
 # In the mean time this function does the job.
 function xcompile {
   zcompile $ZINIT[ZCOMPDUMP_PATH]
-  for rc in $XSH_CONFIG_DIR/zsh/**/*.zsh; { zcompile $rc; }
+  for rc in $XSH_CONFIG_DIR/zsh/**/*.zsh; do
+    zcompile $rc
+  done
 }
 
 # Source zinit.

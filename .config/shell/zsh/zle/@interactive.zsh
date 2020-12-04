@@ -18,9 +18,9 @@ setopt no_beep         # do not fucking beep
 setopt combining_chars # combine accents with the base character
 
 # Return if requirements are not met.
-if [[ $TERM == 'dumb' ]] {
+if [[ $TERM == 'dumb' ]]; then
   return 1
-}
+fi
 
 # Treat these characters as part of a word.
 WORDCHARS='._-~?!#$%^&*()[]{}<>'
@@ -49,18 +49,18 @@ zmodload zsh/terminfo
 # Enables terminal application mode when the editor starts,
 # so that $terminfo values are valid.
 function zle-line-init {
-  if (( $+terminfo[smkx] )) {
+  if (( $+terminfo[smkx] )); then
     echoti smkx
-  }
+  fi
 }
 zle -N zle-line-init
 
 # Disables terminal application mode when the editor exits,
 # so that other applications behave normally.
 function zle-line-finish {
-  if (( $+terminfo[rmkx] )) {
+  if (( $+terminfo[rmkx] )); then
     echoti rmkx
-  }
+  fi
 }
 zle -N zle-line-finish
 
@@ -121,11 +121,11 @@ zle -N insert-first-word
 
 # Expand .... to ../..
 function expand-dot-to-parent-directory-path {
-  if [[ $LBUFFER == *.. ]] {
+  if [[ $LBUFFER == *.. ]]; then
     LBUFFER+='/..'
-  } else {
+  else
     LBUFFER+='.'
-  }
+  fi
 }
 zle -N expand-dot-to-parent-directory-path
 
@@ -140,15 +140,15 @@ zle -N expand-all
 # Insert 'sudo ' or 'sudoedit ' at the beginning of the line.
 function prepend-sudo {
   if [[ $BUFFER == sudo\ * ]]; then
-      BUFFER="${BUFFER#* }"
+    BUFFER="${BUFFER#* }"
   elif [[ $BUFFER == (e|edit|$EDITOR)\ * ]]; then
-      BUFFER="${BUFFER#* }"
-      BUFFER="sudoedit $BUFFER"
+    BUFFER="${BUFFER#* }"
+    BUFFER="sudoedit $BUFFER"
   elif [[ $BUFFER == sudoedit\ * ]]; then
-      BUFFER="${BUFFER#* }"
-      BUFFER="edit $BUFFER"
+    BUFFER="${BUFFER#* }"
+    BUFFER="edit $BUFFER"
   else
-      BUFFER="sudo $BUFFER"
+    BUFFER="sudo $BUFFER"
   fi
 }
 zle -N prepend-sudo
@@ -156,18 +156,18 @@ zle -N prepend-sudo
 # Toggle the comment character at the start of the line. This is meant to work
 # around a buggy implementation of pound-insert in zsh.
 function pound-toggle {
-  if [[ $BUFFER == '#'* ]] {
+  if [[ $BUFFER == '#'* ]]; then
     # Because of an oddity in how zsh handles the cursor when the buffer size
     # changes, we need to make this check before we modify the buffer and let
     # zsh handle moving the cursor back if it's past the end of the line.
-    if [[ $CURSOR != $#BUFFER ]] {
+    if [[ $CURSOR != $#BUFFER ]]; then
       (( CURSOR -= 1 ))
-    }
+    fi
     BUFFER="${BUFFER:1}"
-  } else {
+  else
     BUFFER="#$BUFFER"
     (( CURSOR += 1 ))
-  }
+  fi
 }
 zle -N pound-toggle
 
@@ -275,11 +275,11 @@ function _load_zkbd_config {
 
 # Set empty $keys values to an invalid UTF-8 sequence to induce silent
 # bindkey failure.
-for key in ${(k)keys[@]}; {
-  if [[ ! $keys[$key] ]] {
+for key in ${(k)keys[@]}; do
+  if [[ ! $keys[$key] ]]; then
     keys[$key]='�'
-  }
-}
+  fi
+done
 
 # In emacs mode, some unbound keys insert a tilde in the buffer. Bind these
 # keys in the main keymap to a noop to avoid this behavior.
@@ -310,9 +310,9 @@ unbound_keys=(
   $keys[ShiftPageUp]
   $keys[ShiftPageDown]
 )
-for key in $unbound_keys[@]; {
+for key in $unbound_keys[@]; do
   bindkey "$key" _zle-noop
-}
+done
 
 #
 # Key bindings
@@ -329,9 +329,9 @@ bindkey -M command -R ' '-"~" self-insert
 bindkey -M command -R '\M-^@'-'\M-^?' self-insert
 
 # Start a new numeric argument, or add to the current one.
-for key in "$keys[Alt]"{0-9}; {
+for key in "$keys[Alt]"{0-9}; do
   bindkey "$key" digit-argument
-}
+done
 # Changes the sign of the following argument
 bindkey "$keys[Alt]-" neg-argument
 
@@ -340,12 +340,12 @@ bindkey "$keys[Alt]-" neg-argument
 #
 
 # Move to beginning/end of line.
-for key in "$keys[Control]S" "$keys[Home]"; {
+for key in "$keys[Control]S" "$keys[Home]"; do
   bindkey "$key" beginning-of-line
-}
-for key in "$keys[Control]E" "$keys[End]"; {
+done
+for key in "$keys[Control]E" "$keys[End]"; do
   bindkey "$key" end-of-line
-}
+done
 
 # Move forward/backward one character.
 bindkey "$keys[Left]" backward-char
@@ -400,33 +400,33 @@ bindkey "$keys[Alt]." insert-last-word
 
 # Delete the character under the cursor, or list possible completions for the
 # current word.
-for key in "$keys[Control]D" "$keys[Delete]"; {
+for key in "$keys[Control]D" "$keys[Delete]"; do
   bindkey "$key" delete-char-or-list
-}
+done
 
 # Delete the character behind the cursor.
 bindkey "$keys[Backspace]" backward-delete-char
 
 # Kill/Delete the curent word.
-for key in "$keys[Alt]D" "$keys[ControlDelete]"; {
+for key in "$keys[Alt]D" "$keys[ControlDelete]"; do
   bindkey "$key" kill-word
-}
-for key in "$keys[Alt]d" "$keys[AltDelete]"; {
+done
+for key in "$keys[Alt]d" "$keys[AltDelete]"; do
   bindkey "$key" delete-word
-}
+done
 
 # Kill/Delete the word behind the cursor.
 bindkey "$keys[ControlBackspace]" backward-kill-word
-for key in "$keys[Control]W" "$keys[Alt]$keys[Backspace]"; {
+for key in "$keys[Control]W" "$keys[Alt]$keys[Backspace]"; do
   bindkey "$key" backward-delete-word
-}
+done
 
 # Kill from the cursor to the end of the line.
 bindkey "$keys[Control]K" kill-line
 # Kill from the beginning of the line to the cursor position.
-for key in "$keys[Alt]k" "$keys[Alt]$keys[ControlBackspace]"; {
+for key in "$keys[Alt]k" "$keys[Alt]$keys[ControlBackspace]"; do
   bindkey "$key" backward-kill-line
-}
+done
 # Kill the current line.
 bindkey "$keys[Alt]$keys[Control]K" kill-whole-line
 # Kill the entire buffer.
@@ -443,9 +443,9 @@ bindkey "$keys[Control]U" push-line-or-edit
 bindkey "$keys[Control]B" get-line
 
 # Duplicate previous words in the current line.
-for key in "$keys[Control]P" "$keys[Alt]p"; {
+for key in "$keys[Control]P" "$keys[Alt]p"; do
   bindkey "$key" copy-earlier-word
-}
+done
 
 # Quote the current line.
 bindkey "$keys[Alt]'" quote-line
@@ -489,7 +489,7 @@ bindkey "$keys[BackTab]" reverse-menu-complete
 # Override bindings in the menuselect keymap.
 # The completion module should be loaded before the editor, so that the
 # zsh/complist module is loaded and the menuselect keymap available.
-if { bindkey -l menuselect >/dev/null 2>&1 } {
+if bindkey -l menuselect >/dev/null 2>&1; then
   # Move the mark to the first/last line of the next/previous group of matches.
   bindkey -M menuselect "$keys[PageDown]" vi-forward-blank-word
   bindkey -M menuselect "$keys[PageUp]" vi-backward-blank-word
@@ -508,7 +508,7 @@ if { bindkey -l menuselect >/dev/null 2>&1 } {
   bindkey -M menuselect ' ' accept-line
   # Accept the current menu item and continue selection.
   bindkey "$keys[Control]@" accept-and-hold # Control + Space
-}
+fi
 
 # Expand ... to ../.. (except for special keymaps).
 bindkey '.' expand-dot-to-parent-directory-path
@@ -579,7 +579,7 @@ bindkey "$keys[Alt]X" execute-last-named-cmd
 #
 
 # Run htop.
-if (( $+commands[htop] )) {
+if (( $+commands[htop] )); then
   function open-htop {
     exec </dev/tty
     htop
@@ -587,10 +587,10 @@ if (( $+commands[htop] )) {
   }
   zle -N open-htop
   bindkey "$keys[Control]Oh" open-htop
-}
+fi
 
 # Run bpytop.
-if (( $+commands[bpytop] )) {
+if (( $+commands[bpytop] )); then
   function open-bpytop {
     exec </dev/tty
     bpytop
@@ -598,7 +598,7 @@ if (( $+commands[bpytop] )) {
   }
   zle -N open-bpytop
   bindkey "$keys[Control]O$keys[Control]H" open-bpytop
-}
+fi
 
 #
 # Key bindings - Completion system bindable commands
@@ -607,15 +607,15 @@ if (( $+commands[bpytop] )) {
 # Unbind the given widgets from all their bound keys in the main keymap.
 # Usage: _zle_unbind_widgets <widgets>...
 function _zle_unbind_widgets {
-  if (( $# == 0 )) {
+  if (( $# == 0 )); then
     return 1
-  }
+  fi
 
   local key widget
   local bound_keys=("${(f)$(bindkey | grep -E "${(j:|:)@}")}")
-  for key widget in ${(z)bound_keys}; {
+  for key widget in ${(z)bound_keys}; do
     [[ "$widget" ]] && bindkey -r "${(Q)key}"
-  }
+  done
 }
 
 # Rebind the bindable commands added by the completion system.
@@ -663,14 +663,14 @@ function _rebind_compsys_widgets {
 # During the initial zinit run, plugins are loaded synchronously, so compinit
 # is already available in this case. We check this as we want zinit to download
 # the null repository anyway so that it doesn't show up during the second load.
-if (( $+functions[compinit] && ! $+functions[zinit] )) {
+if (( $+functions[compinit] && ! $+functions[zinit] )); then
   _rebind_compsys_widgets
-} else {
+else
   # Postpone rebinding after the asynchronous compinit.
   zinit ice wait lucid nocompile \
     id-as'hack/rebind-compsys-widgets' \
     nocd atload'_rebind_compsys_widgets'
   zinit light zdharma/null
-}
+fi
 
 unset key{,map}

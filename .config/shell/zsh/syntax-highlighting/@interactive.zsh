@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if [[ $TERM == 'dumb' || $+functions[zinit] == 0 ]] {
+if [[ $TERM == 'dumb' || $+functions[zinit] == 0 ]]; then
   return 1
-}
+fi
 
 # Syntax highlighting plugin with the default theme.
 # Use `fast-theme` to configure.

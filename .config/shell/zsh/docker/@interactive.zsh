@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[docker] )) {
+if (( ! $+commands[docker] )); then
   return 1
-}
+fi
 
 # NOTE: Loads of possible aliases, cherry pick as needed from:
 # https://github.com/sorin-ionescu/prezto/blob/master/modules/docker/alias.zsh
@@ -42,22 +42,22 @@ alias dkpr='docker system prune'
 
 # Extension for run-help to support 'docker' subcommands.
 function run-help-docker {
-  if (( $# == 0 )) {
+  if (( $# == 0 )); then
     man docker
-  } elif { (( $# >= 2 )) && man -w docker-$1-$2 &>/dev/null } {
+  elif (( $# >= 2 )) && man -w docker-$1-$2 &>/dev/null; then
     man docker-$1-$2
-  } else {
+  else
     man docker-$1
-  }
+  fi
 }
 
 # Support for docker-compose.
-if (( $+commands[docker-compose] )) {
+if (( $+commands[docker-compose] )); then
   alias dcp='docker-compose'
-}
+fi
 
 # Integration with the fuzzy finder.
-if (( $+commands[fzf] )) {
+if (( $+commands[fzf] )); then
   # Select a docker container to show logs of.
   function fzf-docker-logs() {
     local selected
@@ -94,4 +94,4 @@ if (( $+commands[fzf] )) {
   alias dklf='fzf-docker-logs'
   alias dkcxf='fzf-docker-rm'
   alias dkixf='fzf-docker-rmi'
-}
+fi

@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[todo.sh] )) {
+if (( ! $+commands[todo.sh] )); then
   return 1
-}
+fi
 
 # See also:
 # https://github.com/todotxt/todo.txt-cli/blob/master/USAGE.md

@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[tmux] )) {
+if (( ! $+commands[tmux] )); then
   return 1
-}
+fi
 
 # XDG path for tmux server sockets.
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR"

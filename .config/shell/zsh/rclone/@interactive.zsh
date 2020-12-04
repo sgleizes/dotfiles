@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[rclone] || ! $+commands[kwalletcli] )) {
+if (( ! $+commands[rclone] || ! $+commands[kwalletcli] )); then
   return 1
-}
+fi
 
 # Command to retrieve the password to the rclone configuration.
 export RCLONE_PASSWORD_COMMAND='kwalletcli -f rclone -e config'

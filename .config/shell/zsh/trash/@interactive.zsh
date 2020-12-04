@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[trash] )) {
+if (( ! $+commands[trash] )); then
   return 1
-}
+fi
 
 # This is not recommended by the author:
 # https://github.com/andreafrancia/trash-cli#can-i-alias-rm-to-trash-put
@@ -17,11 +17,11 @@ if (( ! $+commands[trash] )) {
 function rm {
   local bye
   print -n 'delete permanently? [y/N] ' && read -sq bye; print
-  if [[ $bye == 'y' ]] {
+  if [[ $bye == 'y' ]]; then
     command rm -rv $@
-  } else {
+  else
     trash $@
-  }
+  fi
 }
 
 # Short way to restore from trash.

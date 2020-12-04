@@ -8,9 +8,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   return 1
-}
+fi
 
 # Configure zsh-history-substring-search.
 # This is provided as a function since the plugin is loaded asynchronously
@@ -20,13 +20,13 @@ function _configure_history_substring_search {
   HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS=l
 
   # Use less flashy colors.
-  if (( $terminfo[colors] >= 256 )) {
+  if (( $terminfo[colors] >= 256 )); then
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=62,fg=white,bold'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=88,fg=white,bold'
-  } elif (( $terminfo[colors] >= 8 )) {
+  elif (( $terminfo[colors] >= 8 )); then 
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=blue,fg=white,bold'
     HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
-  }
+  fi
 
   # Rebind up/down keys to use the loaded widgets.
   bindkey "$keys[Up]" history-substring-search-up

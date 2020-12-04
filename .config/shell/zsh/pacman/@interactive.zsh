@@ -6,9 +6,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[pacman] || ! $+commands[expac] )) {
+if (( ! $+commands[pacman] || ! $+commands[expac] )); then
   return 1
-}
+fi
 
 #
 # Basic pacman aliases
@@ -62,9 +62,9 @@ function pacfiles {
 function pacweb {
   pkg="$1"
   info="$(pacman -Si "$pkg")"
-  if [[ ! $info ]] {
+  if [[ ! $info ]]; then
     return
-  }
+  fi
   repo="$(grep '^Repo' <<<$info | grep -oP '[^ ]+$')"
   arch="$(grep '^Arch' <<<$info | grep -oP '[^ ]+$')"
   ${(z)BROWSER} "https://archlinux.org/packages/$repo/$arch/$pkg/"
@@ -78,17 +78,17 @@ alias pacf='pacfiles'
 alias pacw='pacweb'
 
 # Additional functions using `fd`.
-if (( $+commands[fd] )) {
+if (( $+commands[fd] )); then
   # List pacnew and pacsave files.
   function pacnew {
     fd -HI ".+\.pac(new|save)" /etc
   }
 
   alias pacn='pacnew'
-}
+fi
 
 # Additional functions using the fuzzy finder.
-if (( $+commands[fzf] )) {
+if (( $+commands[fzf] )); then
   # Browse installed packages with a preview of package information and files.
   function pacview {
     pacman -Qq | FZF_HEIGHT="${FZF_HEIGHT:-80%}" fzf \
@@ -121,7 +121,7 @@ if (( $+commands[fzf] )) {
 
   alias pacv='pacview'
   alias pacb='pacbrowse'
-}
+fi
 
 #
 # AUR utilities

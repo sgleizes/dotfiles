@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[unison] )) {
+if (( ! $+commands[unison] )); then
   return 1
-}
+fi
 
 # Convenience aliases.
 alias sync='unison'

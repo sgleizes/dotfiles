@@ -3,9 +3,9 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[exa] )) {
+if (( ! $+commands[exa] )); then
   return 1
-}
+fi
 
 # Quick switch to opt-in git support.
 # To enable set `EXA_GIT` to any value.
@@ -26,7 +26,7 @@ alias ltc='l --sort=ch --time=ch'        # list sorted by change time, most rece
 alias lta='l --sort=acc --time=acc'      # list sorted by access time, most recent last
 
 # Color theme.
-if (( $terminfo[colors] >= 256 )) {
+if (( $terminfo[colors] >= 256 )); then
   export EXA_COLORS="\
 ur=38;5;41:\
 uw=38;5;41:\
@@ -48,7 +48,7 @@ un=38;5;9;1:\
 gn=38;5;9;1:\
 da=38;5;145:\
 "
-} elif (( $terminfo[colors] >= 8 )) {
+elif (( $terminfo[colors] >= 8 )); then
   export EXA_COLORS="\
 ur=1;32:\
 uw=1;32:\
@@ -70,5 +70,4 @@ un=1;31:\
 gn=1;31:\
 da=0:\
 "
-}
-
+fi

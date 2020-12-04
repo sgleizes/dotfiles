@@ -22,10 +22,10 @@ function zkey {
 
 # Check the main keymap for changes against the last dump.
 function zkeyguard {
-  if [[ ! -r $_ZKEY_CACHE ]] {
+  if [[ ! -r $_ZKEY_CACHE ]]; then
     [[ $TERM && $TERM != 'dumb' ]] && zkeydump
     return
-  }
+  fi
 
   local dump diff
   dump=${(f)"$(zkey)"}
@@ -43,14 +43,14 @@ function zkeydump {
 }
 
 # Return if autorun is not requested.
-if [[ ! $ZKEY_AUTORUN ]] {
+if [[ ! $ZKEY_AUTORUN ]]; then
   return 0
-}
+fi
 
 # Run the guard immediately or asynchronously.
-if (( ! $+functions[zinit] )) {
+if (( ! $+functions[zinit] )); then
   zkeyguard
-} else {
+else
   # Handle asynchronous printing of the output.
   function _async_zkeyguard {
     local out
@@ -64,4 +64,4 @@ if (( ! $+functions[zinit] )) {
     id-as'guard/zkey' \
     nocd atload'_async_zkeyguard'
   zinit light zdharma/null
-}
+fi

@@ -3,19 +3,19 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[jq] || ! $+commands[fzf] )) {
+if (( ! $+commands[jq] || ! $+commands[fzf] )); then
   return 1
-}
+fi
 
 # Interactive jq filter builder using fzf.
 # Usage: jq-repl [input]
 function jq-repl {
   local input="$1"
-  if [[ ! $input || $input == '-' ]] {
+  if [[ ! $input || $input == '-' ]]; then
     input=$(mktemp)
     trap "command rm -f $input" EXIT
     cat /dev/stdin >|$input
-  }
+  fi
 
   </dev/null fzf \
     --phony \
@@ -29,9 +29,9 @@ function jq-repl {
 function jq-complete {
   local query="$(eval "$LBUFFER" | jq-repl)"
   local ret=$?
-  if [[ $query ]] {
+  if [[ $query ]]; then
     LBUFFER="${LBUFFER} | jq -r '$query'"
-  }
+  fi
   zle redisplay
   return $ret
 }
