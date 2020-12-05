@@ -74,7 +74,7 @@
   # Log (l)
   l  = log --topo-order
   ls = log --topo-order --stat
-  ld = log --topo-order --stat --patch --full-diff
+  ld = log --topo-order --stat --patch
   lo = log --topo-order --pretty=brief
   lg = log --topo-order --pretty=brief --all --graph
   ll = review
