@@ -973,7 +973,8 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
 (set-formatter! 'shfmt
   '("shfmt"
-    "-s"
+    "-s"   ; simplify the code
+    "-bn"  ; binary ops like && and | may start a line
     ("-i" "%d" tab-width)
     ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
                               (boundp 'sh-shell)
