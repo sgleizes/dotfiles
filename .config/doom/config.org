@@ -855,6 +855,12 @@ Customize general evil options.
 (setq evil-cross-lines t)        ; Allow horizontal ops to move to the next
 #+end_src
 
+Enable evil-mode in the minibuffer.
+#+begin_src elisp
+(use-package! evil-collection
+  :custom (evil-collection-setup-minibuffer t))
+#+end_src
+
 Customize options for evil extensions.
 #+begin_src elisp
 (after! evil-multiedit

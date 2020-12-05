@@ -28,10 +28,10 @@ I do not try to support Mac OS. I don't use that.
 
 ## What's in there
 
-- Configuration for various shells [using `xsh`](https://github.com/sgleizes/xsh)
-  [(here)](.config/shell).
-- Extensive `tmux` configuration [(here)](.config/tmux).
-- Literate `emacs` configuration [(here)](.config/doom) based on
+- Extensive [`zsh` configuration](.config/shell) using
+  [xsh](https://github.com/sgleizes/xsh).
+- Extensive [`tmux` configuration](.config/tmux).
+- Literate [`emacs` configuration](.config/doom) using
   [doom-emacs](https://github.com/hlissner/doom-emacs).
 - Configuration for various terminal programs.
 - On the `desktop` branch, configuration for my KDE desktop and various desktop
