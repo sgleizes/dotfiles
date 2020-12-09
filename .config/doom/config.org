@@ -1495,6 +1495,20 @@ This file shouldn't be byte compiled.
 (package! command-log-mode)
 #+end_src
 
+*** Fasd
+[[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
+#+begin_src elisp
+(package! fasd)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! fasd
+  :config
+  (map! :leader
+        :desc "Find frecent file" ">" #'fasd-find-file)
+  (global-fasd-mode))
+#+end_src
+
 *** Fast scroll
 [[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
 modeline during intense scrolling operations.
