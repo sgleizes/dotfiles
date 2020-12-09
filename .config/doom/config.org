@@ -1495,6 +1495,21 @@ This file shouldn't be byte compiled.
 (package! command-log-mode)
 #+end_src
 
+*** Evil visual mark
+[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
+FIXME: Does not support ~evil-delete-marks~.
+#+begin_src elisp
+(package! evil-visual-mark-mode)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! evil-visual-mark-mode
+  :config
+  (custom-set-faces!
+    '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
+  (evil-visual-mark-mode))
+#+end_src
+
 *** Fasd
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
