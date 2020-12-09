@@ -102,7 +102,7 @@ RandomSaturationRange=100
 
 [General]
 Blur=false
-ColorRandomization=false
+ColorRandomization=true
 Description=Breeze
 Opacity=0.9
 Wallpaper=

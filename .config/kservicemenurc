@@ -7,7 +7,6 @@ encrypt=true
 extractfileitemaction=true
 installFont=true
 kactivitymanagerd_fileitem_linking_plugin=true
-kdiff3fileitemaction=true
 kompare=true
 openTerminalHere=true
 rename=true
