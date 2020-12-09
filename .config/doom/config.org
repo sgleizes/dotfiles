@@ -1413,7 +1413,7 @@ Rebind auto-yasnippet commands.
 #+end_src
 
 ** Language packages
-*** TODO Org Mode
+*** Org
 Change the default org directory.
 #+begin_src elisp
 (setq org-directory "~/Projects/org/")
@@ -1426,8 +1426,42 @@ Remove the tangle-on-save hook and add a manual binding.
   "Recompile literate config to `doom-private-dir"
   (interactive)
   (+literate-recompile-maybe-h))
-(map! :leader :prefix "m"
+(map! :map org-mode-map
+      :localleader
       "R" #'+literate-recompile)
+#+end_src
+
+Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(defun evil-org-edit-src-exit ()
+  "Fallback to `evil-edit-src-exit'."
+  (interactive)
+  (mapc #'call-interactively '(org-edit-src-exit)))
+#+end_src
+
+Disable flyspell by default in org-mode (laggy).
+#+begin_src elisp
+(remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Improve org performance by removing some candy.
+See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
+#+begin_src elisp
+(after! org
+  (setq org-fontify-quote-and-verse-blocks nil
+        org-fontify-whole-heading-line nil
+        org-hide-leading-stars nil
+        org-hide-leading-stars-before-indent-mode nil))
+#+end_src
+
+Customize bindings.
+#+begin_src emacs-lisp :tangle yes
+(after! org
+  (map! :map org-mode-map
+        "S-<return>" #'+org/shift-return
+        :localleader
+        :prefix ("b" . "tables")
+        "j"          #'org-table-copy-down))
 #+end_src
 
 * Additional packages
