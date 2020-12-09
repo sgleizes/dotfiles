@@ -1153,6 +1153,51 @@ This file shouldn't be byte compiled.
 (package! command-log-mode)
 #+end_src
 
+*** Fast scroll
+[[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
+modeline during intense scrolling operations.
+#+begin_src elisp
+(package! fast-scroll)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! fast-scroll
+  :config
+  (setq fast-scroll-throttle 0.1)
+  ;; Add scroll-up/down commands for mouse wheel.
+  (defun fast-scroll-advice-scroll-functions ()
+    "Wrap as many scrolling functions that we know of in this advice."
+    (interactive)
+    (advice-add #'scroll-up-command :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-down-command :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'evil-scroll-up :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'evil-scroll-down :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-up :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-down :around #'fast-scroll-run-fn-minimally))
+  (defun fast-scroll-unload-function ()
+    "Remove advice added by `fast-scroll-advice-scroll-functions'.
+Note this function's name implies compatibility with `unload-feature'."
+    (interactive)
+    (advice-remove #'scroll-up-command #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-down-command #'fast-scroll-run-fn-minimally)
+    (advice-remove #'evil-scroll-up #'fast-scroll-run-fn-minimally)
+    (advice-remove #'evil-scroll-down #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-up #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-down #'fast-scroll-run-fn-minimally)
+    nil)
+  ;; Remove modes from default modeline.
+  (defun fast-scroll-default-mode-line ()
+    "An Emacs default/bare bones mode-line."
+    (list "%e" mode-line-front-space
+          mode-line-client
+          mode-line-modified
+          mode-line-frame-identification
+          mode-line-buffer-identification "   "
+          mode-line-position
+          "  " mode-line-misc-info mode-line-end-spaces))
+  ;; Bind mouse button to toggle mode.
+  (map! :g "<mouse-8>" #'fast-scroll-mode))
+#+end_src
 *** Info colors
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
