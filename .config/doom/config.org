@@ -1,8 +1,8 @@
-#+TITLE: Doom Emacs Configuration
-#+AUTHOR: Stéphane Gleizes
-#+STARTUP: fold
-#+PROPERTY: header-args:elisp :tangle yes :cache yes :results silent :comments link
-#+PROPERTY: header-args :tangle no :results silent
+#+title: Doom Emacs Configuration
+#+author: Stéphane Gleizes
+#+startup: fold
+#+property: header-args:elisp :tangle yes :cache yes :results silent :comments link
+#+property: header-args :tangle no :results silent
 
 * System setup
 ** Systemd daemons
@@ -26,6 +26,7 @@ ExecStop=/usr/bin/emacsclient --socket-name=%i --eval "(kill-emacs)"
 # set it from PAM, so don't override by default.
 # Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Restart=on-failure
+Nice=-10
 
 [Install]
 WantedBy=default.target
@@ -259,7 +260,7 @@ literate
 #+begin_src elisp
 ;;chinese
 ;;japanese
-;;layout            ; auie,ctsrnm is the superior home row
+;;layout                      ; auie,ctsrnm is the superior home row
 #+end_src
 
 **** Completion
@@ -280,7 +281,7 @@ doom-dashboard                ; a nifty splash screen for Emacs
 ;;doom-quit                   ; DOOM quit-message prompts when you quit Emacs
 ;;fill-column                 ; a `fill-column' indicator
 hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-;;hydra
+hydra
 ;;indent-guides               ; highlighted indent columns
 (ligatures +fira)             ; ligatures and symbols to make your code pretty again
 ;;minimap                     ; show a map of the code on the side
@@ -319,7 +320,7 @@ snippets                      ; my elves. They type so I don't have to
 **** Builtins
 #+name: doom-emacs
 #+begin_src elisp
-(dired +ranger +icons)        ; making dired pretty [functional]
+(dired +icons)                ; making dired pretty [functional]
 electric                      ; smarter, keyword-based electric-indent
 (ibuffer +icons)              ; interactive buffer management
 (undo +tree)                  ; persistent, smarter undo for your inevitable mistakes
@@ -372,7 +373,7 @@ taskrunner                    ; taskrunner for all your projects
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
-tty                         ; improve the terminal Emacs experience
+tty                           ; improve the terminal Emacs experience
 #+end_src
 
 **** Language support
@@ -562,7 +563,10 @@ Tweak various general settings to more opinionated values.
               x-stretch-cursor t)          ; Stretch cursor to the glyph width
 
 (setq undo-limit 80000000                  ; Raise undo-limit to 80Mb
-      evil-want-fine-undo t                ; By default while in insert all changes are one big blob. Be more granular
+      mark-ring-max 32                     ; Set mark ring size
+      global-mark-ring-max 32              ; Set global mark ring size
+      set-mark-command-repeat-pop t        ; Repeat jump to last mark with just C-SPC
+      max-mini-window-height 0.25          ; Increase max-height of mini-windows
       auto-save-default t                  ; Nobody likes to loose work, I certainly don't
       truncate-string-ellipsis "…"         ; Unicode ellispis are nicer than "...", and also save precious space
       uniquify-buffer-name-style 'forward) ; Use path to uniquify buffer names
@@ -633,8 +637,11 @@ Prompt for the workspace buffer to show on new window.
 *** Line numbers
 Relative line numbers are fantastic for knowing how far away line numbers are,
 then =12 <UP>= gets you exactly where you think.
+Sadly, due to the (very) significant performance hit (mainly on scrolling),
+they are disabled by default.
 #+begin_src elisp
-(setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
+;; (setq display-line-numbers-type 'relative)
 #+end_src
 
 * Package configuration
@@ -771,6 +778,188 @@ describe the selected element (with ~+childframe~), so it can't be used here.
   (add-hook 'evil-insert-state-exit-hook #'company-abort))
 #+end_src
 
+*** Dired
+Customize general dired appearance.
+#+begin_src elisp
+(use-package! dired
+  :config
+  (setq dired-listing-switches "--group-directories-first -lhFG -v -a")
+  ;; FIXME: dired--unhide removes text properties! Use revert-buffer to restore them
+  (add-hook! (dired-mode dired-hide-details-mode)
+    (defun dired-hide-dir-information ()
+      (unless dired-hide-details-mode
+        (add-to-invisibility-spec 'dired-hide-details-information))))
+  ;; Disable evil-snipe as it shadows bindings for some reason.
+  (add-hook! dired-mode
+    (defun dired-disable-evil-snipe ()
+      (evil-snipe-local-mode 0))))
+
+(use-package! fd-dired
+  :config
+  (setq find-ls-option '("-print0 | xargs -0 ls -ldhFN" . "-ldhF"))
+  (setq fd-dired-ls-option '("| xargs -0 ls -ldhFN" . "-ldhF")))
+#+end_src
+
+Omit some more files from being listed.
+#+begin_src elisp
+(use-package! dired-x
+  :config
+  (setq dired-omit-files (concat dired-omit-files "\\|\\.zwc\\'")))
+#+end_src
+
+Fix issues with all-the-icons:
+- Use a consistent icon height.
+- Disable icons on big folders (too slow).
+- Use file-local-name for remote folders.
+- Fix refresh issues on some dired operations.
+#+begin_src elisp
+(after! all-the-icons-dired
+  ;; Patch the refesh function with a :height property to fix inconsistent line height.
+  (defun all-the-icons-dired--refresh ()
+    "Display the icons of files in a dired buffer."
+    (all-the-icons-dired--remove-all-overlays)
+    ;; Don't display icons in remote folders or if the folder has too many items.
+    (if (<= (count-lines (point-min) (point-max)) 150)
+        (save-excursion
+          (goto-char (point-min))
+          (while (not (eobp))
+            (when (dired-move-to-filename nil)
+              (let ((file (file-local-name (dired-get-filename 'relative 'noerror))))
+                (when file
+                  (let ((icon (if (file-directory-p file)
+                                  (all-the-icons-icon-for-dir file
+                                                              :face 'all-the-icons-dired-dir-face
+                                                              :height 0.9 :v-adjust all-the-icons-dired-v-adjust)
+                                (all-the-icons-icon-for-file file :height 0.9 :v-adjust all-the-icons-dired-v-adjust))))
+                    (if (member file '("." ".."))
+                        (all-the-icons-dired--add-overlay (point) "  \t")
+                      (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
+            (forward-line 1)))))
+  ;; Refresh the icons after some dired operations.
+  (advice-add 'dired-add-entry :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-remove-entry :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-unsubdir :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-undo :around #'all-the-icons-dired--refresh-advice))
+#+end_src
+
+Add facilities to quickly toggle hidden files and recursive listing.
+#+begin_src elisp
+(defun dired-switches-all-p (switches)
+  "Return non-nil if the string SWITCHES contains -a or --all."
+  (dired-check-switches switches "a" "all"))
+
+(defun +dired-toggle-hidden-files ()
+  "Toggle hidden files in dired."
+  (interactive)
+  (dired-sort-other
+   (if (dired-switches-all-p dired-actual-switches)
+       (replace-regexp-in-string " \\(-a\\|--all\\)" "" dired-actual-switches)
+     (concat dired-actual-switches " -a"))))
+
+(defun +dired-toggle-recursive ()
+  "Toggle recursive subdirectory listing in dired."
+  (interactive)
+  (dired-sort-other
+   (if (dired-switches-recursive-p dired-actual-switches)
+       (replace-regexp-in-string " \\(-R\\|--recursive\\)" "" dired-actual-switches)
+     (concat dired-actual-switches " -R"))))
+#+end_src
+
+Open marked files in external applications.
+#+begin_src elisp
+(defun dired-do-open ()
+  "Open file(s) in external applications."
+  (interactive)
+  (let* ((files (dired-get-marked-files)))
+    (xdg-open-files files)))
+
+(defun xdg-open-files (files)
+  "Open a list of files with xdg-open."
+  (dolist (file files)
+    (xdg-open file)))
+
+(defun xdg-open (file)
+  "Open a file with xdg-open."
+  (let ((command (format "nohup xdg-open </dev/null >/dev/null 2>&1 '%s'" file)))
+    (shell-command command)))
+#+end_src
+
+Subroutine to jump to a standard directory. Totally stolen from ranger.
+#+begin_src elisp
+(defun +dired-go (path)
+  "Go subroutine"
+  (interactive
+   (list
+    (read-char-choice
+     "e   : /etc
+u   : /usr
+d   : /dev
+l   : follow directory link
+L   : follow selected file
+o   : /opt
+v   : /var
+h   : ~/
+m   : /media
+M   : /mnt
+s   : /srv
+r,/ : /
+> "
+     '(?q ?e ?u ?d ?l ?L ?o ?v ?h ?m ?M ?s ?r ?/))))
+  (message nil)
+  (let* ((c (char-to-string path))
+         (new-path
+          (cl-case (intern c)
+            ('e "/etc")
+            ('u "/usr")
+            ('d "/dev")
+            ('l (file-truename default-directory))
+            ('L (file-truename (dired-get-filename)))
+            ('o "/opt")
+            ('v "/var")
+            ('h  "~/")
+            ('m "/media")
+            ('M "/mnt")
+            ('s "/srv")
+            ('r "/")
+            ('/ "/"))))
+    (when (string-equal c "q")
+      (keyboard-quit))
+    (when (and new-path (file-directory-p new-path))
+      (dired new-path))))
+#+end_src
+
+Customize default bindings. 
+#+begin_src elisp
+(map! :after dired
+      :map dired-mode-map
+      ;; Prefer to navigate directories horizontally rather than the buffer.
+      :n "h"          #'dired-up-directory
+      :n "l"          #'dired-find-file
+      ;; Rebind variants for opening the current file.
+      :n "<C-return>" #'dired-find-file-other-window
+      :n "<S-return>" #'dired-display-file
+      :n "M-RET"      #'dired-view-file
+      ;; Use TAB to fold/unfold as in other modes.
+      :n "TAB"        #'dired-hide-subdir
+      :n "<backtab>"  #'dired-hide-all
+      ;; Miscellaneous
+      :n "_"          #'dired-undo
+      :n "K"          #'dired-kill-subdir
+      :n "M-J"        #'dired-goto-subdir
+      :n "s"          #'dired-sort-toggle-or-edit
+      :n "o"          #'dired-do-open
+      :n "f"          #'dired-create-empty-file
+      :n "F"          #'dired-do-find-marked-files
+      :n "M-c"        #'dired-rsync
+      ;; Bind missing visual-mode commands
+      :v "u"          #'dired-unmark
+      :localleader
+      "g"             #'+dired-go
+      "r"             #'+dired-toggle-recursive
+      "h"             #'+dired-toggle-hidden-files
+      "H"             #'dired-omit-mode)
+#+end_src
+
 *** Ediff
 Automatically kill unmodified buffers at the end of an ~ediff~ session.
 In merge jobs, buffer C is never deleted. However, the side effect of using this
@@ -851,20 +1040,80 @@ Customize default doom-theme faces for ~ediff~.
 *** Evil
 Customize general evil options.
 #+begin_src elisp
-(setq evil-move-cursor-back nil) ; Leave cursor in place when exiting insert-mode
-(setq evil-cross-lines t)        ; Allow horizontal ops to move to the next
+(setq evil-want-fine-undo t     ; By default while in insert all changes are one big blob. Be more granular
+      evil-move-cursor-back nil ; Leave cursor in place when exiting insert-mode
+      evil-cross-lines t)       ; Allow horizontal ops to move to the next
 #+end_src
 
-Enable evil-mode in the minibuffer.
+Enable evil-mode in the minibuffer. Or not.
 #+begin_src elisp
-(use-package! evil-collection
-  :custom (evil-collection-setup-minibuffer t))
+;; (use-package! evil-collection
+;;   :custom (evil-collection-setup-minibuffer t))
 #+end_src
 
 Customize options for evil extensions.
 #+begin_src elisp
 (after! evil-multiedit
   (setq evil-multiedit-follow-matches t))
+#+end_src
+
+Fix evil scroll [[https://github.com/emacs-evil/evil/issues/1322][not taking tab-bar height into account]].
+#+begin_src elisp
+(defun evil-posn-x-y (position)
+  "Return the x and y coordinates in POSITION.
+This function returns y offset from the top of the buffer area including
+the header line and the tab line (on Emacs 27 and later versions).
+
+On Emacs 24 and later versions, the y-offset returned by
+`posn-at-point' is relative to the text area excluding the header
+line and the tab line, while y offset taken by `posn-at-x-y' is relative to
+the buffer area including the header line and the tab line.
+This asymmetry is by design according to GNU Emacs team.
+This function fixes the asymmetry between them.
+
+Learned from mozc.el."
+  (let ((xy (posn-x-y position)))
+    (when header-line-format
+      (setcdr xy (+ (cdr xy)
+                    (or (and (fboundp 'window-header-line-height)
+                             (window-header-line-height))
+                        evil-cached-header-line-height
+                        (setq evil-cached-header-line-height (evil-header-line-height))))))
+    (when (fboundp 'window-tab-line-height)
+      (setcdr xy (+ (cdr xy) (window-tab-line-height))))
+    xy))
+#+end_src
+
+Replace evil-mc bindings by a convenient hydra.
+#+begin_src elisp
+(defhydra evil-mc-hydra (:color pink
+                         :hint nil
+                         :pre (evil-mc-pause-cursors))
+  "
+^Match^            ^Line-wise^           ^Manual^
+^^^^^^----------------------------------------------------
+_a_: match all     _J_: make & go down   _z_: toggle here
+_m_: make & next   _K_: make & go up     _r_: remove last
+_M_: make & prev   ^ ^                   _R_: remove all
+_n_: skip & next   ^ ^                   _p_: pause/resume
+_N_: skip & prev
+
+Current pattern: %`evil-mc-pattern
+
+"
+  ("a" #'evil-mc-make-all-cursors)
+  ("m" #'evil-mc-make-and-goto-next-match)
+  ("M" #'evil-mc-make-and-goto-prev-match)
+  ("n" #'evil-mc-skip-and-goto-next-match)
+  ("N" #'evil-mc-skip-and-goto-prev-match)
+  ("J" #'evil-mc-make-cursor-move-next-line)
+  ("K" #'evil-mc-make-cursor-move-prev-line)
+  ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
+  ("r" #'+multiple-cursors/evil-mc-undo-cursor)
+  ("R" #'evil-mc-undo-all-cursors)
+  ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
+  ("q" #'evil-mc-resume-cursors "quit" :color blue)
+  ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))
 #+end_src
 
 Provide more consistent navigation bindings and add missing evil bindings.
@@ -880,6 +1129,9 @@ Add the missing arrow-key variants of the window navigation commands.
  :m "TAB"             #'+fold/toggle
  :m "<backtab>"       #'+fold/close-all
  :m "C-<iso-lefttab>" #'+fold/open-all
+ ;; Rebind macro command, q is for quitting.
+ :n "q"               nil
+ :n "zq"              #'evil-record-macro
  ;; Use M-/ to toggle comments (M-; for comment-dwim), rebind dabbrev-expand
  :nv "M-/"            #'evilnc-comment-or-uncomment-lines
  :g  "C-/"            #'dabbrev-expand
@@ -888,6 +1140,9 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ (:when (featurep! :editor multiple-cursors)
+  :prefix "g"
+  :nv "z" #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
@@ -973,7 +1228,8 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
 (set-formatter! 'shfmt
   '("shfmt"
-    "-s"
+    "-s"   ; simplify the code
+    "-bn"  ; binary ops like && and | may start a line
     ("-i" "%d" tab-width)
     ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
                               (boundp 'sh-shell)
@@ -1021,22 +1277,66 @@ See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
     (clrhash ivy-rich--ivy-switch-buffer-cache)))
 #+end_src
 
+Extend the default hydra for ivy.
+#+begin_src elisp
+(after! ivy-hydra
+  (defhydra+ hydra-ivy (:hint nil :color pink)
+    "
+ Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
+----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
+ _g_ ^ ^ _k_ ^ ^ _u_ | _f_orward _o_ccur | _i_nsert | _c_alling: %-7s(if ivy-calling \"on\" \"off\") _C_ase-fold: %-10`ivy-case-fold-search
+ ^↨^ _h_ ^+^ _l_ ^↕^ | _RET_ done     ^^ | _q_uit   | _M_atcher: %-7s(ivy--matcher-desc) _T_runcate: %-11`truncate-lines
+ _G_ ^ ^ _j_ ^ ^ _d_ | _TAB_ alt-done ^^ | ^ ^      | _<_/_>_: shrink/grow _m_ark _t_oggle _u_nmark
+"
+    ;; Movement
+    ("l" ivy-alt-done)
+    ("h" ivy-backward-delete-char)
+    ;; Restore mark bindings
+    ("m" ivy-mark)
+    ("u" ivy-unmark)
+    ("<deletechar>" ivy-unmark-backward)
+    ("t" ivy-toggle-marks)
+    ;; Actions
+    ("<escape>" nil)
+    ("M-o" nil)
+    ("K" (ivy-exit-with-action #'ivy--kill-buffer-action))
+    ))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! ivy
+  (map! :map ivy-minibuffer-map
+        "C-<return>" #'ivy-immediate-done))
+#+end_src
+
 *** Ligatures
 Remove annoying programming ligatures.
 #+begin_src elisp
 (setq +ligatures-fira-font-alist (delete '("[]" . 57609) +ligatures-fira-font-alist))
 #+end_src
 
-*** Ranger
-Configure ranger appearance and behavior.
+*** Lsp
+Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
-(use-package! ranger
+(after! lsp
+  (setq lsp-restart 'auto-restart))
+#+end_src
+
+*** Magit
+Customize bindings.
+#+begin_src elisp
+(map! :leader :prefix "g"
+      "m" nil) ; unbind smerge hydra - use ediff instad.
+#+end_src
+
+*** Man
+Add shortcut to man command.
+#+begin_src elisp
+(use-package! man
   :config
-  (setq ranger-cleanup-eagerly t)
-  (setq ranger-show-hidden t)
-  (setq ranger-modify-header nil)
-  (setq ranger-hide-cursor t)
-  )
+  (map! :leader :prefix "h"
+        "H" #'man))
 #+end_src
 
 *** Terminal cursor
@@ -1113,7 +1413,7 @@ Rebind auto-yasnippet commands.
 #+end_src
 
 ** Language packages
-*** TODO Org Mode
+*** Org
 Change the default org directory.
 #+begin_src elisp
 (setq org-directory "~/Projects/org/")
@@ -1126,8 +1426,55 @@ Remove the tangle-on-save hook and add a manual binding.
   "Recompile literate config to `doom-private-dir"
   (interactive)
   (+literate-recompile-maybe-h))
-(map! :leader :prefix "m"
+(map! :map org-mode-map
+      :localleader
       "R" #'+literate-recompile)
+#+end_src
+
+Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(defun evil-org-edit-src-exit ()
+  "Fallback to `evil-edit-src-exit'."
+  (interactive)
+  (mapc #'call-interactively '(org-edit-src-exit)))
+#+end_src
+
+Disable flyspell by default in org-mode (laggy).
+#+begin_src elisp
+(remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Improve org performance by removing some candy.
+See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
+#+begin_src elisp
+(after! org
+  (setq org-fontify-quote-and-verse-blocks nil
+        org-fontify-whole-heading-line nil
+        org-hide-leading-stars nil
+        org-hide-leading-stars-before-indent-mode nil))
+#+end_src
+
+Customize bindings.
+#+begin_src emacs-lisp :tangle yes
+(after! org
+  (map! :map org-mode-map
+        "S-<return>" #'+org/shift-return
+        :localleader
+        :prefix ("b" . "tables")
+        "j"          #'org-table-copy-down))
+#+end_src
+
+*** Sh
+Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
+redundant if bash-language-server implements
+https://github.com/bash-lsp/bash-language-server/issues/104
+#+begin_src elisp
+(defun lsp-flycheck-enable-shellcheck ()
+  "Enable Shellcheck for shell buffers under LSP."
+  (when (derived-mode-p 'sh-mode)
+    (flycheck-add-next-checker 'lsp 'sh-shellcheck)))
+
+(add-hook 'lsp-after-open-hook #'lsp-flycheck-enable-shellcheck)
 #+end_src
 
 * Additional packages
@@ -1148,6 +1495,80 @@ This file shouldn't be byte compiled.
 (package! command-log-mode)
 #+end_src
 
+*** Evil visual mark
+[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
+FIXME: Does not support ~evil-delete-marks~.
+#+begin_src elisp
+(package! evil-visual-mark-mode)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! evil-visual-mark-mode
+  :config
+  (custom-set-faces!
+    '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
+  (evil-visual-mark-mode))
+#+end_src
+
+*** Fasd
+[[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
+#+begin_src elisp
+(package! fasd)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! fasd
+  :config
+  (map! :leader
+        :desc "Find frecent file" ">" #'fasd-find-file)
+  (global-fasd-mode))
+#+end_src
+
+*** Fast scroll
+[[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
+modeline during intense scrolling operations.
+#+begin_src elisp
+(package! fast-scroll)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! fast-scroll
+  :config
+  (setq fast-scroll-throttle 0.1)
+  ;; Add scroll-up/down commands for mouse wheel.
+  (defun fast-scroll-advice-scroll-functions ()
+    "Wrap as many scrolling functions that we know of in this advice."
+    (interactive)
+    (advice-add #'scroll-up-command :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-down-command :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'evil-scroll-up :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'evil-scroll-down :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-up :around #'fast-scroll-run-fn-minimally)
+    (advice-add #'scroll-down :around #'fast-scroll-run-fn-minimally))
+  (defun fast-scroll-unload-function ()
+    "Remove advice added by `fast-scroll-advice-scroll-functions'.
+Note this function's name implies compatibility with `unload-feature'."
+    (interactive)
+    (advice-remove #'scroll-up-command #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-down-command #'fast-scroll-run-fn-minimally)
+    (advice-remove #'evil-scroll-up #'fast-scroll-run-fn-minimally)
+    (advice-remove #'evil-scroll-down #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-up #'fast-scroll-run-fn-minimally)
+    (advice-remove #'scroll-down #'fast-scroll-run-fn-minimally)
+    nil)
+  ;; Remove modes from default modeline.
+  (defun fast-scroll-default-mode-line ()
+    "An Emacs default/bare bones mode-line."
+    (list "%e" mode-line-front-space
+          mode-line-client
+          mode-line-modified
+          mode-line-frame-identification
+          mode-line-buffer-identification "   "
+          mode-line-position
+          "  " mode-line-misc-info mode-line-end-spaces))
+  ;; Bind mouse button to toggle mode.
+  (map! :g "<mouse-8>" #'fast-scroll-mode))
+#+end_src
 *** Info colors
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
