@@ -1,8 +1,8 @@
-#+TITLE: Doom Emacs Configuration
-#+AUTHOR: Stéphane Gleizes
-#+STARTUP: fold
-#+PROPERTY: header-args:elisp :tangle yes :cache yes :results silent :comments link
-#+PROPERTY: header-args :tangle no :results silent
+#+title: Doom Emacs Configuration
+#+author: Stéphane Gleizes
+#+startup: fold
+#+property: header-args:elisp :tangle yes :cache yes :results silent :comments link
+#+property: header-args :tangle no :results silent
 
 * System setup
 ** Systemd daemons
@@ -260,7 +260,7 @@ literate
 #+begin_src elisp
 ;;chinese
 ;;japanese
-;;layout            ; auie,ctsrnm is the superior home row
+;;layout                      ; auie,ctsrnm is the superior home row
 #+end_src
 
 **** Completion
@@ -373,7 +373,7 @@ taskrunner                    ; taskrunner for all your projects
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
-tty                         ; improve the terminal Emacs experience
+tty                           ; improve the terminal Emacs experience
 #+end_src
 
 **** Language support
