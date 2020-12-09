@@ -26,6 +26,7 @@ ExecStop=/usr/bin/emacsclient --socket-name=%i --eval "(kill-emacs)"
 # set it from PAM, so don't override by default.
 # Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Restart=on-failure
+Nice=-10
 
 [Install]
 WantedBy=default.target
