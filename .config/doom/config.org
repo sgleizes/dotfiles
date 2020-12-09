@@ -634,8 +634,11 @@ Prompt for the workspace buffer to show on new window.
 *** Line numbers
 Relative line numbers are fantastic for knowing how far away line numbers are,
 then =12 <UP>= gets you exactly where you think.
+Sadly, due to the (very) significant performance hit (mainly on scrolling),
+they are disabled by default.
 #+begin_src elisp
-(setq display-line-numbers-type 'relative)
+(setq display-line-numbers-type nil)
+;; (setq display-line-numbers-type 'relative)
 #+end_src
 
 * Package configuration
