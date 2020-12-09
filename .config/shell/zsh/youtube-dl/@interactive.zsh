@@ -38,3 +38,6 @@ function youtube-dl-interactive {
   fi
 }
 alias ydli='youtube-dl-interactive'
+
+# Autoload all module functions.
+autoload_dir ${0:h}/function
