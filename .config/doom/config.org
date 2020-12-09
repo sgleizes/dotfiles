@@ -320,7 +320,7 @@ snippets                      ; my elves. They type so I don't have to
 **** Builtins
 #+name: doom-emacs
 #+begin_src elisp
-(dired +ranger +icons)        ; making dired pretty [functional]
+(dired +icons)                ; making dired pretty [functional]
 electric                      ; smarter, keyword-based electric-indent
 (ibuffer +icons)              ; interactive buffer management
 (undo +tree)                  ; persistent, smarter undo for your inevitable mistakes
@@ -776,6 +776,188 @@ describe the selected element (with ~+childframe~), so it can't be used here.
 #+begin_src elisp
 (after! company
   (add-hook 'evil-insert-state-exit-hook #'company-abort))
+#+end_src
+
+*** Dired
+Customize general dired appearance.
+#+begin_src elisp
+(use-package! dired
+  :config
+  (setq dired-listing-switches "--group-directories-first -lhFG -v -a")
+  ;; FIXME: dired--unhide removes text properties! Use revert-buffer to restore them
+  (add-hook! (dired-mode dired-hide-details-mode)
+    (defun dired-hide-dir-information ()
+      (unless dired-hide-details-mode
+        (add-to-invisibility-spec 'dired-hide-details-information))))
+  ;; Disable evil-snipe as it shadows bindings for some reason.
+  (add-hook! dired-mode
+    (defun dired-disable-evil-snipe ()
+      (evil-snipe-local-mode 0))))
+
+(use-package! fd-dired
+  :config
+  (setq find-ls-option '("-print0 | xargs -0 ls -ldhFN" . "-ldhF"))
+  (setq fd-dired-ls-option '("| xargs -0 ls -ldhFN" . "-ldhF")))
+#+end_src
+
+Omit some more files from being listed.
+#+begin_src elisp
+(use-package! dired-x
+  :config
+  (setq dired-omit-files (concat dired-omit-files "\\|\\.zwc\\'")))
+#+end_src
+
+Fix issues with all-the-icons:
+- Use a consistent icon height.
+- Disable icons on big folders (too slow).
+- Use file-local-name for remote folders.
+- Fix refresh issues on some dired operations.
+#+begin_src elisp
+(after! all-the-icons-dired
+  ;; Patch the refesh function with a :height property to fix inconsistent line height.
+  (defun all-the-icons-dired--refresh ()
+    "Display the icons of files in a dired buffer."
+    (all-the-icons-dired--remove-all-overlays)
+    ;; Don't display icons in remote folders or if the folder has too many items.
+    (if (<= (count-lines (point-min) (point-max)) 150)
+        (save-excursion
+          (goto-char (point-min))
+          (while (not (eobp))
+            (when (dired-move-to-filename nil)
+              (let ((file (file-local-name (dired-get-filename 'relative 'noerror))))
+                (when file
+                  (let ((icon (if (file-directory-p file)
+                                  (all-the-icons-icon-for-dir file
+                                                              :face 'all-the-icons-dired-dir-face
+                                                              :height 0.9 :v-adjust all-the-icons-dired-v-adjust)
+                                (all-the-icons-icon-for-file file :height 0.9 :v-adjust all-the-icons-dired-v-adjust))))
+                    (if (member file '("." ".."))
+                        (all-the-icons-dired--add-overlay (point) "  \t")
+                      (all-the-icons-dired--add-overlay (point) (concat icon "\t")))))))
+            (forward-line 1)))))
+  ;; Refresh the icons after some dired operations.
+  (advice-add 'dired-add-entry :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-remove-entry :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-unsubdir :around #'all-the-icons-dired--refresh-advice)
+  (advice-add 'dired-undo :around #'all-the-icons-dired--refresh-advice))
+#+end_src
+
+Add facilities to quickly toggle hidden files and recursive listing.
+#+begin_src elisp
+(defun dired-switches-all-p (switches)
+  "Return non-nil if the string SWITCHES contains -a or --all."
+  (dired-check-switches switches "a" "all"))
+
+(defun +dired-toggle-hidden-files ()
+  "Toggle hidden files in dired."
+  (interactive)
+  (dired-sort-other
+   (if (dired-switches-all-p dired-actual-switches)
+       (replace-regexp-in-string " \\(-a\\|--all\\)" "" dired-actual-switches)
+     (concat dired-actual-switches " -a"))))
+
+(defun +dired-toggle-recursive ()
+  "Toggle recursive subdirectory listing in dired."
+  (interactive)
+  (dired-sort-other
+   (if (dired-switches-recursive-p dired-actual-switches)
+       (replace-regexp-in-string " \\(-R\\|--recursive\\)" "" dired-actual-switches)
+     (concat dired-actual-switches " -R"))))
+#+end_src
+
+Open marked files in external applications.
+#+begin_src elisp
+(defun dired-do-open ()
+  "Open file(s) in external applications."
+  (interactive)
+  (let* ((files (dired-get-marked-files)))
+    (xdg-open-files files)))
+
+(defun xdg-open-files (files)
+  "Open a list of files with xdg-open."
+  (dolist (file files)
+    (xdg-open file)))
+
+(defun xdg-open (file)
+  "Open a file with xdg-open."
+  (let ((command (format "nohup xdg-open </dev/null >/dev/null 2>&1 '%s'" file)))
+    (shell-command command)))
+#+end_src
+
+Subroutine to jump to a standard directory. Totally stolen from ranger.
+#+begin_src elisp
+(defun +dired-go (path)
+  "Go subroutine"
+  (interactive
+   (list
+    (read-char-choice
+     "e   : /etc
+u   : /usr
+d   : /dev
+l   : follow directory link
+L   : follow selected file
+o   : /opt
+v   : /var
+h   : ~/
+m   : /media
+M   : /mnt
+s   : /srv
+r,/ : /
+> "
+     '(?q ?e ?u ?d ?l ?L ?o ?v ?h ?m ?M ?s ?r ?/))))
+  (message nil)
+  (let* ((c (char-to-string path))
+         (new-path
+          (cl-case (intern c)
+            ('e "/etc")
+            ('u "/usr")
+            ('d "/dev")
+            ('l (file-truename default-directory))
+            ('L (file-truename (dired-get-filename)))
+            ('o "/opt")
+            ('v "/var")
+            ('h  "~/")
+            ('m "/media")
+            ('M "/mnt")
+            ('s "/srv")
+            ('r "/")
+            ('/ "/"))))
+    (when (string-equal c "q")
+      (keyboard-quit))
+    (when (and new-path (file-directory-p new-path))
+      (dired new-path))))
+#+end_src
+
+Customize default bindings. 
+#+begin_src elisp
+(map! :after dired
+      :map dired-mode-map
+      ;; Prefer to navigate directories horizontally rather than the buffer.
+      :n "h"          #'dired-up-directory
+      :n "l"          #'dired-find-file
+      ;; Rebind variants for opening the current file.
+      :n "<C-return>" #'dired-find-file-other-window
+      :n "<S-return>" #'dired-display-file
+      :n "M-RET"      #'dired-view-file
+      ;; Use TAB to fold/unfold as in other modes.
+      :n "TAB"        #'dired-hide-subdir
+      :n "<backtab>"  #'dired-hide-all
+      ;; Miscellaneous
+      :n "_"          #'dired-undo
+      :n "K"          #'dired-kill-subdir
+      :n "M-J"        #'dired-goto-subdir
+      :n "s"          #'dired-sort-toggle-or-edit
+      :n "o"          #'dired-do-open
+      :n "f"          #'dired-create-empty-file
+      :n "F"          #'dired-do-find-marked-files
+      :n "M-c"        #'dired-rsync
+      ;; Bind missing visual-mode commands
+      :v "u"          #'dired-unmark
+      :localleader
+      "g"             #'+dired-go
+      "r"             #'+dired-toggle-recursive
+      "h"             #'+dired-toggle-hidden-files
+      "H"             #'dired-omit-mode)
 #+end_src
 
 *** Ediff
