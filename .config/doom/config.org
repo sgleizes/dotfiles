@@ -1095,22 +1095,66 @@ See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
     (clrhash ivy-rich--ivy-switch-buffer-cache)))
 #+end_src
 
+Extend the default hydra for ivy.
+#+begin_src elisp
+(after! ivy-hydra
+  (defhydra+ hydra-ivy (:hint nil :color pink)
+    "
+ Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
+----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
+ _g_ ^ ^ _k_ ^ ^ _u_ | _f_orward _o_ccur | _i_nsert | _c_alling: %-7s(if ivy-calling \"on\" \"off\") _C_ase-fold: %-10`ivy-case-fold-search
+ ^↨^ _h_ ^+^ _l_ ^↕^ | _RET_ done     ^^ | _q_uit   | _M_atcher: %-7s(ivy--matcher-desc) _T_runcate: %-11`truncate-lines
+ _G_ ^ ^ _j_ ^ ^ _d_ | _TAB_ alt-done ^^ | ^ ^      | _<_/_>_: shrink/grow _m_ark _t_oggle _u_nmark
+"
+    ;; Movement
+    ("l" ivy-alt-done)
+    ("h" ivy-backward-delete-char)
+    ;; Restore mark bindings
+    ("m" ivy-mark)
+    ("u" ivy-unmark)
+    ("<deletechar>" ivy-unmark-backward)
+    ("t" ivy-toggle-marks)
+    ;; Actions
+    ("<escape>" nil)
+    ("M-o" nil)
+    ("K" (ivy-exit-with-action #'ivy--kill-buffer-action))
+    ))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! ivy
+  (map! :map ivy-minibuffer-map
+        "C-<return>" #'ivy-immediate-done))
+#+end_src
+
 *** Ligatures
 Remove annoying programming ligatures.
 #+begin_src elisp
 (setq +ligatures-fira-font-alist (delete '("[]" . 57609) +ligatures-fira-font-alist))
 #+end_src
 
-*** Ranger
-Configure ranger appearance and behavior.
+*** Lsp
+Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
-(use-package! ranger
+(after! lsp
+  (setq lsp-restart 'auto-restart))
+#+end_src
+
+*** Magit
+Customize bindings.
+#+begin_src elisp
+(map! :leader :prefix "g"
+      "m" nil) ; unbind smerge hydra - use ediff instad.
+#+end_src
+
+*** Man
+Add shortcut to man command.
+#+begin_src elisp
+(use-package! man
   :config
-  (setq ranger-cleanup-eagerly t)
-  (setq ranger-show-hidden t)
-  (setq ranger-modify-header nil)
-  (setq ranger-hide-cursor t)
-  )
+  (map! :leader :prefix "h"
+        "H" #'man))
 #+end_src
 
 *** Terminal cursor
