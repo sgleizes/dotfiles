@@ -1464,6 +1464,19 @@ Customize bindings.
         "j"          #'org-table-copy-down))
 #+end_src
 
+*** Sh
+Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
+redundant if bash-language-server implements
+https://github.com/bash-lsp/bash-language-server/issues/104
+#+begin_src elisp
+(defun lsp-flycheck-enable-shellcheck ()
+  "Enable Shellcheck for shell buffers under LSP."
+  (when (derived-mode-p 'sh-mode)
+    (flycheck-add-next-checker 'lsp 'sh-shellcheck)))
+
+(add-hook 'lsp-after-open-hook #'lsp-flycheck-enable-shellcheck)
+#+end_src
+
 * Additional packages
 :PROPERTIES:
 :header-args:elisp: :tangle "packages.el" :comments no
