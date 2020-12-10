@@ -357,7 +357,7 @@ editorconfig                  ; let someone else argue about tabs vs spaces
 ;;gist                        ; interacting with github gists
 lookup                        ; navigate your code and its documentation
 lsp                           ; language server protocol
-magit                         ; a git porcelain for Emacs
+(magit +forge)                ; a git porcelain for Emacs
 ;;make                        ; run make tasks from Emacs
 ;;pass                        ; password manager for nerds
 pdf                           ; pdf enhancements
@@ -1324,6 +1324,11 @@ Ignore prompts to restart server to avoid hangs on server-restart.
 #+end_src
 
 *** Magit
+Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
+#+begin_src elisp
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+end_src
+
 Customize bindings.
 #+begin_src elisp
 (map! :leader :prefix "g"
@@ -1569,6 +1574,7 @@ Note this function's name implies compatibility with `unload-feature'."
   ;; Bind mouse button to toggle mode.
   (map! :g "<mouse-8>" #'fast-scroll-mode))
 #+end_src
+
 *** Info colors
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
@@ -1596,9 +1602,26 @@ To make VLF available without delaying startup, just load it in quiet moments.
 ;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 #+end_src
 
-*** TODO Magit delta
+*** Magit delta
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
 package to hook this into the magit diff view. This requires the ~delta~ binary.
+FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
+#+begin_src elisp
+(package! magit-delta)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! magit-delta
+  :after magit
+  :config
+  (setq magit-delta-delta-args
+        '("--features" "truecolor"
+          "--max-line-distance" "0.6"
+          "--24-bit-color" "always"
+          "--color-only"))
+  (magit-delta-mode))
+#+end_src
+
 #+begin_src elisp
 ;; (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta") :pin "0c7d8b2359")
 #+end_src
