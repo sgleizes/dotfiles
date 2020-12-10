@@ -1,0 +1,8 @@
+#
+# Forge configuration for git.
+# https://magit.vc/manual/forge/Introduction.html
+# https://magit.vc/manual/ghub/Basic-Concepts-Arguments-and-Variables.html
+#
+
+[github]
+	user = sgleizes
