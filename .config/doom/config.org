@@ -1494,6 +1494,21 @@ This file shouldn't be byte compiled.
 #+end_src
 
 ** General packages
+*** Beacon
+[[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
+#+begin_src elisp
+(package! beacon)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! beacon
+  :config
+  (setq beacon-color 0.7
+        beacon-size 24
+        beacon-blink-delay 0.2
+        beacon-blink-duration 0.2))
+#+end_src
+
 *** Command logging
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
