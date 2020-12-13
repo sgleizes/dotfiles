@@ -1530,17 +1530,18 @@ Remove the tangle-on-save hook and add a manual binding.
       "R" #'+literate-recompile)
 #+end_src
 
-Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
-#+begin_src elisp
-(defun evil-org-edit-src-exit ()
-  "Fallback to `evil-edit-src-exit'."
-  (interactive)
-  (mapc #'call-interactively '(org-edit-src-exit)))
-#+end_src
-
 Disable flyspell by default in org-mode (laggy).
 #+begin_src elisp
 (remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(after! evil-org
+  (defun evil-org-edit-src-exit ()
+    "Fallback to `evil-edit-src-exit'."
+    (interactive)
+    (mapc #'call-interactively '(org-edit-src-exit))))
 #+end_src
 
 Improve org performance by removing some candy.
