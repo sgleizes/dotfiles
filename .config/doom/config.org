@@ -1601,7 +1601,19 @@ This file shouldn't be byte compiled.
   (setq beacon-color 0.7
         beacon-size 24
         beacon-blink-delay 0.2
-        beacon-blink-duration 0.2))
+        beacon-blink-duration 0.2)
+  (nconc beacon-dont-blink-commands
+         '(evil-ex-search-next
+           evil-ex-search-previous
+           evil-ex-search-forward
+           evil-ex-search-backward
+           evil-ex-search-word-forward
+           evil-ex-search-word-backward))
+  ;; FIXME: Persp-mode must be doing something after the hook that cancels the blink.
+  ;; (add-hook! 'persp-activated-functions
+  ;;   (defun beacon--on-persp-activate (_target)
+  ;;     (beacon-blink-automated)))
+  (add-hook! doom-first-file #'beacon-mode))
 #+end_src
 
 *** Command logging
