@@ -357,7 +357,7 @@ editorconfig                  ; let someone else argue about tabs vs spaces
 ;;gist                        ; interacting with github gists
 lookup                        ; navigate your code and its documentation
 lsp                           ; language server protocol
-magit                         ; a git porcelain for Emacs
+(magit +forge)                ; a git porcelain for Emacs
 ;;make                        ; run make tasks from Emacs
 ;;pass                        ; password manager for nerds
 pdf                           ; pdf enhancements
@@ -486,8 +486,7 @@ Let's make graphical frames slightly transparent.
 (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 #+end_src
 
-While we're modifying the modeline, =LF UTF-8= is the default file encoding, and
-thus not worth noting in the modeline. So, let's conditionally hide it.
+Do not show encoding in the modeline if the value is the default =LF UTF-8=.
 #+begin_src elisp
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -1084,6 +1083,19 @@ Learned from mozc.el."
     xy))
 #+end_src
 
+Replace paste commands with a hydra to cycle through yanked text.
+#+begin_src elisp
+(defhydra hydra-paste (:color red
+                       :hint nil)
+  "\n[%s(length kill-ring-yank-pointer)/%s(length kill-ring)] \
+  [_C-j_/_C-k_] cycles through yanked text, [_p_/_P_] pastes the same text \
+above or below. Anything else exits."
+  ("C-j" evil-paste-pop)
+  ("C-k" evil-paste-pop-next)
+  ("p" evil-paste-after)
+  ("P" evil-paste-before))
+#+end_src
+
 Replace evil-mc bindings by a convenient hydra.
 #+begin_src elisp
 (defhydra evil-mc-hydra (:color pink
@@ -1140,9 +1152,11 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ :nv "p"              #'hydra-paste/evil-paste-after
+ :nv "P"              #'hydra-paste/evil-paste-before
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
-  :nv "z" #'evil-mc-hydra/body)
+  :nv "z"             #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
@@ -1319,11 +1333,19 @@ Remove annoying programming ligatures.
 *** Lsp
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
-(after! lsp
-  (setq lsp-restart 'auto-restart))
+(after! lsp-mode
+  (setq-default lsp-restart 'auto-restart))
 #+end_src
 
 *** Magit
+Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
+#+begin_src elisp
+(after! magit
+  :config
+  (setq git-commit-summary-max-length 72)
+  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")))
+#+end_src
+
 Customize bindings.
 #+begin_src elisp
 (map! :leader :prefix "g"
@@ -1337,6 +1359,98 @@ Add shortcut to man command.
   :config
   (map! :leader :prefix "h"
         "H" #'man))
+#+end_src
+
+*** Projectile
+Customize general projectile options.
+#+begin_src elisp
+(after! projectile
+  :config
+  (setq projectile-track-known-projects-automatically nil
+        ;; Open dired when switching projects
+        projectile-switch-project-action #'projectile-dired
+        ;; Make compilation buffers project-specific
+        compilation-buffer-name-function #'projectile-compilation-buffer-name
+        compilation-save-buffers-predicate #'projectile-current-project-buffer-p))
+#+end_src
+
+Add project name and type in the modeline.
+#+begin_src elisp
+(defcustom projectile-mode-line-info nil
+  "Format for displaying the project in the mode line."
+  :type 'sexp)
+;; Ensure we can display text properties on this value in the mode line.
+;; See (info "(elisp) Mode Line Data") or (info "(elisp) Properties in Mode").
+(put 'projectile-mode-line-info 'risky-local-variable t)
+
+(after! projectile
+  :config
+  ;; Custom projectile modeline format.
+  (defun projectile-custom-mode-line ()
+    "Report project name and type in the modeline."
+    (let ((project-name (projectile-project-name))
+          (project-type (projectile-project-type)))
+      (format "%s%s"
+              (if (not (equal project-name "-"))
+                  project-name
+                "")
+              (if project-type
+                  (format ":%s" project-type)
+                ""))))
+  (setq projectile-mode-line-function 'projectile-custom-mode-line)
+  (setq projectile-dynamic-mode-line t)
+
+  ;; Propertize projectile modeline.
+  (defun projectile-mode-line-info ()
+    "Return the mode line construct for variable `projectile--mode-line'."
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "<mode-line> <down-mouse-1>")
+        `(menu-item "" nil
+                    :filter ,(lambda (_cmd) (projectile-commander))))
+      `(projectile--mode-line
+        ("" (:eval (propertize projectile--mode-line
+                               'face 'doom-modeline-persp-name
+                               'mouse-face 'mode-line-highlight
+                               'keymap ',map
+                               'help-echo "Projectile project:type, mouse-1: Run projectile-commander"))
+         ))))
+  (setq projectile-mode-line-info (projectile-mode-line-info))
+  (nconc mode-line-misc-info '((projectile-mode ("" projectile-mode-line-info " ")))))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! (projectile which-key)
+  ;; Remove previous which-key descriptions.
+  ;; TODO: Encapsulate in a function and use a regex.
+  (cl-delete-if
+   (lambda (x)
+     (member (car x)
+             '(("\\`M-SPC p t\\'")
+               ("\\`SPC p t\\'")
+               ("\\`M-SPC p g\\'")
+               ("\\`SPC p g\\'")
+               ("\\`M-SPC p D\\'")
+               ("\\`SPC p D\\'")
+               ("\\`M-SPC p C\\'")
+               ("\\`SPC p C\\'"))))
+   which-key-replacement-alist)
+  (map! :leader :prefix "p"
+        ;; Adapt default bindings
+        :desc "List project todos"           "l"   #'magit-todos-list
+        :desc "Find test file"               "t"   #'projectile-find-test-file
+        :desc "Search project with git grep" "g"   #'counsel-projectile-git-grep
+        :desc "Discover projects in folder"  "A"   #'+default/discover-projects
+        :desc "Compile in project"           "B"   #'+ivy/project-compile
+        :desc "Configure project"            "C"   #'projectile-configure-project
+        :desc "Install project"              "I"   #'projectile-install-project
+        :desc "Run GDB in project"           "D"   #'projectile-run-gdb
+        :desc "Repeat last command"          ";"   #'projectile-repeat-last-command
+        ;; Bind additional commands.
+        :desc "Find impl/test"               "O"   #'projectile-find-implementation-or-test
+        :desc "Replace in project"           "%"   #'projectile-replace
+        :desc "Replace regexp in project"    "M-%" #'projectile-replace-regexp
+        :desc "Open dired"                   "-"   #'projectile-dired))
 #+end_src
 
 *** Terminal cursor
@@ -1431,17 +1545,18 @@ Remove the tangle-on-save hook and add a manual binding.
       "R" #'+literate-recompile)
 #+end_src
 
-Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
-#+begin_src elisp
-(defun evil-org-edit-src-exit ()
-  "Fallback to `evil-edit-src-exit'."
-  (interactive)
-  (mapc #'call-interactively '(org-edit-src-exit)))
-#+end_src
-
 Disable flyspell by default in org-mode (laggy).
 #+begin_src elisp
 (remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(after! evil-org
+  (defun evil-org-edit-src-exit ()
+    "Fallback to `evil-edit-src-exit'."
+    (interactive)
+    (mapc #'call-interactively '(org-edit-src-exit))))
 #+end_src
 
 Improve org performance by removing some candy.
@@ -1489,6 +1604,33 @@ This file shouldn't be byte compiled.
 #+end_src
 
 ** General packages
+*** Beacon
+[[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
+#+begin_src elisp
+(package! beacon)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! beacon
+  :config
+  (setq beacon-color 0.7
+        beacon-size 24
+        beacon-blink-delay 0.2
+        beacon-blink-duration 0.2)
+  (nconc beacon-dont-blink-commands
+         '(evil-ex-search-next
+           evil-ex-search-previous
+           evil-ex-search-forward
+           evil-ex-search-backward
+           evil-ex-search-word-forward
+           evil-ex-search-word-backward))
+  ;; FIXME: Persp-mode must be doing something after the hook that cancels the blink.
+  ;; (add-hook! 'persp-activated-functions
+  ;;   (defun beacon--on-persp-activate (_target)
+  ;;     (beacon-blink-automated)))
+  (add-hook! doom-first-file #'beacon-mode))
+#+end_src
+
 *** Command logging
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
@@ -1569,6 +1711,7 @@ Note this function's name implies compatibility with `unload-feature'."
   ;; Bind mouse button to toggle mode.
   (map! :g "<mouse-8>" #'fast-scroll-mode))
 #+end_src
+
 *** Info colors
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
@@ -1596,11 +1739,69 @@ To make VLF available without delaying startup, just load it in quiet moments.
 ;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 #+end_src
 
-*** TODO Magit delta
+*** Magit delta
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
 package to hook this into the magit diff view. This requires the ~delta~ binary.
+FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
 #+begin_src elisp
-;; (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta") :pin "0c7d8b2359")
+(package! magit-delta)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! magit-delta
+  :after magit
+  :config
+  (setq magit-delta-delta-args
+        '("--features" "truecolor"
+          "--max-line-distance" "0.6"
+          "--24-bit-color" "always"
+          "--color-only"))
+  (magit-delta-mode))
+#+end_src
+
+*** Scroll on jump
+[[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
+#+begin_src elisp
+(package! scroll-on-jump :recipe
+  (:host gitlab
+   :repo "ideasman42/emacs-scroll-on-jump"))
+#+end_src
+
+Define a global mode for scroll-on-jump and bind to relevant commands.
+#+begin_src elisp :tangle yes
+(use-package! scroll-on-jump
+  :after evil
+  :config
+  (setq scroll-on-jump-duration 0.4)
+  (define-minor-mode scroll-on-jump-mode
+    "Minor-mode to animate scroll and recenter when the point jumps."
+    :group 'scroll-on-jump
+    :global t
+    (if scroll-on-jump-mode
+        (progn
+          (scroll-on-jump-advice-add set-mark-command)
+          (scroll-on-jump-advice-add goto-last-change)
+          (scroll-on-jump-advice-add goto-last-change-reverse)
+          (scroll-on-jump-advice-add evil-undo)
+          (scroll-on-jump-advice-add evil-redo)
+          ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+          (scroll-on-jump-advice-add evil-goto-mark-line)
+          (scroll-on-jump-advice-add evil-ex-search-next)
+          (scroll-on-jump-advice-add evil-ex-search-previous)
+          (scroll-on-jump-advice-add evil-ex-search-forward)
+          (scroll-on-jump-advice-add evil-ex-search-backward))
+      (scroll-on-jump-advice-remove set-mark-command)
+      (scroll-on-jump-advice-remove goto-last-change)
+      (scroll-on-jump-advice-remove goto-last-change-reverse)
+      (scroll-on-jump-advice-remove evil-undo)
+      (scroll-on-jump-advice-remove evil-redo)
+      ;; (scroll-on-jump-advice-remove evil-goto-mark)
+      (scroll-on-jump-advice-remove evil-goto-mark-line)
+      (scroll-on-jump-advice-remove evil-ex-search-next)
+      (scroll-on-jump-advice-remove evil-ex-search-previous)
+      (scroll-on-jump-advice-remove evil-ex-search-forward)
+      (scroll-on-jump-advice-remove evil-ex-search-backward)))
+  (scroll-on-jump-mode +1))
 #+end_src
 
 *** Systemd
