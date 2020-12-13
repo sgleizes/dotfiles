@@ -486,8 +486,7 @@ Let's make graphical frames slightly transparent.
 (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 #+end_src
 
-While we're modifying the modeline, =LF UTF-8= is the default file encoding, and
-thus not worth noting in the modeline. So, let's conditionally hide it.
+Do not show encoding in the modeline if the value is the default =LF UTF-8=.
 #+begin_src elisp
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -1342,6 +1341,98 @@ Add shortcut to man command.
   :config
   (map! :leader :prefix "h"
         "H" #'man))
+#+end_src
+
+*** Projectile
+Customize general projectile options.
+#+begin_src elisp
+(after! projectile
+  :config
+  (setq projectile-track-known-projects-automatically nil
+        ;; Open dired when switching projects
+        projectile-switch-project-action #'projectile-dired
+        ;; Make compilation buffers project-specific
+        compilation-buffer-name-function #'projectile-compilation-buffer-name
+        compilation-save-buffers-predicate #'projectile-current-project-buffer-p))
+#+end_src
+
+Add project name and type in the modeline.
+#+begin_src elisp
+(defcustom projectile-mode-line-info nil
+  "Format for displaying the project in the mode line."
+  :type 'sexp)
+;; Ensure we can display text properties on this value in the mode line.
+;; See (info "(elisp) Mode Line Data") or (info "(elisp) Properties in Mode").
+(put 'projectile-mode-line-info 'risky-local-variable t)
+
+(after! projectile
+  :config
+  ;; Custom projectile modeline format.
+  (defun projectile-custom-mode-line ()
+    "Report project name and type in the modeline."
+    (let ((project-name (projectile-project-name))
+          (project-type (projectile-project-type)))
+      (format "%s%s"
+              (if (not (equal project-name "-"))
+                  project-name
+                "")
+              (if project-type
+                  (format ":%s" project-type)
+                ""))))
+  (setq projectile-mode-line-function 'projectile-custom-mode-line)
+  (setq projectile-dynamic-mode-line t)
+
+  ;; Propertize projectile modeline.
+  (defun projectile-mode-line-info ()
+    "Return the mode line construct for variable `projectile--mode-line'."
+    (let ((map (make-sparse-keymap)))
+      (define-key map (kbd "<mode-line> <down-mouse-1>")
+        `(menu-item "" nil
+                    :filter ,(lambda (_cmd) (projectile-commander))))
+      `(projectile--mode-line
+        ("" (:eval (propertize projectile--mode-line
+                               'face 'doom-modeline-persp-name
+                               'mouse-face 'mode-line-highlight
+                               'keymap ',map
+                               'help-echo "Projectile project:type, mouse-1: Run projectile-commander"))
+         ))))
+  (setq projectile-mode-line-info (projectile-mode-line-info))
+  (nconc mode-line-misc-info '((projectile-mode ("" projectile-mode-line-info " ")))))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! (projectile which-key)
+  ;; Remove previous which-key descriptions.
+  ;; TODO: Encapsulate in a function and use a regex.
+  (cl-delete-if
+   (lambda (x)
+     (member (car x)
+             '(("\\`M-SPC p t\\'")
+               ("\\`SPC p t\\'")
+               ("\\`M-SPC p g\\'")
+               ("\\`SPC p g\\'")
+               ("\\`M-SPC p D\\'")
+               ("\\`SPC p D\\'")
+               ("\\`M-SPC p C\\'")
+               ("\\`SPC p C\\'"))))
+   which-key-replacement-alist)
+  (map! :leader :prefix "p"
+        ;; Adapt default bindings
+        :desc "List project todos"           "l"   #'magit-todos-list
+        :desc "Find test file"               "t"   #'projectile-find-test-file
+        :desc "Search project with git grep" "g"   #'counsel-projectile-git-grep
+        :desc "Discover projects in folder"  "A"   #'+default/discover-projects
+        :desc "Compile in project"           "B"   #'+ivy/project-compile
+        :desc "Configure project"            "C"   #'projectile-configure-project
+        :desc "Install project"              "I"   #'projectile-install-project
+        :desc "Run GDB in project"           "D"   #'projectile-run-gdb
+        :desc "Repeat last command"          ";"   #'projectile-repeat-last-command
+        ;; Bind additional commands.
+        :desc "Find impl/test"               "O"   #'projectile-find-implementation-or-test
+        :desc "Replace in project"           "%"   #'projectile-replace
+        :desc "Replace regexp in project"    "M-%" #'projectile-replace-regexp
+        :desc "Open dired"                   "-"   #'projectile-dired))
 #+end_src
 
 *** Terminal cursor
