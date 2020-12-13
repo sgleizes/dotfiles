@@ -1318,8 +1318,8 @@ Remove annoying programming ligatures.
 *** Lsp
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
-(after! lsp
-  (setq lsp-restart 'auto-restart))
+(after! lsp-mode
+  (setq-default lsp-restart 'auto-restart))
 #+end_src
 
 *** Magit
