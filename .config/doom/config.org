@@ -1744,8 +1744,49 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
   (magit-delta-mode))
 #+end_src
 
+*** Scroll on jump
+[[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
 #+begin_src elisp
-;; (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta") :pin "0c7d8b2359")
+(package! scroll-on-jump :recipe
+  (:host gitlab
+   :repo "ideasman42/emacs-scroll-on-jump"))
+#+end_src
+
+Define a global mode for scroll-on-jump and bind to relevant commands.
+#+begin_src elisp :tangle yes
+(use-package! scroll-on-jump
+  :after evil
+  :config
+  (setq scroll-on-jump-duration 0.4)
+  (define-minor-mode scroll-on-jump-mode
+    "Minor-mode to animate scroll and recenter when the point jumps."
+    :group 'scroll-on-jump
+    :global t
+    (if scroll-on-jump-mode
+        (progn
+          (scroll-on-jump-advice-add set-mark-command)
+          (scroll-on-jump-advice-add goto-last-change)
+          (scroll-on-jump-advice-add goto-last-change-reverse)
+          (scroll-on-jump-advice-add evil-undo)
+          (scroll-on-jump-advice-add evil-redo)
+          ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+          (scroll-on-jump-advice-add evil-goto-mark-line)
+          (scroll-on-jump-advice-add evil-ex-search-next)
+          (scroll-on-jump-advice-add evil-ex-search-previous)
+          (scroll-on-jump-advice-add evil-ex-search-forward)
+          (scroll-on-jump-advice-add evil-ex-search-backward))
+      (scroll-on-jump-advice-remove set-mark-command)
+      (scroll-on-jump-advice-remove goto-last-change)
+      (scroll-on-jump-advice-remove goto-last-change-reverse)
+      (scroll-on-jump-advice-remove evil-undo)
+      (scroll-on-jump-advice-remove evil-redo)
+      ;; (scroll-on-jump-advice-remove evil-goto-mark)
+      (scroll-on-jump-advice-remove evil-goto-mark-line)
+      (scroll-on-jump-advice-remove evil-ex-search-next)
+      (scroll-on-jump-advice-remove evil-ex-search-previous)
+      (scroll-on-jump-advice-remove evil-ex-search-forward)
+      (scroll-on-jump-advice-remove evil-ex-search-backward)))
+  (scroll-on-jump-mode +1))
 #+end_src
 
 *** Systemd
