@@ -1325,7 +1325,10 @@ Ignore prompts to restart server to avoid hangs on server-restart.
 *** Magit
 Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+begin_src elisp
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+(after! magit
+  :config
+  (setq git-commit-summary-max-length 72)
+  (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")))
 #+end_src
 
 Customize bindings.
