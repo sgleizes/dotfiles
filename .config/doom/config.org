@@ -1464,11 +1464,37 @@ Configure treemacs appearance and behavior.
 #+begin_src elisp
 (use-package! treemacs
   :init
-  (setq +treemacs-git-mode 'deferred)
-  (setq doom-themes-treemacs-theme "all-the-icons")
+  (setq doom-themes-treemacs-theme "all-the-icons"
+        +treemacs-git-mode 'deferred)
   :config
-  (treemacs-follow-mode 1)
-  (custom-set-faces! '(treemacs-fringe-indicator-face :inherit cursor)))
+  (setq treemacs-recenter-after-file-follow 'always)
+  (custom-set-faces!
+    '(treemacs-root-face :inherit (variable-pitch font-lock-builtin-face))
+    '(treemacs-all-the-icons-root-face :inherit font-lock-builtin-face)
+    '(treemacs-fringe-indicator-face :inherit cursor)))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! treemacs-evil
+  (defun treemacs-toggle-node-nested ()
+    (interactive)
+    (treemacs-toggle-node "0"))
+  (defun treemacs-visit-node-nofocus ()
+    (interactive)
+    (treemacs-visit-node-default "0"))
+  (evil-define-key* 'treemacs treemacs-mode-map
+    (kbd "h")          #'treemacs-goto-parent-node
+    (kbd "l")          #'treemacs-toggle-node
+    (kbd "<")          #'treemacs-root-up
+    (kbd ">")          #'treemacs-root-down
+    (kbd "L")          #'treemacs-toggle-node-nested
+    (kbd "C")          #'treemacs-copy-file
+    (kbd "M")          #'treemacs-move-file
+    (kbd "x")          #'treemacs-delete
+    (kbd "<S-return>") #'treemacs-visit-node-nofocus
+    (kbd "<M-return>") #'treemacs-peek)
+  (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
 
 *** Undo tree
