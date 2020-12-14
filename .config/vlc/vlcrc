@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.11
+###  vlc 3.0.11.1
 ###
 
 ###
@@ -645,6 +645,17 @@
 # Advanced options (string)
 #sout-avio-options=
 
+[cdda] # Audio CD input
+
+# Audio CD device (string)
+#cd-audio=/dev/sr0
+
+# CDDB Server (string)
+#cddb-server=freedb.videolan.org
+
+# CDDB port (integer)
+#cddb-port=80
+
 [access_alsa] # ALSA audio capture
 
 # Stereo (boolean)
@@ -948,6 +959,11 @@
 
 # Crypto key length in bytes (integer)
 #key-length=16
+
+[dvdread] # DVDRead Input (no menu support)
+
+# DVD angle (integer)
+#dvdread-angle=1
 
 [smb] # SMB input
 
@@ -1306,7 +1322,7 @@
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.11 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.11.1 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=
@@ -3004,6 +3020,11 @@ qt-privacy-ask=0
 # Y offset (integer)
 #sout-mosaic-bridge-y=-1
 
+[stream_out_chromaprint] # Chromaprint stream output
+
+# Duration of the fingerprinting (integer)
+#duration=90
+
 [stream_out_transcode] # Transcode stream output
 
 # Video encoder (string)
@@ -4270,7 +4291,7 @@ vod-server=any
 #random=0
 
 # Repeat all (boolean)
-#loop=0
+loop=1
 
 # Repeat current item (boolean)
 #repeat=0
