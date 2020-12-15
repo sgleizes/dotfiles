@@ -521,6 +521,7 @@ if in terminal."
   (interactive)
   (unless (display-graphic-p frame)
     (remove-hook! doom-first-file #'centaur-tabs-mode)
+    (remove-hook! doom-first-file #'beacon-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
     (remove-hook! '(doom-dashboard-mode-hook
                     term-mode-hook
