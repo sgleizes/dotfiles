@@ -1,0 +1,63 @@
+#
+# Automatically split a downloaded file into several tracks if possible.
+#
+
+zmodload zsh/pcre
+
+function extract_track {
+  local orig="$1"
+  local trackno="$2"
+  local start="$3"
+  local end="$4"
+  local title="$6"
+
+  local metadata=(-metadata track=$trackno)
+  for (( n = 5; n <= $#; n += 2 )); do
+    metadata+=(-metadata:s:0 "${@[$n]}=${@[(( $n + 1 ))]}")
+  done
+
+  local output=$(print -f '%s/%02d %s.%s' ${orig:h} $trackno $title ${orig:e})
+  print -P "%F{blue}::%f Extracting track: ${output:t}"
+  ffmpeg -loglevel warning -y -i $orig -acodec copy \
+    -ss $start -to $end $metadata $output || exit 1
+}
+
+function extract_tracks_from_chapters {
+  local orig="$1"
+  local probe=$(ffprobe -i $orig 2>&1)
+
+  local regex
+  regex='\s+Chapter\s+'
+  regex+='#(?<track>[:0-9]+).*?'
+  regex+='start\s+(?<start>[0-9.]+).*?'
+  regex+='end\s+(?<end>[0-9.]+).*?'
+  regex+='Metadata:(?<metadata>$'
+  regex+='\s+(?<key>\S+)\s+:'
+  regex+='\s+(?<value>.*?)'
+  regex+='$)+?'
+
+  pcre_compile -s -m $regex
+  pcre_study
+
+  pcre_match -b -- $probe
+  while (( $? == 0 )); do
+    local trackno=$(( ${${(s.:.)match[1]}[2]} + 1 ))
+    extract_track $orig $trackno $match[2] $match[3] ${match:4}
+
+    local offset=(${=ZPCRE_OP})
+    pcre_match -b -n $offset[2] -- $probe
+  done
+  return $(( offset[1] == 0 ))
+}
+
+local orig="$1"
+
+if extract_tracks_from_chapters $orig; then
+  rm $orig
+else
+  print -P "%F{red}::%f No track information found"
+fi
+
+unfunction \
+  extract_track \
+  extract_tracks_from_chapters
