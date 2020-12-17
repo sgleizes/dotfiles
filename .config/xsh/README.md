@@ -4,7 +4,7 @@
 
 A simple framework for shell configuration management.
 
-[Concept](#design--concepts) • [Installation](#installation) • [Usage](#usage)
+[Features](#features) • [Concepts](#design--concepts) • [Installation](#installation) • [Usage](#usage)
 
 ![Xsh directory structure](https://raw.githubusercontent.com/sgleizes/xsh/assets/screenshot.png)
 
@@ -17,6 +17,7 @@ A simple framework for shell configuration management.
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Features](#features)
 - [Dependencies](#dependencies)
 - [Supported shells](#supported-shells)
 - [Design & Concepts](#design--concepts)
@@ -28,9 +29,11 @@ A simple framework for shell configuration management.
   - [Bootstrap the desired shell(s)](#bootstrap-the-desired-shells)
   - [Migrating your existing configuration](#migrating-your-existing-configuration)
   - [Start a new xsh-powered shell](#start-a-new-xsh-powered-shell)
+  - [Uninstall](#uninstall)
 - [Usage](#usage)
   - [Initialization file](#initialization-file)
-  - [Module runcoms](#module-runcoms)
+  - [Creating module runcoms](#creating-module-runcoms)
+  - [Loading module runcoms](#loading-module-runcoms)
   - [Debugging & Benchmarking](#debugging--benchmarking)
   - [Tips & Tricks](#tips--tricks)
   - [Known limitations](#known-limitations)
@@ -49,7 +52,37 @@ Each type of shell comes with its own set of startup files and initialization
 rules. Xsh abstracts away the complexity, allowing users to focus on
 configuration by avoiding the most common traps and pitfalls. Its modular
 configuration interface also encourages users to keep their configuration
-structured, for the sake of maintainability and readability.
+structured, maintainable and readable.
+
+This project might be of interest to you if:
+
+- You are frustrated by the
+  [complexity and inconsistency](https://blog.flowblok.id.au/static/images/shell-startup-actual.png)
+  of `bash` startup rules, or you simply noticed that it doesn't behave as you
+  would expect in some cases.
+- You like to keep your configuration structured, or would like to improve the
+  readability and maintainability of your current configuration.
+- You maintain configuration for multiple shells, and would like to keep a
+  consistent structure while being able to reuse some parts.
+- You want to quickly try out some
+  [shell plugin manager(s)](https://github.com/sgleizes/xsh-modules), or would
+  like to decouple some of your custom configuration from your current plugin
+  manager.
+
+## Features
+
+- Consistent startup/shutdown behavior for all supported shells.
+- Self-contained configuration modules that can hook into `env`, `login`,
+  `interactive` and `logout` runcoms for any supported shell.
+- Reusability of POSIX modules for other shells.
+- Quickly bootstrap a configuration for a supported shell with `xsh bootstrap`.
+- Quickly create new module runcoms with `xsh create`.
+- Register modules from shell initialization files with `xsh module`.
+- Load dependent modules from other modules with `xsh load`.
+- List registered modules for the current shell with `xsh list`.
+- Benchmark runcom/module loading times with `XSH_BENCHMARK`.
+
+See [usage](#usage) for examples and information about xsh commands.
 
 ## Dependencies
 
@@ -113,6 +146,9 @@ as well as any additional files you would like to put there.
 ### Runcoms
 
 #### Definitions
+
+See the [wikipedia page](https://en.wikipedia.org/wiki/Run_commands) about
+runcoms.
 
 Some disambiguation is needed here to avoid confusion between **shell runcoms**,
 **xsh runcoms** and **module runcoms**.
@@ -238,19 +274,19 @@ default module by using commands from the following snippet:
 XSH_CONFIG_DIR="${XSH_CONFIG_DIR:-${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}}"
 
 # For POSIX shells
-mv "$HOME/.profile.~1~" "$XSH_CONFIG_DIR/posix/core/@login.sh"
-mv "$HOME/.shrc.~1~"    "$XSH_CONFIG_DIR/posix/core/@interactive.sh"
+cp "$HOME/.profile.~1~" "$XSH_CONFIG_DIR/posix/core/@login.sh"
+cp "$HOME/.shrc.~1~"    "$XSH_CONFIG_DIR/posix/core/@interactive.sh"
 
 # For bash
-mv "$HOME/.bash_profile.~1~" "$XSH_CONFIG_DIR/bash/core/@login.bash"
-mv "$HOME/.bashrc.~1~"       "$XSH_CONFIG_DIR/bash/core/@interactive.bash"
-mv "$HOME/.bash_logout.~1~"  "$XSH_CONFIG_DIR/bash/core/@logout.bash"
+cp "$HOME/.bash_profile.~1~" "$XSH_CONFIG_DIR/bash/core/@login.bash"
+cp "$HOME/.bashrc.~1~"       "$XSH_CONFIG_DIR/bash/core/@interactive.bash"
+cp "$HOME/.bash_logout.~1~"  "$XSH_CONFIG_DIR/bash/core/@logout.bash"
 
 # For zsh
-mv "${ZDOTDIR:-$HOME}/.zshenv.~1~"  "$XSH_CONFIG_DIR/zsh/core/@env.zsh"
-mv "${ZDOTDIR:-$HOME}/.zlogin.~1~"  "$XSH_CONFIG_DIR/zsh/core/@login.zsh"
-mv "${ZDOTDIR:-$HOME}/.zshrc.~1~"   "$XSH_CONFIG_DIR/zsh/core/@interactive.zsh"
-mv "${ZDOTDIR:-$HOME}/.zlogout.~1~" "$XSH_CONFIG_DIR/zsh/core/@logout.zsh"
+cp "${ZDOTDIR:-$HOME}/.zshenv.~1~"  "$XSH_CONFIG_DIR/zsh/core/@env.zsh"
+cp "${ZDOTDIR:-$HOME}/.zlogin.~1~"  "$XSH_CONFIG_DIR/zsh/core/@login.zsh"
+cp "${ZDOTDIR:-$HOME}/.zshrc.~1~"   "$XSH_CONFIG_DIR/zsh/core/@interactive.zsh"
+cp "${ZDOTDIR:-$HOME}/.zlogout.~1~" "$XSH_CONFIG_DIR/zsh/core/@logout.zsh"
 ```
 
 Note that this might not be exactly equivalent to your original setup, as the
@@ -281,6 +317,29 @@ If an error occurs, it probably means that
 Otherwise, everything should be ready for you to start playing around with
 your modules. See below for the next steps.
 
+### Uninstall
+
+If you want to go back to your previous setup at any point, simply overwrite the
+links created by xsh in your `$HOME` or `ZDOTDIR` by your original, backed-up
+config:
+
+```sh
+# For POSIX shells
+mv "$HOME/.profile.~1~" "$HOME/.profile"
+mv "$HOME/.shrc.~1~"    "$HOME/.shrc"
+
+# For bash
+mv "$HOME/.bash_profile.~1~" "$HOME/.bash_profile"
+mv "$HOME/.bashrc.~1~"       "$HOME/.bashrc"
+mv "$HOME/.bash_logout.~1~"  "$HOME/.bash_logout"
+
+# For zsh
+mv "${ZDOTDIR:-$HOME}/.zshenv.~1~"  "${ZDOTDIR:-$HOME}/.zshenv"
+mv "${ZDOTDIR:-$HOME}/.zlogin.~1~"  "${ZDOTDIR:-$HOME}/.zlogin"
+mv "${ZDOTDIR:-$HOME}/.zshrc.~1~"   "${ZDOTDIR:-$HOME}/.zshrc"
+mv "${ZDOTDIR:-$HOME}/.zlogout.~1~" "${ZDOTDIR:-$HOME}/.zlogout"
+```
+
 ## Usage
 
 Assuming `xsh bootstrap` was run (see [Installation](#Installation)), the
@@ -300,14 +359,12 @@ at which point two things happen:
 ### Initialization file
 
 Each type of shell must have a dedicated xsh initialization file located at
-`<shell>/init.<ext>`
+`<shell>/init.<ext>`. This file is automatically created by `xsh bootstrap`.
 
-This file should merely register the modules to be loaded for each runcom:
-`env`, `login`, `interactive` and `logout`.
+Its role is to register the modules to be loaded for each runcom: `env`,
+`login`, `interactive` and `logout`.
 The order in which the modules are registered defines the order in which
 they will be loaded.
-
-#### Loading modules
 
 Modules can be registered using the `xsh module` command. Note that registering
 a module doesn't directly execute that module's runcoms.
@@ -370,7 +427,28 @@ performing unnecessary file lookup every time a shell starts up.
 
 See also `xsh help` and `xsh help module`.
 
-### Module runcoms
+### Creating module runcoms
+
+A default `core` module with an `interactive` runcom file is automatically
+created by `xsh bootstrap`. You can quickly create new module runcoms using the
+`xsh create` command.
+
+This command works similarly to the `xsh module` command:
+
+```sh
+xsh create ssh login:interactive
+```
+
+This will create a new `ssh` module for the current shell, containing two runcom
+files `@login.<ext>` and `@interactive.<ext>`. You can also use this command to
+add a runcom to an existing module.
+
+Note that the potentially new module needs to be registered in the
+initialization file for it to be automatically loaded.
+
+See also `xsh help` and `xsh help create`.
+
+### Loading module runcoms
 
 The module contents and organization is entirely up to you. During this design
 process, you might find a need to express dependencies between modules, or to
