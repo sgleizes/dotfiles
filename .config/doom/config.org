@@ -1096,19 +1096,6 @@ Learned from mozc.el."
     xy))
 #+end_src
 
-Replace paste commands with a hydra to cycle through yanked text.
-#+begin_src elisp
-(defhydra hydra-paste (:color red
-                       :hint nil)
-  "\n[%s(length kill-ring-yank-pointer)/%s(length kill-ring)] \
-  [_C-j_/_C-k_] cycles through yanked text, [_p_/_P_] pastes the same text \
-above or below. Anything else exits."
-  ("C-j" evil-paste-pop)
-  ("C-k" evil-paste-pop-next)
-  ("p" evil-paste-after)
-  ("P" evil-paste-before))
-#+end_src
-
 Replace evil-mc bindings by a convenient hydra.
 #+begin_src elisp
 (defhydra evil-mc-hydra (:color pink
@@ -1165,8 +1152,6 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
- :nv "p"              #'hydra-paste/evil-paste-after
- :nv "P"              #'hydra-paste/evil-paste-before
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
   :nv "z"             #'evil-mc-hydra/body)
