@@ -101,6 +101,8 @@
 /plasma-nm
 /plasma.emojierrc
 /plasmashellrc
+/plasmawindowed-appletsrc
+/plasmawindowedrc
 /plasmoidviewer*
 /print-manager
 /soffice.binrc
