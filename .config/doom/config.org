@@ -373,7 +373,7 @@ taskrunner                    ; taskrunner for all your projects
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
-tty                           ; improve the terminal Emacs experience
+;;tty                         ; improve the terminal Emacs experience
 #+end_src
 
 **** Language support
@@ -513,9 +513,21 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 #+end_src
 
 *** Terminal
+Improve terminal integration. Taken from the ~tty~ module.
+#+begin_src elisp
+;; Some terminals offer two different cursors: a "visible" static cursor and a
+;; "very visible" blinking one. By default, Emacs uses the very visible cursor
+;; and will switch back to it when Emacs is started or resumed. A nil
+;; `visible-cursor' prevents this.
+(setq visible-cursor nil)
+
+;; Enable the mouse in terminal Emacs
+(add-hook 'tty-setup-hook #'xterm-mouse-mode)
+#+end_src
+
 Disable minor modes that are undesired in terminal frames.
 #+begin_src elisp
-(defun +doom-disable-graphical-modes (&optional frame)
+(defun +doom-disable-graphical-modes (frame)
   "Disable undesired minor-modes in FRAME (default: selected frame)
 if in terminal."
   (interactive)
@@ -1454,12 +1466,6 @@ Customize bindings.
         :desc "Open dired"                   "-"   #'projectile-dired))
 #+end_src
 
-*** Terminal cursor
-Disable ~evil-terminal-cursor-changer~, the feature is nice but the performance hit is not worth it.
-#+begin_src elisp
-(remove-hook 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
-#+end_src
-
 *** Treemacs
 Configure treemacs appearance and behavior.
 #+begin_src elisp
@@ -1679,6 +1685,24 @@ FIXME: Does not support ~evil-delete-marks~.
   (evil-visual-mark-mode))
 #+end_src
 
+*** Evil terminal cursor
+[[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
+#+begin_src elisp
+(package! evil-terminal-cursor-changer
+  ;; HACK Original package is abandoned. This fork greatly simplifies
+  ;; and optimizes the implementation by relying on evil-set-cursor.
+  :recipe (:host github :repo "amosbird/evil-terminal-cursor-changer"))
+#+end_src
+
+#+begin_src elisp :tangle yes
+(add-hook! 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
+;; Restore my default terminal cursor.
+(add-hook! 'delete-terminal-functions
+  (defun +doom-restore-terminal-cursor (terminal)
+    (unless (display-graphic-p terminal)
+      (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'bar)))))
+#+end_src
+
 *** Fasd
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
@@ -1872,6 +1896,22 @@ Disable font-lock mode in tldr-mode buffers.
 #+begin_src elisp :tangle yes
 (map! :map evil-window-map
  "\\" #'rotate-layout)
+#+end_src
+
+*** Xclip
+[[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
+#+begin_src elisp
+(package! xclip :pin "2951c6b62b")
+#+end_src
+
+#+begin_src elisp :tangle yes
+(add-hook! 'tty-setup-hook
+  (defun doom-init-clipboard-in-tty-emacs-h ()
+    ;; Fix the clipboard in tty Emacs by piping clipboard I/O through xclip,
+    ;; xsel, pb{copy,paste}, wl-copy, termux-clipboard-get, or getclip (cygwin);
+    ;; depending on what is available.
+    (and (require 'xclip nil t)
+         (xclip-mode +1))))
 #+end_src
 
 ** Language packages
