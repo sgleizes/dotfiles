@@ -1822,37 +1822,47 @@ Define a global mode for scroll-on-jump and bind to relevant commands.
 #+begin_src elisp :tangle yes
 (use-package! scroll-on-jump
   :after evil
+  :hook (doom-first-file . scroll-on-jump-mode)
   :config
   (setq scroll-on-jump-duration 0.4)
+
+  ;; XXX: For some really obscure reason, the order in which these functions
+  ;; are declared defines which one will actually work. Currently turning off
+  ;; doesn't work, unless this code is re-evaluated from the emacs instance.
+  ;; If the turn-off function is declared after the turn-on, then turning on
+  ;; will similarly not work. Someone help me understand this plz.
+  (defun scroll-on-jump--turn-off ()
+    (scroll-on-jump-advice-remove set-mark-command)
+    (scroll-on-jump-advice-remove goto-last-change)
+    (scroll-on-jump-advice-remove goto-last-change-reverse)
+    (scroll-on-jump-advice-remove evil-undo)
+    (scroll-on-jump-advice-remove evil-redo)
+    ;; (scroll-on-jump-advice-remove evil-goto-mark)
+    (scroll-on-jump-advice-remove evil-goto-mark-line)
+    (scroll-on-jump-advice-remove evil-ex-search-next)
+    (scroll-on-jump-advice-remove evil-ex-search-previous)
+    (scroll-on-jump-advice-remove evil-ex-search-forward)
+    (scroll-on-jump-advice-remove evil-ex-search-backward))
+  (defun scroll-on-jump--turn-on ()
+    (scroll-on-jump-advice-add set-mark-command)
+    (scroll-on-jump-advice-add goto-last-change)
+    (scroll-on-jump-advice-add goto-last-change-reverse)
+    (scroll-on-jump-advice-add evil-undo)
+    (scroll-on-jump-advice-add evil-redo)
+    ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+    (scroll-on-jump-advice-add evil-goto-mark-line)
+    (scroll-on-jump-advice-add evil-ex-search-next)
+    (scroll-on-jump-advice-add evil-ex-search-previous)
+    (scroll-on-jump-advice-add evil-ex-search-forward)
+    (scroll-on-jump-advice-add evil-ex-search-backward))
+
   (define-minor-mode scroll-on-jump-mode
     "Minor-mode to animate scroll and recenter when the point jumps."
     :group 'scroll-on-jump
     :global t
     (if scroll-on-jump-mode
-        (progn
-          (scroll-on-jump-advice-add set-mark-command)
-          (scroll-on-jump-advice-add goto-last-change)
-          (scroll-on-jump-advice-add goto-last-change-reverse)
-          (scroll-on-jump-advice-add evil-undo)
-          (scroll-on-jump-advice-add evil-redo)
-          ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
-          (scroll-on-jump-advice-add evil-goto-mark-line)
-          (scroll-on-jump-advice-add evil-ex-search-next)
-          (scroll-on-jump-advice-add evil-ex-search-previous)
-          (scroll-on-jump-advice-add evil-ex-search-forward)
-          (scroll-on-jump-advice-add evil-ex-search-backward))
-      (scroll-on-jump-advice-remove set-mark-command)
-      (scroll-on-jump-advice-remove goto-last-change)
-      (scroll-on-jump-advice-remove goto-last-change-reverse)
-      (scroll-on-jump-advice-remove evil-undo)
-      (scroll-on-jump-advice-remove evil-redo)
-      ;; (scroll-on-jump-advice-remove evil-goto-mark)
-      (scroll-on-jump-advice-remove evil-goto-mark-line)
-      (scroll-on-jump-advice-remove evil-ex-search-next)
-      (scroll-on-jump-advice-remove evil-ex-search-previous)
-      (scroll-on-jump-advice-remove evil-ex-search-forward)
-      (scroll-on-jump-advice-remove evil-ex-search-backward)))
-  (scroll-on-jump-mode +1))
+        (scroll-on-jump--turn-on)
+      (scroll-on-jump--turn-off))))
 #+end_src
 
 *** Systemd
