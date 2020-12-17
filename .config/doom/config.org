@@ -1325,7 +1325,14 @@ Customize bindings.
 *** Ligatures
 Remove annoying programming ligatures.
 #+begin_src elisp
-(setq +ligatures-fira-font-alist (delete '("[]" . 57609) +ligatures-fira-font-alist))
+(cl-delete-if
+ (lambda (x)
+   (member (car x)
+           '("[]"
+             "##"
+             "###"
+             "####")))
+ +ligatures-fira-font-alist)
 #+end_src
 
 *** Lsp
