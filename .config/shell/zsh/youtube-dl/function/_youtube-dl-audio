@@ -1,0 +1,3 @@
+#compdef youtube-dl-audio
+
+_youtube-dl

@@ -1,0 +1,3 @@
+#compdef youtube-dl-interactive
+
+_youtube-dl

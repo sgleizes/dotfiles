@@ -1,5 +1,5 @@
 #
-# Zinit module for zsh.
+# Zinit configuration module for zsh.
 # https://github.com/zdharma/zinit
 #
 

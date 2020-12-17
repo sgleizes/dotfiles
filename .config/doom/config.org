@@ -373,7 +373,7 @@ taskrunner                    ; taskrunner for all your projects
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
-tty                           ; improve the terminal Emacs experience
+;;tty                         ; improve the terminal Emacs experience
 #+end_src
 
 **** Language support
@@ -513,14 +513,27 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 #+end_src
 
 *** Terminal
+Improve terminal integration. Taken from the ~tty~ module.
+#+begin_src elisp
+;; Some terminals offer two different cursors: a "visible" static cursor and a
+;; "very visible" blinking one. By default, Emacs uses the very visible cursor
+;; and will switch back to it when Emacs is started or resumed. A nil
+;; `visible-cursor' prevents this.
+(setq visible-cursor nil)
+
+;; Enable the mouse in terminal Emacs
+(add-hook 'tty-setup-hook #'xterm-mouse-mode)
+#+end_src
+
 Disable minor modes that are undesired in terminal frames.
 #+begin_src elisp
-(defun +doom-disable-graphical-modes (&optional frame)
+(defun +doom-disable-graphical-modes (frame)
   "Disable undesired minor-modes in FRAME (default: selected frame)
 if in terminal."
   (interactive)
   (unless (display-graphic-p frame)
     (remove-hook! doom-first-file #'centaur-tabs-mode)
+    (remove-hook! doom-first-file #'beacon-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
     (remove-hook! '(doom-dashboard-mode-hook
                     term-mode-hook
@@ -655,11 +668,43 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+end_src
 
 *** Better jumper
+Use the latest version.
+#+begin_src elisp :tangle "packages.el" :comments no
+(package! better-jumper :pin "9b214d71e6")
+#+end_src
+
+Prevent better-jumper and evil-jump to add jumps to buffers in other perspectives.
+#+begin_src elisp
+(use-package! better-jumper
+  :config
+  ;; Clear initial jump list when creating new perspective.
+  (add-hook! 'persp-created-functions
+    (defun +worspaces-mark-creating (persp &rest _)
+      (setq better-jumper-creating-perspective (persp-name persp))))
+  (add-hook! 'persp-activated-functions
+    (defun +worspaces-clear-initial-jump-list (&rest _)
+      (let ((persp (get-current-persp)))
+        (when (and persp (eq better-jumper-creating-perspective (persp-name persp)))
+          (setq better-jumper-creating-perspective nil)
+          (better-jumper-clear-jumps)))))
+  ;; Prevent adding jumps from other perspectives.
+  (defun doom-prevent-persp-jump (orig-fn &rest args)
+    "Ensure ORIG-FN doesn't set any jump points in buffers from other perspectives."
+    (unless (and (markerp (car args))
+                 (not (+workspace-contains-buffer-p (marker-buffer (car args)))))
+      (apply orig-fn args)))
+  (add-hook! better-jumper-mode
+    (defun doom-prevent-persp-jump-h ()
+      (advice-add #'evil-set-jump :around #'doom-prevent-persp-jump)
+      (advice-add #'better-jumper-set-jump :around #'doom-prevent-persp-jump))))
+#+end_src
+
 Bind better-jumper functions to a doom-like alternative.
 #+begin_src elisp
-(map!
- :n "g[" #'better-jumper-jump-backward
- :n "g]" #'better-jumper-jump-forward)
+(after! better-jumper
+  (map!
+   :n "g[" #'better-jumper-jump-backward
+   :n "g]" #'better-jumper-jump-forward))
 #+end_src
 
 *** Centaur tabs
@@ -1083,19 +1128,6 @@ Learned from mozc.el."
     xy))
 #+end_src
 
-Replace paste commands with a hydra to cycle through yanked text.
-#+begin_src elisp
-(defhydra hydra-paste (:color red
-                       :hint nil)
-  "\n[%s(length kill-ring-yank-pointer)/%s(length kill-ring)] \
-  [_C-j_/_C-k_] cycles through yanked text, [_p_/_P_] pastes the same text \
-above or below. Anything else exits."
-  ("C-j" evil-paste-pop)
-  ("C-k" evil-paste-pop-next)
-  ("p" evil-paste-after)
-  ("P" evil-paste-before))
-#+end_src
-
 Replace evil-mc bindings by a convenient hydra.
 #+begin_src elisp
 (defhydra evil-mc-hydra (:color pink
@@ -1152,8 +1184,6 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
- :nv "p"              #'hydra-paste/evil-paste-after
- :nv "P"              #'hydra-paste/evil-paste-before
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
   :nv "z"             #'evil-mc-hydra/body)
@@ -1327,7 +1357,14 @@ Customize bindings.
 *** Ligatures
 Remove annoying programming ligatures.
 #+begin_src elisp
-(setq +ligatures-fira-font-alist (delete '("[]" . 57609) +ligatures-fira-font-alist))
+(cl-delete-if
+ (lambda (x)
+   (member (car x)
+           '("[]"
+             "##"
+             "###"
+             "####")))
+ +ligatures-fira-font-alist)
 #+end_src
 
 *** Lsp
@@ -1453,22 +1490,42 @@ Customize bindings.
         :desc "Open dired"                   "-"   #'projectile-dired))
 #+end_src
 
-*** Terminal cursor
-Disable ~evil-terminal-cursor-changer~, the feature is nice but the performance hit is not worth it.
-#+begin_src elisp
-(remove-hook 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
-#+end_src
-
 *** Treemacs
 Configure treemacs appearance and behavior.
 #+begin_src elisp
 (use-package! treemacs
   :init
-  (setq +treemacs-git-mode 'deferred)
-  (setq doom-themes-treemacs-theme "all-the-icons")
+  (setq doom-themes-treemacs-theme "all-the-icons"
+        +treemacs-git-mode 'deferred)
   :config
-  (treemacs-follow-mode 1)
-  (custom-set-faces! '(treemacs-fringe-indicator-face :inherit cursor)))
+  (setq treemacs-recenter-after-file-follow 'always)
+  (custom-set-faces!
+    '(treemacs-root-face :inherit (variable-pitch font-lock-builtin-face))
+    '(treemacs-all-the-icons-root-face :inherit font-lock-builtin-face)
+    '(treemacs-fringe-indicator-face :inherit cursor)))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! treemacs-evil
+  (defun treemacs-toggle-node-nested ()
+    (interactive)
+    (treemacs-toggle-node "0"))
+  (defun treemacs-visit-node-nofocus ()
+    (interactive)
+    (treemacs-visit-node-default "0"))
+  (evil-define-key* 'treemacs treemacs-mode-map
+    (kbd "h")          #'treemacs-goto-parent-node
+    (kbd "l")          #'treemacs-toggle-node
+    (kbd "<")          #'treemacs-root-up
+    (kbd ">")          #'treemacs-root-down
+    (kbd "L")          #'treemacs-toggle-node-nested
+    (kbd "C")          #'treemacs-copy-file
+    (kbd "M")          #'treemacs-move-file
+    (kbd "x")          #'treemacs-delete
+    (kbd "<S-return>") #'treemacs-visit-node-nofocus
+    (kbd "<M-return>") #'treemacs-peek)
+  (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
 
 *** Undo tree
@@ -1652,6 +1709,24 @@ FIXME: Does not support ~evil-delete-marks~.
   (evil-visual-mark-mode))
 #+end_src
 
+*** Evil terminal cursor
+[[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
+#+begin_src elisp
+(package! evil-terminal-cursor-changer
+  ;; HACK Original package is abandoned. This fork greatly simplifies
+  ;; and optimizes the implementation by relying on evil-set-cursor.
+  :recipe (:host github :repo "amosbird/evil-terminal-cursor-changer"))
+#+end_src
+
+#+begin_src elisp :tangle yes
+(add-hook! 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
+;; Restore my default terminal cursor.
+(add-hook! 'delete-terminal-functions
+  (defun +doom-restore-terminal-cursor (terminal)
+    (unless (display-graphic-p terminal)
+      (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'bar)))))
+#+end_src
+
 *** Fasd
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
@@ -1771,37 +1846,47 @@ Define a global mode for scroll-on-jump and bind to relevant commands.
 #+begin_src elisp :tangle yes
 (use-package! scroll-on-jump
   :after evil
+  :hook (doom-first-file . scroll-on-jump-mode)
   :config
   (setq scroll-on-jump-duration 0.4)
+
+  ;; XXX: For some really obscure reason, the order in which these functions
+  ;; are declared defines which one will actually work. Currently turning off
+  ;; doesn't work, unless this code is re-evaluated from the emacs instance.
+  ;; If the turn-off function is declared after the turn-on, then turning on
+  ;; will similarly not work. Someone help me understand this plz.
+  (defun scroll-on-jump--turn-off ()
+    (scroll-on-jump-advice-remove set-mark-command)
+    (scroll-on-jump-advice-remove goto-last-change)
+    (scroll-on-jump-advice-remove goto-last-change-reverse)
+    (scroll-on-jump-advice-remove evil-undo)
+    (scroll-on-jump-advice-remove evil-redo)
+    ;; (scroll-on-jump-advice-remove evil-goto-mark)
+    (scroll-on-jump-advice-remove evil-goto-mark-line)
+    (scroll-on-jump-advice-remove evil-ex-search-next)
+    (scroll-on-jump-advice-remove evil-ex-search-previous)
+    (scroll-on-jump-advice-remove evil-ex-search-forward)
+    (scroll-on-jump-advice-remove evil-ex-search-backward))
+  (defun scroll-on-jump--turn-on ()
+    (scroll-on-jump-advice-add set-mark-command)
+    (scroll-on-jump-advice-add goto-last-change)
+    (scroll-on-jump-advice-add goto-last-change-reverse)
+    (scroll-on-jump-advice-add evil-undo)
+    (scroll-on-jump-advice-add evil-redo)
+    ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+    (scroll-on-jump-advice-add evil-goto-mark-line)
+    (scroll-on-jump-advice-add evil-ex-search-next)
+    (scroll-on-jump-advice-add evil-ex-search-previous)
+    (scroll-on-jump-advice-add evil-ex-search-forward)
+    (scroll-on-jump-advice-add evil-ex-search-backward))
+
   (define-minor-mode scroll-on-jump-mode
     "Minor-mode to animate scroll and recenter when the point jumps."
     :group 'scroll-on-jump
     :global t
     (if scroll-on-jump-mode
-        (progn
-          (scroll-on-jump-advice-add set-mark-command)
-          (scroll-on-jump-advice-add goto-last-change)
-          (scroll-on-jump-advice-add goto-last-change-reverse)
-          (scroll-on-jump-advice-add evil-undo)
-          (scroll-on-jump-advice-add evil-redo)
-          ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
-          (scroll-on-jump-advice-add evil-goto-mark-line)
-          (scroll-on-jump-advice-add evil-ex-search-next)
-          (scroll-on-jump-advice-add evil-ex-search-previous)
-          (scroll-on-jump-advice-add evil-ex-search-forward)
-          (scroll-on-jump-advice-add evil-ex-search-backward))
-      (scroll-on-jump-advice-remove set-mark-command)
-      (scroll-on-jump-advice-remove goto-last-change)
-      (scroll-on-jump-advice-remove goto-last-change-reverse)
-      (scroll-on-jump-advice-remove evil-undo)
-      (scroll-on-jump-advice-remove evil-redo)
-      ;; (scroll-on-jump-advice-remove evil-goto-mark)
-      (scroll-on-jump-advice-remove evil-goto-mark-line)
-      (scroll-on-jump-advice-remove evil-ex-search-next)
-      (scroll-on-jump-advice-remove evil-ex-search-previous)
-      (scroll-on-jump-advice-remove evil-ex-search-forward)
-      (scroll-on-jump-advice-remove evil-ex-search-backward)))
-  (scroll-on-jump-mode +1))
+        (scroll-on-jump--turn-on)
+      (scroll-on-jump--turn-off))))
 #+end_src
 
 *** Systemd
@@ -1845,6 +1930,22 @@ Disable font-lock mode in tldr-mode buffers.
 #+begin_src elisp :tangle yes
 (map! :map evil-window-map
  "\\" #'rotate-layout)
+#+end_src
+
+*** Xclip
+[[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
+#+begin_src elisp
+(package! xclip :pin "2951c6b62b")
+#+end_src
+
+#+begin_src elisp :tangle yes
+(add-hook! 'tty-setup-hook
+  (defun doom-init-clipboard-in-tty-emacs-h ()
+    ;; Fix the clipboard in tty Emacs by piping clipboard I/O through xclip,
+    ;; xsel, pb{copy,paste}, wl-copy, termux-clipboard-get, or getclip (cygwin);
+    ;; depending on what is available.
+    (and (require 'xclip nil t)
+         (xclip-mode +1))))
 #+end_src
 
 ** Language packages

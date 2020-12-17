@@ -1,5 +1,5 @@
 #
-# Editor configuration module for zsh.
+# ZLE configuration module for zsh.
 #
 # NOTE: This module should be loaded after the completion module.
 # This is necessary so that the `menuselect` keymap and the bindable commands
