@@ -51,7 +51,8 @@ ui:
 
 plugins:
   - discogs
-  - bandcamp
+  # FIXME: Crashes when importing singletons
+  # - bandcamp
   - info
   - edit
   - duplicates
