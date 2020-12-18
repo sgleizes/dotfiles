@@ -1434,6 +1434,7 @@ Add project name and type in the modeline.
               (if project-type
                   (format ":%s" project-type)
                 ""))))
+  (setq-default projectile--mode-line nil)
   (setq projectile-mode-line-function 'projectile-custom-mode-line)
   (setq projectile-dynamic-mode-line t)
 
