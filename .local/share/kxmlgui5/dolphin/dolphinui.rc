@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<kpartgui name="dolphin" version="32">
+<kpartgui version="33" name="dolphin">
  <MenuBar>
   <Menu name="file">
    <Action name="new_menu"/>
@@ -52,7 +52,7 @@
    <Action name="stop"/>
    <Separator/>
    <Action name="panels"/>
-   <Menu name="location_bar" icon="edit-select-text">
+   <Menu icon="edit-select-text" name="location_bar">
     <text context="@title:menu">Location Bar</text>
     <Action name="editable_location"/>
     <Action name="replace_location"/>
@@ -73,7 +73,7 @@
    <Action name="change_remote_encoding"/>
   </Menu>
  </MenuBar>
- <ToolBar name="mainToolBar" alreadyVisited="1" noMerge="1">
+ <ToolBar noMerge="1" alreadyVisited="1" name="mainToolBar">
   <text context="@title:menu" translationDomain="dolphin">Main Toolbar</text>
   <Action name="go_back"/>
   <Action name="go_forward"/>
@@ -128,25 +128,25 @@
   </disable>
  </State>
  <ActionProperties scheme="Default">
-  <Action name="compact" priority="0"/>
-  <Action name="create_dir" shortcut="Ctrl+Shift+N"/>
-  <Action name="details" priority="0"/>
-  <Action name="edit_copy" priority="0"/>
-  <Action name="edit_cut" shortcut="Ctrl+X" priority="0"/>
-  <Action name="edit_paste" priority="0"/>
-  <Action name="go_back" priority="0"/>
-  <Action name="go_forward" priority="0"/>
-  <Action name="go_home" priority="0"/>
-  <Action name="go_up" priority="0"/>
-  <Action name="icons" priority="0"/>
-  <Action name="new_tab" shortcut="Ctrl+T; "/>
-  <Action name="open_terminal" shortcut="Shift+F4; Ctrl+Shift+T"/>
-  <Action name="show_terminal_panel" shortcut="F4; Shift+T"/>
-  <Action name="stop" priority="0"/>
-  <Action name="toggle_search" priority="0"/>
-  <Action name="undo_close_tab" shortcut=""/>
-  <Action name="view_zoom_in" priority="0"/>
-  <Action name="view_zoom_out" priority="0"/>
-  <Action name="view_zoom_reset" priority="0"/>
+  <Action priority="0" name="compact"/>
+  <Action shortcut="Ctrl+Shift+N" name="create_dir"/>
+  <Action priority="0" name="details"/>
+  <Action priority="0" name="edit_copy"/>
+  <Action priority="0" shortcut="Ctrl+X" name="edit_cut"/>
+  <Action priority="0" name="edit_paste"/>
+  <Action priority="0" name="go_back"/>
+  <Action priority="0" name="go_forward"/>
+  <Action priority="0" name="go_home"/>
+  <Action priority="0" name="go_up"/>
+  <Action priority="0" name="icons"/>
+  <Action shortcut="Ctrl+T; " name="new_tab"/>
+  <Action shortcut="Shift+F4; Ctrl+Shift+T" name="open_terminal"/>
+  <Action shortcut="F4; Shift+T" name="show_terminal_panel"/>
+  <Action priority="0" name="stop"/>
+  <Action priority="0" name="toggle_search"/>
+  <Action shortcut="" name="undo_close_tab"/>
+  <Action priority="0" name="view_zoom_in"/>
+  <Action priority="0" name="view_zoom_out"/>
+  <Action priority="0" name="view_zoom_reset"/>
  </ActionProperties>
 </kpartgui>
