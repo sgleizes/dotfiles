@@ -670,33 +670,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 *** Better jumper
 Use the latest version.
 #+begin_src elisp :tangle "packages.el" :comments no
-(package! better-jumper :pin "9b214d71e6")
-#+end_src
-
-Prevent better-jumper and evil-jump to add jumps to buffers in other perspectives.
-#+begin_src elisp
-(use-package! better-jumper
-  :config
-  ;; Clear initial jump list when creating new perspective.
-  (add-hook! 'persp-created-functions
-    (defun +worspaces-mark-creating (persp &rest _)
-      (setq better-jumper-creating-perspective (persp-name persp))))
-  (add-hook! 'persp-activated-functions
-    (defun +worspaces-clear-initial-jump-list (&rest _)
-      (let ((persp (get-current-persp)))
-        (when (and persp (eq better-jumper-creating-perspective (persp-name persp)))
-          (setq better-jumper-creating-perspective nil)
-          (better-jumper-clear-jumps)))))
-  ;; Prevent adding jumps from other perspectives.
-  (defun doom-prevent-persp-jump (orig-fn &rest args)
-    "Ensure ORIG-FN doesn't set any jump points in buffers from other perspectives."
-    (unless (and (markerp (car args))
-                 (not (+workspace-contains-buffer-p (marker-buffer (car args)))))
-      (apply orig-fn args)))
-  (add-hook! better-jumper-mode
-    (defun doom-prevent-persp-jump-h ()
-      (advice-add #'evil-set-jump :around #'doom-prevent-persp-jump)
-      (advice-add #'better-jumper-set-jump :around #'doom-prevent-persp-jump))))
+(package! better-jumper :pin "e3a6546aa6")
 #+end_src
 
 Bind better-jumper functions to a doom-like alternative.
