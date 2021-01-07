@@ -97,7 +97,7 @@ plugin=org.kde.weatherWidget
 layoutType=Compact
 
 [Containments][2][Applets][33][Configuration][General]
-placeIndex=1
+placeIndex=4
 places=[{"providerId":"yrno","placeIdentifier":"Luxembourg/Luxembourg/Luxembourg","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"2960316","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy, France"},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon, France"},{"providerId":"owm","placeIdentifier":"6451007","placeAlias":"Annemasse, France"}]
 
 [Containments][2][Applets][35]
@@ -275,6 +275,8 @@ names=sys.acpi/Thermal_Zone/6-pch_skylake/Temperature,sys.acpi/Thermal_Zone/1-pc
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
+[Containments][2][Applets][55][Configuration]
+
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
 length=612
@@ -289,6 +291,8 @@ SystrayContainmentId=7
 [Containments][2][Applets][60]
 immutability=1
 plugin=org.kde.plasma.showActivityManager
+
+[Containments][2][Applets][60][Configuration]
 
 [Containments][2][Applets][60][Configuration][General]
 showActivityName=false
@@ -305,6 +309,8 @@ immutability=1
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
+
+[Containments][61][Configuration]
 
 [Containments][61][General]
 arrangement=1
@@ -328,6 +334,8 @@ location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.image
 
+[Containments][63][Configuration]
+
 [Containments][63][General]
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=739
@@ -343,6 +351,8 @@ immutability=1
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
+
+[Containments][64][Configuration]
 
 [Containments][64][General]
 arrangement=1
@@ -363,6 +373,8 @@ location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
+[Containments][65][Configuration]
+
 [Containments][65][Wallpaper][org.kde.potd][General]
 FillMode=2
 Provider=bing
@@ -375,6 +387,8 @@ location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
+[Containments][66][Configuration]
+
 [Containments][66][Wallpaper][org.kde.image][General]
 Image=file:///home/psydev/Pictures/Wallpapers/Work.jpg
 
@@ -386,6 +400,8 @@ location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
+[Containments][67][Configuration]
+
 [Containments][68]
 activityId=e1fb771e-29d1-4641-a442-b99b55616702
 formfactor=0
@@ -393,6 +409,8 @@ immutability=1
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
+
+[Containments][68][Configuration]
 
 [Containments][68][Wallpaper][org.kde.potd][General]
 Category=1065376
@@ -412,6 +430,9 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
+
+[Containments][7][Applets][10][Configuration][General]
+raiseMaximumVolume=true
 
 [Containments][7][Applets][11]
 immutability=1
@@ -472,9 +493,13 @@ plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][69]
 immutability=1
-plugin=org.kde.plasma.printmanager
+plugin=org.kde.kdeconnect
 
 [Containments][7][Applets][69][Configuration]
+
+[Containments][7][Applets][70]
+immutability=1
+plugin=org.kde.plasma.printmanager
 
 [Containments][7][Configuration]
 
@@ -489,6 +514,8 @@ immutability=1
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
+
+[Containments][70][Configuration]
 
 [Containments1Appletsts][51][Configuration][config]
 max_value=2000

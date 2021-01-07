@@ -4,6 +4,7 @@ application/x-mswinurl=org.kde.kate.desktop;firefox.desktop;
 audio/ogg=org.strawberrymusicplayer.strawberry.desktop;vlc.desktop;
 audio/x-opus+ogg=org.strawberrymusicplayer.strawberry.desktop;vlc.desktop;
 text/plain=emacs.desktop;org.kde.kate.desktop;libreoffice-writer.desktop;okularApplication_txt.desktop;wine-extension-txt.desktop;
+x-scheme-handler/tg=userapp-Telegram Desktop-5Z62V0.desktop;
 
 [Default Applications]
 application/pdf=org.kde.okular.desktop;
@@ -25,3 +26,4 @@ x-scheme-handler/https=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/mailspring=mailspring.desktop
 x-scheme-handler/mailto=mailspring.desktop;
 x-scheme-handler/sgnl=signal.desktop
+x-scheme-handler/tg=userapp-Telegram Desktop-5Z62V0.desktop
