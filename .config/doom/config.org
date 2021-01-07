@@ -668,11 +668,6 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+end_src
 
 *** Better jumper
-Use the latest version.
-#+begin_src elisp :tangle "packages.el" :comments no
-(package! better-jumper :pin "e3a6546aa6")
-#+end_src
-
 Bind better-jumper functions to a doom-like alternative.
 #+begin_src elisp
 (after! better-jumper
