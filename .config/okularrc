@@ -1,3 +1,6 @@
 [Desktop Entry]
 FullScreen=false
 
+[Notification Messages]
+presentationInfo=false
+

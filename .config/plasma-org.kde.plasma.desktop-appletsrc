@@ -501,6 +501,8 @@ plugin=org.kde.kdeconnect
 immutability=1
 plugin=org.kde.plasma.printmanager
 
+[Containments][7][Applets][70][Configuration]
+
 [Containments][7][Configuration]
 
 [Containments][7][General]

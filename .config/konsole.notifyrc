@@ -11,7 +11,7 @@ Sound=
 TTS=
 
 [Event/BellInvisible]
-Action=Sound|Popup
+Action=
 Execute=
 Logfile=
 Sound=/usr/share/sounds/freedesktop/stereo/dialog-error.oga

@@ -54,7 +54,7 @@ Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose
 
 [NightColor]
 Active=true
-NightTemperature=4000
+NightTemperature=4200
 
 [Plugins]
 blurEnabled=true

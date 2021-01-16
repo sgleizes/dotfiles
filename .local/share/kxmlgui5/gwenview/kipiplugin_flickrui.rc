@@ -3,13 +3,13 @@
  <MenuBar>
   <Menu name="Export">
    <text>&amp;Export</text>
-   <Action group="kipi_export_group" name="flickrexport"/>
-   <Action group="kipi_export_group" name="23export"/>
+   <Action name="flickrexport" group="kipi_export_group"/>
+   <Action name="23export" group="kipi_export_group"/>
   </Menu>
   <Menu name="Export">
    <text>&amp;Export</text>
-   <Action group="kipi_export_group" name="flickrexport"/>
-   <Action group="kipi_export_group" name="23export"/>
+   <Action name="flickrexport" group="kipi_export_group"/>
+   <Action name="23export" group="kipi_export_group"/>
   </Menu>
  </MenuBar>
  <ToolBar name="mainToolBar">

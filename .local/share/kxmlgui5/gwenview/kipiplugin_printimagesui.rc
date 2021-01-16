@@ -3,13 +3,13 @@
  <MenuBar>
   <Menu name="Image">
    <text>&amp;Image</text>
-   <Action group="kipi_image_group" name="printimages"/>
-   <Action group="kipi_image_group" name="printassistant"/>
+   <Action name="printimages" group="kipi_image_group"/>
+   <Action name="printassistant" group="kipi_image_group"/>
   </Menu>
   <Menu name="Image">
    <text>&amp;Image</text>
-   <Action group="kipi_image_group" name="printimages"/>
-   <Action group="kipi_image_group" name="printassistant"/>
+   <Action name="printimages" group="kipi_image_group"/>
+   <Action name="printassistant" group="kipi_image_group"/>
   </Menu>
  </MenuBar>
  <ToolBar name="mainToolBar">
