@@ -32,6 +32,8 @@ export GOPATH="$XDG_LIB_HOME/go"
 export NPM_CONFIG_PREFIX="$XDG_LIB_HOME/npm"
 
 # XDG_CONFIG_HOME environment overrides.
+export ANDROID_PREFS_ROOT="$XDG_CONFIG_HOME/android"
+export ANDROID_EMULATOR_HOME="$XDG_DATA_HOME/android/emulator"
 export ELINKS_CONFDIR="$XDG_CONFIG_HOME/elinks"
 export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
