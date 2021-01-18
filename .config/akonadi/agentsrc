@@ -1,7 +1,8 @@
 [InstanceCounters]
 akonadi_akonotes_resource\InstanceCounter=1
 akonadi_contacts_resource\InstanceCounter=1
-akonadi_davgroupware_resource\InstanceCounter=0
+akonadi_davgroupware_resource\InstanceCounter=1
+akonadi_etesync_resource\InstanceCounter=0
 akonadi_ews_resource\InstanceCounter=0
 akonadi_ewsmta_resource\InstanceCounter=0
 akonadi_google_resource\InstanceCounter=1
@@ -28,6 +29,7 @@ akonadi_vcarddir_resource\InstanceCounter=0
 akonadi_akonotes_resource_0\AgentType=akonadi_akonotes_resource
 akonadi_birthdays_resource\AgentType=akonadi_birthdays_resource
 akonadi_contacts_resource_0\AgentType=akonadi_contacts_resource
+akonadi_davgroupware_resource_0\AgentType=akonadi_davgroupware_resource
 akonadi_google_resource_0\AgentType=akonadi_google_resource
 akonadi_indexing_agent\AgentType=akonadi_indexing_agent
 akonadi_maildir_resource_0\AgentType=akonadi_maildir_resource

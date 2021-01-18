@@ -1,0 +1,5 @@
+[General]
+defaultUsername=sgleizes@e.email
+displayName=ECloud
+remoteUrls=$default$|CalDav|https://ecloud.global/remote.php/dav/,$default$|CardDav|https://ecloud.global/remote.php/dav/
+settingsVersion=3
