@@ -10,5 +10,8 @@ Seen=true
 [Applications][mailspring]
 Seen=true
 
+[Applications][telegramdesktop]
+Seen=true
+
 [Notifications]
 PopupPosition=TopRight
