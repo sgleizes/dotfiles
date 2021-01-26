@@ -50,6 +50,8 @@
 /zinit/
 
 # Exceptions for directories with uninteresting contents.
+/Nextcloud/**
+!/Nextcloud/nextcloud.cfg
 /beets/**
 !/beets/config.yaml
 /elinks/**
@@ -57,6 +59,8 @@
 /nnn/**
 !/nnn/plugins/
 !/nnn/plugins/**
+/syncthing/**
+!/syncthing/config.xml
 /youtube-dlg/**
 !/youtube-dlg/settings.json
 
