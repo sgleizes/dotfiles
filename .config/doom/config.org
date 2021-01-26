@@ -1557,7 +1557,7 @@ Rebind auto-yasnippet commands.
 *** Org
 Change the default org directory.
 #+begin_src elisp
-(setq org-directory "~/Projects/org/")
+(setq org-directory "~/Notes")
 #+end_src
 
 Remove the tangle-on-save hook and add a manual binding.

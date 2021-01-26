@@ -4,3 +4,4 @@
 
 # Paths to synchronize.
 path = Documents
+path = Notes
