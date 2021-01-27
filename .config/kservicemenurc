@@ -17,4 +17,5 @@ rename=true
 runInKonsole=true
 sharefileitemaction=true
 slideshow=true
+syncthingfileitemaction=true
 tagsfileitemaction=true
