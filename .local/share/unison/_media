@@ -8,3 +8,8 @@ path = Books
 path = Pictures
 path = Resources
 path = Videos
+
+# Paths to ignore.
+ignore = Path Audios/Pending
+ignore = Path Pictures/Pending
+ignore = Path Pictures/Screenshots

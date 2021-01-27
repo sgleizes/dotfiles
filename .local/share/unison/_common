@@ -26,3 +26,4 @@ addprefsto = _common
 ignore = Name {*~,.*~}
 ignore = Name *.o
 ignore = Name *.tmp
+ignore = Name {.stfolder,.stversions}

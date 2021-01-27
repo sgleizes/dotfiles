@@ -4,6 +4,3 @@
 
 # Paths to synchronize.
 path = Projects
-
-# Follow link to gnucash project.
-follow = Path Projects/finance
