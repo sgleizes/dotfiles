@@ -1,7 +1,7 @@
 [Bell]
 ArtsBell=true
 ArtsBellFile[$e]=/usr/share/sounds/freedesktop/stereo/dialog-error.oga
-SystemBell=true
+SystemBell=false
 VisibleBell=false
 VisibleBellColor=255,0,0
 VisibleBellInvert=true
