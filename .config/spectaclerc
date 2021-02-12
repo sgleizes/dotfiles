@@ -15,6 +15,5 @@ quitAfterSaveCopyExport=true
 [Save]
 compressionQuality=90
 copySaveLocation=false
-defaultSaveImageFormat=BMP
 defaultSaveLocation=file:///home/psydev/Pictures/Screenshots/
 saveFilenameFormat=Screenshot_%Y%M%D_%H%m%S
