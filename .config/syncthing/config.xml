@@ -35,6 +35,40 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
+    <folder id="bynfj-7gewp" label="Videos" path="/home/psydev/Videos" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+        <filesystemType>basic</filesystemType>
+        <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning>
+            <cleanupIntervalS>0</cleanupIntervalS>
+        </versioning>
+        <copiers>0</copiers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <paused>true</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+        <copyRangeMethod>standard</copyRangeMethod>
+        <caseSensitiveFS>false</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+    </folder>
     <folder id="d67ct-l4jmf" label="Documents" path="/home/psydev/Documents" type="sendreceive" rescanIntervalS="86400" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
@@ -69,7 +103,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="fzwbw-91cob" label="Tracks" path="/home/psydev/Documents/Sport/Traces" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="fzwbw-91cob" label="Tracks" path="/home/psydev/Tracks" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -103,7 +137,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="uinzn-m6e28" label="Screenshots" path="/home/psydev/Pictures/Screenshots/" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="ivzyx-swktr" label="Audios" path="/home/psydev/Audios" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -137,7 +171,41 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="ynmgj-xhzxv" label="Photos" path="/home/psydev/Pictures/Pending/" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="k4vrv-c6k6y" label="Books" path="/home/psydev/Books" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+        <filesystemType>basic</filesystemType>
+        <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning>
+            <cleanupIntervalS>0</cleanupIntervalS>
+        </versioning>
+        <copiers>0</copiers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <paused>true</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+        <copyRangeMethod>standard</copyRangeMethod>
+        <caseSensitiveFS>false</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+    </folder>
+    <folder id="u2axi-xt6hg" label="Pictures" path="/home/psydev/Pictures" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -160,6 +228,40 @@
         <disableSparseFiles>false</disableSparseFiles>
         <disableTempIndexes>false</disableTempIndexes>
         <paused>false</paused>
+        <weakHashThresholdPct>25</weakHashThresholdPct>
+        <markerName>.stfolder</markerName>
+        <copyOwnershipFromParent>false</copyOwnershipFromParent>
+        <modTimeWindowS>0</modTimeWindowS>
+        <maxConcurrentWrites>2</maxConcurrentWrites>
+        <disableFsync>false</disableFsync>
+        <blockPullOrder>standard</blockPullOrder>
+        <copyRangeMethod>standard</copyRangeMethod>
+        <caseSensitiveFS>false</caseSensitiveFS>
+        <junctionsAsDirs>false</junctionsAsDirs>
+    </folder>
+    <folder id="yacra-yb6qn" label="Resources" path="/home/psydev/Resources" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+        <filesystemType>basic</filesystemType>
+        <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <minDiskFree unit="%">1</minDiskFree>
+        <versioning>
+            <cleanupIntervalS>0</cleanupIntervalS>
+        </versioning>
+        <copiers>0</copiers>
+        <pullerMaxPendingKiB>0</pullerMaxPendingKiB>
+        <hashers>0</hashers>
+        <order>random</order>
+        <ignoreDelete>false</ignoreDelete>
+        <scanProgressIntervalS>0</scanProgressIntervalS>
+        <pullerPauseS>0</pullerPauseS>
+        <maxConflicts>10</maxConflicts>
+        <disableSparseFiles>false</disableSparseFiles>
+        <disableTempIndexes>false</disableTempIndexes>
+        <paused>true</paused>
         <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
         <copyOwnershipFromParent>false</copyOwnershipFromParent>
