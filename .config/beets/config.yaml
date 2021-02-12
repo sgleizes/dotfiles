@@ -51,8 +51,7 @@ ui:
 
 plugins:
   - discogs
-  # FIXME: Crashes when importing singletons
-  # - bandcamp
+  - bandcamp
   - info
   - edit
   - duplicates
@@ -62,6 +61,7 @@ plugins:
   - mbsync
   - convert
   - playlist
+  # - smartplaylist
   - play
 
 bandcamp:
@@ -85,8 +85,15 @@ convert:
 
 playlist:
   auto: yes
-  relative_to: ~/Audios/Musique
+  relative_to: playlist
   playlist_dir: ~/Audios/Playlists
+
+# smartplaylist:
+#   relative_to: ~/Audios/Playlists/Smart
+#   playlist_dir: ~/Audios/Playlists/Smart
+#   playlists:
+#     - name: "Phone.m3u"
+#       query: ["context:phone genre+ artist+ album+ track+"]
 
 play:
   command: strawberry --play --create=Beets
