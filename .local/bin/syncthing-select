@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+# Use a '.stselect' file to select playlists for a specific syncthing device.
+# 
+# The list of files from the playlists are automatically merged and converted
+# to a '.stignore' file for use with #include from the device's .stignore.
+
+# TODO: This is fragile and does the job, but could be improved:
+# - Improve management of error messages in case of invalid file name
+# - Do not assume files in .stselect are playlist files
+# => Need to loop/filter files from array
+# - Allow patterns in source file
+
+# Show the usage and exit.
+function usage {
+  cat <<-EOF
+Use a '.stselect' file to select playlists for a specific syncthing device.
+
+The list of files from the playlists are automatically merged and converted
+to a '.stignore' file for use with #include from the device's .stignore.
+
+An optional name can be given as a device specifier for the stselect and
+stignore files, e.g. 'fp3' will use '.stselect-fp3' and '.stignore-fp3'.
+
+Usage: ${0##*/} <dir> [name]
+Options:
+  -c, --cover  Include cover file with the selected albums.
+  -w, --watch  Start a inotify watcher daemon on all source files.
+EOF
+  exit 0
+}
+
+# Generate the ignore file from the source file.
+function gen_ignore_file {
+  # Update input files from stselect file.
+  readarray -t files <"$dir/$src"
+
+  { printf '!%s\n' "${files[@]}";
+    [[ "$cover" ]] && sed -E '/^#/d;s,\.\./\.\.,!,g;s,(.*)/[^/]+$,\1/cover.*,g' "${files[@]/#/$dir\/}";
+    sed '/^#/d;s,\.\./\.\.,!,g;s,\\\\([][}{]),\\1,g;$a **' "${files[@]/#/$dir\/}"; } |
+    sort -diru
+}
+
+# Process arguments.
+
+while (( $# > 0 )); do
+  case "$1" in
+    -h|--help)
+      usage
+      ;;
+    -c|--cover)
+      cover=1
+      ;;
+    -w|--watch)
+      daemon=1
+      ;;
+    *)
+      if [[ ! "$dir" ]]; then
+        dir="$1"
+      else
+        name="$1"
+      fi
+      ;;
+  esac
+  shift
+done
+
+src=".stselect${name:+-$name}"
+out=".stignore${name:+-$name}"
+log=".stselect${name:+-$name}.log"
+
+# Validate requirements.
+
+if ! command -v inotifywait >/dev/null; then
+  echo "error: inotifywait is not available; please install inotify-tools"
+  exit 1
+fi
+
+if [[ ! "$dir" ]]; then
+  usage
+fi
+
+if [[ ! -d "$dir" ]]; then
+  echo "error: '$dir' does not exist or is not a directory"
+  exit 1
+fi
+
+if [[ ! -f "$dir/$src" ]]; then
+  echo "error: '$dir/$src' does not exist or is not a regular file"
+  exit 1
+fi
+
+# Generate the ignore file.
+gen_ignore_file >"$dir/$out"
+
+# Start watcher daemon on all source files.
+if [[ "$daemon" ]]; then
+  touch "$log"
+  inotifywait --monitor \
+    --format '%T %:e %w%f' --timefmt '%FT%TZ' \
+    -e modify "$dir/$src" "${files[@]/#/$dir\/}" |
+    while read -r event; do
+      echo "$event" >>"$log"
+      gen_ignore_file >"$dir/$out"
+    done &
+fi
