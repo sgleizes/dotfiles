@@ -120,7 +120,7 @@ Add another launcher script to start an ~ediff~ session in a new graphical frame
 Note that it depends on a ~+workspace/rename-frame~ function that automatically
 generates a unique name for the new perspective (workspace).
 #+begin_src sh :tangle ~/.local/bin/ediff :tangle-mode (identity #o755)
-#/usr/bin/env bash
+#!/usr/bin/env bash
 # Start an ediff session in a new emacs frame. Inspired by:
 # https://gist.github.com/ptrv/0b460291e14a4a3c6372
 #
@@ -164,7 +164,7 @@ emacsclient $EMACSCLIENT_OPTS --eval "
     ($EVAL))"
 
 # Check modified file for unresolved conflicts.
-if [[ $MODE == 'files' && ! $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") == 0 ]]; then
+if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
   MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
   cp "$MERGED" "$MERGEDSAVE"
   echo >&2 "Oops! Conflict markers detected in $MERGED"

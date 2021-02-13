@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 # Start an ediff session in a new emacs frame. Inspired by:
 # https://gist.github.com/ptrv/0b460291e14a4a3c6372
 #
@@ -42,7 +42,7 @@ emacsclient $EMACSCLIENT_OPTS --eval "
     ($EVAL))"
 
 # Check modified file for unresolved conflicts.
-if [[ $MODE == 'files' && ! $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") == 0 ]]; then
+if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
   MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
   cp "$MERGED" "$MERGEDSAVE"
   echo >&2 "Oops! Conflict markers detected in $MERGED"
