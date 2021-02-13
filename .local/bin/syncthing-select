@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Use a '.stselect' file to select playlists for a specific syncthing device.
-# 
+#
 # The list of files from the playlists are automatically merged and converted
 # to a '.stignore' file for use with #include from the device's .stignore.
 
@@ -34,32 +34,33 @@ function gen_ignore_file {
   # Update input files from stselect file.
   readarray -t files <"$dir/$src"
 
-  { printf '!%s\n' "${files[@]}";
-    [[ "$cover" ]] && sed -E '/^#/d;s,\.\./\.\.,!,g;s,(.*)/[^/]+$,\1/cover.*,g' "${files[@]/#/$dir\/}";
-    sed '/^#/d;s,\.\./\.\.,!,g;s,\\\\([][}{]),\\1,g;$a **' "${files[@]/#/$dir\/}"; } |
-    sort -diru
+  {
+    printf '!/%s\n' "${files[@]}"
+    [[ "$cover" ]] && sed -E '/^#/d;s,\.\./\.\.,!,g;s,(.*)/[^/]+$,\1/cover.*,g' "${files[@]/#/$dir\/}"
+    sed '/^#/d;s,\.\./\.\.,!,g;s,\\\\([][}{]),\\1,g;$a **' "${files[@]/#/$dir\/}"
+  } | sort -diru
 }
 
 # Process arguments.
 
-while (( $# > 0 )); do
+while (($# > 0)); do
   case "$1" in
-    -h|--help)
-      usage
-      ;;
-    -c|--cover)
-      cover=1
-      ;;
-    -w|--watch)
-      daemon=1
-      ;;
-    *)
-      if [[ ! "$dir" ]]; then
-        dir="$1"
-      else
-        name="$1"
-      fi
-      ;;
+  -h | --help)
+    usage
+    ;;
+  -c | --cover)
+    cover=1
+    ;;
+  -w | --watch)
+    daemon=1
+    ;;
+  *)
+    if [[ ! $dir ]]; then
+      dir="$1"
+    else
+      name="$1"
+    fi
+    ;;
   esac
   shift
 done
@@ -75,11 +76,11 @@ if ! command -v inotifywait >/dev/null; then
   exit 1
 fi
 
-if [[ ! "$dir" ]]; then
+if [[ ! $dir ]]; then
   usage
 fi
 
-if [[ ! -d "$dir" ]]; then
+if [[ ! -d $dir ]]; then
   echo "error: '$dir' does not exist or is not a directory"
   exit 1
 fi
@@ -97,8 +98,8 @@ if [[ "$daemon" ]]; then
   touch "$log"
   inotifywait --monitor \
     --format '%T %:e %w%f' --timefmt '%FT%TZ' \
-    -e modify "$dir/$src" "${files[@]/#/$dir\/}" |
-    while read -r event; do
+    -e modify "$dir/$src" "${files[@]/#/$dir\/}" \
+    | while read -r event; do
       echo "$event" >>"$log"
       gen_ignore_file >"$dir/$out"
     done &

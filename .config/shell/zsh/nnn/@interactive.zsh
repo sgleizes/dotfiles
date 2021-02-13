@@ -38,6 +38,7 @@ N:-opendir;\
 o:finder;\
 p:-_less \$nnn*;\
 P:-preview-tui;\
+s:syncthing-select;\
 u:getplugs;\
 x:-hexview;\
 "

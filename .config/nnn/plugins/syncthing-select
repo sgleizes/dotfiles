@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Description: Manage the syncthing ignore file of a synchronized folder.
+#
+# Shell: NON POSIX compliant
+# Author: Stéphane Gleizes
+
+source "$(dirname "$0")"/.nnn-plugin-helper
+
+# Find the target stignore file in current or parent directories.
+path="$PWD"
+out="$PWD/.stignore"
+while [[ "$path" != "$HOME" ]] && [[ "$path" != / ]]; do
+  # TODO: Support multiple matches
+  file="$(fd -H -d 1 '.stignore' "$path" -a)"
+  if [[ -f "$file" ]] || [[ -d "$path/.stfolder" ]]; then
+    out="${file:-$path/.stignore}"
+    break
+  fi
+
+  # NOTE: To ignore symlinks, use "$(realpath -s "$path"/..)"
+  path="$(readlink -f "$path"/..)"
+done
+
+if [[ "$path" = "$HOME" ]] || [[ "$path" = / ]]; then
+  path="$PWD"
+fi
+
+printf "(f)ormat/(l)ist/(a)ppend/(r)eplace? [default=f] "
+read -r cmd
+
+if [[ "$cmd" = "r" ]] || { [[ "$cmd" = "a" ]] && [[ ! -f "$out" ]]; }; then
+  echo '**' >"$out"
+elif [[ "$cmd" = "l" ]]; then
+  [[ ! -f "$out" ]] && exit
+  printf "%s" "+l" >"$NNN_PIPE"
+  sed -E "\$d;s,!(.*),$path\1,g;s,\\\([][}{]),\1,g" <"$out" | tr '\n' '\0' >"$NNN_PIPE"
+  exit
+fi
+
+printf "(s)election/(c)urrent? [default=c] "
+read -r resp
+
+if [[ "$resp" = "s" ]]; then
+  readarray -t files < <(tr '\0' '\n' <"$selection")
+  set -- "${files[@]}"
+else
+  set -- "$PWD/$1"
+fi
+
+paths=("${@//${out%/*}\//}")
+for c in \[ \] \{ \}; do
+  paths=("${paths[@]//$c/\\$c}")
+done
+
+if [[ "$cmd" != "a" ]] && [[ "$cmd" != "r" ]]; then
+  printf '!/%s\n' "${paths[@]}"
+  printf "\n'Enter' to continue"
+  read -r
+  exit
+fi
+
+if [[ "$@" ]]; then
+  printf '!/%s\n' "${paths[@]}" >>"$out"
+  sort -diru -o "$out" "$out" 
+fi
