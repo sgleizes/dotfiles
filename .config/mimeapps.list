@@ -1,6 +1,7 @@
 [Added Associations]
 application/pdf=masterpdfeditor4.desktop;org.kde.okular.desktop;
 application/x-mswinurl=org.kde.kate.desktop;firefox.desktop;
+audio/mp4=org.strawberrymusicplayer.strawberry.desktop;
 audio/ogg=org.strawberrymusicplayer.strawberry.desktop;vlc.desktop;
 audio/x-opus+ogg=org.strawberrymusicplayer.strawberry.desktop;vlc.desktop;
 text/plain=emacs.desktop;org.kde.kate.desktop;libreoffice-writer.desktop;okularApplication_txt.desktop;wine-extension-txt.desktop;
@@ -15,6 +16,7 @@ application/x-extension-xht=userapp-Firefox-D3SRI0.desktop
 application/x-extension-xhtml=userapp-Firefox-D3SRI0.desktop
 application/x-mswinurl=org.kde.kate.desktop;
 application/xhtml+xml=userapp-Firefox-D3SRI0.desktop
+audio/mp4=org.strawberrymusicplayer.strawberry.desktop;
 audio/ogg=org.strawberrymusicplayer.strawberry.desktop;
 audio/x-opus+ogg=org.strawberrymusicplayer.strawberry.desktop;
 text/html=userapp-Firefox-D3SRI0.desktop
