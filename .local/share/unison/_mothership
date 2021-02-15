@@ -18,9 +18,9 @@ fat = true
 nodeletion = /home/psydev
 
 # Only sync new or updated media from HOME.
-nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /home/psydev
-noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /home/psydev
-nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Videos} -> /run/media/psydev/MOTHERSHIP
+nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
+noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
+nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /run/media/psydev/MOTHERSHIP
 
 # Ignored projects.
 ignore = Path Projects/*/archive
