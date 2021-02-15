@@ -7,9 +7,11 @@ path = Audios
 path = Books
 path = Pictures
 path = Resources
+path = Tracks
 path = Videos
 
 # Paths to ignore.
 ignore = Path Audios/Pending
 ignore = Path Pictures/Pending
 ignore = Path Pictures/Screenshots
+ignore = Path Pictures/Telegram
