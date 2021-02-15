@@ -6,6 +6,9 @@ ViewBackgroundValue=27
 [ImageView]
 AlphaBackgroundMode=AbstractImageView::AlphaBackgroundCheckBoard
 
+[Phonon::AudioOutput]
+Gwenview_Volume=1
+
 [Print]
 PrintHeight=20.6
 
