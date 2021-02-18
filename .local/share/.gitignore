@@ -38,3 +38,9 @@
 /unison/ar*
 /unison/fp*
 /unison/unison.log
+
+# VLC extensions.
+!/vlc/
+/vlc/**
+!/vlc/lua/
+/vlc/lua/extensions/
