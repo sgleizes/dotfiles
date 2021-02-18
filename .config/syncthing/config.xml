@@ -1,4 +1,4 @@
-<configuration version="32">
+<configuration version="33">
     <folder id="ankpe-mgyul" label="Notes" path="/home/psydev/Notes" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
@@ -347,5 +347,7 @@
         <maxConcurrentIncomingRequestKiB>0</maxConcurrentIncomingRequestKiB>
         <announceLANAddresses>true</announceLANAddresses>
         <sendFullIndexOnUpgrade>false</sendFullIndexOnUpgrade>
+        <connectionLimitEnough>0</connectionLimitEnough>
+        <connectionLimitMax>0</connectionLimitMax>
     </options>
 </configuration>
