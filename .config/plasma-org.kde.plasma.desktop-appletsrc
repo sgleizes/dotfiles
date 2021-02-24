@@ -1,5 +1,5 @@
 [ActionPlugins][0]
-MidButton;NoModifier=org.kde.paste
+MiddleButton;NoModifier=org.kde.paste
 RightButton;NoModifier=org.kde.contextmenu
 wheel:Vertical;NoModifier=org.kde.switchdesktop
 
@@ -37,8 +37,8 @@ wallpaperplugin=org.kde.potd
 
 [Containments][1][General]
 ToolBoxButtonState=topcenter
-ToolBoxButtonX=739
-ToolBoxButtonY=28
+ToolBoxButtonX=577
+ToolBoxButtonY=24
 arrangement=1
 filterMimeTypes=\\0
 iconSize=2
@@ -130,7 +130,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][45][Configuration][General]
 expanding=false
-length=18
+length=20
 
 [Containments][2][Applets][47]
 immutability=1
@@ -278,7 +278,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=612
+length=631
 
 [Containments][2][Applets][6]
 immutability=1
@@ -314,8 +314,8 @@ wallpaperplugin=org.kde.image
 
 [Containments][61][General]
 ToolBoxButtonState=topcenter
-ToolBoxButtonX=668
-ToolBoxButtonY=28
+ToolBoxButtonX=577
+ToolBoxButtonY=24
 arrangement=1
 iconSize=2
 textLines=1
@@ -519,8 +519,8 @@ size=20,25
 [Containments][7][Configuration]
 
 [Containments][7][General]
-extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid
-knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid
+extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout
+knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout
 
 [Containments][70]
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632

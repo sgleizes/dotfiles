@@ -1,5 +1,5 @@
 [Keyboard]
-KeyboardRepeating=0
+KeyRepeat=repeat
 NumLock=2
 RepeatDelay=250
 RepeatRate=40

@@ -1,6 +1,6 @@
 [Layout]
 DisplayNames=,fr
-LayoutList=us,us(alt-intl)
+LayoutList=us,us
 LayoutLoopCount=-1
 Model=pc101
 Options=caps:swapescape,grp_led:caps
@@ -9,5 +9,6 @@ ShowFlag=false
 ShowLabel=true
 ShowLayoutIndicator=true
 ShowSingle=false
-SwitchMode=Global
+SwitchMode=WinClass
 Use=true
+VariantList=,alt-intl

@@ -1,6 +1,7 @@
 [General]
 
 [PlasmaRunnerManager]
+migrated=true
 
 [Plugins]
 CharacterRunnerEnabled=true
