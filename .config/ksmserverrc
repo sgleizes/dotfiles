@@ -1,3 +1,3 @@
 [General]
-excludeApps=/opt/enpass/Enpass,/usr/bin/emacs
+excludeApps=/opt/enpass/Enpass,/usr/bin/emacs,emacs
 
