@@ -5,6 +5,7 @@
 # to a '.stignore' file for use with #include from the device's .stignore.
 
 # TODO: This is fragile and does the job, but could be improved:
+# - Add/Remove watches when a file is added/removed
 # - Improve management of error messages in case of invalid file name
 # - Do not assume files in .stselect are playlist files
 # => Need to loop/filter files from array
