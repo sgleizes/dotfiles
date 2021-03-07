@@ -157,7 +157,7 @@ plugin=com.github.burlog.plasmoid-sysmon
 
 [Containments][2][Applets][48][Configuration][config]
 label=M
-max_value=16330816
+max_value=32661632
 multiplier=1000
 update_interval=2
 
@@ -215,6 +215,7 @@ multiplier=1000
 
 [Containments][2][Applets][51][Configuration][sources]
 colors=#55aa7f,#55aaff
+labels=,
 last_filter=network/interfaces/wl
 names=sys.network/interfaces/wlp3s0/receiver/data,sys.network/interfaces/wlp3s0/transmitter/data
 
@@ -265,10 +266,10 @@ max_value=100
 update_interval=5
 
 [Containments][2][Applets][54][Configuration][sources]
-colors=limegreen,#ff557f
+colors=#ff557f
 labels=\\0
 last_filter=acpi/Thermal_Zone
-names=sys.acpi/Thermal_Zone/6-pch_skylake/Temperature,sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
+names=sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
 
 [Containments][2][Applets][55]
 immutability=1

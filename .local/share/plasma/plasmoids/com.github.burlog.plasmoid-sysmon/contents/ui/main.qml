@@ -189,7 +189,7 @@ Item {
                                 if (i) result += "\n"
                                 var value = Utils.format_number(plasmoid.configuration, main.orig_values[i])
                                 var name = plasmoid.configuration.labels[i]
-                                if (!name.length) name = plasmoid.configuration.names[i].substring(4)
+                                if (!name || !name.length) name = plasmoid.configuration.names[i].substring(4)
                                 result += i18n("%1: %2", name, value)
                             }
                             tooltip_text.text = result

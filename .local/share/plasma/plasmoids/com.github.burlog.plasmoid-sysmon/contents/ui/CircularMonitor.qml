@@ -102,7 +102,7 @@ Item {
         elide: Text.ElideRight
         color: "#848484"
         font.family: "Fira Mono"
-        font.pointSize: 8
+        font.pointSize: 7
 
         // tells the label to be centered in parent (in the centre of CircularMonitor)
         anchors {
