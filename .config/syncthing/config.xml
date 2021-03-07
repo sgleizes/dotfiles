@@ -103,7 +103,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="fzwbw-91cob" label="Tracks" path="/home/psydev/Tracks" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="fzwbw-91cob" label="Tracks" path="/home/psydev/Tracks" type="receiveonly" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
