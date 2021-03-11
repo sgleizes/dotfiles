@@ -45,4 +45,4 @@
   clean = "sed -E '/\\s*\\[.*(\\$Version|MainWindow|Dialog|Player).*\\]/,/^\\s*$/d;/(geometry|splitter_state|current_tab|current_playlist|file_path|add_media_path|state|last_\\w*)/d'"
 
 [filter "projectM-interface-state"]
-  clean = "sed -E '/^(pos|playlistPos|playlistWindowSize)/d'"
+  clean = "sed -E '/^(pos|playlistPos|playlistWindowSize|PlaylistFile)/d'"
