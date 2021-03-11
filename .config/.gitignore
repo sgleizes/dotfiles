@@ -69,6 +69,7 @@
 /gtk-2.0/gtkfilechooser.ini
 /jesseduffield/lazygit/state.yml
 /latte/.multiple-layouts_hidden.layout.latte
+/projectM/qprojectM-pulseaudio.conf
 
 # Uninteresting files.
 /bluedevilglobalrc
