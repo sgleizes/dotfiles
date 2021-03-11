@@ -19,3 +19,4 @@ vlc-qt-interface.conf      filter=vlc-interface-state
 bleachbit.ini              filter=bleachbit-interface-state
 youtube-dlg/settings.json  filter=youtube-dlg-interface-state
 strawberry/strawberry.conf filter=strawberry-interface-state
+projectM/qprojectM.conf    filter=projectM-interface-state
