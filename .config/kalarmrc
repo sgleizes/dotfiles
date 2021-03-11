@@ -14,7 +14,7 @@ HolidayRegion=lu_fr
 MessageBackgroundColour=77,31,36
 MessageFont=Noto Sans,16,-1,5,75,0,0,0,0,0,Bold
 ModalMessages=false
-Version=3.1.2
+Version=3.1.3
 WorkDayEnd=1900,1,1,18,0,0
 WorkDayStart=1900,1,1,9,0,0
 
