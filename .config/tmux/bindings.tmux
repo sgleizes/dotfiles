@@ -202,7 +202,7 @@ bind -N 'Select a buffer interactively' 'b' choose-buffer -Z {
 bind -N 'Search backward for a regular expression' '/' copy-mode \; send '?'
 
 # Keymap information.
-bind -N 'List key bindings'      '?' display-popup -w30% -h90% -KE -R "tmux list-keys -N | $PAGER"
+bind -N 'List key bindings'      '?' display-popup -w80 -h90% -E "tmux list-keys -N | $PAGER"
 bind -N 'Describe a key binding' '.' command-prompt -k -p "(key)" "list-keys -1N \"%%%\""
 
 # Customize mode.
@@ -255,12 +255,12 @@ bind -N 'Reload the tmux configuration' 'r' reload
 # Integration with https://github.com/facebook/pathpicker.
 bind -N 'Run path-picker on the current pane visible contents' 'f' {
   capture-pane -J
-  send C-j # push-line
+  send C-u # push-line - coupled to zsh bindings
   send "tmux show-buffer | fpp ; tmux delete-buffer" 'Enter'
 }
 bind -N 'Run path-picker on the current pane history' 'F' {
   capture-pane -J -S-
-  send C-j # push-line
+  send C-u # push-line - coupled to zsh bindings
   send "tmux show-buffer | fpp ; tmux delete-buffer" 'Enter'
 }
 

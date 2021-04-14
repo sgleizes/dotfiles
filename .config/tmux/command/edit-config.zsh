@@ -9,5 +9,5 @@ if [[ $TMUX_COMMAND_LOAD ]] {
   return
 }
 
-tmux popup -w90% -h90% -KE -d '#{pane_current_path}' -R \
-  "${(z)VISUAL:-${(z)EDITOR}} $TMUX_CONFIG && tmux reload"
+tmux popup -w90% -h90% -E -d '#{pane_current_path}' \
+  "${VISUAL:-${EDITOR}} $TMUX_CONFIG && tmux reload"
