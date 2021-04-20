@@ -685,141 +685,12 @@ they are disabled by default.
 #+end_src
 
 * Package configuration
+
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#configuring-doom][configuration instructions]] from the doom documentation.
 
-** General packages
-*** Ace window
-#+begin_src elisp
-(after! ace-window
-  (map! :leader :prefix "w"
-        "a" #'ace-window))
-#+end_src
-
-*** Better jumper
-Bind better-jumper functions to a doom-like alternative.
-#+begin_src elisp
-(after! better-jumper
-  (map!
-   :n "g[" #'better-jumper-jump-backward
-   :n "g]" #'better-jumper-jump-forward))
-#+end_src
-
-*** Centaur tabs
-Configure centaur-tabs appearance and behavior. Define rules for buffer groups
-and restrict buffer list to workspace buffers.
-#+begin_src elisp
-(use-package! centaur-tabs
-  :config
-  (setq centaur-tabs-style "bar"
-        centaur-tabs-height 32
-        centaur-tabs-gray-out-icons nil
-        centaur-tabs-set-bar 'under
-        x-underline-at-descent-line t)
-  (centaur-tabs-headline-match)
-  ;; Override rules for grouping buffers.
-  (defun centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
-
-Group centaur-tabs with mode if buffer is derived from `vterm-mode'
-`dired-mode' `org-mode' `magit-mode'.
-All buffer name start with * will group to \"Emacs\".
-Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
-      ((derived-mode-p 'term-mode 'vterm-mode)
-       "Term")
-      ;; ((derived-mode-p 'prog-mode)
-      ;;  "Coding")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
-       "Org")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-  ;; Override centaur tabs to use workspace buffers as input list.
-  (defun centaur-tabs-buffer-list ()
-    "Return the list of buffers to show in tabs.
-Exclude buffers whose name starts with a space, when they are not
-visiting a file.  The current buffer is always included."
-    (centaur-tabs-filter-out
-     'centaur-tabs-hide-tab-cached
-     (delq nil
-           (cl-mapcar #'(lambda (b)
-                          (cond
-                           ;; Always include the current buffer.
-                           ((eq (current-buffer) b) b)
-                           ((buffer-file-name b) b)
-                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-                           ((buffer-live-p b) b)))
-                      (doom-buffer-list)))))
-  :hook
-  (doom-dashboard-mode . centaur-tabs-local-mode)
-  (term-mode . centaur-tabs-local-mode)
-  (vterm-mode . centaur-tabs-local-mode))
-#+end_src
-
-Provide additional bindings for centaur-tabs functions.
-#+begin_src elisp
-(map!
- ;; Rebind buffer switching to tab switching commands.
- :g [remap previous-buffer] #'centaur-tabs-backward
- :g [remap next-buffer]     #'centaur-tabs-forward
- ;; Tab manipulation
- :g "C-<next>"    #'centaur-tabs-forward
- :g "C-<prior>"   #'centaur-tabs-backward
- :g "C-M-<next>"  #'centaur-tabs-forward-group
- :g "C-M-<prior>" #'centaur-tabs-backward-group
- :n "gt"   #'centaur-tabs-forward
- :n "gb"   #'centaur-tabs-backward
- :n "gT"   #'centaur-tabs-forward-group
- :n "gB"   #'centaur-tabs-backward-group
- :n "]B"   #'centaur-tabs-forward-group
- :n "[B"   #'centaur-tabs-backward-group
- :g "C-S-<prior>" #'centaur-tabs-move-current-tab-to-left
- :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
-
- :leader :prefix "b"
- ;; Buffer group navigation
- :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
- :desc "Next buffer group"     "L" #'centaur-tabs-forward-group
- :desc "Previous buffer group" "H" #'centaur-tabs-backward-group
- ;; Tab movement
- :desc "Move tab right"  "l" #'centaur-tabs-move-current-tab-to-right
- :desc "Move tab left"   "h" #'centaur-tabs-move-current-tab-to-left
- ;; Numbered buffer navigation
- :desc "Select tab 1..9" "1" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "2" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "3" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "4" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "5" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "6" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "7" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "8" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "9" #'centaur-tabs-select-visible-tab
- :desc "Select last tab" "0" #'centaur-tabs-select-end-tab
- )
-#+end_src
-
-*** Company
-Make aborting completions less annoying.
-The ~evil-normal-state-entry-hook~ is triggered when the child frame opens to
-describe the selected element (with ~+childframe~), so it can't be used here.
-#+begin_src elisp
-(after! company
-  (add-hook 'evil-insert-state-exit-hook #'company-abort))
-#+end_src
-
+** Builtin packages
 *** Dired
+
 Customize general dired appearance.
 #+begin_src elisp
 (use-package! dired
@@ -1001,7 +872,187 @@ Customize default bindings.
       "H"             #'dired-omit-mode)
 #+end_src
 
+*** Undo tree
+
+Customize undo-tree visualizer.
+#+begin_src elisp
+(use-package! undo-tree
+  :config
+  (setq undo-tree-visualizer-diff nil)
+  :bind (:map evil-normal-state-map
+         ("U" . undo-tree-visualize)))
+#+end_src
+
+** General packages
+*** Ace window
+
+#+begin_src elisp
+(after! ace-window
+  (map! :leader :prefix "w"
+        "a" #'ace-window))
+#+end_src
+
+*** Better jumper
+
+Bind better-jumper functions to a doom-like alternative.
+#+begin_src elisp
+(after! better-jumper
+  (map!
+   :n "g[" #'better-jumper-jump-backward
+   :n "g]" #'better-jumper-jump-forward))
+#+end_src
+
+*** Centaur tabs
+
+Configure centaur-tabs appearance and behavior. Define rules for buffer groups
+and restrict buffer list to workspace buffers.
+#+begin_src elisp
+(use-package! centaur-tabs
+  :config
+  (setq centaur-tabs-style "bar"
+        centaur-tabs-height 32
+        centaur-tabs-gray-out-icons nil
+        centaur-tabs-set-bar 'under
+        x-underline-at-descent-line t)
+  (centaur-tabs-headline-match)
+  ;; Override rules for grouping buffers.
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+Group centaur-tabs with mode if buffer is derived from `vterm-mode'
+`dired-mode' `org-mode' `magit-mode'.
+All buffer name start with * will group to \"Emacs\".
+Other buffer group by `centaur-tabs-get-group-name' with project name."
+    (list
+     (cond
+      ((or (string-equal "*" (substring (buffer-name) 0 1))
+           (memq major-mode '(magit-process-mode
+                              magit-status-mode
+                              magit-diff-mode
+                              magit-log-mode
+                              magit-file-mode
+                              magit-blob-mode
+                              magit-blame-mode
+                              )))
+       "Emacs")
+      ((derived-mode-p 'term-mode 'vterm-mode)
+       "Term")
+      ;; ((derived-mode-p 'prog-mode)
+      ;;  "Coding")
+      ((derived-mode-p 'dired-mode)
+       "Dired")
+      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
+       "Org")
+      (t
+       (centaur-tabs-get-group-name (current-buffer))))))
+  ;; Override centaur tabs to use workspace buffers as input list.
+  (defun centaur-tabs-buffer-list ()
+    "Return the list of buffers to show in tabs.
+Exclude buffers whose name starts with a space, when they are not
+visiting a file.  The current buffer is always included."
+    (centaur-tabs-filter-out
+     'centaur-tabs-hide-tab-cached
+     (delq nil
+           (cl-mapcar #'(lambda (b)
+                          (cond
+                           ;; Always include the current buffer.
+                           ((eq (current-buffer) b) b)
+                           ((buffer-file-name b) b)
+                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+                           ((buffer-live-p b) b)))
+                      (doom-buffer-list)))))
+  :hook
+  (doom-dashboard-mode . centaur-tabs-local-mode)
+  (term-mode . centaur-tabs-local-mode)
+  (vterm-mode . centaur-tabs-local-mode))
+#+end_src
+
+Provide additional bindings for centaur-tabs functions.
+#+begin_src elisp
+(after! centaur-tabs
+  ;; Remove previous which-key descriptions.
+  ;; TODO: Encapsulate in a function and use a regex.
+  ;; TODO Move these bindings in a more appropriate, doom-related section
+  (cl-delete-if
+   (lambda (x)
+     (member (car x)
+             '(("\\`M-SPC b k\\'")
+               ("\\`SPC b k\\'")
+               ("\\`M-SPC b K\\'")
+               ("\\`SPC b K\\'")
+               ("\\`M-SPC b l\\'")
+               ("\\`SPC b l\\'")
+               ("\\`M-SPC b O\\'")
+               ("\\`SPC b O\\'")
+               ("\\`M-SPC b n\\'")
+               ("\\`SPC b n\\'")
+               ("\\`M-SPC b N\\'")
+               ("\\`SPC b N\\'")
+               ("\\`M-SPC b p\\'")
+               ("\\`SPC b p\\'"))))
+   which-key-replacement-alist)
+
+  (map!
+   ;; Rebind buffer switching to tab switching commands.
+   :g [remap previous-buffer] #'centaur-tabs-backward
+   :g [remap next-buffer]     #'centaur-tabs-forward
+   ;; Tab manipulation
+   :g "C-<next>"    #'centaur-tabs-forward
+   :g "C-<prior>"   #'centaur-tabs-backward
+   :g "C-M-<next>"  #'centaur-tabs-forward-group
+   :g "C-M-<prior>" #'centaur-tabs-backward-group
+   :n "gt"          #'centaur-tabs-forward
+   :n "gb"          #'centaur-tabs-backward
+   :n "gT"          #'centaur-tabs-forward-group
+   :n "gB"          #'centaur-tabs-backward-group
+   :n "]B"          #'centaur-tabs-forward-group
+   :n "[B"          #'centaur-tabs-backward-group
+   :g "C-S-<prior>" #'centaur-tabs-move-current-tab-to-left
+   :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
+
+   :leader :prefix "b"
+   ;; Buffer group navigation
+   :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
+   :desc "Next buffer group"     "j" #'centaur-tabs-forward-group
+   :desc "Previous buffer group" "k" #'centaur-tabs-backward-group
+   ;; Tab movement
+   :desc "Next tab"              "l" #'centaur-tabs-forward
+   :desc "Previous tab"          "h" #'centaur-tabs-backward
+   :desc "Move tab right"        "L" #'centaur-tabs-move-current-tab-to-right
+   :desc "Move tab left"         "H" #'centaur-tabs-move-current-tab-to-left
+   ;; Other stuff
+   :desc "Kill all buffers"      "D" #'doom/kill-all-buffers
+   :desc "Kill other buffers"    "K" #'doom/kill-other-buffers
+   :desc ""                      "O" nil
+   :desc "New empty buffer"      "n" #'evil-buffer-new
+   :desc "New empty buffer"      "N" nil
+   :desc ""                      "p" nil
+   ;; Numbered buffer navigation
+   :desc "Select tab 1..9"       "1" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "2" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "3" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "4" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "5" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "6" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "7" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "8" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "9" #'centaur-tabs-select-visible-tab
+   :desc "Select last tab"       "0" #'centaur-tabs-select-end-tab
+   ))
+#+end_src
+
+*** Company
+
+Make aborting completions less annoying.
+The ~evil-normal-state-entry-hook~ is triggered when the child frame opens to
+describe the selected element (with ~+childframe~), so it can't be used here.
+#+begin_src elisp
+(after! company
+  (add-hook 'evil-insert-state-exit-hook #'company-abort))
+#+end_src
+
 *** Ediff
+
 Automatically kill unmodified buffers at the end of an ~ediff~ session.
 In merge jobs, buffer C is never deleted. However, the side effect of using this
 function is that you may not be able to compare the same buffer in two separate
@@ -1079,6 +1130,7 @@ Customize default doom-theme faces for ~ediff~.
 #+end_src
 
 *** Evil
+
 Customize general evil options.
 #+begin_src elisp
 (setq evil-want-fine-undo t     ; By default while in insert all changes are one big blob. Be more granular
@@ -1210,6 +1262,7 @@ Add the missing arrow-key variants of the window navigation commands.
 #+end_src
 
 *** Evil goggles
+
 Customize evil-goggles visual hints.
 #+begin_src elisp
 (use-package! evil-goggles
@@ -1224,6 +1277,7 @@ Customize evil-goggles visual hints.
 #+end_src
 
 *** Flyspell
+
 Provide language cycling.
 #+begin_src elisp
 (defvar-local lang-ring nil
@@ -1247,6 +1301,7 @@ Provide language cycling.
 #+end_src
 
 *** Format
+
 Override format-on-save default enabled modes to add emacs-lisp-mode.
 #+begin_src elisp
 (setq +format-on-save-enabled-modes
@@ -1283,6 +1338,7 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+end_src
 
 *** Ivy
+
 Enable Ivy buffer previews. This only applies to workspace buffer switching,
 as it seems that previewing buffers from other workspaces adds them to the
 current workspace, which is totally unwanted behavior.
@@ -1530,16 +1586,6 @@ Customize bindings.
     (kbd "<S-return>") #'treemacs-visit-node-nofocus
     (kbd "<M-return>") #'treemacs-peek)
   (map! :map treemacs-mode-map "d" nil "m" nil))
-#+end_src
-
-*** Undo tree
-Customize undo-tree visualizer.
-#+begin_src elisp
-(use-package! undo-tree
-  :config
-  (setq undo-tree-visualizer-diff nil)
-  :bind (:map evil-normal-state-map
-         ("U" . undo-tree-visualize)))
 #+end_src
 
 *** Vterm
