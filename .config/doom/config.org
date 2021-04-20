@@ -1184,6 +1184,178 @@ Configure archiving behavior.
         org-export-with-archived-trees nil))
 #+end_src
 
+**** TODO Agenda
+
+Define default span and starting day for daily/weekly agenda.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-files (list org-directory)
+        org-agenda-span 'week
+        org-agenda-start-on-weekday 1
+        org-agenda-start-day nil))
+#+end_src
+
+Show blocked tasks with the dimmed face, customized.
+These are usually projects and are useful to provide context in the backlog.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-dim-blocked-tasks 't)
+  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171" )))
+#+end_src
+
+Add extra files to agenda text search commands.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-text-search-extra-files
+        (list (concat doom-private-dir "config.org"))))
+#+end_src
+
+Configure default sorting.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-up)
+          (todo category-up priority-down)
+          (tags category-up priority-down)
+          (search category-up))))
+#+end_src
+
+
+***** Diary
+
+Configure diary/agenda integration.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-include-diary nil
+        org-agenda-diary-file (concat org-directory "life.org")))
+#+end_src
+
+***** Filtering
+
+Define some custom filters.
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-filter-by-category (category exclude)
+    "Filter lines in the agenda buffer that have the given category.
+With a `\\[universal-argument]' prefix argument, exclude the lines of that category.
+When there is already a (non-excluding) category filter in place, this command removes the filter."
+    (interactive "P")
+    (if (and org-agenda-filtered-by-category
+             org-agenda-category-filter)
+        (org-agenda-filter-show-all-cat)
+      (cond
+       ((and category exclude)
+        (org-agenda-filter-apply
+         (push (concat "-" category) org-agenda-category-filter) 'category))
+       (category
+        (org-agenda-filter-apply
+         (setq org-agenda-category-filter
+               (list (concat "+" category)))
+         'category)))))
+
+  (defun +org-agenda-filter-astral ()
+    "Remove entries with the Astral category from the agenda."
+    (interactive)
+    (if org-agenda-category-filter
+        (org-agenda-filter-show-all-cat)
+      (+org-agenda-filter-by-category "Astral" 't))))
+#+end_src
+
+***** Appearance
+
+Configure prefix.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-17:c%?-12t% s")
+          (todo . " %i %-17:c")
+          (tags . " %i %-17:c")
+          (search . " %i %-17:c"))))
+#+end_src
+
+Configure time grid.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          "......" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
+#+end_src
+
+***** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! evil-org-agenda
+  (map! :map evil-org-agenda-mode-map
+        ;; Avoid spurious bindings kicking in with ESC
+        :g [escape]   #'transient-noop
+        ;; This is more consistent for me
+        :m [C-return] #'org-agenda-goto
+        :m "C-RET"    #'org-agenda-goto
+        :m [S-return] #'org-agenda-recenter
+        :m "S-RET"    #'org-agenda-recenter
+        :m [M-return] #'org-agenda-tree-to-indirect-buffer
+        :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
+
+        ;; Add equivalence for org-mode bindings (HJKL equivalents)
+        :m "C-M-k"    #'org-agenda-priority-up
+        :m "C-M-j"    #'org-agenda-priority-down
+        :m "C-M-h"    #'org-agenda-do-date-earlier
+        :m "C-M-l"    #'org-agenda-do-date-later
+        :m "C-M-S-h"  #'org-agenda-todo-previousset
+        :m "C-M-S-l"  #'org-agenda-todo-nextset
+
+        ;; Bind filter commands to 'f' prefix
+        :m "ff"       #'org-agenda-filter
+        :m "f^"       #'org-agenda-filter-by-top-headline
+        :m "fc"       #'org-agenda-filter-by-category
+        :m "fe"       #'org-agenda-filter-by-effort
+        :m "fr"       #'org-agenda-filter-by-regexp
+        :m "ft"       #'org-agenda-filter-by-tag
+        :m "fl"       #'org-agenda-limit-interactively
+        :m "fA"       #'+org-agenda-filter-astral
+        :m "F"        #'org-agenda-filter-remove-all
+        :m "s^"       nil
+        :m "sc"       nil
+        :m "se"       nil
+        :m "sr"       nil
+        :m "st"       nil
+        :m "ss"       nil
+
+        ;; Bind "show" commands to 's' prefix
+        :m "sh"       #'org-habit-toggle-display-in-agenda
+        :m "sH"       #'org-agenda-holidays
+        :m "sm"       #'org-agenda-phases-of-moon
+        :m "ss"       #'org-agenda-sunrise-sunset
+        :m "st"       #'org-agenda-show-tags
+        :m "sd"       #'org-agenda-convert-date
+        :m "gh"       nil
+        :m "gm"       nil
+        :m "gs"       nil
+        :m "gt"       nil
+        :m "gC"       nil
+
+        ;; Bind additional commands
+        :m "S"        #'org-save-all-org-buffers
+        :m "M"        #'org-agenda-bulk-toggle-all
+        :m "D"        #'org-agenda-archive-default-with-confirmation
+        :m "T"        #'org-agenda-todo-nextset
+        :m "cd"       #'org-agenda-date-prompt
+        :m ">"        #'org-agenda-remove-restriction-lock
+
+        :map org-agenda-mode-map
+        ;; Unbind obsolete and/or misleading bindings
+        :m "C-SPC"    nil
+        :m "o"        #'org-agenda-open-link
+
+        ;; Bind missing agenda-equivalent of frequent org commands
+        :localleader
+        "a"           #'org-attach
+        "p"           #'org-agenda-priority))
+#+end_src
 **** TODO Chef
 
 I *need* this in my life. It take a URL to a recipe from a common site, and
