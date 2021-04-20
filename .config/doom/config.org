@@ -1,11 +1,12 @@
 #+title: Doom Emacs Configuration
 #+author: Stéphane Gleizes
-#+startup: fold
+#+startup: overview
 #+property: header-args:elisp :tangle yes :cache yes :results silent :comments link
 #+property: header-args :tangle no :results silent
 
 * System setup
 ** Systemd daemons
+
 To avoid the loads of issues arising when using a single ~emacs~ daemon for both
 terminal and graphical frames, I decided to use dedicated daemons for each type
 of frame.
@@ -57,6 +58,7 @@ systemctl --user enable --now emacs.target
 #+end_src
 
 ** Desktop launcher
+
 Since I don't want a new graphical frame to be created every time a file is
 opened, I wrote this launcher script to wrap ~emacsclient~:
 #+begin_src sh :tangle ~/.local/bin/emacs-xclient :tangle-mode (identity #o755)
@@ -115,6 +117,7 @@ Type=Application
 #+end_src
 
 ** Ediff launcher
+
 Add another launcher script to start an ~ediff~ session in a new graphical frame.
 
 Note that it depends on a ~+workspace/rename-frame~ function that automatically
@@ -174,6 +177,7 @@ fi
 #+end_src
 
 * General configuration
+
 Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
 for more info).
 #+begin_src elisp :comments no
@@ -181,6 +185,7 @@ for more info).
 #+end_src
 
 ** Personal information
+
 Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 #+begin_src elisp
@@ -193,6 +198,7 @@ clients, file templates and snippets.
 :PROPERTIES:
 :header-args:elisp: :tangle no
 :END:
+
 Doom has this lovely /modular configuration base/ that takes a lot of work out
 of configuring Emacs. Each module (when enabled) can provide a list of packages
 to install (on ~doom sync~) and configuration to be applied. The modules can
@@ -201,8 +207,9 @@ also have flags applied to tweak their behavior.
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#modules][doom documentation]] and the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][modules appendix]].
 
 **** Structure
+
 #+name: init.el
-#+begin_src elisp :tangle "init.el" :noweb no-export :comments none
+#+begin_src elisp :tangle "init.el" :noweb no-export :comments no
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load in.
@@ -250,6 +257,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+end_src
 
 **** Configuration
+
 #+name: doom-config
 #+begin_src elisp
 literate
@@ -264,6 +272,7 @@ literate
 #+end_src
 
 **** Completion
+
 #+name: doom-completion
 #+begin_src elisp
 (company +childframe)         ; the ultimate code completion backend
@@ -273,6 +282,7 @@ literate
 #+end_src
 
 **** Interface
+
 #+name: doom-ui
 #+begin_src elisp
 ;;deft                        ; notational velocity for Emacs
@@ -301,6 +311,7 @@ workspaces                    ; tab emulation, persistence & separate workspaces
 #+end_src
 
 **** Editor
+
 #+name: doom-editor
 #+begin_src elisp
 (evil +everywhere)            ; come to the dark side, we have cookies
@@ -318,6 +329,7 @@ snippets                      ; my elves. They type so I don't have to
 #+end_src
 
 **** Builtins
+
 #+name: doom-emacs
 #+begin_src elisp
 (dired +icons)                ; making dired pretty [functional]
@@ -328,6 +340,7 @@ vc                            ; version-control and Emacs, sitting in a tree
 #+end_src
 
 **** Terminal
+
 #+name: doom-term
 #+begin_src elisp
 ;;eshell                      ; the elisp shell that works everywhere
@@ -337,6 +350,7 @@ vterm                         ; the best terminal emulation in Emacs
 #+end_src
 
 **** Checkers
+
 #+name: doom-checkers
 #+begin_src elisp
 syntax                        ; tasing you for every semicolon you forget
@@ -345,6 +359,7 @@ syntax                        ; tasing you for every semicolon you forget
 #+end_src
 
 **** Tools
+
 #+name: doom-tools
 #+begin_src elisp
 ;;ansible                     ; a crucible for infrastructure as code
@@ -370,6 +385,7 @@ taskrunner                    ; taskrunner for all your projects
 #+end_src
 
 **** System
+
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
@@ -377,6 +393,7 @@ taskrunner                    ; taskrunner for all your projects
 #+end_src
 
 **** Language support
+
 We can be rather liberal with enabling support for languages as the associated
 packages/configuration are (usually) only loaded when first opening an
 associated file.
@@ -443,6 +460,7 @@ yaml                          ; JSON, but readable
 #+end_src
 
 **** Applications
+
 #+name: doom-email
 #+begin_src elisp
 ;;(mu4e +org +gmail)
@@ -452,14 +470,15 @@ yaml                          ; JSON, but readable
 
 #+name: doom-app
 #+begin_src elisp
-;;calendar
+calendar
 ;;irc                        ; how neckbeards socialize
-;;(rss +org)                 ; emacs as an RSS reader
+(rss +org)                 ; emacs as an RSS reader
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
 *** Appearance
 **** Fonts
+
 Doom exposes five (optional) variables for controlling fonts in Doom, they are:
 + doom-font
 + doom-variable-pitch-font
@@ -476,6 +495,7 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
 #+end_src
 
 **** Theme and modeline
+
 #+begin_src elisp
 (setq doom-theme 'doom-tomorrow-night)
 (delq! t custom-theme-load-path) ; Remove default emacs theme from search path
@@ -497,6 +517,7 @@ Do not show encoding in the modeline if the value is the default =LF UTF-8=.
 #+end_src
 
 **** Dashboard
+
 Customize the splash image of the doom dashboard.
 #+begin_src elisp
 (setq fancy-splash-image nil
@@ -513,6 +534,7 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 #+end_src
 
 *** Terminal
+
 Improve terminal integration. Taken from the ~tty~ module.
 #+begin_src elisp
 ;; Some terminals offer two different cursors: a "visible" static cursor and a
@@ -552,6 +574,7 @@ if in terminal."
 #+end_src
 
 *** Workspaces
+
 Add an API to create default workspace names for specific applications.
 #+begin_src elisp
 (defun +workspace--generate-named-id (&optional prefix)
@@ -569,6 +592,7 @@ Add an API to create default workspace names for specific applications.
 
 ** Better defaults
 *** General
+
 Tweak various general settings to more opinionated values.
 #+begin_src elisp
 (setq-default delete-by-moving-to-trash t  ; Delete files to trash
@@ -587,6 +611,7 @@ Tweak various general settings to more opinionated values.
 #+end_src
 
 *** Indentation
+
 Set default values for the various indentation settings.
 Even though ~dtrt-indent~ will properly update these by analyzing existing
 files, it is still necessary to set the desired value for new files.
@@ -622,6 +647,7 @@ files, it is still necessary to set the desired value for new files.
 #+end_src
 
 *** Frames
+
 Automatically maximize and focus new graphical frames.
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -633,6 +659,7 @@ Automatically maximize and focus new graphical frames.
 #+end_src
 
 *** Windows
+
 Focus the new window on vertical/horizontal splits.
 #+begin_src elisp
 (setq evil-vsplit-window-right t
@@ -647,6 +674,7 @@ Prompt for the workspace buffer to show on new window.
 #+end_src
 
 *** Line numbers
+
 Relative line numbers are fantastic for knowing how far away line numbers are,
 then =12 <UP>= gets you exactly where you think.
 Sadly, due to the (very) significant performance hit (mainly on scrolling),
@@ -657,141 +685,12 @@ they are disabled by default.
 #+end_src
 
 * Package configuration
+
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#configuring-doom][configuration instructions]] from the doom documentation.
 
-** General packages
-*** Ace window
-#+begin_src elisp
-(after! ace-window
-  (map! :leader :prefix "w"
-        "a" #'ace-window))
-#+end_src
-
-*** Better jumper
-Bind better-jumper functions to a doom-like alternative.
-#+begin_src elisp
-(after! better-jumper
-  (map!
-   :n "g[" #'better-jumper-jump-backward
-   :n "g]" #'better-jumper-jump-forward))
-#+end_src
-
-*** Centaur tabs
-Configure centaur-tabs appearance and behavior. Define rules for buffer groups
-and restrict buffer list to workspace buffers.
-#+begin_src elisp
-(use-package! centaur-tabs
-  :config
-  (setq centaur-tabs-style "bar"
-        centaur-tabs-height 32
-        centaur-tabs-gray-out-icons nil
-        centaur-tabs-set-bar 'under
-        x-underline-at-descent-line t)
-  (centaur-tabs-headline-match)
-  ;; Override rules for grouping buffers.
-  (defun centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
-
-Group centaur-tabs with mode if buffer is derived from `vterm-mode'
-`dired-mode' `org-mode' `magit-mode'.
-All buffer name start with * will group to \"Emacs\".
-Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
-      ((derived-mode-p 'term-mode 'vterm-mode)
-       "Term")
-      ;; ((derived-mode-p 'prog-mode)
-      ;;  "Coding")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
-       "Org")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-  ;; Override centaur tabs to use workspace buffers as input list.
-  (defun centaur-tabs-buffer-list ()
-    "Return the list of buffers to show in tabs.
-Exclude buffers whose name starts with a space, when they are not
-visiting a file.  The current buffer is always included."
-    (centaur-tabs-filter-out
-     'centaur-tabs-hide-tab-cached
-     (delq nil
-           (cl-mapcar #'(lambda (b)
-                          (cond
-                           ;; Always include the current buffer.
-                           ((eq (current-buffer) b) b)
-                           ((buffer-file-name b) b)
-                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-                           ((buffer-live-p b) b)))
-                      (doom-buffer-list)))))
-  :hook
-  (doom-dashboard-mode . centaur-tabs-local-mode)
-  (term-mode . centaur-tabs-local-mode)
-  (vterm-mode . centaur-tabs-local-mode))
-#+end_src
-
-Provide additional bindings for centaur-tabs functions.
-#+begin_src elisp
-(map!
- ;; Rebind buffer switching to tab switching commands.
- :g [remap previous-buffer] #'centaur-tabs-backward
- :g [remap next-buffer]     #'centaur-tabs-forward
- ;; Tab manipulation
- :g "C-<next>"    #'centaur-tabs-forward
- :g "C-<prior>"   #'centaur-tabs-backward
- :g "C-M-<next>"  #'centaur-tabs-forward-group
- :g "C-M-<prior>" #'centaur-tabs-backward-group
- :n "gt"   #'centaur-tabs-forward
- :n "gb"   #'centaur-tabs-backward
- :n "gT"   #'centaur-tabs-forward-group
- :n "gB"   #'centaur-tabs-backward-group
- :n "]B"   #'centaur-tabs-forward-group
- :n "[B"   #'centaur-tabs-backward-group
- :g "C-S-<prior>" #'centaur-tabs-move-current-tab-to-left
- :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
-
- :leader :prefix "b"
- ;; Buffer group navigation
- :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
- :desc "Next buffer group"     "L" #'centaur-tabs-forward-group
- :desc "Previous buffer group" "H" #'centaur-tabs-backward-group
- ;; Tab movement
- :desc "Move tab right"  "l" #'centaur-tabs-move-current-tab-to-right
- :desc "Move tab left"   "h" #'centaur-tabs-move-current-tab-to-left
- ;; Numbered buffer navigation
- :desc "Select tab 1..9" "1" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "2" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "3" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "4" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "5" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "6" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "7" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "8" #'centaur-tabs-select-visible-tab
- :desc "Select tab 1..9" "9" #'centaur-tabs-select-visible-tab
- :desc "Select last tab" "0" #'centaur-tabs-select-end-tab
- )
-#+end_src
-
-*** Company
-Make aborting completions less annoying.
-The ~evil-normal-state-entry-hook~ is triggered when the child frame opens to
-describe the selected element (with ~+childframe~), so it can't be used here.
-#+begin_src elisp
-(after! company
-  (add-hook 'evil-insert-state-exit-hook #'company-abort))
-#+end_src
-
+** Builtin packages
 *** Dired
+
 Customize general dired appearance.
 #+begin_src elisp
 (use-package! dired
@@ -941,7 +840,7 @@ r,/ : /
       (dired new-path))))
 #+end_src
 
-Customize default bindings. 
+Customize default bindings.
 #+begin_src elisp
 (map! :after dired
       :map dired-mode-map
@@ -954,6 +853,7 @@ Customize default bindings.
       :n "M-RET"      #'dired-view-file
       ;; Use TAB to fold/unfold as in other modes.
       :n "TAB"        #'dired-hide-subdir
+      :n "<tab>"      #'dired-hide-subdir
       :n "<backtab>"  #'dired-hide-all
       ;; Miscellaneous
       :n "_"          #'dired-undo
@@ -973,7 +873,1145 @@ Customize default bindings.
       "H"             #'dired-omit-mode)
 #+end_src
 
+*** Org
+
+Change the default org directory.
+#+begin_src elisp
+(setq org-directory "~/Notes/")
+#+end_src
+
+Configure region behavior for org commands.
+#+begin_src elisp
+(after! org
+  (setq org-loop-over-headlines-in-active-region 'start-level
+        org-agenda-loop-over-headlines-in-active-region 't))
+#+end_src
+
+**** Document Structure
+
+Configure the behavior of M-RET and friends, and ensure that headings are terminated by blank lines.
+#+begin_src elisp
+(after! org
+  (setq org-insert-heading-respect-content nil
+        org-M-RET-may-split-line '((default . t))
+        org-blank-before-new-entry
+        '((heading . always)
+          (plain-list-item . nil))))
+#+end_src
+
+Patch doom's org-insert-item variant to better respect blank settings.
+#+begin_src elisp
+(after! org
+  (defun +org--insert-item (direction)
+    (let ((context (org-element-lineage
+                    (org-element-context)
+                    '(table table-row headline inlinetask item plain-list)
+                    t)))
+      (pcase (org-element-type context)
+        ;; Add a new list item (carrying over checkboxes if necessary)
+        ((or `item `plain-list)
+         ;; Position determines where org-insert-todo-heading and org-insert-item
+         ;; insert the new list item.
+         (if (eq direction 'above)
+             (org-beginning-of-item)
+           (org-end-of-item)
+           (backward-char))
+         (org-insert-item (org-element-property :checkbox context))
+         ;; Handle edge case where current item is empty and bottom of list is
+         ;; flush against a new heading.
+         (when (and (eq direction 'below)
+                    (eq (org-element-property :contents-begin context)
+                        (org-element-property :contents-end context)))
+           (org-end-of-item)
+           (org-end-of-line)))
+
+        ;; Add a new table row
+        ((or `table `table-row)
+         (pcase direction
+           ('below (save-excursion (org-table-insert-row t))
+                   (org-table-next-row))
+           ('above (save-excursion (org-shiftmetadown))
+                   (+org/table-previous-row))))
+
+        ;; Otherwise, add a new heading, carrying over any todo state, if
+        ;; necessary.
+        (_
+         (let ((level (or (org-current-level) 1)))
+           ;; I intentionally avoid `org-insert-heading' and the like because they
+           ;; impose unpredictable whitespace rules depending on the cursor
+           ;; position. It's simpler to express this command's responsibility at a
+           ;; lower level than work around all the quirks in org's API.
+           (pcase direction
+             (`below
+              (let (org-insert-heading-respect-content
+                    (blank? (org--blank-before-heading-p)))
+                (goto-char (line-end-position))
+                (org-end-of-subtree)
+                ;; FIXME: Respect blank settings, at least when inserting headlines below.
+                (insert "\n")
+                (unless (and blank? (org-previous-line-empty-p))
+                  (org-N-empty-lines-before-current (if blank? 1 0)))
+                (insert (make-string level ?*) " ")))
+             (`above
+              (org-back-to-heading)
+              (insert (make-string level ?*) " ")
+              (save-excursion (insert "\n"))))
+           (when-let* ((todo-keyword (org-element-property :todo-keyword context))
+                       (todo-type    (org-element-property :todo-type context)))
+             (org-todo
+              (cond ((eq todo-type 'done)
+                     ;; Doesn't make sense to create more "DONE" headings
+                     (car (+org-get-todo-keywords-for todo-keyword)))
+                    (todo-keyword)
+                    ('todo)))))))
+
+      (when (org-invisible-p)
+        (org-show-hidden-entry))
+      (when (and (bound-and-true-p evil-local-mode)
+                 (not (evil-emacs-state-p)))
+        (evil-insert 1)))))
+#+end_src
+
+Add helper function to help with blank line consistency.
+#+begin_src elisp
+(defun +org/fix-blank-lines (&optional prefix)
+  "Ensure that blank lines exist between headings and between headings and their contents.
+With prefix, operate on whole buffer. Ensures that blank lines
+exist after each headings's drawers."
+  (interactive "P")
+  (org-map-entries (lambda ()
+                     (org-with-wide-buffer
+                      ;; `org-map-entries' narrows the buffer, which prevents us from seeing
+                      ;; newlines before the current heading, so we do this part widened.
+                      (when (and (forward-line -1) (not (org-at-heading-p)) (forward-line))
+                        (while (not (looking-back "\n\n" nil))
+                          ;; Insert blank lines before heading.
+                          (insert "\n"))))
+                     (let ((end (org-entry-end-position)))
+                       ;; Insert blank lines before entry content
+                       (forward-line)
+                       (while (and (org-at-planning-p)
+                                   (< (point) (point-max)))
+                         ;; Skip planning lines
+                         (forward-line))
+                       (while (re-search-forward org-drawer-regexp end t)
+                         ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
+                         ;; for some reason it doesn't work correctly when operating on hidden text.
+                         ;; This works, taken from `org-agenda-get-some-entry-text'.
+                         (re-search-forward "^[ \t]*:END:.*\n?" end t)
+                         (goto-char (match-end 0)))
+                       (unless (or (= (point) (point-max))
+                                   (org-at-heading-p)
+                                   (looking-at-p "\n"))
+                         (insert "\n"))))
+                   t (if prefix
+                         nil
+                       'tree)))
+#+end_src
+
+**** TODO-items & Checkboxes
+
+Define todo workflows and associated faces.
+Use ~#+TODO~ (or ~#+SEQ_TODO~ / ~#+TYP_TODO~) to define per-file keywords
+#+begin_src elisp
+(after! org
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"          ; A task that needs doing & is ready to do
+           "ACTV(a!)"         ; A task that is active/in progress
+           "WAIT(w@/!)"       ; A task that is waiting on something external
+           "HOLD(h@/!)"       ; A task that is paused/on hold because of me
+           "|"
+           "DONE(d!/!)")      ; Task successfully completed
+          (sequence
+           "IDEA(i)"          ; A captured task or project that must be processed and is not yet ready to do
+           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in the main backlog
+           "PROJ(p)"          ; A project, which usually contains other tasks/subprojects
+           "|"
+           "DONEPROJ(d)")
+          (sequence
+           "|"
+           "CANCELED(c@/!)")) ; Task was aborted or is no longer applicable
+        org-todo-keyword-faces
+        '(("ACTV" . +org-todo-active)
+          ("WAIT" . +org-todo-onhold)
+          ("HOLD" . +org-todo-onhold)
+          ("SMDY" . +org-todo-onhold)
+          ("IDEA" . +org-todo-idea)
+          ("PROJ" . +org-todo-project)))
+  (custom-declare-face '+org-todo-idea '((t (:inherit (bold org-drawer org-todo)))) "")
+  (custom-set-faces!
+    '(+org-todo-active :inherit (bold font-lock-constant-face org-todo))
+    '(+org-todo-onhold :inherit (bold warning org-todo))
+    '(+org-todo-idea :inherit (bold org-formula org-todo))
+    '(+org-todo-project :inherit (bold org-priority org-todo))))
+#+end_src
+
+Prefer using the ~LOGBOOK~ drawer rather than a CLOSED: entry (~org-log-done~).
+#+begin_src elisp
+(after! org
+  (setq org-log-done nil
+        org-log-repeat 'time        ; Ensure that a timestamp is logged when repeating
+        org-log-redeadline 'note    ; Ask to record a note when rescheduling a deadline
+        org-todo-repeat-to-state 't ; Repeat tasks to the previous state
+        org-log-into-drawer "LOGBOOK"))
+#+end_src
+
+Block headings from changing to DONE if they have TODO headings that are not DONE.
+#+begin_src elisp
+(after! org
+  (setq org-enforce-todo-dependencies 't
+        org-enforce-todo-checkbox-dependencies nil))
+#+end_src
+
+Set statistics cookies to be recursive by default.
+Set the ~COOKIE_DATA~ property to ~todo~ or ~checkbox~ to resolve conflicts, and
+add ~recursive~ to keep the recursive behavior.
+#+begin_src elisp
+(after! org
+  (setq org-hierarchical-todo-statistics nil
+        org-checkbox-hierarchical-statistics nil))
+#+end_src
+
+Automatically change TODO item with a stats cookie to DONE when children are done.
+Unfortunately it does not appear to work with checkboxes.
+It also inconveniently switches headlines with no subtasks to DONE.
+Kept for reference, but is probably a bad idea.
+#+begin_src elisp
+;; (after! org
+;;   (defun org-todo-done-when-stats-full (n-done n-not-done)
+;;     "Switch entry to DONE when all subentries are done."
+;;     (let (org-log-done
+;;           org-log-states  ; turn off logging
+;;           (state (org-get-todo-state)))
+;;       (when (= n-not-done 0)
+;;         (cond ((equal state "PROJ")
+;;                (org-todo "DONEPROJ"))
+;;               ((not (equal state "DONEPROJ"))
+;;                (org-todo "DONE"))
+;;               ))))
+;;   (add-hook! 'org-after-todo-statistics-hook #'org-todo-done-when-stats-full))
+#+end_src
+
+**** Tags
+
+Configure default tags behavior and appearance.
+#+begin_src elisp
+(after! org
+  ;; Default list of toplevel tags.
+  ;; My org files redefine these tags for explicitness and might add their own specific tags.
+  (setq org-tag-alist
+        '((:startgrouptag . nil)
+          ("date"         . ?1)
+          (:grouptags     . nil)
+          ("event"        . ?e)
+          ("appointment"  . ?t)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("activity"     . ?2)
+          (:grouptags     . nil)
+          ("read"         . ?d)
+          ("listen"       . ?a)
+          ("watch"        . ?w)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("task"         . ?3)
+          (:grouptags     . nil)
+          ("issue"        . ?i)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("context"      . ?4)
+          (:grouptags     . nil)
+          ("@self"        . ?s)
+          ("@phone"       . ?p)
+          ("@computer"    . ?c)
+          ("@home"        . ?h)
+          ("@work"        . ?w)
+          ("@people"      . ?l)
+          ("{@.+}"        . ?@)
+          (:endgrouptag . nil))
+        org-tag-faces
+        ;; Teal/Blue version, matches org-formula
+        '(("date"        . (:foreground "LightSkyBlue" :weight bold))
+          ("activity"    . (:foreground "#b5bd68" :weight bold))
+          ("task"        . (:foreground "#cc6666" :weight bold))
+          ("context"     . (:foreground "#8abeb7" :weight bold))
+          ;; Date tags
+          ("event"       . (:foreground "LightSkyBlue" :weight bold))
+          ("appointment" . (:foreground "#f0c674" :weight bold))
+          ;; Activity tags
+          ("read"        . (:foreground "#b5bd68" :weight bold))
+          ("listen"      . (:foreground "#b5bd68" :weight bold))
+          ("watch"       . (:foreground "#b5bd68" :weight bold))
+          ;; Task tags
+          ("issue"       . (:foreground "#cc6666" :weight bold))
+          ("bug"         . (:foreground "#cc6666" :weight bold))
+          ("improvement" . (:foreground "#de935f" :weight bold))
+          ("feature"     . (:foreground "#b5bd68" :weight bold))
+          ;; Context tags
+          ("@self"       . (:foreground "#8abeb7" :weight bold))
+          ("@phone"      . (:foreground "#8abeb7" :weight bold))
+          ("@computer"   . (:foreground "#8abeb7" :weight bold))
+          ("@home"       . (:foreground "#8abeb7" :weight bold))
+          ("@work"       . (:foreground "#8abeb7" :weight bold))
+          ("@people"     . (:foreground "#8abeb7" :weight bold))
+          ("@errand"     . (:foreground "#8abeb7" :weight bold)))
+        org-tags-column -132
+        org-fast-tag-selection-single-key 't)
+  (custom-set-faces!
+    ;; '(org-tag :foreground "#717171" :weight normal)
+    ;; '(org-tag :foreground "#de935f" :weight normal)
+    '(org-tag :foreground "#8abeb7" :weight normal)
+    '(org-tag-group :foreground unspecified :weight unspecified)))
+#+end_src
+
+**** Dates & Times
+
+Configure org-habit.
+#+begin_src elisp
+(after! org
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-completed-glyph ?✔
+        org-habit-today-glyph ?!))
+#+end_src
+
+**** Refiling & Archiving
+
+Configure archiving behavior.
+#+begin_src elisp
+(after! org
+  (setq org-archive-location "archive/%s_archive::datetree/"
+        org-export-with-archived-trees nil))
+#+end_src
+
+**** TODO Agenda
+
+Define default span and starting day for daily/weekly agenda.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-files (list org-directory)
+        org-agenda-span 'week
+        org-agenda-start-on-weekday 1
+        org-agenda-start-day nil))
+#+end_src
+
+Show blocked tasks with the dimmed face, customized.
+These are usually projects and are useful to provide context in the backlog.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-dim-blocked-tasks 't)
+  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171" )))
+#+end_src
+
+Add extra files to agenda text search commands.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-text-search-extra-files
+        (list (concat doom-private-dir "config.org"))))
+#+end_src
+
+Configure default sorting.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-up)
+          (todo category-up priority-down)
+          (tags category-up priority-down)
+          (search category-up))))
+#+end_src
+
+
+***** Diary
+
+Configure diary/agenda integration.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-include-diary nil
+        org-agenda-diary-file (concat org-directory "life.org")))
+#+end_src
+
+***** Filtering
+
+Define some custom filters.
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-filter-by-category (category exclude)
+    "Filter lines in the agenda buffer that have the given category.
+With a `\\[universal-argument]' prefix argument, exclude the lines of that category.
+When there is already a (non-excluding) category filter in place, this command removes the filter."
+    (interactive "P")
+    (if (and org-agenda-filtered-by-category
+             org-agenda-category-filter)
+        (org-agenda-filter-show-all-cat)
+      (cond
+       ((and category exclude)
+        (org-agenda-filter-apply
+         (push (concat "-" category) org-agenda-category-filter) 'category))
+       (category
+        (org-agenda-filter-apply
+         (setq org-agenda-category-filter
+               (list (concat "+" category)))
+         'category)))))
+
+  (defun +org-agenda-filter-astral ()
+    "Remove entries with the Astral category from the agenda."
+    (interactive)
+    (if org-agenda-category-filter
+        (org-agenda-filter-show-all-cat)
+      (+org-agenda-filter-by-category "Astral" 't))))
+#+end_src
+
+***** Appearance
+
+Configure prefix.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-prefix-format
+        '((agenda . " %i %-17:c%?-12t% s")
+          (todo . " %i %-17:c")
+          (tags . " %i %-17:c")
+          (search . " %i %-17:c"))))
+#+end_src
+
+Configure time grid.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          "......" "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
+#+end_src
+
+***** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! evil-org-agenda
+  (map! :map evil-org-agenda-mode-map
+        ;; Avoid spurious bindings kicking in with ESC
+        :g [escape]   #'transient-noop
+        ;; This is more consistent for me
+        :m [C-return] #'org-agenda-goto
+        :m "C-RET"    #'org-agenda-goto
+        :m [S-return] #'org-agenda-recenter
+        :m "S-RET"    #'org-agenda-recenter
+        :m [M-return] #'org-agenda-tree-to-indirect-buffer
+        :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
+
+        ;; Add equivalence for org-mode bindings (HJKL equivalents)
+        :m "C-M-k"    #'org-agenda-priority-up
+        :m "C-M-j"    #'org-agenda-priority-down
+        :m "C-M-h"    #'org-agenda-do-date-earlier
+        :m "C-M-l"    #'org-agenda-do-date-later
+        :m "C-M-S-h"  #'org-agenda-todo-previousset
+        :m "C-M-S-l"  #'org-agenda-todo-nextset
+
+        ;; Bind filter commands to 'f' prefix
+        :m "ff"       #'org-agenda-filter
+        :m "f^"       #'org-agenda-filter-by-top-headline
+        :m "fc"       #'org-agenda-filter-by-category
+        :m "fe"       #'org-agenda-filter-by-effort
+        :m "fr"       #'org-agenda-filter-by-regexp
+        :m "ft"       #'org-agenda-filter-by-tag
+        :m "fl"       #'org-agenda-limit-interactively
+        :m "fA"       #'+org-agenda-filter-astral
+        :m "F"        #'org-agenda-filter-remove-all
+        :m "s^"       nil
+        :m "sc"       nil
+        :m "se"       nil
+        :m "sr"       nil
+        :m "st"       nil
+        :m "ss"       nil
+
+        ;; Bind "show" commands to 's' prefix
+        :m "sh"       #'org-habit-toggle-display-in-agenda
+        :m "sH"       #'org-agenda-holidays
+        :m "sm"       #'org-agenda-phases-of-moon
+        :m "ss"       #'org-agenda-sunrise-sunset
+        :m "st"       #'org-agenda-show-tags
+        :m "sd"       #'org-agenda-convert-date
+        :m "gh"       nil
+        :m "gm"       nil
+        :m "gs"       nil
+        :m "gt"       nil
+        :m "gC"       nil
+
+        ;; Bind additional commands
+        :m "S"        #'org-save-all-org-buffers
+        :m "M"        #'org-agenda-bulk-toggle-all
+        :m "D"        #'org-agenda-archive-default-with-confirmation
+        :m "T"        #'org-agenda-todo-nextset
+        :m "cd"       #'org-agenda-date-prompt
+        :m ">"        #'org-agenda-remove-restriction-lock
+
+        :map org-agenda-mode-map
+        ;; Unbind obsolete and/or misleading bindings
+        :m "C-SPC"    nil
+        :m "o"        #'org-agenda-open-link
+
+        ;; Bind missing agenda-equivalent of frequent org commands
+        :localleader
+        "a"           #'org-attach
+        "p"           #'org-agenda-priority))
+#+end_src
+**** TODO Chef
+
+I *need* this in my life. It take a URL to a recipe from a common site, and
+inserts an org-ified version at point. Isn't that just great.
+#+begin_src elisp
+;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
+#+end_src
+
+**** Appearance
+
+Customize org appearance.
+#+begin_src elisp
+(after! org
+  ;; Change the ellipsis to something prettier
+  (setq org-ellipsis " ▾"))
+#+end_src
+
+Customize org-superstar.
+#+begin_src elisp
+(after! org-superstar
+  ;; Make leading stars truly invisible, by rendering them as spaces.
+  (setq org-superstar-leading-bullet ?\s
+        org-superstar-leading-fallback ?\s
+        org-hide-leading-stars nil
+        ;; With org-indent this is also needed, otherwise the
+        ;; above has no effect while indent is enabled.
+        org-indent-mode-turns-on-hiding-stars nil)
+  ;; Stop cycling bullets to emphasize hierarchy of headlines.
+  (setq org-superstar-cycle-headline-bullets nil)
+  ;; Define custom bullets.
+  (setq org-superstar-headline-bullets-list
+        '(?◉ ?○ ?● ?○ ?● ?○ ?●)
+        ;; '(?◉ ?○ ?◈ ?✸ ?✿ ?✣ ?▷)
+        org-superstar-item-bullet-alist
+        '((42 . ?•)
+          (43 . ?➤)
+          (45 . ?–)))
+  ;; Disable list syntax checking for files with lots of list items.
+  (defun org-superstar-auto-lightweight-mode ()
+    "Start org-superstar differently depending on the number of lists items."
+    (let ((list-items
+           (count-matches "^[ \t]*?\\([+-]\\|[ \t]\\*\\)"
+                          (point-min) (point-max))))
+      (unless (< list-items 200)
+        (org-superstar-toggle-lightweight-lists)))
+    (org-superstar-mode))
+
+  (remove-hook! org-mode #'org-superstar-mode)
+  (add-hook! org-mode #'org-superstar-auto-lightweight-mode))
+#+end_src
+
+Customize org-fancy-priorities.
+Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
+#+begin_src elisp :tangle "packages.el" :comments no
+(package! org-fancy-priorities :disable t)
+#+end_src
+#+begin_src elisp
+;; (after! org-fancy-priorities
+;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+;;         org-priority-faces
+;;         '((65 . error)
+;;           (66 . warning)
+;;           (67 . success)
+;;           (68 . success)))
+#+end_src
+
+**** Bindings
+
+Fix ~evil-org-edit-src-exit~ remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(after! evil-org
+  (defun evil-org-edit-src-exit ()
+    "Fallback to `evil-edit-src-exit'."
+    (interactive)
+    (mapc #'call-interactively '(org-edit-src-exit))))
+#+end_src
+
+Fix ~evil-save-modified-and-close~ for org-mode temporary buffers.
+#+begin_src elisp
+(after! evil-org
+  (evil-define-command evil-save-modified-and-close (file &optional bang)
+    "Saves the current buffer and closes the window."
+    :repeat nil
+    (interactive "<f><!>")
+    (if (and (local-variable-p 'org-finish-function)
+             (fboundp org-finish-function))
+        (funcall org-finish-function)
+      (when (buffer-modified-p)
+        (evil-write nil nil nil file bang))
+      (evil-quit))))
+#+end_src
+
+Restore original TAB behavior to cycle through current subtree recursively.
+#+begin_src elisp
+;; (after! evil-org
+;;   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! evil-org
+  (map! :map evil-org-mode-map
+        ;; Prefer smart beginning of line to digit argument? (overridden)
+        :m "0"                               #'evil-org-beginning-of-line
+        ;; Add quick motion bindings
+        :ni "C-k"     (cmds! (org-at-table-p) #'+org/table-previous-row
+                             (bound-and-true-p evil-insert-state-minor-mode) #'evil-previous-line
+                             #'org-backward-paragraph)
+        :ni "C-j"     (cmds! (org-at-table-p) #'org-table-next-row
+                             (bound-and-true-p evil-insert-state-minor-mode) #'evil-next-line
+                             #'org-forward-paragraph)
+        :ni "C-h"     (cmds! (org-at-table-p) #'org-table-previous-field
+                             (bound-and-true-p evil-insert-state-minor-mode) #'left-char
+                             #'evil-backward-word-begin)
+        :ni "C-l"     (cmds! (org-at-table-p) #'org-table-next-field
+                             (bound-and-true-p evil-insert-state-minor-mode) #'right-char
+                             #'evil-forward-word-begin)
+        ;; Prefer visible headings to same-level
+        :ni "C-S-k"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-backward-paragraph
+                             #'org-backward-heading-same-level) ; org-previous-visible-heading)
+        :ni "C-S-j"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-forward-paragraph
+                             #'org-forward-heading-same-level) ; org-next-visible-heading)
+        ;; Allow subtree traversal
+        :ni "C-S-h"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'evil-backward-word-begin
+                             #'org-up-element)
+        :ni "C-S-l"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'evil-forward-word-begin
+                             #'org-down-element)
+
+        ;; Evil replacements
+        :g "C-M-k"           #'org-shiftup
+        :g "C-M-j"           #'org-shiftdown
+        :g "C-M-h"           #'org-shiftleft
+        :g "C-M-l"           #'org-shiftright
+        :g "C-M-S-k"         #'org-shiftcontrolup
+        :g "C-M-S-j"         #'org-shiftcontroldown
+        :g "C-M-S-h"         #'org-shiftcontrolleft
+        :g "C-M-S-l"         #'org-shiftcontrolright
+
+        :map org-mode-map
+        ;; This looks like a fix for doom
+        :n [S-return]        #'+org/shift-return
+        :n "S-RET"           #'+org/shift-return
+
+        ;; M-RET difficult choices
+        ;; - normal-mode: org-ctrl-c-ret
+        ;;   Always insert headings and not list items: straight to the point. Useful to split headings.
+        ;;   More appropriate behavior in tables (or I don't understand how wrapping works)
+        ;; - insert-mode: org-meta-return
+        ;;   More appropriate to break an item/heading in two, supports the respect-content setting
+        :gn [M-return]       #'org-ctrl-c-ret
+        :gn "M-RET"          #'org-ctrl-c-ret
+        :i [M-return]        #'org-meta-return
+        :i "M-RET"           #'org-meta-return
+        ;; This is more consistent for me
+        :g [M-S-return]      #'org-insert-subheading
+        :g "M-S-RET"         #'org-insert-subheading
+        :g [C-M-return]      #'org-insert-todo-heading
+        :g "C-M-RET"         #'org-insert-todo-heading
+        :g [C-M-S-return]    #'org-insert-todo-subheading
+        :g "C-M-S-RET"       #'org-insert-todo-subheading
+
+        ;; Override +fold/close-all, it seems broken in org-mode
+        :m "<backtab>"       #'org-shifttab
+        :m "C-<iso-lefttab>" #'org-ctrl-c-tab
+
+        (:localleader
+         "SPC"               #'+org/fix-blank-lines
+         "D"                 #'org-insert-drawer
+         "H"                 #'org-list-make-subtree
+         "O"                 #'org-property-action
+         "X"                 #'org-toggle-radio-button
+         (:prefix ("s" . "Tree/Subtree")
+          "A"                #'org-archive-to-archive-sibling
+          "o"                #'org-toggle-ordered-property)))
+  ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
+  (define-key!
+    [remap org-set-tags-command] nil))
+#+end_src
+
+**** Performance
+
+Disable flyspell by default in org-mode (laggy).
+#+begin_src elisp
+(remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Remove the tangle-on-save hook and add a manual binding.
+#+begin_src elisp
+(remove-hook! org-mode #'+literate-enable-recompile-h)
+(defun +literate-recompile ()
+  "Recompile literate config to `doom-private-dir"
+  (interactive)
+  (+literate-recompile-maybe-h))
+(map! :map org-mode-map
+      :localleader
+      "R" #'+literate-recompile)
+#+end_src
+
+Improve org performance by removing some candy.
+See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
+#+begin_src elisp
+(after! org
+  (setq org-fontify-whole-heading-line nil
+        org-fontify-quote-and-verse-blocks nil))
+#+end_src
+
+*** Undo tree
+
+Customize undo-tree visualizer.
+#+begin_src elisp
+(use-package! undo-tree
+  :config
+  (setq undo-tree-visualizer-diff nil)
+  :bind (:map evil-normal-state-map
+         ("U" . undo-tree-visualize)))
+#+end_src
+
+** General packages
+*** Ace window
+
+#+begin_src elisp
+(after! ace-window
+  (map! :leader :prefix "w"
+        "a" #'ace-window))
+#+end_src
+
+*** Better jumper
+
+Bind better-jumper functions to a doom-like alternative.
+#+begin_src elisp
+(after! better-jumper
+  (map!
+   :n "g[" #'better-jumper-jump-backward
+   :n "g]" #'better-jumper-jump-forward))
+#+end_src
+
+*** Calendar
+
+Configure localization settings.
+#+begin_src elisp
+(after! calendar
+  (setq calendar-date-style 'european
+        calendar-time-display-form
+        '(24-hours ":" minutes
+                   (if time-zone " (") time-zone (if time-zone ")"))
+        calendar-latitude 49.61167
+        calendar-longitude 6.13
+        calendar-location-name "Luxembourg"))
+#+end_src
+
+**** Diary
+
+Make holidays, diaries and today's date visible in calendar by default.
+#+begin_src elisp
+(after! calendar
+  (setq calendar-mark-holidays-flag 't
+        calendar-mark-diary-entries-flag 't)
+  (add-hook! 'calendar-today-visible-hook #'calendar-mark-today))
+#+end_src
+
+Adapt sunrise/sunset diary sexp.
+#+begin_src elisp
+(require 'solar)
+
+;; Sunrise (edits by Eph Zero)
+;; Brady Trainor
+;; http://stackoverflow.com/questions/22889036/custom-diary-sunrise-function-not-working-autoload-diary-emacs
+(defun solar-sunrise-string (date &optional nolocation)
+  "String of *local* time of sunrise and daylight on Gregorian DATE."
+  (let ((l (solar-sunrise-sunset date)))
+    (format
+     "🌅 %s (%s de jour)"
+     (if (car l)
+         (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
+       "Aucun Lever du Soleil")
+     (nth 2 l))))
+;; To be called from diary-list-sexp-entries, where DATE is bound.
+;;;###diary-autoload
+(defun diary-sunrise ()
+  "Local time of sunrise as a diary entry.
+Accurate to a few seconds."
+  (with-no-warnings (defvar date))
+  (or (and calendar-latitude calendar-longitude calendar-time-zone)
+      (solar-setup))
+  (solar-sunrise-string date))
+
+;; Sunset
+(defun solar-sunset-string (date &optional nolocation)
+  "String of *local* time of sunset and daylight on Gregorian DATE."
+  (let ((l (solar-sunrise-sunset date)))
+    (format
+     "🌅 %s"
+     (if (cadr l)
+         (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
+       "Aucun Coucher du Soleil"))))
+;; To be called from diary-list-sexp-entries, where DATE is bound.
+;;;###diary-autoload
+(defun diary-sunset ()
+  "Local time of sunset as a diary entry.
+Accurate to a few seconds."
+  (with-no-warnings (defvar date))
+  (or (and calendar-latitude calendar-longitude calendar-time-zone)
+      (solar-setup))
+  (solar-sunset-string date))
+#+end_src
+
+Adapt solar holidays to diary-compatible expressions.
+#+begin_src elisp
+;;;###diary-autoload
+(defun diary-equinoxes-solstices ()
+  "Equinoxes/Solstices diary entry."
+  (with-no-warnings (defvar displayed-month)
+                    (defvar displayed-year))
+  (let* ((displayed-month (calendar-extract-month date))
+         (displayed-year  (calendar-extract-year  date))
+         (event (solar-equinoxes-solstices)))
+    (when (calendar-date-equal date (car (car event)))
+      (car (cdr (car event))))))
+(defun diary-daylight-saving-time ()
+  "Daylight Saving Time diary entry."
+  (let ((start (calendar-dst-starts (calendar-extract-year date)))
+        (end (calendar-dst-ends (calendar-extract-year date))))
+    (cond ((calendar-date-equal date start)
+           (format "Heure d'été %s"
+                   (solar-time-string
+                    (/ calendar-daylight-savings-starts-time (float 60))
+                    calendar-standard-time-zone-name)))
+          ((calendar-date-equal date end)
+           (format "Heure d'Hiver %s"
+                   (solar-time-string
+                    (/ calendar-daylight-savings-ends-time (float 60))
+                    calendar-daylight-time-zone-name))))))
+#+end_src
+
+Add support for included diary files.
+#+begin_src elisp
+(after! calendar
+  (add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
+  (add-hook 'diary-list-entries-hook #'diary-sort-entries t)
+  (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files))
+#+end_src
+
+Add a default diary file since I will be using org mode for appointments and other diary entries.
+This is a way to keep solar/lunar information available in the calendar.
+#+begin_src diary :tangle ~/.local/share/emacs/etc/diary
+&%%(diary-sunrise-sunset)
+%%(diary-lunar-phases)
+%%(diary-equinoxes-solstices)
+%%(diary-daylight-saving-time)
+#+end_src
+
+**** Holidays
+
+Customize solar/lunar phase names.
+#+begin_src elisp
+(after! calendar
+  (setq lunar-phase-names
+        '("🌕 Nouvelle Lune"
+          "🌓 Premier Quartier de Lune"
+          "🌑 Pleine Lune"
+          "🌗 Dernier Quartier de Lune")
+        solar-n-hemi-seasons
+        '("Equinoxe de Printemps"
+          "Solstice d'Été"
+          "Equinoxe d'Automne"
+          "Solstice d'Hiver")))
+#+end_src
+
+Customize [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Holiday-Customizing.html][holidays]].
+#+begin_src elisp
+(after! calendar
+  (setq holiday-general-holidays
+        ;; Replace most US holidays by french/european holidays
+        '((holiday-fixed  1  1    "Nouvel An")
+          (holiday-fixed  5  1    "Fête du Travail")
+          (holiday-fixed  5  8    "Fête de la Victoire")
+          (holiday-fixed  5  9    "Jour de l'Europe")
+          (holiday-fixed  7 14    "Fête Nationale")
+          (holiday-float  5  0  2 "Fête Nationale de Jeanne d'Arc et du Patriotisme")
+          (holiday-fixed 11 11    "Jour de l'Armistice")
+          ;; Selected holidays from other countries
+          (holiday-fixed  6 23    "Fête Nationale (Luxembourg)")
+          (holiday-float  1  1  3 "Martin Luther King Day (US)")
+          (holiday-float  2  1  3 "President's Day (US)")
+          (holiday-fixed  7  4    "Independence Day (US)")
+          (holiday-float 11  4  4 "Thanksgiving (US)"))
+        ;; Other national/international holidays
+        holiday-other-holidays
+        '((holiday-fixed  2 14    "Fête de la Saint-Valentin")
+          (holiday-fixed  3  8    "Journée Internationale des Femmes")
+          (holiday-fixed  3 17    "Fête de la Saint-Patrick")
+          (holiday-fixed  4  1    "Jour du Poisson d'Avril")
+          (holiday-fixed  4 22    "Jour de la Terre")
+          (holiday-fixed  5 22    "Journée Internationale de la Biodiversité")
+          (holiday-float  5  5 -1 "Fête des Voisins")
+          (holiday-sexp  '(if (equal (holiday-easter-etc 49) (holiday-float 5 0 -1 nil))
+                              (calendar-nth-named-day 1 0 6 year)
+                            (calendar-nth-named-day -1 0 5 year))
+                         "Fête des Mères")
+          (holiday-float  6  0  3 "Fête des Pères")
+          (holiday-fixed  6 21    "Fête de la Musique")
+          (holiday-float  9  6  4 "Fête de la Gastronomie") ; Fourth week-end of september
+          (holiday-fixed 11 20    "Journée Internationale des droits de l'Enfant"))
+        ;; Astral events are converted to diary entries.
+        holiday-solar-holidays nil
+        ;; Christian holidays
+        holiday-christian-holidays
+        '((holiday-float  1  0  1 "Épiphanie")
+          (holiday-fixed  2  2    "Chandeleur")
+          (holiday-fixed  8 15    "Assomption de Marie")
+          (holiday-fixed 11  1    "Toussaint")
+          (holiday-fixed 11  2    "Jour des Morts")
+          (holiday-advent 0       "Premier dimanche de l'Avent")
+          (holiday-fixed 12  6    "Saint-Nicolas")
+          (holiday-fixed 12 25    "Noël")
+          (holiday-fixed 12 26    "Saint-Étienne")
+          ;; Easter-related holidays
+          (apply 'append
+                 (mapcar (lambda (e) (apply 'holiday-easter-etc e))
+                         '((-47 "Mardi Gras")
+                           (-46 "Mercredi des Cendres")
+                           (-14 "Dimanche de la Passion")
+                           (-7  "Dimanche des Palmes")
+                           (-4  "Mercredi Saint")
+                           (-3  "Jeudi Saint")
+                           (-2  "Vendredi Saint")
+                           (-1  "Samedi Saint")
+                           (0   "Dimanche de Pâques")
+                           (1   "Lundi de Pâques")
+                           (39  "Ascension")
+                           (49  "Pentecôte")
+                           (50  "Lundi de Pentecôte")
+                           (56  "Fête de la Sainte Trinité")
+                           (60  "Corpus Christi")
+                           (68  "Fête du Sacré-Cœur")))))
+        ;; Other cultures
+        holiday-islamic-holidays
+        '((holiday-islamic-new-year)
+          (holiday-islamic  9  1 "Ramadan Begins")
+          (holiday-islamic 10 -1 "Ramadan Ends"))
+        holiday-oriental-holidays
+        '((holiday-chinese-new-year))
+        holiday-hebrew-holidays nil
+        holiday-bahai-holidays nil))
+#+end_src
+
+**** Bindings
+
+Disable evil-snipe.
+#+begin_src elisp
+(after! evil-snipe
+  (add-to-list 'evil-snipe-disabled-modes 'calendar-mode))
+#+end_src
+
+Configure bindings.
+#+begin_src elisp
+(map! :after calendar
+      :map calendar-mode-map
+      :n "C-k"    #'calendar-beginning-of-month
+      :n "C-j"    #'calendar-end-of-month
+      :n "C-h"    #'calendar-beginning-of-week
+      :n "C-l"    #'calendar-end-of-week
+      :n "C-S-k"  #'calendar-backward-year
+      :n "C-S-j"  #'calendar-forward-year
+      :n "C-S-h"  #'calendar-backward-month
+      :n "C-S-l"  #'calendar-forward-month
+      :n "M-k"    #'calendar-beginning-of-month
+      :n "M-j"    #'calendar-end-of-month
+      :n "M-h"    #'calendar-beginning-of-week
+      :n "M-l"    #'calendar-end-of-week
+      :n "M-S-k"  #'calendar-backward-year
+      :n "M-S-j"  #'calendar-forward-year
+      :n "M-S-h"  #'calendar-backward-month
+      :n "M-S-l"  #'calendar-forward-month
+      :n "C-u"    #'calendar-scroll-right
+      :n "C-d"    #'calendar-scroll-left
+
+      :n "r"      #'calendar-redraw
+      :n "S"      #'calendar-sunrise-sunset
+      :n "M"      #'calendar-lunar-phases
+      :n "H"      #'calendar-cursor-holidays
+      :n "s"      nil
+      :n "ss"     #'calendar-sunrise-sunset
+      :n "sm"     #'calendar-lunar-phases
+      :n "sh"     #'calendar-cursor-holidays
+      :n "sH"     #'calendar-list-holidays
+
+      :n "i"      nil
+      :n "id"     #'diary-insert-entry
+      :n "iw"     #'diary-insert-weekly-entry
+      :n "im"     #'diary-insert-monthly-entry
+      :n "iy"     #'diary-insert-yearly-entry
+      :n "ia"     #'diary-insert-anniversary-entry
+      :n "ib"     #'diary-insert-block-entry
+      :n "ic"     #'diary-insert-cyclic-entry
+      :n "a"      #'diary-show-all-entries
+
+      :n [return] #'org-calendar-goto-agenda
+      :n "RET"    #'org-calendar-goto-agenda
+
+      :leader
+      (:prefix-map ("o" . "open")
+       :desc "Calendar" "c" #'org-goto-calendar))
+#+end_src
+
+*** Centaur tabs
+
+Configure centaur-tabs appearance and behavior. Define rules for buffer groups
+and restrict buffer list to workspace buffers.
+#+begin_src elisp
+(use-package! centaur-tabs
+  :config
+  (setq centaur-tabs-style "bar"
+        centaur-tabs-height 32
+        centaur-tabs-gray-out-icons nil
+        centaur-tabs-set-bar 'under
+        x-underline-at-descent-line t)
+  (centaur-tabs-headline-match)
+  ;; Override rules for grouping buffers.
+  (defun centaur-tabs-buffer-groups ()
+    "`centaur-tabs-buffer-groups' control buffers' group rules.
+
+Group centaur-tabs with mode if buffer is derived from `vterm-mode'
+`dired-mode' `org-mode' `magit-mode'.
+All buffer name start with * will group to \"Emacs\".
+Other buffer group by `centaur-tabs-get-group-name' with project name."
+    (list
+     (cond
+      ((or (string-equal "*" (substring (buffer-name) 0 1))
+           (memq major-mode '(magit-process-mode
+                              magit-status-mode
+                              magit-diff-mode
+                              magit-log-mode
+                              magit-file-mode
+                              magit-blob-mode
+                              magit-blame-mode
+                              )))
+       "Emacs")
+      ((derived-mode-p 'term-mode 'vterm-mode)
+       "Term")
+      ;; ((derived-mode-p 'prog-mode)
+      ;;  "Coding")
+      ((derived-mode-p 'dired-mode)
+       "Dired")
+      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
+       "Org")
+      (t
+       (centaur-tabs-get-group-name (current-buffer))))))
+  ;; Override centaur tabs to use workspace buffers as input list.
+  (defun centaur-tabs-buffer-list ()
+    "Return the list of buffers to show in tabs.
+Exclude buffers whose name starts with a space, when they are not
+visiting a file.  The current buffer is always included."
+    (centaur-tabs-filter-out
+     'centaur-tabs-hide-tab-cached
+     (delq nil
+           (cl-mapcar #'(lambda (b)
+                          (cond
+                           ;; Always include the current buffer.
+                           ((eq (current-buffer) b) b)
+                           ((buffer-file-name b) b)
+                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
+                           ((buffer-live-p b) b)))
+                      (doom-buffer-list)))))
+  :hook
+  (doom-dashboard-mode . centaur-tabs-local-mode)
+  (term-mode . centaur-tabs-local-mode)
+  (vterm-mode . centaur-tabs-local-mode))
+#+end_src
+
+Provide additional bindings for centaur-tabs functions.
+#+begin_src elisp
+(after! centaur-tabs
+  ;; Remove previous which-key descriptions.
+  ;; TODO: Encapsulate in a function and use a regex.
+  ;; TODO Move these bindings in a more appropriate, doom-related section
+  (cl-delete-if
+   (lambda (x)
+     (member (car x)
+             '(("\\`M-SPC b k\\'")
+               ("\\`SPC b k\\'")
+               ("\\`M-SPC b K\\'")
+               ("\\`SPC b K\\'")
+               ("\\`M-SPC b l\\'")
+               ("\\`SPC b l\\'")
+               ("\\`M-SPC b O\\'")
+               ("\\`SPC b O\\'")
+               ("\\`M-SPC b n\\'")
+               ("\\`SPC b n\\'")
+               ("\\`M-SPC b N\\'")
+               ("\\`SPC b N\\'")
+               ("\\`M-SPC b p\\'")
+               ("\\`SPC b p\\'"))))
+   which-key-replacement-alist)
+
+  (map!
+   ;; Rebind buffer switching to tab switching commands.
+   :g [remap previous-buffer] #'centaur-tabs-backward
+   :g [remap next-buffer]     #'centaur-tabs-forward
+   ;; Tab manipulation
+   :g "C-<next>"    #'centaur-tabs-forward
+   :g "C-<prior>"   #'centaur-tabs-backward
+   :g "C-M-<next>"  #'centaur-tabs-forward-group
+   :g "C-M-<prior>" #'centaur-tabs-backward-group
+   :n "gt"          #'centaur-tabs-forward
+   :n "gb"          #'centaur-tabs-backward
+   :n "gT"          #'centaur-tabs-forward-group
+   :n "gB"          #'centaur-tabs-backward-group
+   :n "]B"          #'centaur-tabs-forward-group
+   :n "[B"          #'centaur-tabs-backward-group
+   :g "C-S-<prior>" #'centaur-tabs-move-current-tab-to-left
+   :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
+
+   :leader :prefix "b"
+   ;; Buffer group navigation
+   :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
+   :desc "Next buffer group"     "j" #'centaur-tabs-forward-group
+   :desc "Previous buffer group" "k" #'centaur-tabs-backward-group
+   ;; Tab movement
+   :desc "Next tab"              "l" #'centaur-tabs-forward
+   :desc "Previous tab"          "h" #'centaur-tabs-backward
+   :desc "Move tab right"        "L" #'centaur-tabs-move-current-tab-to-right
+   :desc "Move tab left"         "H" #'centaur-tabs-move-current-tab-to-left
+   ;; Other stuff
+   :desc "Kill all buffers"      "D" #'doom/kill-all-buffers
+   :desc "Kill other buffers"    "K" #'doom/kill-other-buffers
+   :desc ""                      "O" nil
+   :desc "New empty buffer"      "n" #'evil-buffer-new
+   :desc "New empty buffer"      "N" nil
+   :desc ""                      "p" nil
+   ;; Numbered buffer navigation
+   :desc "Select tab 1..9"       "1" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "2" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "3" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "4" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "5" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "6" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "7" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "8" #'centaur-tabs-select-visible-tab
+   :desc "Select tab 1..9"       "9" #'centaur-tabs-select-visible-tab
+   :desc "Select last tab"       "0" #'centaur-tabs-select-end-tab
+   ))
+#+end_src
+
+*** Company
+
+Make aborting completions less annoying.
+The ~evil-normal-state-entry-hook~ is triggered when the child frame opens to
+describe the selected element (with ~+childframe~), so it can't be used here.
+#+begin_src elisp
+(after! company
+  (add-hook 'evil-insert-state-exit-hook #'company-abort))
+#+end_src
+
 *** Ediff
+
 Automatically kill unmodified buffers at the end of an ~ediff~ session.
 In merge jobs, buffer C is never deleted. However, the side effect of using this
 function is that you may not be able to compare the same buffer in two separate
@@ -1050,7 +2088,841 @@ Customize default doom-theme faces for ~ediff~.
   `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
 #+end_src
 
+*** Elfeed
+
+Configure elfeed and elfeed-org.
+#+begin_src elisp
+(use-package! elfeed
+  :config
+  (setq elfeed-search-remain-on-entry 't
+        elfeed-search-sort-function #'psydev/elfeed-search-entry<
+        elfeed-sort-order 'ascending)
+  (elfeed-set-max-connections 8) ; default is 16
+  (elfeed-set-timeout 60))       ; default is 30
+
+(use-package! elfeed-org
+  :after org
+  :config
+  (setq elfeed-search-filter "+unread +starred "
+        rmh-elfeed-org-files (list (concat org-directory "elfeed/feed.org"))
+        rmh-elfeed-org-tree-id "feed")
+  (elfeed-org))
+#+end_src
+
+**** Integration
+
+Fix elfeed-search-selected to avoid including the line below selection.
+This is properly not the right approach to this issue but is functional.
+#+begin_src emacs-lisp :tangle yes
+(after! elfeed
+  (defun psydev/elfeed-search-selected (&optional ignore-region-p)
+    "Return a list of the currently selected feeds.
+
+If IGNORE-REGION-P is non-nil, only return the entry under point."
+    (let ((use-region (and (not ignore-region-p) (use-region-p))))
+      (let ((start (if use-region (region-beginning) (point)))
+            (end   (if use-region (- (region-end) 1) (point))))
+        (cl-loop for line from (line-number-at-pos start)
+                 to (line-number-at-pos end)
+                 for offset = (- line elfeed-search--offset)
+                 when (and (>= offset 0) (nth offset elfeed-search-entries))
+                 collect it into selected
+                 finally (return (if ignore-region-p
+                                     (car selected)
+                                   selected))))))
+  (advice-add #'elfeed-search-selected :override #'psydev/elfeed-search-selected))
+#+end_src
+
+Add advice to elfeed-update to make sure the list of feed is up to date.
+#+begin_src elisp
+(after! elfeed-org
+  (defadvice elfeed-update (before configure-elfeed activate)
+    "Load all feed settings before elfeed updates."
+    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
+#+end_src
+
+Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
+Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
+#+begin_src elisp
+(after! elfeed-org
+  (defun +rss-cleanup-h ()
+    "Clean up after an elfeed session. Kills all elfeed buffers."
+    (interactive)
+    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
+    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
+    ;;     (switch-to-buffer elfeed-dashboard--buf))
+    ;; FIXME This seems to break the perspective as well, reason not understood
+    ;; (let ((buf (switch-to-prev-buffer)))
+    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
+    ;;     (switch-to-buffer (doom-fallback-buffer))))
+    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
+          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
+          kill-buffer-query-functions)
+      (dolist (b search-buffers)
+        (when (not (eq b (current-buffer)))
+          (with-current-buffer b
+            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
+            (kill-buffer b))))
+      (mapc #'kill-buffer show-buffers))))
+#+end_src
+
+Override ~elfeed-db-compact~ to bypass the projectile cache.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-db-compact ()
+    "Minimize the Elfeed database storage size on the filesystem."
+    (interactive)
+    ;; `delete-file-projectile-remove-from-cache' slows down `elfeed-db-compact'
+    ;; tremendously, so we disable the projectile cache:
+    (let (projectile-enable-caching)
+      (elfeed-db-compact))))
+#+end_src
+
+**** Date Separators
+
+Add date separator overlay. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
+#+begin_src elisp
+(after! elfeed
+  (cl-defun psydev/elfeed-search-add-separators (&key (min-group-size 2))
+    "Insert overlay spacers where the current date changes.
+If no group has at least MIN-GROUP-SIZE items, no spacers will be
+inserted. "
+    ;; TODO: Use column-specific functions so that, e.g. date column could be grouped by month/year
+    (cl-labels ((insert-date (date)
+                             (ov (line-beginning-position) (line-beginning-position)
+                                 'before-string (propertize (format "%s%s\n"
+                                                                    (if (= 1 (line-number-at-pos)) "" "\n")
+                                                                    date)
+                                                            'face 'elfeed-search-date-face)
+                                 'type 'date-separator))
+                (entry-date (offset)
+                            (when-let ((entry (nth offset elfeed-search-entries)))
+                              (elfeed-search-format-date (elfeed-entry-date entry)))))
+      (ov-clear)
+      (save-excursion
+        (goto-char (point-min))
+        (cl-loop with largest-group-size = 1
+                 with offset = (- 1 elfeed-search--offset) ; 1 is first line
+                 with prev-data = (entry-date offset)
+
+                 initially do (when prev-data
+                                (insert-date prev-data))
+
+                 while (not (eobp))
+                 do (progn
+                      (forward-line 1)
+                      (incf offset))
+
+                 for current-data = (entry-date offset)
+                 if (not (equal current-data prev-data))
+                 do (when current-data
+                      (insert-date current-data)
+                      (setq prev-data current-data))
+                 else do (incf largest-group-size)
+
+                 finally do (when (< largest-group-size min-group-size)
+                              (ov-clear))))))
+
+  (defun psydev/elfeed-search-post-process ()
+    (psydev/elfeed-search-add-separators :min-group-size 1))
+
+  (defun psydev/elfeed-forward-day ()
+    "Move forward to the next day."
+    (interactive)
+    (let ((o (ov-in-next 'type 'date-separator)))
+      (if o (goto-char (ov-end o)))))
+  (defun psydev/elfeed-backward-day ()
+    "Move backward to the previous day."
+    (interactive)
+    (let ((o (ov-in-prev 'type 'date-separator)))
+      (if o (goto-char (ov-end o)))))
+
+  (add-hook 'elfeed-search-update-hook #'psydev/elfeed-search-post-process))
+#+end_src
+
+Add missing overlay commands.
+NOTE: Hopefully these overlay functions can be merged into ov.el.  See
+https://github.com/ShingoFukuyama/ov.el/issues/14
+#+begin_src elisp
+(after! ov
+  (cl-defun ov-in-prev (&optional point-or-prop prop-or-val (val 'any))
+    "Get the previous overlay satisfying a condition.
+
+If POINT-OR-PROP is a symbol, get the previous overlay with this
+property being non-nil.
+
+If PROP-OR-VAL is non-nil, the property should have this value.
+
+If POINT-OR-PROP is a number, get the previous overlay after this
+point.
+
+If PROP-OR-VAL and VAL are also specified, get the previous
+overlay after POINT-OR-PROP having property PROP-OR-VAL set to
+VAL (with VAL unspecified, only the presence of property is
+tested)."
+    (cl-labels ((any (pos)
+                     (car (overlays-in (previous-overlay-change pos) (previous-overlay-change pos))))
+                (property (pos property)
+                          (save-excursion
+                            (goto-char pos)
+                            (cl-loop while (and (not (bobp))
+                                                (goto-char (previous-overlay-change (point))))
+                                     when (cl-loop for ov in (overlays-in (point) (point))
+                                                   when (plist-get (ov-prop ov) property)
+                                                   return ov)
+                                     return it)))
+                (property-value (pos property value)
+                                (save-excursion
+                                  (goto-char pos)
+                                  (cl-loop while (and (not (bobp))
+                                                      (goto-char (previous-overlay-change (point))))
+                                           when (cl-loop for ov in (overlays-in (point) (point))
+                                                         for ov-value = (plist-get (ov-prop ov) property)
+                                                         when (equal ov-value value)
+                                                         return ov)
+                                           return it))))
+      (pcase point-or-prop
+        ((pred numberp) (pcase prop-or-val
+                          (`nil (any point-or-prop))
+                          (_ (pcase val
+                               ('any (property point-or-prop prop-or-val))
+                               (_ (property-value point-or-prop prop-or-val val))))))
+        (`nil (any (point)))
+        (_ (pcase prop-or-val
+             (`nil (property (point) point-or-prop))
+             (_ (pcase val
+                  ('any (property (point) point-or-prop))
+                  (_ (property-value point-or-prop prop-or-val val)))))))))
+
+  (cl-defun ov-in-next (&optional point-or-prop prop-or-val (val 'any))
+    "Get the next overlay satisfying a condition.
+
+If POINT-OR-PROP is a symbol, get the next overlay with this
+property being non-nil.
+
+If PROP-OR-VAL is non-nil, the property should have this value.
+
+If POINT-OR-PROP is a number, get the next overlay after this
+point.
+
+If PROP-OR-VAL and VAL are also specified, get the next overlay
+after POINT-OR-PROP having property PROP-OR-VAL set to VAL (with
+VAL unspecified, only the presence of property is tested)."
+    (cl-labels ((any (pos)
+                     (car (overlays-in (next-overlay-change pos) (next-overlay-change pos))))
+                (property (pos property)
+                          (save-excursion
+                            (goto-char pos)
+                            (cl-loop while (and (not (eobp))
+                                                (goto-char (next-overlay-change (point))))
+                                     when (cl-loop for ov in (overlays-in (point) (point))
+                                                   when (plist-get (ov-prop ov) property)
+                                                   return ov)
+                                     return it)))
+                (property-value (pos property value)
+                                (save-excursion
+                                  (goto-char pos)
+                                  (cl-loop while (and (not (eobp))
+                                                      (goto-char (next-overlay-change (point))))
+                                           when (cl-loop for ov in (overlays-in (point) (point))
+                                                         for ov-value = (plist-get (ov-prop ov) property)
+                                                         when (equal ov-value value)
+                                                         return ov)
+                                           return it))))
+      (pcase point-or-prop
+        ((pred numberp) (pcase prop-or-val
+                          (`nil (any point-or-prop))
+                          (_ (pcase val
+                               ('any (property point-or-prop prop-or-val))
+                               (_ (property-value point-or-prop prop-or-val val))))))
+        (`nil (any (point)))
+        (_ (pcase prop-or-val
+             (`nil (property (point) point-or-prop))
+             (_ (pcase val
+                  ('any (property (point) point-or-prop))
+                  (_ (property-value point-or-prop prop-or-val val))))))))))
+#+end_src
+
+**** Sorting
+
+Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-search-entry< (a b)
+    "Return non-nil if A should be sorted before B."
+    (with-no-warnings (defvar a-tags) (defvar b-tags)) ; NOTE Needed to fix void a-tags?
+    (cl-flet* ((tags (it) (elfeed-entry-tags it))
+               (day (it) (time-to-days (seconds-to-time (elfeed-entry-date it))))
+               (compare-days (a b)
+                             (let* ((a-day (day a))
+                                    (b-day (day b)))
+                               (if (= a-day b-day)
+                                   ;; Same day: compare unread, then tags, then domain, then timestamp
+                                   (cl-case (psydev/elfeed-search-unread< a-tags b-tags)
+                                     ('< nil)
+                                     ('> 't)
+                                     ('= ;; Same unread status; compare feed title
+                                      ;; Same day: compare tags, then domain, then timestamp
+                                      (cl-case (psydev/elfeed-search-tags< a-tags b-tags)
+                                        ('< nil)
+                                        ('> 't)
+                                        ('= ;; Same tags; compare feed title
+                                         (cl-case (psydev/elfeed-search-feed< a b)
+                                           ('< nil)
+                                           ('> 't)
+                                           ('= ;; Same site; compare timestamp
+                                            (< (elfeed-entry-date a) (elfeed-entry-date b))))))))
+                                 ;; Different day: compare day
+                                 (< a-day b-day)))))
+      (let* ((a-tags (tags a))
+             (b-tags (tags b))
+             (a-starred (member 'starred a-tags))
+             (b-starred (member 'starred b-tags)))
+        ;; Inverting the values because we usually use descending order
+        (cond ((and a-starred b-starred) (compare-days a b))
+              (a-starred nil)
+              (b-starred t)
+              (t (compare-days a b))))))
+
+  (defun psydev/elfeed-search-unread< (a-tags b-tags)
+    "Return the relationship of A's unread tag to B's."
+    (cl-flet ((unread (it) (member 'unread it)))
+      (let ((a-unread (unread a-tags))
+            (b-unread (unread b-tags)))
+        (cond ((and a-unread b-unread) '=)
+              ((not b-unread) '<)
+              (t '>)))))
+
+  (defun psydev/elfeed-search-tags< (a-tags b-tags)
+    "Return the relationship of A's tags to B's."
+    ;; Convert list of symbols to comma-separated string of tags
+    (if (not (or a-tags b-tags))
+        ;; No tags
+        '=
+      ;; Some tags
+      (if (not (and a-tags b-tags))
+          ;; One item has no tags
+          (if a-tags
+              '<
+            '>)
+        ;; Both items have tags
+        (let ((a-length (length a-tags))
+              (b-length (length b-tags)))
+          (if (/= a-length b-length)
+              ;; Different number of tags
+              (if (< a-length b-length)
+                  '<
+                '>)
+            ;; Same number of tags
+            (let ((a-string (s-join "" (mapcar #'symbol-name a-tags)))
+                  (b-string (s-join "" (mapcar #'symbol-name b-tags))))
+              (cond ((string= a-string b-string) '=)
+                    ((string< a-string b-string) '<)
+                    (t '>))))))))
+
+  (defun psydev/elfeed-search-feed< (a b)
+    "Return the relationship of A's feed to B's.
+If alphabetically less or greater than, return `<' or `>',
+respectively.  If the same, return `='."
+    (cl-flet ((feed (it) (elfeed-feed-title (elfeed-entry-feed it))))
+      (let ((a-feed (feed a))
+            (b-feed (feed b)))
+        (cond ((string= a-feed b-feed) '=)
+              ((string< a-feed b-feed) '<)
+              (t '>))))))
+#+end_src
+
+Add commands to toggle custom sort (much slower).
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-toggle-sort ()
+    "Toggle the advanced sort function."
+    (interactive)
+    (if (not elfeed-search-sort-function)
+        (setq elfeed-search-sort-function #'psydev/elfeed-search-entry<
+              elfeed-sort-order 'ascending)
+      (setq elfeed-search-sort-function nil
+            elfeed-sort-order 'descending))
+    (elfeed-search-update :force)))
+#+end_src
+
+**** Appearance
+
+See [[*Elfeed goodies][Elfeed goodies]].
+
+**** Commands
+***** Excerpt Display
+
+Add commands to show entry contents in the search buffer directly.
+#+begin_src elisp
+(after! elfeed
+  (defmacro psydev/elfeed-search-at-entry (entry &rest body)
+    "Eval BODY with point at ENTRY."
+    (declare (indent defun))
+    `(when-let* ((n (cl-position ,entry elfeed-search-entries)))
+       (elfeed-goto-line (+ elfeed-search--offset n))
+       ,@body))
+
+  (defun psydev/elfeed-search-excerpt-toggle-selected (&optional hide-all)
+    "Toggle excerpts on selected entries.
+With prefix, hide all excerpts."
+    (interactive (list current-prefix-arg))
+    (if hide-all
+        (ov-clear 'type 'excerpt)
+      (--each (elfeed-search-selected)
+        (psydev/elfeed-search-at-entry it (psydev/elfeed-excerpt-toggle)))))
+
+  (defun psydev/elfeed-excerpt-toggle ()
+    (interactive)
+    (or (psydev/elfeed-excerpt-hide)
+        (psydev/elfeed-excerpt-insert)))
+
+  (defun psydev/elfeed-excerpt-hide ()
+    (interactive)
+    (when-let ((pos (1+ (line-end-position)))
+               (overlay (car (ov-in 'type 'excerpt pos pos))))
+      (delete-overlay overlay)
+      t))
+
+  (defun psydev/elfeed-wrap-string (string length)
+    "Wrap STRING to LENGTH."
+    (if (<= (length string) length)
+        string
+      (s-trim (with-temp-buffer
+                (insert string)
+                (let ((fill-column length))
+                  (fill-region (point-min) (point-max))
+                  (buffer-string))))))
+
+  (defun psydev/elfeed-excerpt-insert ()
+    "Show excerpt of current entry."
+    (interactive)
+    (when-let* ((pos (1+ (line-end-position)))
+                (width (window-text-width))
+                (entry (elfeed-search-selected 'ignore-region))
+                (ref (elfeed-entry-content entry))
+                (content (elfeed-deref ref))
+                (excerpt (--> content
+                              (with-temp-buffer
+                                (elfeed-insert-html it)
+                                (buffer-string))
+                              (psydev/elfeed-wrap-string it width)
+                              (concat it "\n")
+                              (propertize it 'face '(:inherit (variable-pitch default))))))
+      (ov pos pos
+          'type 'excerpt
+          'after-string (concat "\n" excerpt "\n"))
+      (elfeed-untag entry 'unread)
+      (elfeed-search-update-entry entry))))
+#+end_src
+
+***** Quick tag toggles
+
+Add commands to mark all items as read/unread (avoid having to select all entries).
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-search-mark-all-read ()
+    "Mark all entries as read in the current buffer."
+    (interactive)
+    (when (y-or-n-p "Really mark all items as read?")
+      (let* ((entries (--filter (not (member 'starred (elfeed-entry-tags it)))
+                                elfeed-search-entries)))
+        (elfeed-untag entries 'unread)
+        (elfeed-search-update :force))))
+
+  (defun psydev/elfeed-search-mark-all-unread ()
+    "Mark all entries as unread in the current buffer."
+    (interactive)
+    (when (y-or-n-p "Really mark all items as unread?")
+      (let* ((entries (--filter (not (member 'starred (elfeed-entry-tags it)))
+                                elfeed-search-entries)))
+        (elfeed-tag entries 'unread)
+        (elfeed-search-update :force)))))
+#+end_src
+
+Add commands to mark more selective groups of items as read. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-search-toggle-tag-group (tag predicate)
+    "Mark all entries as read in the group at point, grouped by PREDICATE."
+    (let* ((offset (- (line-number-at-pos) elfeed-search--offset))
+           (current-entry (nth offset elfeed-search-entries))
+           (value (funcall predicate current-entry))
+           (starred (member 'starred (elfeed-entry-tags current-entry)))
+           (entries (--filter (and (equal value (funcall predicate it))
+                                   (equal starred (member 'starred (elfeed-entry-tags it))))
+                              elfeed-search-entries)))
+      (if (elfeed-tagged-p tag current-entry)
+          (elfeed-untag entries tag)
+        (elfeed-tag entries tag))
+      (mapc #'elfeed-search-update-entry entries)))
+
+  (defun psydev/elfeed-search-toggle-day-site-as-read ()
+    "Mark all entries as read in the current site and day at point."
+    (interactive)
+    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+                                                     (list (time-to-days (seconds-to-time (elfeed-entry-date entry)))
+                                                           (elfeed-entry-feed entry)))))
+  (defun psydev/elfeed-search-toggle-site-as-read ()
+    "Mark all entries as read in the current site and day at point."
+    (interactive)
+    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+                                                     (elfeed-entry-feed entry))))
+  (defun psydev/elfeed-search-toggle-day-as-read ()
+    "Mark all entries as unread in the day at point."
+    (interactive)
+    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+                                                     (time-to-days (seconds-to-time (elfeed-entry-date entry)))))))
+#+end_src
+
+Add a command to quickly toggle the =unread= tag.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-search-toggle-unread ()
+    "Toggle `unread' tag on selected entries."
+    (interactive)
+    (elfeed-search-toggle-all 'unread)))
+#+end_src
+
+Add a command to quickly toggle the =starred= tag.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-search-toggle-star ()
+    "Toggle `starred' tag on selected entries."
+    (interactive)
+    (elfeed-search-toggle-all 'starred)))
+#+end_src
+
+***** Other commands
+
+Add a command to delete entries from the database.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-delete-entries (pred)
+    "Delete entries from `elfeed-db-index' and `elfeed-db-entries' that PRED returns non-nil for.
+PRED is called with one argument, the entry."
+    (let ((size-before (ht-size elfeed-db-entries))
+          size-after )
+      (cl-loop for key being the hash-keys of elfeed-db-entries
+               using (hash-values entry)
+               when (funcall pred entry)
+               do (progn
+                    (avl-tree-delete elfeed-db-index (elfeed-entry-id entry))
+                    (ht-remove elfeed-db-entries key)))
+      (a-list 'before size-before
+              'after (ht-size elfeed-db-entries))))
+
+  (defun psydev/elfeed-search-delete-selected ()
+    "Delete selected entries from database."
+    ;; TODO This could probably be much more efficient.
+    (interactive)
+    (when (y-or-n-p "Really delete entries from database?")
+      (--each (elfeed-search-selected)
+        (psydev/elfeed-delete-entries
+         (lambda (entry)
+           (eq (elfeed-entry-id entry) (elfeed-entry-id it)))))
+      (elfeed-search-update :force))))
+#+end_src
+
+Add a command to delete old entries to keep decent performances.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-delete-old-entries (&optional before)
+    "Delete elfeed entries older than BEFORE, defaults to 2 weeks."
+    (interactive)
+    (let* ((before (or before "1 year ago"))
+           (before-time (elfeed-time-duration before))
+           (old-entries (make-hash-table :test 'equal)))
+      (psydev/elfeed-delete-entries
+       (lambda (entry)
+         (let ((date (elfeed-entry-date entry)))
+           (and (< date (- (float-time) before-time))
+                (not (member 'unread (elfeed-entry-tags entry)))
+                (not (member 'starred (elfeed-entry-tags entry))))))))
+    (psydev/elfeed-db-compact)
+    (elfeed-dashboard-update-links)))
+#+end_src
+
+Add a command to list dead feeds.
+#+begin_src elisp
+(after! elfeed
+  (defun psydev/elfeed-dead-feeds (&optional years)
+    "List feeds that haven't posted anything in YEARS."
+    (interactive "p")
+    (with-current-buffer (get-buffer-create "*Elfeed Dead Feeds*")
+      (erase-buffer)
+      (--each (+rss-dead-feeds years) (insert it "\n"))
+      (pop-to-buffer (current-buffer)))))
+#+end_src
+
+**** Hydra
+
+Thanks again, [[https://github.com/alphapapa/unpackaged.el#filter-hydra][alphapapa!]]
+#+begin_src elisp
+(cl-defmacro unpackaged/elfeed-search-view-hydra-define (name body views)
+  "Define a pretty hydra named NAME with BODY and VIEWS.
+VIEWS is a plist: in it, each property is a string which becomes
+a column header in the hydra, and each value is a list of lists
+in this format: (KEY COMPONENT &optional LABEL).
+
+The KEY is a key sequence passed to `kbd', like \"s\" or \"S
+TAB\".  The COMPONENT is an Elfeed filter component, which may
+begin with \"+\" or \"=\", and in which spaces are automatically
+escaped as required by Elfeed.  The LABEL, if present, is a
+string displayed next to the KEY; if absent, COMPONENT is
+displayed.
+
+In the resulting hydra, when KEY is pressed, the COMPONENT is
+toggled in `elfeed-search-filter'.  It is toggled between three
+states: normal, inverse, and absent.  For example, the component
+\"+tag\" cycles between three states in the filter: \"+tag\",
+\"-tag\", and \"\".  The appropriate inverse prefix is used
+according to the component's prefix (i.e. for \"=\", the inverse
+is \"~\", and for \"\" (a plain regexp), \"!\" is used).
+
+These special components may be used to read choices from the
+Elfeed database with completion and toggle them:
+
+  :complete-age   Completes and sets the age token.
+  :complete-feed  Completes and toggles a feed token.
+  :selected-feed  Toggles the currently selected feed token.
+  :complete-tag   Completes and toggles a tag token.
+  nil             Sets default filter.
+
+A complete example:
+
+  (unpackaged/elfeed-search-view-hydra-define my/elfeed-search-view-hydra
+    (:foreign-keys warn)
+    (\"Views\"
+     ((\"@\" :complete-age \"Date\")
+      (\"d\" nil))
+     \"Status\"
+     ((\"su\" \"+unread\"))
+     \"Feed\"
+     ((\"f TAB\" :complete-feed \"Choose\")
+      (\"fE\" \"=Planet Emacslife\" \"Planet Emacslife\"))
+     \"Tags\"
+     ((\"t TAB\" :complete-tag \"Choose\")
+      (\"te\" \"+Emacs\"))
+     \"\"
+     ((\"tn\" \"+news\"))))"
+  (declare (indent defun))
+  (cl-labels ((escape-spaces (string)
+                             ;; Return STRING with spaces escaped with "\s-".  Necessary
+                             ;; because Elfeed treats all literal spaces as separating tokens.
+                             (replace-regexp-in-string (rx space) "\\s-" string t t)))
+    (let* ((completion-fns
+            (list (cons :complete-age
+                        (lambda ()
+                          (interactive)
+                          (save-match-data
+                            (let* ((date-regexp (rx (group (or bos blank) "@" (1+ digit) (1+ (not blank)))))
+                                   (date-tag (when (string-match date-regexp elfeed-search-filter)
+                                               (match-string 1 elfeed-search-filter)))
+                                   (date-new (read-string "Date: " date-tag)))
+                              (elfeed-search-set-filter
+                               (if date-tag
+                                   (replace-regexp-in-string date-regexp date-new elfeed-search-filter t t)
+                                 (concat date-new " " elfeed-search-filter)))))))
+                  (cons :complete-feed
+                        '(concat "=" (replace-regexp-in-string
+                                      (rx space) "\\s-"
+                                      (->> (hash-table-values elfeed-db-feeds)
+                                           (--map (elfeed-meta it :title))
+                                           (remove nil)
+                                           (completing-read "Feed: ")
+                                           regexp-quote) t t)))
+                  (cons :selected-feed
+                        '(concat "=" (replace-regexp-in-string
+                                      (rx space) "\\s-"
+                                      (--> (elfeed-search-selected 'ignore-region)
+                                           (elfeed-entry-feed it)
+                                           (elfeed-meta it :title)
+                                           (regexp-quote it)) t t)))
+                  (cons :complete-tag
+                        '(concat "+" (completing-read "Tag: " (elfeed-db-get-all-tags))))))
+           (body (append '(:title (concat (propertize "Filter: " 'face 'minibuffer-prompt)
+                                          (propertize elfeed-search-filter 'face 'elfeed-search-filter-face))
+                           :color amaranth :hint t :quit-key "q")
+                         body))
+           (heads (cl-loop for (heading views) on views by #'cddr
+                           collect heading
+                           collect (cl-loop for (key component label) in views
+                                            collect
+                                            `(,key
+                                              ,(cl-typecase component
+                                                 ((and function (not null))
+                                                  ;; I don't understand why nil matches
+                                                  ;; (or lambda function), but it does,
+                                                  ;; so we have to account for it.  See
+                                                  ;; (info-lookup-symbol 'cl-typep).
+                                                  `(funcall-interactively ,component))
+                                                 (string
+                                                  `(elfeed-search-set-filter
+                                                    (unpackaged/elfeed-search-filter-toggle-component
+                                                     elfeed-search-filter ,(escape-spaces component))))
+                                                 (otherwise
+                                                  `(elfeed-search-set-filter
+                                                    ,(when component
+                                                       `(unpackaged/elfeed-search-filter-toggle-component
+                                                         elfeed-search-filter ,component)))))
+                                              ,(or label component "Default"))))))
+      ;; I am so glad I discovered `cl-sublis'.  I tried several variations of `cl-labels' and
+      ;; `cl-macrolet' and `cl-symbol-macrolet', but this is the only way that has worked.
+      (setf heads (cl-sublis completion-fns heads))
+      `(pretty-hydra-define ,name ,body
+         ,heads))))
+
+(cl-defun unpackaged/elfeed-search-filter-toggle-component (string component)
+  "Return STRING (which should be `elfeed-search-filter') having toggled COMPONENT.
+Tries to intelligently handle components based on their prefix:
++tag, =feed, regexp."
+  (save-match-data
+    (cl-labels ((toggle (component +prefix -prefix string)
+                        (let ((+pat (rx-to-string `(seq (or bos blank)
+                                                        (group ,+prefix ,component)
+                                                        (or eos blank))))
+                              (-pat (rx-to-string `(seq (group (or bos (1+ blank)) ,-prefix ,component)
+                                                        (or eos blank)))))
+                          ;; TODO: In newer Emacs versions, the `rx' pattern `literal'
+                          ;; evaluates at runtime in `pcase' expressions.
+                          (pcase string
+                            ((pred (string-match +pat)) (rm (concat -prefix component) string))
+                            ((pred (string-match -pat)) (rm "" string))
+                            (_ (concat string " " +prefix component)))))
+                (rm (new string) (replace-match new t t string 1)))
+      (pcase component
+        ((rx bos "+" (group (1+ anything)))
+         (toggle (match-string 1 component) "+" "-" string))
+        ((rx bos "=" (group (1+ anything)))
+         (toggle (match-string 1 component) "=" "~" string))
+        ((pred string-empty-p)
+         (replace-regexp-in-string "[^\s]*\s*$" "" string))
+        (_ (toggle component "" "!" string))))))
+#+end_src
+
+The custom filter hydra.
+#+begin_src elisp
+(unpackaged/elfeed-search-view-hydra-define
+  psydev/elfeed-search-filter-hydra
+  (:foreign-keys warn)
+  ("Views"
+   (("<tab>" (lambda () (elfeed-search-live-filter)) "Set")
+    ;; FIXME: For some obscure reason, using cl-sublis to substitute with a lambda results in a
+    ;; stack overflow. The lambda is copied here to avoid the substitution as a workaround.
+    ;; ("@" :complete-age "Date")
+    ("@" (lambda ()
+           (interactive)
+           (save-match-data
+             (let* ((date-regexp (rx (group (or bos blank) "@" (1+ digit) (1+ (not blank)))))
+                    (date-tag (when (string-match date-regexp elfeed-search-filter)
+                                (match-string 1 elfeed-search-filter)))
+                    (date-new (read-string "Date: " date-tag)))
+               (elfeed-search-set-filter
+                (if date-tag
+                    (replace-regexp-in-string date-regexp date-new elfeed-search-filter t t)
+                  (concat date-new " " elfeed-search-filter))))))
+     "Date")
+    ("d" "" "Delete")
+    ("r" nil))
+   "Status"
+   (("u" "+unread")
+    ("m" "+starred"))
+   "Feed"
+   (("f <tab>" :complete-feed "Choose")
+    ("ff" :selected-feed "Selected"))
+   "Tags"
+   (("t <tab>" :complete-tag "Choose")
+    ("tn" "+news")
+    ("tl" "+list")
+    ("tf" "+fun"))))
+#+end_src
+
+**** Hooks
+
+Mark entries older than 2 weeks as read.
+#+begin_src elisp
+(after! elfeed
+  (defvar psydev/elfeed-outdated-tagger
+    (elfeed-make-tagger :before "2 weeks ago"
+                        :remove 'unread))
+
+  (defvar psydev/elfeed-odysee-marker
+    (elfeed-make-tagger :feed-url "lbryfeed\\.melroy\\.org"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "odysee"))))
+  (defvar psydev/elfeed-bitchute-marker
+    (elfeed-make-tagger :feed-url "bitchute\\.com"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "bitchute"))))
+  (defvar psydev/elfeed-youtube-marker
+    (elfeed-make-tagger :feed-url "youtube\\.com"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "youtube"))))
+  (defvar psydev/elfeed-twitter-marker
+    (elfeed-make-tagger :feed-url "bridge=Twitter"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "twitter"))))
+  (defvar psydev/elfeed-reddit-marker
+    (elfeed-make-tagger :feed-url "reddit\\.com"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "reddit"))))
+  (defvar psydev/elfeed-github-marker
+    (elfeed-make-tagger :feed-url "github\\.com"
+                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "github"))))
+
+  ;; Mark entries older than 2 weeks as read.
+  (add-hook! 'elfeed-new-entry-hook
+    (defun psydev/elfeed-mark-outdated-as-read (entry)
+      (when (not (elfeed-tagged-p 'starred entry))
+        (funcall psydev/elfeed-outdated-tagger entry))))
+
+  ;; Mark all video entries with an icon tag.
+  (add-hook! 'elfeed-new-entry-hook
+    (defun psydev/elfeed-mark-entry-source (entry)
+      (cond
+       ((funcall psydev/elfeed-odysee-marker entry))
+       ((funcall psydev/elfeed-bitchute-marker entry))
+       ((funcall psydev/elfeed-youtube-marker entry))
+       ((funcall psydev/elfeed-twitter-marker entry))
+       ((funcall psydev/elfeed-reddit-marker entry))
+       ((funcall psydev/elfeed-github-marker entry))))))
+#+end_src
+
+**** Bindings
+
+Configure bindings.
+#+begin_src elisp
+(map! :after elfeed-org
+      :map elfeed-search-mode-map
+      :n  "C-j"        #'psydev/elfeed-forward-day
+      :n  "C-k"        #'psydev/elfeed-backward-day
+      :n  "<S-return>" #'psydev/elfeed-search-excerpt-toggle-selected
+      :n  "R"          #'elfeed-search-fetch
+      :n  "H"          #'elfeed-apply-hooks-now
+      :n  "J"          #'elfeed-apply-autotags-now
+      :n  "t"          #'elfeed-search-set-entry-title
+      :n  "T"          #'elfeed-search-set-feed-title
+      :n  "="          #'elfeed-search-toggle-all
+      :n  "s"          #'psydev/elfeed-toggle-sort
+      :n  "f"          #'elfeed-search-live-filter
+      :n  "F"          #'elfeed-search-clear-filter
+      :n  "M-f"        #'psydev/elfeed-search-filter-hydra/body
+      :nv "m"          #'psydev/elfeed-search-toggle-star
+      :nv "u"          #'psydev/elfeed-search-toggle-unread
+      :n  "i"          #'psydev/elfeed-search-toggle-day-site-as-read
+      :n  "I"          #'psydev/elfeed-search-toggle-site-as-read
+      :n  "o"          #'psydev/elfeed-search-toggle-day-as-read
+      :n  "a"          #'psydev/elfeed-search-mark-all-read
+      :n  "A"          #'psydev/elfeed-search-mark-all-unread
+      :nv "d"          #'psydev/elfeed-search-delete-selected
+      :n  "L"          #'elfeed-goodies/toggle-logs
+      :n  "q"          #'elfeed-search-quit-window
+      :n  "Q"          #'elfeed-kill-buffer
+
+      :map elfeed-show-mode-map
+      :n "<M-return>" #'elfeed-show-visit
+      :n "C-j"        #'evil-forward-paragraph
+      :n "C-k"        #'evil-backward-paragraph)
+#+end_src
+
 *** Evil
+
 Customize general evil options.
 #+begin_src elisp
 (setq evil-want-fine-undo t     ; By default while in insert all changes are one big blob. Be more granular
@@ -1140,6 +3012,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
  ;; Rebind fold commands
  :m "TAB"             #'+fold/toggle
+ :m "<tab>"           #'+fold/toggle
  :m "<backtab>"       #'+fold/close-all
  :m "C-<iso-lefttab>" #'+fold/open-all
  ;; Rebind macro command, q is for quitting.
@@ -1161,6 +3034,31 @@ Add the missing arrow-key variants of the window navigation commands.
  :m "[ TAB"           #'+workspace/switch-left
  :nm "]w"             #'evil-window-next
  :nm "[w"             #'evil-window-prev
+ ;; Bind more motion/editing commands to hjkl
+ :i "C-k"             #'evil-previous-line
+ :i "C-j"             #'evil-next-line
+ :i "C-h"             #'left-char
+ :i "C-l"             #'right-char
+ :m "C-k"             #'evil-backward-paragraph
+ :m "C-j"             #'evil-forward-paragraph
+ :m "C-h"             #'evil-backward-word-begin
+ :m "C-l"             #'evil-forward-word-begin
+ :i "C-S-k"           #'evil-backward-paragraph
+ :i "C-S-j"           #'evil-forward-paragraph
+ :i "C-S-h"           #'evil-backward-word-begin
+ :i "C-S-l"           #'evil-forward-word-begin
+ :m "C-S-k"           #'evil-backward-section-end
+ :m "C-S-j"           #'evil-forward-section-end
+ :m "C-S-h"           #'evil-backward-WORD-begin
+ :m "C-S-l"           #'evil-forward-WORD-end
+ :g "M-k"             #'drag-stuff-up
+ :g "M-j"             #'drag-stuff-down
+ :g "M-h"             #'evil/shift-left
+ :g "M-l"             #'evil-shift-right
+ :g "M-K"             #'drag-stuff-up
+ :g "M-J"             #'drag-stuff-down
+ :g "M-H"             #'drag-stuff-left
+ :g "M-L"             #'drag-stuff-right
  :map evil-window-map
  ;; Navigation
  "]"                  #'evil-window-next
@@ -1170,10 +3068,10 @@ Add the missing arrow-key variants of the window navigation commands.
  "<up>"               #'evil-window-up
  "<right>"            #'evil-window-right
  ;; Moving windows
- "C-<left>"           #'+evil/window-move-left
- "C-<down>"           #'+evil/window-move-down
- "C-<up>"             #'+evil/window-move-up
- "C-<right>"          #'+evil/window-move-right
+ "S-<left>"           #'+evil/window-move-left
+ "S-<down>"           #'+evil/window-move-down
+ "S-<up>"             #'+evil/window-move-up
+ "S-<right>"          #'+evil/window-move-right
  ;; Miscellaneous
  "`"                  #'evil-window-mru     ; Consistent with SPC `
  "p"                  #'+popup/other        ; Better than C-x p
@@ -1182,6 +3080,7 @@ Add the missing arrow-key variants of the window navigation commands.
 #+end_src
 
 *** Evil goggles
+
 Customize evil-goggles visual hints.
 #+begin_src elisp
 (use-package! evil-goggles
@@ -1196,6 +3095,7 @@ Customize evil-goggles visual hints.
 #+end_src
 
 *** Flyspell
+
 Provide language cycling.
 #+begin_src elisp
 (defvar-local lang-ring nil
@@ -1219,12 +3119,15 @@ Provide language cycling.
 #+end_src
 
 *** Format
+
 Override format-on-save default enabled modes to add emacs-lisp-mode.
 #+begin_src elisp
 (setq +format-on-save-enabled-modes
       '(not sql-mode         ; sqlformat is currently broken
             tex-mode         ; latexindent is broken
-            latex-mode))
+            latex-mode
+            elfeed-search-mode
+            elfeed-show-mode))
 #+end_src
 
 Disable ~shfmt~ formatting for zsh buffers (not supported).
@@ -1255,6 +3158,7 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+end_src
 
 *** Ivy
+
 Enable Ivy buffer previews. This only applies to workspace buffer switching,
 as it seems that previewing buffers from other workspaces adds them to the
 current workspace, which is totally unwanted behavior.
@@ -1324,6 +3228,7 @@ Customize bindings.
 #+end_src
 
 *** Ligatures
+
 Remove annoying programming ligatures.
 #+begin_src elisp
 (cl-delete-if
@@ -1337,6 +3242,7 @@ Remove annoying programming ligatures.
 #+end_src
 
 *** Lsp
+
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
 (after! lsp-mode
@@ -1344,6 +3250,7 @@ Ignore prompts to restart server to avoid hangs on server-restart.
 #+end_src
 
 *** Magit
+
 Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+begin_src elisp
 (after! magit
@@ -1359,6 +3266,7 @@ Customize bindings.
 #+end_src
 
 *** Man
+
 Add shortcut to man command.
 #+begin_src elisp
 (use-package! man
@@ -1368,6 +3276,7 @@ Add shortcut to man command.
 #+end_src
 
 *** Projectile
+
 Customize general projectile options.
 #+begin_src elisp
 (after! projectile
@@ -1461,6 +3370,7 @@ Customize bindings.
 #+end_src
 
 *** Treemacs
+
 Configure treemacs appearance and behavior.
 #+begin_src elisp
 (use-package! treemacs
@@ -1498,17 +3408,8 @@ Customize bindings.
   (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
 
-*** Undo tree
-Customize undo-tree visualizer.
-#+begin_src elisp
-(use-package! undo-tree
-  :config
-  (setq undo-tree-visualizer-diff nil)
-  :bind (:map evil-normal-state-map
-         ("U" . undo-tree-visualize)))
-#+end_src
-
 *** Vterm
+
 Configure vterm buffer naming scheme.
 #+begin_src elisp
 (use-package! vterm
@@ -1517,6 +3418,7 @@ Configure vterm buffer naming scheme.
 #+end_src
 
 *** Which-key
+
 Reduce the delay before the which-key buffer is displayed.
 #+begin_src elisp
 (after! which-key
@@ -1535,6 +3437,7 @@ Replace =evil-= like prefixes by a unicode symbol to reduce verbosity.
 #+end_src
 
 *** YASnippet
+
 Nested snippets are good, enable that.
 #+begin_src elisp
 (use-package! yasnippet
@@ -1554,59 +3457,8 @@ Rebind auto-yasnippet commands.
 #+end_src
 
 ** Language packages
-*** Org
-Change the default org directory.
-#+begin_src elisp
-(setq org-directory "~/Notes")
-#+end_src
-
-Remove the tangle-on-save hook and add a manual binding.
-#+begin_src elisp
-(remove-hook! org-mode #'+literate-enable-recompile-h)
-(defun +literate-recompile ()
-  "Recompile literate config to `doom-private-dir"
-  (interactive)
-  (+literate-recompile-maybe-h))
-(map! :map org-mode-map
-      :localleader
-      "R" #'+literate-recompile)
-#+end_src
-
-Disable flyspell by default in org-mode (laggy).
-#+begin_src elisp
-(remove-hook! org-mode #'flyspell-mode)
-#+end_src
-
-Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
-#+begin_src elisp
-(after! evil-org
-  (defun evil-org-edit-src-exit ()
-    "Fallback to `evil-edit-src-exit'."
-    (interactive)
-    (mapc #'call-interactively '(org-edit-src-exit))))
-#+end_src
-
-Improve org performance by removing some candy.
-See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
-#+begin_src elisp
-(after! org
-  (setq org-fontify-quote-and-verse-blocks nil
-        org-fontify-whole-heading-line nil
-        org-hide-leading-stars nil
-        org-hide-leading-stars-before-indent-mode nil))
-#+end_src
-
-Customize bindings.
-#+begin_src emacs-lisp :tangle yes
-(after! org
-  (map! :map org-mode-map
-        "S-<return>" #'+org/shift-return
-        :localleader
-        :prefix ("b" . "tables")
-        "j"          #'org-table-copy-down))
-#+end_src
-
 *** Sh
+
 Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
@@ -1623,6 +3475,7 @@ https://github.com/bash-lsp/bash-language-server/issues/104
 :PROPERTIES:
 :header-args:elisp: :tangle "packages.el" :comments no
 :END:
+
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management][package management instructions]] from the doom documentation.
 
 This file shouldn't be byte compiled.
@@ -1632,6 +3485,7 @@ This file shouldn't be byte compiled.
 
 ** General packages
 *** Beacon
+
 [[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
 #+begin_src elisp
 (package! beacon)
@@ -1659,27 +3513,544 @@ This file shouldn't be byte compiled.
 #+end_src
 
 *** Command logging
+
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
 (package! command-log-mode)
 #+end_src
 
+*** Elfeed dashboard
+
+[[https://github.com/Manoj321/elfeed-dashboard][This package]] is a frontend for elfeed, similar to mu4e landing page.
+#+begin_src elisp
+(package! elfeed-dashboard
+  :recipe (:host github :repo "Manoj321/elfeed-dashboard"))
+#+end_src
+
+Disable evil-snipe.
+#+begin_src elisp :tangle yes
+(after! evil-snipe
+  (add-to-list 'evil-snipe-disabled-modes 'elfeed-dashboard-mode))
+#+end_src
+
+Configure dashboard.
+#+begin_src elisp :tangle yes
+(use-package! elfeed-dashboard
+  :config
+  (setq elfeed-dashboard-file (concat org-directory "elfeed/dashboard.org"))
+  ;; Update feed counts on elfeed-quit
+  ;; FIXME: Too slow, fallback to manual update
+  ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
+  )
+#+end_src
+
+Add hooks to improve the usability and readability of the dashboard.
+#+begin_src elisp :tangle yes
+(after! elfeed-dashboard
+  ;; Remove ineffective code called on dashboard open, use hook instead.
+  (defun psydev/elfeed-dashboard ()
+    "Open the elfeed dasboard."
+    (interactive)
+    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+    (with-current-buffer elfeed-dashboard--buf
+      (elfeed-dashboard-mode)))
+  (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
+
+  ;; Really update links when opening the dashboard.
+  (add-hook! elfeed-dashboard-mode
+    (defun psydev/elfeed-dashboard-setup ()
+      ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
+      (setq elfeed-dashboard--buf (current-buffer))
+      ;; FIXME: Too slow, fallback to manual update
+      ;; (elfeed-dashboard-update-links)
+      ))
+
+  ;; Move point to the first selectable shortcut.
+  (add-hook! elfeed-dashboard-mode
+    (defun psydev/elfeed-dashboard-top ()
+      (goto-line 3)
+      (scroll-down))) ; TODO Does not always work, how to truly reset the view to top?
+
+  ;; Disable evil-org-mode for now, I could not find a way to make elfeed-dashboard-mode-map
+  ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
+  (add-hook! elfeed-dashboard-mode
+    (defun psydev/elfeed-dashboard-override-keymap ()
+      ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
+      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+      ;; (elfeed-dashboard-update-links)
+
+      (evil-org-mode 0)))
+
+  ;; Take advantage of org-mode capabilities to improve prettiness.
+  (add-hook! elfeed-dashboard-mode
+    (defun psydev/elfeed-dashboard-prettify ()
+      (let ((org-image-actual-width 188))
+        (org-toggle-inline-images 'include-linked))
+      (psydev/elfeed-dashboard-emphasis)
+      (+org-pretty-mode 1)))
+
+  ;; Remove emphasis that can appear in feed titles.
+  (defun psydev/elfeed-dashboard-emphasis ()
+    (setq-local org-emphasis-alist
+                '(("*" bold)
+                  ("_" underline)
+                  ("=" org-verbatim verbatim)
+                  ("~" org-code verbatim))))
+
+  ;; Toggle additional customization on edit.
+  (defun psydev/elfeed-dashboard-edit ()
+    "Edit dashboard."
+    (interactive)
+    (+org-pretty-mode 0)
+    (org-toggle-inline-images)
+    (evil-org-mode 1)
+    (setq buffer-read-only nil)
+    (org-mode)
+    (psydev/elfeed-dashboard-emphasis))
+  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit))
+#+end_src
+
+Add custom command to open elfeed or the dashboard entry at point.
+#+begin_src elisp :tangle yes
+(after! elfeed-dashboard
+  (defun psydev/elfeed-dashboard-open (&optional arg)
+    "Open the first elfeed link on the current line, or open elfeed if none are found.
+
+With a numeric prefix, opens the nth elfeed link on the current line."
+    (interactive "p") ;; FIXME Why is this not working?
+    (let ((nlink (or arg (prefix-numeric-value current-prefix-arg))))
+      (save-excursion
+        (org-beginning-of-line)
+        (if (re-search-forward org-link-any-re (line-end-position) t nlink)
+            (progn (forward-char -1) (org-open-at-point))
+          (elfeed))))))
+#+end_src
+
+Generalize status updates while elfeed is updating.
+#+begin_src elisp :tangle yes
+(after! elfeed-dashboard
+  (defun psydev/elfeed-dashboard-update ()
+    "Fetch new feeds, if there are no updates already in progress."
+    (interactive)
+    (unless elfeed-dashboard--elfeed-update-timer
+      (elfeed-update)))
+  (advice-add #'elfeed-dashboard-update :override #'psydev/elfeed-dashboard-update)
+
+  (add-hook! 'elfeed-update-init-hooks
+    (defun psydev/elfeed-update-info ()
+      "Display status information while elfeed fetches feeds."
+      (unless elfeed-dashboard--elfeed-update-timer
+        (setq elfeed-dashboard--elfeed-update-timer
+              (run-with-timer 1 1 (lambda ()
+                                    (if (> (elfeed-queue-count-total) 0)
+                                        (message "elfeed: %d jobs pending..." (elfeed-queue-count-total))
+                                      (cancel-timer elfeed-dashboard--elfeed-update-timer)
+                                      (setq elfeed-dashboard--elfeed-update-timer nil)
+                                      (elfeed-dashboard-update-links)
+                                      (message "elfeed: Updated!")))))))))
+#+end_src
+
+Patch keymap function to support evil-mode and key combinations.
+#+begin_src elisp :tangle yes
+(after! elfeed-dashboard
+  (defun psydev/elfeed-dashboard-parse-keymap ()
+    "Install key binding defined as KEYMAP:VALUE.
+
+VALUE is composed of \"keybinding | function-call\" with
+keybidning begin a string describing a key sequence and a call to
+an existing function. For example, to have 'q' to kill the
+current buffer, the syntax would be:
+
+,#+KEYMAP: q | kill-current-buffer
+
+This can be placed anywhere in the org file even though I advise
+to group keymaps at the same place."
+
+    (org-element-map (org-element-parse-buffer) 'keyword
+      (lambda (keyword)
+        (when (string= (org-element-property :key keyword) "KEYMAP")
+          (let* ((value (org-element-property :value keyword))
+                 (key   (string-trim (nth 0 (split-string value "|"))))
+                 (call  (string-trim (nth 1 (split-string value "|")))))
+            (evil-define-key* 'normal elfeed-dashboard-mode-map (kbd key)
+              (eval (car (read-from-string
+                          (format "(lambda () (interactive) (%s))" call))))))))))
+  (advice-add #'elfeed-dashboard-parse-keymap :override #'psydev/elfeed-dashboard-parse-keymap))
+#+end_src
+
+Add top level binding.
+#+begin_src elisp :tangle yes
+(map! :after elfeed-dashboard
+      :leader
+      (:prefix-map ("o" . "open")
+       :desc "Elfeed" "n" #'elfeed-dashboard))
+#+end_src
+
+*** Elfeed goodies
+
+[[https://github.com/algernon/elfeed-goodies][This package]] enhances the elfeed experience.
+#+begin_src elisp
+(package! ov) ; Required in elfeed for date-separators and entry previews
+(package! elfeed-goodies)
+#+end_src
+
+Configure basic settings and setup goodies.
+#+begin_src elisp :tangle yes
+(use-package! elfeed-goodies
+  :config
+  ;; Disable font-lock-mode in elfeed buffers (prevents faces from being applied)
+  (setq font-lock-global-modes '(not elfeed-search-mode))
+
+  ;; Configure the header
+  (setq elfeed-goodies/powerline-default-separator 'slant
+        elfeed-goodies/feed-source-column-width 42
+        elfeed-goodies/tag-column-width 48
+        elfeed-goodies/wide-threshold 0.42
+        elfeed-goodies/entry-pane-size 0.5) ; Unused, using doom's popup (see popup rule)
+
+  ;; Use a special (hidden) tag for feeds with HTML entry titles.
+  (setq elfeed-goodies/html-decode-title-tags '(html))
+  ;; Declare the list of hidden tags.
+  (defvar psydev/elfeed-hidden-tags '("unread" "starred" "html")
+    "Tags that are hidden from elfeed views.")
+
+  ;; Customized version of elfeed-goodies/setup
+  (defun psydev/elfeed-goodies/setup ()
+    "Setup Elfeed with adaptive header bar and entries."
+    (interactive)
+    (add-hook 'elfeed-show-mode-hook #'elfeed-goodies/show-mode-setup)
+    (add-hook 'elfeed-new-entry-hook #'elfeed-goodies/html-decode-title)
+    (when (boundp 'elfeed-new-entry-parse-hook)
+      (add-hook 'elfeed-new-entry-parse-hook #'elfeed-goodies/parse-author))
+    (setq elfeed-search-header-function #'elfeed-goodies/search-header-draw
+          elfeed-search-print-entry-function #'psydev/elfeed-goodies/entry-line-draw
+          ;; NOTE Prefer doom's horizontal popup
+          ;; elfeed-show-entry-switch #'elfeed-goodies/switch-pane
+          ;; elfeed-show-entry-delete #'elfeed-goodies/delete-pane
+          elfeed-show-entry-switch #'pop-to-buffer
+          elfeed-show-entry-delete #'+rss/delete-pane
+          elfeed-show-refresh-function #'elfeed-goodies/show-refresh--plain))
+  (advice-add #'elfeed-goodies/setup :override #'psydev/elfeed-goodies/setup)
+
+  (psydev/elfeed-goodies/setup))
+#+end_src
+
+**** Faces
+
+Define the color theme for header and entries.
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  ;; TODO Tricky to implement, try again if really needed
+  (defface psydev/elfeed-search-shown-face '((t (:background "gray23")))
+    "Face used in search mode for the entry shown in elfeed-show-mode."
+    :group 'elfeed)
+
+  ;; Configure powerline theme and elfeed faces.
+  (custom-set-faces!
+    '(powerline-inactive0 :background "gray23")
+    '(powerline-inactive1 :background "gray37")
+    '(powerline-inactive2 :background "wheat2")
+    '(powerline-active0 :background "gray23" :foreground "wheat1")
+    '(powerline-active1 :background "gray37" :foreground "wheat1")
+    '(powerline-active2 :background "wheat2" :foreground "grey23")
+    '(elfeed-search-filter-face :foreground "#b294bb")
+    '(elfeed-search-unread-count-face :foreground "wheat1")
+    '(elfeed-search-last-update-face :foreground "grey23")
+    '(elfeed-search-date-face :foreground "wheat2")
+    '(elfeed-search-feed-face :foreground "skyblue2")
+    '(elfeed-search-tag-face :foreground "#f0c674")
+    '(elfeed-search-title-face :foreground "wheat2")
+    '(elfeed-search-unread-title-face :foreground unspecified :weight bold)))
+#+end_src
+
+**** Search Header
+
+Patch the header drawing function for ~elfeed-search-mode~.
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  ;; NOTE Updated attribution of powerline fonts
+  ;; NOTE Added face properties for filter, (unread-count and last-update
+  (defun psydev/elfeed-goodies/search-header/rhs (separator-left separator-right search-filter stats update)
+    (list
+     (funcall separator-right 'mode-line 'powerline-active0)
+     (powerline-raw
+      (propertize (concat "  " search-filter (when (string-empty-p search-filter) "no filter"))
+                  'face 'elfeed-search-filter-face)
+      'powerline-active0 'r)
+     (funcall separator-right 'powerline-active0 'powerline-active1)
+     (cl-destructuring-bind (unread entry-count feed-count) stats
+       (let ((content (format "  %d/%d:%d " unread entry-count feed-count)))
+         (when url-queue
+           (cl-destructuring-bind (total-feeds queue-length in-progress) (-elfeed/queue-stats)
+             (setf content (concat content (format "(* %.0f%%%%) "
+                                                   (* (/ (- total-feeds (+ queue-length
+                                                                           in-progress))
+                                                         total-feeds 1.0) 100))))))
+         (propertize content 'face 'powerline-active1)))
+     (funcall separator-right 'powerline-active1 'powerline-active2)
+     (powerline-raw
+      (propertize (concat "  " update) 'face 'elfeed-search-last-update-face)
+      'powerline-active2 'r)))
+
+  ;; NOTE Changed Subject -> Title
+  ;; NOTE Updated attribution of powerline fonts and removed columns
+  (defun psydev/elfeed-goodies/search-header/draw-wide (separator-left separator-right search-filter stats db-time)
+    (let* ((update (format-time-string "%Y-%m-%d %H:%M:%S" db-time)) ; NOTE Removed timezone
+           (lhs (list
+                 (powerline-raw
+                  (-pad-string-to " Feed" (- elfeed-goodies/feed-source-column-width 6))
+                  'powerline-active2 'l)
+                 (funcall separator-left 'powerline-active2 'mode-line)
+                 (powerline-raw
+                  (propertize " Title" 'face 'elfeed-search-title-face)
+                  'mode-line 'l)))
+           (rhs (search-header/rhs separator-left separator-right search-filter stats update)))
+      (concat (powerline-render lhs)
+              (powerline-fill 'mode-line (powerline-width rhs))
+              (powerline-render rhs))))
+
+  ;; NOTE Changed Subject -> Title
+  (defun psydev/elfeed-goodies/search-header/draw-tight (separator-left separator-right search-filter stats db-time)
+    (let* ((update (format-time-string "%H:%M:%S" db-time))
+           (lhs (list
+                 (powerline-raw " Title" 'mode-line 'l)))
+           (rhs (search-header/rhs separator-left separator-right search-filter stats update)))
+      (concat (powerline-render lhs)
+              (powerline-fill 'mode-line (powerline-width rhs))
+              (powerline-render rhs))))
+
+  (advice-add #'search-header/rhs :override #'psydev/elfeed-goodies/search-header/rhs)
+  (advice-add #'search-header/draw-wide :override #'psydev/elfeed-goodies/search-header/draw-wide)
+  (advice-add #'search-header/draw-tight :override #'psydev/elfeed-goodies/search-header/draw-tight))
+#+end_src
+
+Patch the header drawing function for ~elfeed-show-mode~.
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  (defun psydev/elfeed-goodies/entry-header-line ()
+    "Print the header line for elfeed-show-mode."
+    (cl-flet ((tags (entry)
+                    (seq-difference (--map (substring-no-properties (symbol-name it))
+                                           (elfeed-entry-tags entry))
+                                    psydev/elfeed-hidden-tags)))
+      (let* (;; (entry-face 'elfeed-search-feed-face)
+             ;; (entry-face (psydev/elfeed-search--entry-face elfeed-show-entry))
+             (title-faces (elfeed-search--faces (elfeed-entry-tags elfeed-show-entry)))
+
+             (tags (mapconcat
+                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (tags elfeed-show-entry) ","))
+             ;; (tags (mapconcat #'symbol-name (tags elfeed-show-entry) ","))
+             (feed (elfeed-entry-feed elfeed-show-entry))
+             (entry-author (elfeed-meta elfeed-show-entry :author))
+             (feed-title (when feed (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+             (feed-title (if entry-author
+                             (concat entry-author " (" feed-title ")")
+                           feed-title))
+             (date (format-time-string "%Y-%m-%d %H:%M:%S "
+                                       (seconds-to-time (elfeed-entry-date elfeed-show-entry))))
+
+             (title (elfeed-entry-title elfeed-show-entry))
+             (title-width (- (window-width) (length tags) (length feed-title) (length date) 10))
+             (title (truncate-string-to-width title title-width nil nil 'ellipsis))
+
+             (separator-left (intern (format "powerline-%s-%s"
+                                             elfeed-goodies/powerline-default-separator
+                                             (car powerline-default-separator-dir))))
+             (separator-right (intern (format "powerline-%s-%s"
+                                              elfeed-goodies/powerline-default-separator
+                                              (cdr powerline-default-separator-dir))))
+             (lhs (list
+                   (powerline-raw (concat "  " feed-title ) 'powerline-active2 'r)
+                   (funcall separator-left 'powerline-active2 'powerline-active1)
+                   (powerline-raw (propertize (concat " " title " ") 'face title-faces) 'powerline-active1 'l)
+                   (funcall separator-left 'powerline-active1 'mode-line)))
+             (rhs (list
+                   (funcall separator-right 'mode-line 'powerline-active1)
+                   (powerline-raw (concat "  " tags " ") 'powerline-active1)
+                   (funcall separator-right 'powerline-active1 'powerline-active2)
+                   (powerline-raw (concat " " date) 'powerline-active2 'l))))
+        (concat
+         (powerline-render lhs)
+         (powerline-fill 'mode-line (powerline-width rhs))
+         (powerline-render rhs)))))
+  (advice-add #'elfeed-goodies/entry-header-line :override #'psydev/elfeed-goodies/entry-header-line))
+#+end_src
+
+**** Search Entries
+
+Add a function to define how the face is selected for each entry.
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  (defun psydev/elfeed-search--entry-face (entry)
+    "Return face for ENTRY."
+    (let ((rainbow-identifiers-cie-l*a*b*-color-count 256)
+          (rainbow-identifiers-cie-l*a*b*-lightness 60)
+          (rainbow-identifiers-cie-l*a*b*-saturation 27))
+      (or (--> entry
+               (elfeed-entry-feed it)
+               (elfeed-feed-meta it)
+               (-let (((&plist :background background :foreground foreground) it)
+                      (face nil))
+                 (when (or background foreground)
+                   (when background
+                     (setq face (plist-put face :background background)))
+                   (when foreground
+                     (setq face (plist-put face :foreground foreground)))
+                   face)))
+          (->> entry
+               elfeed-entry-feed
+               elfeed-feed-url
+               rainbow-identifiers--hash-function
+               rainbow-identifiers-cie-l*a*b*-choose-face)))))
+#+end_src
+
+Add functions to define how icons are selected for each entry.
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  (defun psydev/elfeed-search--entry-status (entry)
+    "Return the status character for ENTRY."
+    (let* ((unread-p (member 'unread (elfeed-entry-tags entry)))
+           (starred-p (member 'starred (elfeed-entry-tags entry))))
+      (cond ((and unread-p starred-p) "") ;  
+            (starred-p "") ; ★
+            (unread-p "•")
+            (t " "))))
+
+  (defun psydev/elfeed-search--entry-icon (entry)
+    "Return the feed icon for ENTRY."
+    (let* ((feed (elfeed-entry-feed entry))
+           (feed-source (elfeed-meta feed :source)))
+      (pcase feed-source
+        ("odysee"   (all-the-icons-faicon "renren"         :height 1.0  :v-adjust 0)) ; ""
+        ("bitchute" (all-the-icons-faicon "circle-o-notch" :height 0.85 :v-adjust 0)) ; ""
+        ("youtube"  (all-the-icons-faicon "youtube-play"   :height 0.9  :v-adjust 0)) ; ""
+        ("twitter"  (all-the-icons-faicon "twitter"        :height 1.0  :v-adjust 0)) ; ""
+        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 1.0  :v-adjust 0)) ; ""
+        ("github"   (all-the-icons-faicon "github"         :height 1.0  :v-adjust 0)) ; ""
+        (_ "  ")))))
+#+end_src
+
+Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa]].
+#+begin_src elisp :tangle yes
+(after! elfeed-goodies
+  (defun psydev/elfeed-goodies/entry-line-draw (entry)
+    "Print ENTRY to the buffer."
+    (cl-flet ((add-faces (str &rest faces)
+                         (dolist (face faces str)
+                           (add-face-text-property 0 (length str)
+                                                   face 'append str)))
+              (tags (entry)
+                    (seq-difference (--map (substring-no-properties (symbol-name it))
+                                           (elfeed-entry-tags entry))
+                                    psydev/elfeed-hidden-tags)))
+      (let* (;; Choose color and faces first
+             ;; See https://www.reddit.com/r/emacs/comments/7a976a/face_applied_to_result_of_symbolname_becomes/
+             (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+             (entry-face (psydev/elfeed-search--entry-face entry))
+             (entry-status (psydev/elfeed-search--entry-status entry))
+             (entry-icon (psydev/elfeed-search--entry-icon entry))
+
+             ;; Feed
+             (feed (elfeed-entry-feed entry))
+             (feed-title (when feed (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+             (feed-width elfeed-goodies/feed-source-column-width)
+             (feed-column (elfeed-format-column feed-title (- feed-width 4) :left))
+             (feed-column (apply #'add-faces feed-column entry-face title-faces))
+
+             ;; Tags
+             (tags (mapconcat
+                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (tags entry) ","))
+             ;; (tags-width elfeed-goodies/tag-column-width)                     ; Fixed alignment
+             (tags-width (min (length tags) elfeed-goodies/tag-column-width)) ; Dynamic Alignment
+             (tags-column (elfeed-format-column tags tags-width :right))
+             (tags-column (apply #'add-faces tags-column title-faces))
+
+             ;; Title
+             (title (substring-no-properties (or (elfeed-meta entry :title) (elfeed-entry-title entry) "")))
+             (title-width (- (window-width) feed-width tags-width 3))
+             (title-column (elfeed-format-column
+                            (truncate-string-to-width title title-width nil nil 'ellipsis)
+                            title-width :left))
+             (title-column (apply #'add-faces title-column title-faces))
+
+             (line (propertize
+                    (concat entry-status " "
+                            (if (>= (window-width) (* (frame-width) elfeed-goodies/wide-threshold))
+                                (concat feed-column " " entry-icon " " title-column " " tags-column)
+                              (apply #'add-faces title entry-face title-faces)))
+                    'kbd-help title)))
+        (insert line))))
+
+  (advice-add #'elfeed-goodies/entry-line-draw :override #'psydev/elfeed-goodies/entry-line-draw))
+#+end_src
+
+Replace "End of entries." string by empty-list placeholder.
+#+begin_src elisp :tangle yes
+(after! elfeed
+  (defun elfeed-search-update (&optional force)
+    "Update the elfeed-search buffer listing to match the database.
+When FORCE is non-nil, redraw even when the database hasn't changed."
+    (interactive)
+    (with-current-buffer (elfeed-search-buffer)
+      (when (or force (and (not elfeed-search-filter-active)
+                           (< elfeed-search-last-update (elfeed-db-last-update))))
+        (elfeed-save-excursion
+          (let ((inhibit-read-only t)
+                (standard-output (current-buffer)))
+            (erase-buffer)
+            (elfeed-search--update-list)
+            (dolist (entry elfeed-search-entries)
+              (funcall elfeed-search-print-entry-function entry)
+              (insert "\n"))
+            (when (not elfeed-search-entries) (insert "No entries.\n")) ; NOTE Changed to placeholder
+            (setf elfeed-search-last-update (float-time))))
+        (run-hooks 'elfeed-search-update-hook)))))
+#+end_src
+
+Remove string sort on tags to keep original order by tag-inheritance from org file.
+#+begin_src elisp :tangle yes
+(after! elfeed
+  (defun psydev/elfeed-normalize-tags (tags &rest more-tags)
+    "Return the normalized tag list for TAGS."
+    (let ((all (apply #'append tags (nconc more-tags (list ())))))
+      (cl-delete-duplicates all)))
+  (advice-add #'elfeed-normalize-tags :override #'psydev/elfeed-normalize-tags))
+#+end_src
+
+**** Bindings
+
+Add goodies-specific bindings.
+#+begin_src elisp :tangle yes
+(map! :after elfeed-goodies
+      :map elfeed-show-mode-map
+      :n "C-S-j" #'elfeed-goodies/split-show-next
+      :n "C-S-k" #'elfeed-goodies/split-show-prev
+      :n "n" #'elfeed-goodies/split-show-next
+      :n "p" #'elfeed-goodies/split-show-prev)
+#+end_src
+
 *** Evil visual mark
+
 [[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
 FIXME: Does not support ~evil-delete-marks~.
 #+begin_src elisp
 (package! evil-visual-mark-mode)
 #+end_src
 
+Customize, disabled by default for now as I often mistype and set marks unwillingly. Enable as needed.
 #+begin_src elisp :tangle yes
 (use-package! evil-visual-mark-mode
   :config
   (custom-set-faces!
     '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
-  (evil-visual-mark-mode))
+  ;; (evil-visual-mark-mode)
+)
 #+end_src
 
 *** Evil terminal cursor
+
 [[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
 #+begin_src elisp
 (package! evil-terminal-cursor-changer
@@ -1698,6 +4069,7 @@ FIXME: Does not support ~evil-delete-marks~.
 #+end_src
 
 *** Fasd
+
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
 (package! fasd)
@@ -1712,6 +4084,7 @@ FIXME: Does not support ~evil-delete-marks~.
 #+end_src
 
 *** Fast scroll
+
 [[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
 modeline during intense scrolling operations.
 #+begin_src elisp
@@ -1758,6 +4131,7 @@ Note this function's name implies compatibility with `unload-feature'."
 #+end_src
 
 *** Info colors
+
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
 (package! info-colors :pin "47ee73cc19")
@@ -1770,6 +4144,7 @@ Note this function's name implies compatibility with `unload-feature'."
 #+end_src
 
 *** TODO Large files
+
 The [[https://github.com/m00natic/vlfi][/very large files/ mode]] loads large files in chunks, allowing one to open
 ridiculously large files.
 #+begin_src elisp
@@ -1785,6 +4160,7 @@ To make VLF available without delaying startup, just load it in quiet moments.
 #+end_src
 
 *** Magit delta
+
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
 package to hook this into the magit diff view. This requires the ~delta~ binary.
 FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
@@ -1804,7 +4180,30 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
   (magit-delta-mode))
 #+end_src
 
+*** Pretty hydra
+
+[[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][This package]] provides a macro for creating hydras with automatically formatted columns.
+#+begin_src elisp
+(package! pretty-hydra)
+#+end_src
+
+*** Rainbow delimiters
+
+[[https://github.com/Fanael/rainbow-identifiers][This package]] provides highlighting of identifiers based on their names.
+#+begin_src elisp
+(package! rainbow-identifiers)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! rainbow-identifiers
+  :config
+  (setq rainbow-identifiers-choose-face-function 'rainbow-identifiers-cie-l*a*b*-choose-face
+        rainbow-identifiers-cie-l*a*b*-lightness 87
+        rainbow-identifiers-cie-l*a*b*-saturation 17))
+#+end_src
+
 *** Scroll on jump
+
 [[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
 #+begin_src elisp
 (package! scroll-on-jump :recipe
@@ -1860,12 +4259,14 @@ Define a global mode for scroll-on-jump and bind to relevant commands.
 #+end_src
 
 *** Systemd
+
 [[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
 #+begin_src elisp
 (package! systemd :pin "51c148e09a")
 #+end_src
 
 *** TLDR
+
 [[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
 #+begin_src elisp
 (package! tldr)
@@ -1881,6 +4282,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Treemacs icons
+
 [[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
 #+begin_src elisp
 (package! treemacs-all-the-icons)
@@ -1892,6 +4294,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Window layouts
+
 [[https://github.com/daichirata/emacs-rotate][This package]] allows rotating between window layouts.
 #+begin_src elisp
 (package! rotate :pin "091b5ac4fc")
@@ -1903,6 +4306,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Xclip
+
 [[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
 #+begin_src elisp
 (package! xclip :pin "2951c6b62b")
@@ -1919,10 +4323,3 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 ** Language packages
-*** TODO Org Mode
-I *need* this in my life. It take a URL to a recipe from a common site, and
-inserts an org-ified version at point. Isn't that just great.
-#+begin_src emacs-lisp
-;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
-#+end_src
-
