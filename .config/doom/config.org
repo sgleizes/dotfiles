@@ -840,7 +840,7 @@ r,/ : /
       (dired new-path))))
 #+end_src
 
-Customize default bindings. 
+Customize default bindings.
 #+begin_src elisp
 (map! :after dired
       :map dired-mode-map
@@ -853,6 +853,7 @@ Customize default bindings.
       :n "M-RET"      #'dired-view-file
       ;; Use TAB to fold/unfold as in other modes.
       :n "TAB"        #'dired-hide-subdir
+      :n "<tab>"      #'dired-hide-subdir
       :n "<backtab>"  #'dired-hide-all
       ;; Miscellaneous
       :n "_"          #'dired-undo
@@ -1220,6 +1221,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
  ;; Rebind fold commands
  :m "TAB"             #'+fold/toggle
+ :m "<tab>"           #'+fold/toggle
  :m "<backtab>"       #'+fold/close-all
  :m "C-<iso-lefttab>" #'+fold/open-all
  ;; Rebind macro command, q is for quitting.
@@ -1241,6 +1243,31 @@ Add the missing arrow-key variants of the window navigation commands.
  :m "[ TAB"           #'+workspace/switch-left
  :nm "]w"             #'evil-window-next
  :nm "[w"             #'evil-window-prev
+ ;; Bind more motion/editing commands to hjkl
+ :i "C-k"             #'evil-previous-line
+ :i "C-j"             #'evil-next-line
+ :i "C-h"             #'left-char
+ :i "C-l"             #'right-char
+ :m "C-k"             #'evil-backward-paragraph
+ :m "C-j"             #'evil-forward-paragraph
+ :m "C-h"             #'evil-backward-word-begin
+ :m "C-l"             #'evil-forward-word-begin
+ :i "C-S-k"           #'evil-backward-paragraph
+ :i "C-S-j"           #'evil-forward-paragraph
+ :i "C-S-h"           #'evil-backward-word-begin
+ :i "C-S-l"           #'evil-forward-word-begin
+ :m "C-S-k"           #'evil-backward-section-end
+ :m "C-S-j"           #'evil-forward-section-end
+ :m "C-S-h"           #'evil-backward-WORD-begin
+ :m "C-S-l"           #'evil-forward-WORD-end
+ :g "M-k"             #'drag-stuff-up
+ :g "M-j"             #'drag-stuff-down
+ :g "M-h"             #'evil/shift-left
+ :g "M-l"             #'evil-shift-right
+ :g "M-K"             #'drag-stuff-up
+ :g "M-J"             #'drag-stuff-down
+ :g "M-H"             #'drag-stuff-left
+ :g "M-L"             #'drag-stuff-right
  :map evil-window-map
  ;; Navigation
  "]"                  #'evil-window-next
@@ -1250,10 +1277,10 @@ Add the missing arrow-key variants of the window navigation commands.
  "<up>"               #'evil-window-up
  "<right>"            #'evil-window-right
  ;; Moving windows
- "C-<left>"           #'+evil/window-move-left
- "C-<down>"           #'+evil/window-move-down
- "C-<up>"             #'+evil/window-move-up
- "C-<right>"          #'+evil/window-move-right
+ "S-<left>"           #'+evil/window-move-left
+ "S-<down>"           #'+evil/window-move-down
+ "S-<up>"             #'+evil/window-move-up
+ "S-<right>"          #'+evil/window-move-right
  ;; Miscellaneous
  "`"                  #'evil-window-mru     ; Consistent with SPC `
  "p"                  #'+popup/other        ; Better than C-x p
