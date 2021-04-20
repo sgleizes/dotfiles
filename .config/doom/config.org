@@ -873,6 +873,523 @@ Customize default bindings.
       "H"             #'dired-omit-mode)
 #+end_src
 
+*** Org
+
+Change the default org directory.
+#+begin_src elisp
+(setq org-directory "~/Notes/")
+#+end_src
+
+Configure region behavior for org commands.
+#+begin_src elisp
+(after! org
+  (setq org-loop-over-headlines-in-active-region 'start-level
+        org-agenda-loop-over-headlines-in-active-region 't))
+#+end_src
+
+**** Document Structure
+
+Configure the behavior of M-RET and friends, and ensure that headings are terminated by blank lines.
+#+begin_src elisp
+(after! org
+  (setq org-insert-heading-respect-content nil
+        org-M-RET-may-split-line '((default . t))
+        org-blank-before-new-entry
+        '((heading . always)
+          (plain-list-item . nil))))
+#+end_src
+
+Patch doom's org-insert-item variant to better respect blank settings.
+#+begin_src elisp
+(after! org
+  (defun +org--insert-item (direction)
+    (let ((context (org-element-lineage
+                    (org-element-context)
+                    '(table table-row headline inlinetask item plain-list)
+                    t)))
+      (pcase (org-element-type context)
+        ;; Add a new list item (carrying over checkboxes if necessary)
+        ((or `item `plain-list)
+         ;; Position determines where org-insert-todo-heading and org-insert-item
+         ;; insert the new list item.
+         (if (eq direction 'above)
+             (org-beginning-of-item)
+           (org-end-of-item)
+           (backward-char))
+         (org-insert-item (org-element-property :checkbox context))
+         ;; Handle edge case where current item is empty and bottom of list is
+         ;; flush against a new heading.
+         (when (and (eq direction 'below)
+                    (eq (org-element-property :contents-begin context)
+                        (org-element-property :contents-end context)))
+           (org-end-of-item)
+           (org-end-of-line)))
+
+        ;; Add a new table row
+        ((or `table `table-row)
+         (pcase direction
+           ('below (save-excursion (org-table-insert-row t))
+                   (org-table-next-row))
+           ('above (save-excursion (org-shiftmetadown))
+                   (+org/table-previous-row))))
+
+        ;; Otherwise, add a new heading, carrying over any todo state, if
+        ;; necessary.
+        (_
+         (let ((level (or (org-current-level) 1)))
+           ;; I intentionally avoid `org-insert-heading' and the like because they
+           ;; impose unpredictable whitespace rules depending on the cursor
+           ;; position. It's simpler to express this command's responsibility at a
+           ;; lower level than work around all the quirks in org's API.
+           (pcase direction
+             (`below
+              (let (org-insert-heading-respect-content
+                    (blank? (org--blank-before-heading-p)))
+                (goto-char (line-end-position))
+                (org-end-of-subtree)
+                ;; FIXME: Respect blank settings, at least when inserting headlines below.
+                (insert "\n")
+                (unless (and blank? (org-previous-line-empty-p))
+                  (org-N-empty-lines-before-current (if blank? 1 0)))
+                (insert (make-string level ?*) " ")))
+             (`above
+              (org-back-to-heading)
+              (insert (make-string level ?*) " ")
+              (save-excursion (insert "\n"))))
+           (when-let* ((todo-keyword (org-element-property :todo-keyword context))
+                       (todo-type    (org-element-property :todo-type context)))
+             (org-todo
+              (cond ((eq todo-type 'done)
+                     ;; Doesn't make sense to create more "DONE" headings
+                     (car (+org-get-todo-keywords-for todo-keyword)))
+                    (todo-keyword)
+                    ('todo)))))))
+
+      (when (org-invisible-p)
+        (org-show-hidden-entry))
+      (when (and (bound-and-true-p evil-local-mode)
+                 (not (evil-emacs-state-p)))
+        (evil-insert 1)))))
+#+end_src
+
+Add helper function to help with blank line consistency.
+#+begin_src elisp
+(defun +org/fix-blank-lines (&optional prefix)
+  "Ensure that blank lines exist between headings and between headings and their contents.
+With prefix, operate on whole buffer. Ensures that blank lines
+exist after each headings's drawers."
+  (interactive "P")
+  (org-map-entries (lambda ()
+                     (org-with-wide-buffer
+                      ;; `org-map-entries' narrows the buffer, which prevents us from seeing
+                      ;; newlines before the current heading, so we do this part widened.
+                      (when (and (forward-line -1) (not (org-at-heading-p)) (forward-line))
+                        (while (not (looking-back "\n\n" nil))
+                          ;; Insert blank lines before heading.
+                          (insert "\n"))))
+                     (let ((end (org-entry-end-position)))
+                       ;; Insert blank lines before entry content
+                       (forward-line)
+                       (while (and (org-at-planning-p)
+                                   (< (point) (point-max)))
+                         ;; Skip planning lines
+                         (forward-line))
+                       (while (re-search-forward org-drawer-regexp end t)
+                         ;; Skip drawers. You might think that `org-at-drawer-p' would suffice, but
+                         ;; for some reason it doesn't work correctly when operating on hidden text.
+                         ;; This works, taken from `org-agenda-get-some-entry-text'.
+                         (re-search-forward "^[ \t]*:END:.*\n?" end t)
+                         (goto-char (match-end 0)))
+                       (unless (or (= (point) (point-max))
+                                   (org-at-heading-p)
+                                   (looking-at-p "\n"))
+                         (insert "\n"))))
+                   t (if prefix
+                         nil
+                       'tree)))
+#+end_src
+
+**** TODO-items & Checkboxes
+
+Define todo workflows and associated faces.
+Use ~#+TODO~ (or ~#+SEQ_TODO~ / ~#+TYP_TODO~) to define per-file keywords
+#+begin_src elisp
+(after! org
+  (setq org-todo-keywords
+        '((sequence
+           "TODO(t)"          ; A task that needs doing & is ready to do
+           "ACTV(a!)"         ; A task that is active/in progress
+           "WAIT(w@/!)"       ; A task that is waiting on something external
+           "HOLD(h@/!)"       ; A task that is paused/on hold because of me
+           "|"
+           "DONE(d!/!)")      ; Task successfully completed
+          (sequence
+           "IDEA(i)"          ; A captured task or project that must be processed and is not yet ready to do
+           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in the main backlog
+           "PROJ(p)"          ; A project, which usually contains other tasks/subprojects
+           "|"
+           "DONEPROJ(d)")
+          (sequence
+           "|"
+           "CANCELED(c@/!)")) ; Task was aborted or is no longer applicable
+        org-todo-keyword-faces
+        '(("ACTV" . +org-todo-active)
+          ("WAIT" . +org-todo-onhold)
+          ("HOLD" . +org-todo-onhold)
+          ("SMDY" . +org-todo-onhold)
+          ("IDEA" . +org-todo-idea)
+          ("PROJ" . +org-todo-project)))
+  (custom-declare-face '+org-todo-idea '((t (:inherit (bold org-drawer org-todo)))) "")
+  (custom-set-faces!
+    '(+org-todo-active :inherit (bold font-lock-constant-face org-todo))
+    '(+org-todo-onhold :inherit (bold warning org-todo))
+    '(+org-todo-idea :inherit (bold org-formula org-todo))
+    '(+org-todo-project :inherit (bold org-priority org-todo))))
+#+end_src
+
+Prefer using the ~LOGBOOK~ drawer rather than a CLOSED: entry (~org-log-done~).
+#+begin_src elisp
+(after! org
+  (setq org-log-done nil
+        org-log-repeat 'time        ; Ensure that a timestamp is logged when repeating
+        org-log-redeadline 'note    ; Ask to record a note when rescheduling a deadline
+        org-todo-repeat-to-state 't ; Repeat tasks to the previous state
+        org-log-into-drawer "LOGBOOK"))
+#+end_src
+
+Block headings from changing to DONE if they have TODO headings that are not DONE.
+#+begin_src elisp
+(after! org
+  (setq org-enforce-todo-dependencies 't
+        org-enforce-todo-checkbox-dependencies nil))
+#+end_src
+
+Set statistics cookies to be recursive by default.
+Set the ~COOKIE_DATA~ property to ~todo~ or ~checkbox~ to resolve conflicts, and
+add ~recursive~ to keep the recursive behavior.
+#+begin_src elisp
+(after! org
+  (setq org-hierarchical-todo-statistics nil
+        org-checkbox-hierarchical-statistics nil))
+#+end_src
+
+Automatically change TODO item with a stats cookie to DONE when children are done.
+Unfortunately it does not appear to work with checkboxes.
+It also inconveniently switches headlines with no subtasks to DONE.
+Kept for reference, but is probably a bad idea.
+#+begin_src elisp
+;; (after! org
+;;   (defun org-todo-done-when-stats-full (n-done n-not-done)
+;;     "Switch entry to DONE when all subentries are done."
+;;     (let (org-log-done
+;;           org-log-states  ; turn off logging
+;;           (state (org-get-todo-state)))
+;;       (when (= n-not-done 0)
+;;         (cond ((equal state "PROJ")
+;;                (org-todo "DONEPROJ"))
+;;               ((not (equal state "DONEPROJ"))
+;;                (org-todo "DONE"))
+;;               ))))
+;;   (add-hook! 'org-after-todo-statistics-hook #'org-todo-done-when-stats-full))
+#+end_src
+
+**** Tags
+
+Configure default tags behavior and appearance.
+#+begin_src elisp
+(after! org
+  ;; Default list of toplevel tags.
+  ;; My org files redefine these tags for explicitness and might add their own specific tags.
+  (setq org-tag-alist
+        '((:startgrouptag . nil)
+          ("date"         . ?1)
+          (:grouptags     . nil)
+          ("event"        . ?e)
+          ("appointment"  . ?t)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("activity"     . ?2)
+          (:grouptags     . nil)
+          ("read"         . ?d)
+          ("listen"       . ?a)
+          ("watch"        . ?w)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("task"         . ?3)
+          (:grouptags     . nil)
+          ("issue"        . ?i)
+          (:endgrouptag   . nil)
+          (:startgrouptag . nil)
+          ("context"      . ?4)
+          (:grouptags     . nil)
+          ("@self"        . ?s)
+          ("@phone"       . ?p)
+          ("@computer"    . ?c)
+          ("@home"        . ?h)
+          ("@work"        . ?w)
+          ("@people"      . ?l)
+          ("{@.+}"        . ?@)
+          (:endgrouptag . nil))
+        org-tag-faces
+        ;; Teal/Blue version, matches org-formula
+        '(("date"        . (:foreground "LightSkyBlue" :weight bold))
+          ("activity"    . (:foreground "#b5bd68" :weight bold))
+          ("task"        . (:foreground "#cc6666" :weight bold))
+          ("context"     . (:foreground "#8abeb7" :weight bold))
+          ;; Date tags
+          ("event"       . (:foreground "LightSkyBlue" :weight bold))
+          ("appointment" . (:foreground "#f0c674" :weight bold))
+          ;; Activity tags
+          ("read"        . (:foreground "#b5bd68" :weight bold))
+          ("listen"      . (:foreground "#b5bd68" :weight bold))
+          ("watch"       . (:foreground "#b5bd68" :weight bold))
+          ;; Task tags
+          ("issue"       . (:foreground "#cc6666" :weight bold))
+          ("bug"         . (:foreground "#cc6666" :weight bold))
+          ("improvement" . (:foreground "#de935f" :weight bold))
+          ("feature"     . (:foreground "#b5bd68" :weight bold))
+          ;; Context tags
+          ("@self"       . (:foreground "#8abeb7" :weight bold))
+          ("@phone"      . (:foreground "#8abeb7" :weight bold))
+          ("@computer"   . (:foreground "#8abeb7" :weight bold))
+          ("@home"       . (:foreground "#8abeb7" :weight bold))
+          ("@work"       . (:foreground "#8abeb7" :weight bold))
+          ("@people"     . (:foreground "#8abeb7" :weight bold))
+          ("@errand"     . (:foreground "#8abeb7" :weight bold)))
+        org-tags-column -132
+        org-fast-tag-selection-single-key 't)
+  (custom-set-faces!
+    ;; '(org-tag :foreground "#717171" :weight normal)
+    ;; '(org-tag :foreground "#de935f" :weight normal)
+    '(org-tag :foreground "#8abeb7" :weight normal)
+    '(org-tag-group :foreground unspecified :weight unspecified)))
+#+end_src
+
+**** Dates & Times
+
+Configure org-habit.
+#+begin_src elisp
+(after! org
+  (add-to-list 'org-modules 'org-habit)
+  (setq org-habit-completed-glyph ?✔
+        org-habit-today-glyph ?!))
+#+end_src
+
+**** Refiling & Archiving
+
+Configure archiving behavior.
+#+begin_src elisp
+(after! org
+  (setq org-archive-location "archive/%s_archive::datetree/"
+        org-export-with-archived-trees nil))
+#+end_src
+
+**** TODO Chef
+
+I *need* this in my life. It take a URL to a recipe from a common site, and
+inserts an org-ified version at point. Isn't that just great.
+#+begin_src elisp
+;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
+#+end_src
+
+**** Appearance
+
+Customize org appearance.
+#+begin_src elisp
+(after! org
+  ;; Change the ellipsis to something prettier
+  (setq org-ellipsis " ▾"))
+#+end_src
+
+Customize org-superstar.
+#+begin_src elisp
+(after! org-superstar
+  ;; Make leading stars truly invisible, by rendering them as spaces.
+  (setq org-superstar-leading-bullet ?\s
+        org-superstar-leading-fallback ?\s
+        org-hide-leading-stars nil
+        ;; With org-indent this is also needed, otherwise the
+        ;; above has no effect while indent is enabled.
+        org-indent-mode-turns-on-hiding-stars nil)
+  ;; Stop cycling bullets to emphasize hierarchy of headlines.
+  (setq org-superstar-cycle-headline-bullets nil)
+  ;; Define custom bullets.
+  (setq org-superstar-headline-bullets-list
+        '(?◉ ?○ ?● ?○ ?● ?○ ?●)
+        ;; '(?◉ ?○ ?◈ ?✸ ?✿ ?✣ ?▷)
+        org-superstar-item-bullet-alist
+        '((42 . ?•)
+          (43 . ?➤)
+          (45 . ?–)))
+  ;; Disable list syntax checking for files with lots of list items.
+  (defun org-superstar-auto-lightweight-mode ()
+    "Start org-superstar differently depending on the number of lists items."
+    (let ((list-items
+           (count-matches "^[ \t]*?\\([+-]\\|[ \t]\\*\\)"
+                          (point-min) (point-max))))
+      (unless (< list-items 200)
+        (org-superstar-toggle-lightweight-lists)))
+    (org-superstar-mode))
+
+  (remove-hook! org-mode #'org-superstar-mode)
+  (add-hook! org-mode #'org-superstar-auto-lightweight-mode))
+#+end_src
+
+Customize org-fancy-priorities.
+Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
+#+begin_src elisp :tangle "packages.el" :comments no
+(package! org-fancy-priorities :disable t)
+#+end_src
+#+begin_src elisp
+;; (after! org-fancy-priorities
+;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+;;         org-priority-faces
+;;         '((65 . error)
+;;           (66 . warning)
+;;           (67 . success)
+;;           (68 . success)))
+#+end_src
+
+**** Bindings
+
+Fix ~evil-org-edit-src-exit~ remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(after! evil-org
+  (defun evil-org-edit-src-exit ()
+    "Fallback to `evil-edit-src-exit'."
+    (interactive)
+    (mapc #'call-interactively '(org-edit-src-exit))))
+#+end_src
+
+Fix ~evil-save-modified-and-close~ for org-mode temporary buffers.
+#+begin_src elisp
+(after! evil-org
+  (evil-define-command evil-save-modified-and-close (file &optional bang)
+    "Saves the current buffer and closes the window."
+    :repeat nil
+    (interactive "<f><!>")
+    (if (and (local-variable-p 'org-finish-function)
+             (fboundp org-finish-function))
+        (funcall org-finish-function)
+      (when (buffer-modified-p)
+        (evil-write nil nil nil file bang))
+      (evil-quit))))
+#+end_src
+
+Restore original TAB behavior to cycle through current subtree recursively.
+#+begin_src elisp
+;; (after! evil-org
+;;   (remove-hook 'org-tab-first-hook #'+org-cycle-only-current-subtree-h))
+#+end_src
+
+Customize bindings.
+#+begin_src elisp
+(after! evil-org
+  (map! :map evil-org-mode-map
+        ;; Prefer smart beginning of line to digit argument? (overridden)
+        :m "0"                               #'evil-org-beginning-of-line
+        ;; Add quick motion bindings
+        :ni "C-k"     (cmds! (org-at-table-p) #'+org/table-previous-row
+                             (bound-and-true-p evil-insert-state-minor-mode) #'evil-previous-line
+                             #'org-backward-paragraph)
+        :ni "C-j"     (cmds! (org-at-table-p) #'org-table-next-row
+                             (bound-and-true-p evil-insert-state-minor-mode) #'evil-next-line
+                             #'org-forward-paragraph)
+        :ni "C-h"     (cmds! (org-at-table-p) #'org-table-previous-field
+                             (bound-and-true-p evil-insert-state-minor-mode) #'left-char
+                             #'evil-backward-word-begin)
+        :ni "C-l"     (cmds! (org-at-table-p) #'org-table-next-field
+                             (bound-and-true-p evil-insert-state-minor-mode) #'right-char
+                             #'evil-forward-word-begin)
+        ;; Prefer visible headings to same-level
+        :ni "C-S-k"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-backward-paragraph
+                             #'org-backward-heading-same-level) ; org-previous-visible-heading)
+        :ni "C-S-j"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-forward-paragraph
+                             #'org-forward-heading-same-level) ; org-next-visible-heading)
+        ;; Allow subtree traversal
+        :ni "C-S-h"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'evil-backward-word-begin
+                             #'org-up-element)
+        :ni "C-S-l"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'evil-forward-word-begin
+                             #'org-down-element)
+
+        ;; Evil replacements
+        :g "C-M-k"           #'org-shiftup
+        :g "C-M-j"           #'org-shiftdown
+        :g "C-M-h"           #'org-shiftleft
+        :g "C-M-l"           #'org-shiftright
+        :g "C-M-S-k"         #'org-shiftcontrolup
+        :g "C-M-S-j"         #'org-shiftcontroldown
+        :g "C-M-S-h"         #'org-shiftcontrolleft
+        :g "C-M-S-l"         #'org-shiftcontrolright
+
+        :map org-mode-map
+        ;; This looks like a fix for doom
+        :n [S-return]        #'+org/shift-return
+        :n "S-RET"           #'+org/shift-return
+
+        ;; M-RET difficult choices
+        ;; - normal-mode: org-ctrl-c-ret
+        ;;   Always insert headings and not list items: straight to the point. Useful to split headings.
+        ;;   More appropriate behavior in tables (or I don't understand how wrapping works)
+        ;; - insert-mode: org-meta-return
+        ;;   More appropriate to break an item/heading in two, supports the respect-content setting
+        :gn [M-return]       #'org-ctrl-c-ret
+        :gn "M-RET"          #'org-ctrl-c-ret
+        :i [M-return]        #'org-meta-return
+        :i "M-RET"           #'org-meta-return
+        ;; This is more consistent for me
+        :g [M-S-return]      #'org-insert-subheading
+        :g "M-S-RET"         #'org-insert-subheading
+        :g [C-M-return]      #'org-insert-todo-heading
+        :g "C-M-RET"         #'org-insert-todo-heading
+        :g [C-M-S-return]    #'org-insert-todo-subheading
+        :g "C-M-S-RET"       #'org-insert-todo-subheading
+
+        ;; Override +fold/close-all, it seems broken in org-mode
+        :m "<backtab>"       #'org-shifttab
+        :m "C-<iso-lefttab>" #'org-ctrl-c-tab
+
+        (:localleader
+         "SPC"               #'+org/fix-blank-lines
+         "D"                 #'org-insert-drawer
+         "H"                 #'org-list-make-subtree
+         "O"                 #'org-property-action
+         "X"                 #'org-toggle-radio-button
+         (:prefix ("s" . "Tree/Subtree")
+          "A"                #'org-archive-to-archive-sibling
+          "o"                #'org-toggle-ordered-property)))
+  ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
+  (define-key!
+    [remap org-set-tags-command] nil))
+#+end_src
+
+**** Performance
+
+Disable flyspell by default in org-mode (laggy).
+#+begin_src elisp
+(remove-hook! org-mode #'flyspell-mode)
+#+end_src
+
+Remove the tangle-on-save hook and add a manual binding.
+#+begin_src elisp
+(remove-hook! org-mode #'+literate-enable-recompile-h)
+(defun +literate-recompile ()
+  "Recompile literate config to `doom-private-dir"
+  (interactive)
+  (+literate-recompile-maybe-h))
+(map! :map org-mode-map
+      :localleader
+      "R" #'+literate-recompile)
+#+end_src
+
+Improve org performance by removing some candy.
+See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
+#+begin_src elisp
+(after! org
+  (setq org-fontify-whole-heading-line nil
+        org-fontify-quote-and-verse-blocks nil))
+#+end_src
+
 *** Undo tree
 
 Customize undo-tree visualizer.
@@ -901,6 +1418,275 @@ Bind better-jumper functions to a doom-like alternative.
   (map!
    :n "g[" #'better-jumper-jump-backward
    :n "g]" #'better-jumper-jump-forward))
+#+end_src
+
+*** Calendar
+
+Configure localization settings.
+#+begin_src elisp
+(after! calendar
+  (setq calendar-date-style 'european
+        calendar-time-display-form
+        '(24-hours ":" minutes
+                   (if time-zone " (") time-zone (if time-zone ")"))
+        calendar-latitude 49.61167
+        calendar-longitude 6.13
+        calendar-location-name "Luxembourg"))
+#+end_src
+
+**** Diary
+
+Make holidays, diaries and today's date visible in calendar by default.
+#+begin_src elisp
+(after! calendar
+  (setq calendar-mark-holidays-flag 't
+        calendar-mark-diary-entries-flag 't)
+  (add-hook! 'calendar-today-visible-hook #'calendar-mark-today))
+#+end_src
+
+Adapt sunrise/sunset diary sexp.
+#+begin_src elisp
+(require 'solar)
+
+;; Sunrise (edits by Eph Zero)
+;; Brady Trainor
+;; http://stackoverflow.com/questions/22889036/custom-diary-sunrise-function-not-working-autoload-diary-emacs
+(defun solar-sunrise-string (date &optional nolocation)
+  "String of *local* time of sunrise and daylight on Gregorian DATE."
+  (let ((l (solar-sunrise-sunset date)))
+    (format
+     "🌅 %s (%s de jour)"
+     (if (car l)
+         (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
+       "Aucun Lever du Soleil")
+     (nth 2 l))))
+;; To be called from diary-list-sexp-entries, where DATE is bound.
+;;;###diary-autoload
+(defun diary-sunrise ()
+  "Local time of sunrise as a diary entry.
+Accurate to a few seconds."
+  (with-no-warnings (defvar date))
+  (or (and calendar-latitude calendar-longitude calendar-time-zone)
+      (solar-setup))
+  (solar-sunrise-string date))
+
+;; Sunset
+(defun solar-sunset-string (date &optional nolocation)
+  "String of *local* time of sunset and daylight on Gregorian DATE."
+  (let ((l (solar-sunrise-sunset date)))
+    (format
+     "🌅 %s"
+     (if (cadr l)
+         (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
+       "Aucun Coucher du Soleil"))))
+;; To be called from diary-list-sexp-entries, where DATE is bound.
+;;;###diary-autoload
+(defun diary-sunset ()
+  "Local time of sunset as a diary entry.
+Accurate to a few seconds."
+  (with-no-warnings (defvar date))
+  (or (and calendar-latitude calendar-longitude calendar-time-zone)
+      (solar-setup))
+  (solar-sunset-string date))
+#+end_src
+
+Adapt solar holidays to diary-compatible expressions.
+#+begin_src elisp
+;;;###diary-autoload
+(defun diary-equinoxes-solstices ()
+  "Equinoxes/Solstices diary entry."
+  (with-no-warnings (defvar displayed-month)
+                    (defvar displayed-year))
+  (let* ((displayed-month (calendar-extract-month date))
+         (displayed-year  (calendar-extract-year  date))
+         (event (solar-equinoxes-solstices)))
+    (when (calendar-date-equal date (car (car event)))
+      (car (cdr (car event))))))
+(defun diary-daylight-saving-time ()
+  "Daylight Saving Time diary entry."
+  (let ((start (calendar-dst-starts (calendar-extract-year date)))
+        (end (calendar-dst-ends (calendar-extract-year date))))
+    (cond ((calendar-date-equal date start)
+           (format "Heure d'été %s"
+                   (solar-time-string
+                    (/ calendar-daylight-savings-starts-time (float 60))
+                    calendar-standard-time-zone-name)))
+          ((calendar-date-equal date end)
+           (format "Heure d'Hiver %s"
+                   (solar-time-string
+                    (/ calendar-daylight-savings-ends-time (float 60))
+                    calendar-daylight-time-zone-name))))))
+#+end_src
+
+Add support for included diary files.
+#+begin_src elisp
+(after! calendar
+  (add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
+  (add-hook 'diary-list-entries-hook #'diary-sort-entries t)
+  (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files))
+#+end_src
+
+Add a default diary file since I will be using org mode for appointments and other diary entries.
+This is a way to keep solar/lunar information available in the calendar.
+#+begin_src diary :tangle ~/.local/share/emacs/etc/diary
+&%%(diary-sunrise-sunset)
+%%(diary-lunar-phases)
+%%(diary-equinoxes-solstices)
+%%(diary-daylight-saving-time)
+#+end_src
+
+**** Holidays
+
+Customize solar/lunar phase names.
+#+begin_src elisp
+(after! calendar
+  (setq lunar-phase-names
+        '("🌕 Nouvelle Lune"
+          "🌓 Premier Quartier de Lune"
+          "🌑 Pleine Lune"
+          "🌗 Dernier Quartier de Lune")
+        solar-n-hemi-seasons
+        '("Equinoxe de Printemps"
+          "Solstice d'Été"
+          "Equinoxe d'Automne"
+          "Solstice d'Hiver")))
+#+end_src
+
+Customize [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Holiday-Customizing.html][holidays]].
+#+begin_src elisp
+(after! calendar
+  (setq holiday-general-holidays
+        ;; Replace most US holidays by french/european holidays
+        '((holiday-fixed  1  1    "Nouvel An")
+          (holiday-fixed  5  1    "Fête du Travail")
+          (holiday-fixed  5  8    "Fête de la Victoire")
+          (holiday-fixed  5  9    "Jour de l'Europe")
+          (holiday-fixed  7 14    "Fête Nationale")
+          (holiday-float  5  0  2 "Fête Nationale de Jeanne d'Arc et du Patriotisme")
+          (holiday-fixed 11 11    "Jour de l'Armistice")
+          ;; Selected holidays from other countries
+          (holiday-fixed  6 23    "Fête Nationale (Luxembourg)")
+          (holiday-float  1  1  3 "Martin Luther King Day (US)")
+          (holiday-float  2  1  3 "President's Day (US)")
+          (holiday-fixed  7  4    "Independence Day (US)")
+          (holiday-float 11  4  4 "Thanksgiving (US)"))
+        ;; Other national/international holidays
+        holiday-other-holidays
+        '((holiday-fixed  2 14    "Fête de la Saint-Valentin")
+          (holiday-fixed  3  8    "Journée Internationale des Femmes")
+          (holiday-fixed  3 17    "Fête de la Saint-Patrick")
+          (holiday-fixed  4  1    "Jour du Poisson d'Avril")
+          (holiday-fixed  4 22    "Jour de la Terre")
+          (holiday-fixed  5 22    "Journée Internationale de la Biodiversité")
+          (holiday-float  5  5 -1 "Fête des Voisins")
+          (holiday-sexp  '(if (equal (holiday-easter-etc 49) (holiday-float 5 0 -1 nil))
+                              (calendar-nth-named-day 1 0 6 year)
+                            (calendar-nth-named-day -1 0 5 year))
+                         "Fête des Mères")
+          (holiday-float  6  0  3 "Fête des Pères")
+          (holiday-fixed  6 21    "Fête de la Musique")
+          (holiday-float  9  6  4 "Fête de la Gastronomie") ; Fourth week-end of september
+          (holiday-fixed 11 20    "Journée Internationale des droits de l'Enfant"))
+        ;; Astral events are converted to diary entries.
+        holiday-solar-holidays nil
+        ;; Christian holidays
+        holiday-christian-holidays
+        '((holiday-float  1  0  1 "Épiphanie")
+          (holiday-fixed  2  2    "Chandeleur")
+          (holiday-fixed  8 15    "Assomption de Marie")
+          (holiday-fixed 11  1    "Toussaint")
+          (holiday-fixed 11  2    "Jour des Morts")
+          (holiday-advent 0       "Premier dimanche de l'Avent")
+          (holiday-fixed 12  6    "Saint-Nicolas")
+          (holiday-fixed 12 25    "Noël")
+          (holiday-fixed 12 26    "Saint-Étienne")
+          ;; Easter-related holidays
+          (apply 'append
+                 (mapcar (lambda (e) (apply 'holiday-easter-etc e))
+                         '((-47 "Mardi Gras")
+                           (-46 "Mercredi des Cendres")
+                           (-14 "Dimanche de la Passion")
+                           (-7  "Dimanche des Palmes")
+                           (-4  "Mercredi Saint")
+                           (-3  "Jeudi Saint")
+                           (-2  "Vendredi Saint")
+                           (-1  "Samedi Saint")
+                           (0   "Dimanche de Pâques")
+                           (1   "Lundi de Pâques")
+                           (39  "Ascension")
+                           (49  "Pentecôte")
+                           (50  "Lundi de Pentecôte")
+                           (56  "Fête de la Sainte Trinité")
+                           (60  "Corpus Christi")
+                           (68  "Fête du Sacré-Cœur")))))
+        ;; Other cultures
+        holiday-islamic-holidays
+        '((holiday-islamic-new-year)
+          (holiday-islamic  9  1 "Ramadan Begins")
+          (holiday-islamic 10 -1 "Ramadan Ends"))
+        holiday-oriental-holidays
+        '((holiday-chinese-new-year))
+        holiday-hebrew-holidays nil
+        holiday-bahai-holidays nil))
+#+end_src
+
+**** Bindings
+
+Disable evil-snipe.
+#+begin_src elisp
+(after! evil-snipe
+  (add-to-list 'evil-snipe-disabled-modes 'calendar-mode))
+#+end_src
+
+Configure bindings.
+#+begin_src elisp
+(map! :after calendar
+      :map calendar-mode-map
+      :n "C-k"    #'calendar-beginning-of-month
+      :n "C-j"    #'calendar-end-of-month
+      :n "C-h"    #'calendar-beginning-of-week
+      :n "C-l"    #'calendar-end-of-week
+      :n "C-S-k"  #'calendar-backward-year
+      :n "C-S-j"  #'calendar-forward-year
+      :n "C-S-h"  #'calendar-backward-month
+      :n "C-S-l"  #'calendar-forward-month
+      :n "M-k"    #'calendar-beginning-of-month
+      :n "M-j"    #'calendar-end-of-month
+      :n "M-h"    #'calendar-beginning-of-week
+      :n "M-l"    #'calendar-end-of-week
+      :n "M-S-k"  #'calendar-backward-year
+      :n "M-S-j"  #'calendar-forward-year
+      :n "M-S-h"  #'calendar-backward-month
+      :n "M-S-l"  #'calendar-forward-month
+      :n "C-u"    #'calendar-scroll-right
+      :n "C-d"    #'calendar-scroll-left
+
+      :n "r"      #'calendar-redraw
+      :n "S"      #'calendar-sunrise-sunset
+      :n "M"      #'calendar-lunar-phases
+      :n "H"      #'calendar-cursor-holidays
+      :n "s"      nil
+      :n "ss"     #'calendar-sunrise-sunset
+      :n "sm"     #'calendar-lunar-phases
+      :n "sh"     #'calendar-cursor-holidays
+      :n "sH"     #'calendar-list-holidays
+
+      :n "i"      nil
+      :n "id"     #'diary-insert-entry
+      :n "iw"     #'diary-insert-weekly-entry
+      :n "im"     #'diary-insert-monthly-entry
+      :n "iy"     #'diary-insert-yearly-entry
+      :n "ia"     #'diary-insert-anniversary-entry
+      :n "ib"     #'diary-insert-block-entry
+      :n "ic"     #'diary-insert-cyclic-entry
+      :n "a"      #'diary-show-all-entries
+
+      :n [return] #'org-calendar-goto-agenda
+      :n "RET"    #'org-calendar-goto-agenda
+
+      :leader
+      (:prefix-map ("o" . "open")
+       :desc "Calendar" "c" #'org-goto-calendar))
 #+end_src
 
 *** Centaur tabs
@@ -1664,58 +2450,6 @@ Rebind auto-yasnippet commands.
 #+end_src
 
 ** Language packages
-*** Org
-Change the default org directory.
-#+begin_src elisp
-(setq org-directory "~/Notes")
-#+end_src
-
-Remove the tangle-on-save hook and add a manual binding.
-#+begin_src elisp
-(remove-hook! org-mode #'+literate-enable-recompile-h)
-(defun +literate-recompile ()
-  "Recompile literate config to `doom-private-dir"
-  (interactive)
-  (+literate-recompile-maybe-h))
-(map! :map org-mode-map
-      :localleader
-      "R" #'+literate-recompile)
-#+end_src
-
-Disable flyspell by default in org-mode (laggy).
-#+begin_src elisp
-(remove-hook! org-mode #'flyspell-mode)
-#+end_src
-
-Fix evil-org-edit-src-exit: remove evil-write to prevent error when no filename is provided.
-#+begin_src elisp
-(after! evil-org
-  (defun evil-org-edit-src-exit ()
-    "Fallback to `evil-edit-src-exit'."
-    (interactive)
-    (mapc #'call-interactively '(org-edit-src-exit))))
-#+end_src
-
-Improve org performance by removing some candy.
-See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-emacsdoom-slow][this section of the doom FAQ]].
-#+begin_src elisp
-(after! org
-  (setq org-fontify-quote-and-verse-blocks nil
-        org-fontify-whole-heading-line nil
-        org-hide-leading-stars nil
-        org-hide-leading-stars-before-indent-mode nil))
-#+end_src
-
-Customize bindings.
-#+begin_src emacs-lisp :tangle yes
-(after! org
-  (map! :map org-mode-map
-        "S-<return>" #'+org/shift-return
-        :localleader
-        :prefix ("b" . "tables")
-        "j"          #'org-table-copy-down))
-#+end_src
-
 *** Sh
 
 Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
@@ -2047,10 +2781,3 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 ** Language packages
-*** TODO Org Mode
-I *need* this in my life. It take a URL to a recipe from a common site, and
-inserts an org-ified version at point. Isn't that just great.
-#+begin_src emacs-lisp
-;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
-#+end_src
-
