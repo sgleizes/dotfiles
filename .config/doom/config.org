@@ -1752,18 +1752,21 @@ This file shouldn't be byte compiled.
 #+end_src
 
 *** Evil visual mark
+
 [[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
 FIXME: Does not support ~evil-delete-marks~.
 #+begin_src elisp
 (package! evil-visual-mark-mode)
 #+end_src
 
+Customize, disabled by default for now as I often mistype and set marks unwillingly. Enable as needed.
 #+begin_src elisp :tangle yes
 (use-package! evil-visual-mark-mode
   :config
   (custom-set-faces!
     '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
-  (evil-visual-mark-mode))
+  ;; (evil-visual-mark-mode)
+)
 #+end_src
 
 *** Evil terminal cursor
