@@ -1,11 +1,12 @@
 #+title: Doom Emacs Configuration
 #+author: Stéphane Gleizes
-#+startup: fold
+#+startup: overview
 #+property: header-args:elisp :tangle yes :cache yes :results silent :comments link
 #+property: header-args :tangle no :results silent
 
 * System setup
 ** Systemd daemons
+
 To avoid the loads of issues arising when using a single ~emacs~ daemon for both
 terminal and graphical frames, I decided to use dedicated daemons for each type
 of frame.
@@ -57,6 +58,7 @@ systemctl --user enable --now emacs.target
 #+end_src
 
 ** Desktop launcher
+
 Since I don't want a new graphical frame to be created every time a file is
 opened, I wrote this launcher script to wrap ~emacsclient~:
 #+begin_src sh :tangle ~/.local/bin/emacs-xclient :tangle-mode (identity #o755)
@@ -115,6 +117,7 @@ Type=Application
 #+end_src
 
 ** Ediff launcher
+
 Add another launcher script to start an ~ediff~ session in a new graphical frame.
 
 Note that it depends on a ~+workspace/rename-frame~ function that automatically
@@ -174,6 +177,7 @@ fi
 #+end_src
 
 * General configuration
+
 Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
 for more info).
 #+begin_src elisp :comments no
@@ -181,6 +185,7 @@ for more info).
 #+end_src
 
 ** Personal information
+
 Some functionality uses this to identify you, e.g. GPG configuration, email
 clients, file templates and snippets.
 #+begin_src elisp
@@ -193,6 +198,7 @@ clients, file templates and snippets.
 :PROPERTIES:
 :header-args:elisp: :tangle no
 :END:
+
 Doom has this lovely /modular configuration base/ that takes a lot of work out
 of configuring Emacs. Each module (when enabled) can provide a list of packages
 to install (on ~doom sync~) and configuration to be applied. The modules can
@@ -201,8 +207,9 @@ also have flags applied to tweak their behavior.
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#modules][doom documentation]] and the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][modules appendix]].
 
 **** Structure
+
 #+name: init.el
-#+begin_src elisp :tangle "init.el" :noweb no-export :comments none
+#+begin_src elisp :tangle "init.el" :noweb no-export :comments no
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load in.
@@ -250,6 +257,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+end_src
 
 **** Configuration
+
 #+name: doom-config
 #+begin_src elisp
 literate
@@ -264,6 +272,7 @@ literate
 #+end_src
 
 **** Completion
+
 #+name: doom-completion
 #+begin_src elisp
 (company +childframe)         ; the ultimate code completion backend
@@ -273,6 +282,7 @@ literate
 #+end_src
 
 **** Interface
+
 #+name: doom-ui
 #+begin_src elisp
 ;;deft                        ; notational velocity for Emacs
@@ -301,6 +311,7 @@ workspaces                    ; tab emulation, persistence & separate workspaces
 #+end_src
 
 **** Editor
+
 #+name: doom-editor
 #+begin_src elisp
 (evil +everywhere)            ; come to the dark side, we have cookies
@@ -318,6 +329,7 @@ snippets                      ; my elves. They type so I don't have to
 #+end_src
 
 **** Builtins
+
 #+name: doom-emacs
 #+begin_src elisp
 (dired +icons)                ; making dired pretty [functional]
@@ -328,6 +340,7 @@ vc                            ; version-control and Emacs, sitting in a tree
 #+end_src
 
 **** Terminal
+
 #+name: doom-term
 #+begin_src elisp
 ;;eshell                      ; the elisp shell that works everywhere
@@ -337,6 +350,7 @@ vterm                         ; the best terminal emulation in Emacs
 #+end_src
 
 **** Checkers
+
 #+name: doom-checkers
 #+begin_src elisp
 syntax                        ; tasing you for every semicolon you forget
@@ -345,6 +359,7 @@ syntax                        ; tasing you for every semicolon you forget
 #+end_src
 
 **** Tools
+
 #+name: doom-tools
 #+begin_src elisp
 ;;ansible                     ; a crucible for infrastructure as code
@@ -370,6 +385,7 @@ taskrunner                    ; taskrunner for all your projects
 #+end_src
 
 **** System
+
 #+name: doom-os
 #+begin_src elisp
 (:if IS-MAC macos)            ; improve compatibility with macOS
@@ -377,6 +393,7 @@ taskrunner                    ; taskrunner for all your projects
 #+end_src
 
 **** Language support
+
 We can be rather liberal with enabling support for languages as the associated
 packages/configuration are (usually) only loaded when first opening an
 associated file.
@@ -443,6 +460,7 @@ yaml                          ; JSON, but readable
 #+end_src
 
 **** Applications
+
 #+name: doom-email
 #+begin_src elisp
 ;;(mu4e +org +gmail)
@@ -460,6 +478,7 @@ yaml                          ; JSON, but readable
 
 *** Appearance
 **** Fonts
+
 Doom exposes five (optional) variables for controlling fonts in Doom, they are:
 + doom-font
 + doom-variable-pitch-font
@@ -476,6 +495,7 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
 #+end_src
 
 **** Theme and modeline
+
 #+begin_src elisp
 (setq doom-theme 'doom-tomorrow-night)
 (delq! t custom-theme-load-path) ; Remove default emacs theme from search path
@@ -497,6 +517,7 @@ Do not show encoding in the modeline if the value is the default =LF UTF-8=.
 #+end_src
 
 **** Dashboard
+
 Customize the splash image of the doom dashboard.
 #+begin_src elisp
 (setq fancy-splash-image nil
@@ -513,6 +534,7 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 #+end_src
 
 *** Terminal
+
 Improve terminal integration. Taken from the ~tty~ module.
 #+begin_src elisp
 ;; Some terminals offer two different cursors: a "visible" static cursor and a
@@ -552,6 +574,7 @@ if in terminal."
 #+end_src
 
 *** Workspaces
+
 Add an API to create default workspace names for specific applications.
 #+begin_src elisp
 (defun +workspace--generate-named-id (&optional prefix)
@@ -569,6 +592,7 @@ Add an API to create default workspace names for specific applications.
 
 ** Better defaults
 *** General
+
 Tweak various general settings to more opinionated values.
 #+begin_src elisp
 (setq-default delete-by-moving-to-trash t  ; Delete files to trash
@@ -587,6 +611,7 @@ Tweak various general settings to more opinionated values.
 #+end_src
 
 *** Indentation
+
 Set default values for the various indentation settings.
 Even though ~dtrt-indent~ will properly update these by analyzing existing
 files, it is still necessary to set the desired value for new files.
@@ -622,6 +647,7 @@ files, it is still necessary to set the desired value for new files.
 #+end_src
 
 *** Frames
+
 Automatically maximize and focus new graphical frames.
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
@@ -633,6 +659,7 @@ Automatically maximize and focus new graphical frames.
 #+end_src
 
 *** Windows
+
 Focus the new window on vertical/horizontal splits.
 #+begin_src elisp
 (setq evil-vsplit-window-right t
@@ -647,6 +674,7 @@ Prompt for the workspace buffer to show on new window.
 #+end_src
 
 *** Line numbers
+
 Relative line numbers are fantastic for knowing how far away line numbers are,
 then =12 <UP>= gets you exactly where you think.
 Sadly, due to the (very) significant performance hit (mainly on scrolling),
@@ -1324,6 +1352,7 @@ Customize bindings.
 #+end_src
 
 *** Ligatures
+
 Remove annoying programming ligatures.
 #+begin_src elisp
 (cl-delete-if
@@ -1337,6 +1366,7 @@ Remove annoying programming ligatures.
 #+end_src
 
 *** Lsp
+
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
 (after! lsp-mode
@@ -1344,6 +1374,7 @@ Ignore prompts to restart server to avoid hangs on server-restart.
 #+end_src
 
 *** Magit
+
 Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+begin_src elisp
 (after! magit
@@ -1359,6 +1390,7 @@ Customize bindings.
 #+end_src
 
 *** Man
+
 Add shortcut to man command.
 #+begin_src elisp
 (use-package! man
@@ -1368,6 +1400,7 @@ Add shortcut to man command.
 #+end_src
 
 *** Projectile
+
 Customize general projectile options.
 #+begin_src elisp
 (after! projectile
@@ -1461,6 +1494,7 @@ Customize bindings.
 #+end_src
 
 *** Treemacs
+
 Configure treemacs appearance and behavior.
 #+begin_src elisp
 (use-package! treemacs
@@ -1509,6 +1543,7 @@ Customize undo-tree visualizer.
 #+end_src
 
 *** Vterm
+
 Configure vterm buffer naming scheme.
 #+begin_src elisp
 (use-package! vterm
@@ -1517,6 +1552,7 @@ Configure vterm buffer naming scheme.
 #+end_src
 
 *** Which-key
+
 Reduce the delay before the which-key buffer is displayed.
 #+begin_src elisp
 (after! which-key
@@ -1535,6 +1571,7 @@ Replace =evil-= like prefixes by a unicode symbol to reduce verbosity.
 #+end_src
 
 *** YASnippet
+
 Nested snippets are good, enable that.
 #+begin_src elisp
 (use-package! yasnippet
@@ -1607,6 +1644,7 @@ Customize bindings.
 #+end_src
 
 *** Sh
+
 Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
@@ -1623,6 +1661,7 @@ https://github.com/bash-lsp/bash-language-server/issues/104
 :PROPERTIES:
 :header-args:elisp: :tangle "packages.el" :comments no
 :END:
+
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management][package management instructions]] from the doom documentation.
 
 This file shouldn't be byte compiled.
@@ -1632,6 +1671,7 @@ This file shouldn't be byte compiled.
 
 ** General packages
 *** Beacon
+
 [[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
 #+begin_src elisp
 (package! beacon)
@@ -1659,6 +1699,7 @@ This file shouldn't be byte compiled.
 #+end_src
 
 *** Command logging
+
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
 (package! command-log-mode)
@@ -1680,6 +1721,7 @@ FIXME: Does not support ~evil-delete-marks~.
 #+end_src
 
 *** Evil terminal cursor
+
 [[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
 #+begin_src elisp
 (package! evil-terminal-cursor-changer
@@ -1698,6 +1740,7 @@ FIXME: Does not support ~evil-delete-marks~.
 #+end_src
 
 *** Fasd
+
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
 (package! fasd)
@@ -1712,6 +1755,7 @@ FIXME: Does not support ~evil-delete-marks~.
 #+end_src
 
 *** Fast scroll
+
 [[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
 modeline during intense scrolling operations.
 #+begin_src elisp
@@ -1758,6 +1802,7 @@ Note this function's name implies compatibility with `unload-feature'."
 #+end_src
 
 *** Info colors
+
 [[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
 #+begin_src elisp
 (package! info-colors :pin "47ee73cc19")
@@ -1770,6 +1815,7 @@ Note this function's name implies compatibility with `unload-feature'."
 #+end_src
 
 *** TODO Large files
+
 The [[https://github.com/m00natic/vlfi][/very large files/ mode]] loads large files in chunks, allowing one to open
 ridiculously large files.
 #+begin_src elisp
@@ -1785,6 +1831,7 @@ To make VLF available without delaying startup, just load it in quiet moments.
 #+end_src
 
 *** Magit delta
+
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
 package to hook this into the magit diff view. This requires the ~delta~ binary.
 FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
@@ -1860,12 +1907,14 @@ Define a global mode for scroll-on-jump and bind to relevant commands.
 #+end_src
 
 *** Systemd
+
 [[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
 #+begin_src elisp
 (package! systemd :pin "51c148e09a")
 #+end_src
 
 *** TLDR
+
 [[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
 #+begin_src elisp
 (package! tldr)
@@ -1881,6 +1930,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Treemacs icons
+
 [[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
 #+begin_src elisp
 (package! treemacs-all-the-icons)
@@ -1892,6 +1942,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Window layouts
+
 [[https://github.com/daichirata/emacs-rotate][This package]] allows rotating between window layouts.
 #+begin_src elisp
 (package! rotate :pin "091b5ac4fc")
@@ -1903,6 +1954,7 @@ Disable font-lock mode in tldr-mode buffers.
 #+end_src
 
 *** Xclip
+
 [[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
 #+begin_src elisp
 (package! xclip :pin "2951c6b62b")
