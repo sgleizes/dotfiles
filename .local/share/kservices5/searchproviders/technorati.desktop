@@ -1,6 +1,6 @@
 [Desktop Entry]
 Charset=
-Hidden=false
+Hidden=true
 Keys=technorati
 Name=Technorati
 Query=https://technorati.com/search?return=sites&authority=high&q=\\{@}

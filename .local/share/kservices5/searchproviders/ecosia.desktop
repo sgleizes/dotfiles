@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=ec,eco
+Name=Ecosia search engine
+Query=https://ecosia.org/search.php?q=\\{@}&meta=normal
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

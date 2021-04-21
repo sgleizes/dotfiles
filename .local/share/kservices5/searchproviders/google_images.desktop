@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=ggi
+Name=Google Image Search
+Query=https://www.google.com/search?site=imghp&tbm=isch&q=\\{@}
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

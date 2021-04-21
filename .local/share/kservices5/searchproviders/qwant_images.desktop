@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=qwi,images
+Name=Qwant Images
+Query=https://www.qwant.com/?q=\\{@}&client=kde&t=images
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

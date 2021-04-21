@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=mbzr
+Name=MusicBrainz Releases
+Query=https://musicbrainz.org/search?type=release&query=\\{@}
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

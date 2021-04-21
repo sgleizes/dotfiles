@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=sxfr
+Name=Searx FR
+Query=https://searx.prvcy.eu/search?q=\\{@}&categories=general&language=fr
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

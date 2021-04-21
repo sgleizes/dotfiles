@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=fd,fandom
+Name=Fandom
+Query=https://www.fandom.com/?s=\\{@}
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

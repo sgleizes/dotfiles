@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=sp,startpage
+Name=Startpage
+Query=https://www.startpage.com/do/dsearch?query=\\{@}&cat=web&pl=ext-ff&language=english&extVersion=1.3.0
+Type=Service
+X-KDE-ServiceTypes=SearchProvider

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Charset=
+Hidden=false
+Keys=mbz,musicbrainz
+Name=MusicBrainz
+Query=https://musicbrainz.org/search?query=\\{@}&type=artist&method=indexed
+Type=Service
+X-KDE-ServiceTypes=SearchProvider
