@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE khotnewstuff3>
+<hotnewstuffregistry>
+ <stuff category="629">
+  <name>QuickWebShortcuts</name>
+  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
+  <author>alex1701c</author>
+  <homepage>https://store.kde.org/p/1310571</homepage>
+  <licence></licence>
+  <version>2.4.0</version>
+  <rating>71</rating>
+  <downloads>259</downloads>
+  <installedfile>/home/psydev/.local/share/krunner-sources/QuickWebShortcuts-2.4.0/*</installedfile>
+  <id>1310571</id>
+  <releasedate>2020-03-14</releasedate>
+  <summary>This plugin allows you to use search engines inside Krunner. But instead of specifying the search engine every time can set one you want to use. Additionally it provides search suggestions and direct links. These can be configured in the config dialog, by default they are disabled.&lt;br...</summary>
+  <changelog></changelog>
+  <preview>https://cn.opendesktop.org/cache/100x100-0/img/f/5/3/5/96fae097aa086a105111b6bfd6008123d1f2.png</preview>
+  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/f/5/3/5/96fae097aa086a105111b6bfd6008123d1f2.png</previewBig>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1ODQyMDQ0NjQiLCJvIjoiMSIsInMiOiJlODY5NWM3NDIwNzI1ODBjYmNmMGE4YTFhYWZhMDIxMjM4OWU2YzQ1MzE2MGNlYzU2Mzk0ZmQwMDcyNGFjNTMyNTE2NjFlNDE2NmI0M2UyZTBmZmE1NDUzNGIyOGZmMzZkZTk3Nzc5NTZjYWJmODAwNGJhMjQzMTgwYjcwZDEzYiIsInQiOjE2MTU0OTk3NzQsInN0ZnAiOm51bGwsInN0aXAiOiIxODUuNi4yMzQuMTAifQ.quUfoZNt95ZXR4_reeUV6thcYbx3b7g-ZTW42k1sHfw/QuickWebShortcuts-2.4.0.tar.gz</payload>
+  <tags>krunner,web,plasma5,utility,addon,original-product,lgplv3</tags>
+  <status>installed</status>
+ </stuff>
+</hotnewstuffregistry>
