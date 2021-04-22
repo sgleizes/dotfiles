@@ -1,6 +1,6 @@
 [General]
-DefaultWebShortcut=
+DefaultWebShortcut=searx
 EnableWebShortcuts=true
 KeywordDelimiter=:
-PreferredWebShortcuts=facebook,yahoo,gitlab,kde_apps,bug,youtube,rfc,ecosia,github,wikit,deepl,wikipedia,soundcloud,google_maps,archpkg,google,kde_forums,archwiki,amazon
+PreferredWebShortcuts=qwantf9sv,facebook,acronym,startpage,musicbrainz,kde_apps,mbzr,aur,ecosia,wiktionary,kde,google_images,wolfram_alpha,wikifr,rfc,fandom,wikit,qt,msdn,archwiki,gitlab,bug,vimeo,google_maps,amazon,jamendo,github,metacrawler,youtube,searx,amg,sxfr,imdb,kde_forums,soundcloud,qwant_images,deepl,wikipedia,opendesktop,dictfr,duckduckgo,archpkg,google,pgpkeys,cia
 UsePreferredWebShortcutsOnly=true
