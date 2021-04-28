@@ -1,2 +1,8 @@
+[1]
+Description=No Minimum Size
+minsize=1,1
+minsizerule=2
+types=1
+
 [General]
-count=0
+count=1
