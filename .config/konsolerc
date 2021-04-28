@@ -1,3 +1,9 @@
+MenuBar=Disabled
+StatusBar=Disabled
+eDP-1 Window-Maximized 1920x1080=true
+eDP-1 XPosition 1920x1080=1058
+eDP-1 YPosition 1920x1080=24
+
 [Desktop Entry]
 DefaultProfile=Dark Unlimited.profile
 
