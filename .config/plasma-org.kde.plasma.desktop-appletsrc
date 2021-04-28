@@ -489,6 +489,9 @@ plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
 
+[Containments][7][Applets][18][Shortcuts]
+global=Meta+M
+
 [Containments][7][Applets][19]
 immutability=1
 plugin=org.kde.plasma.bluetooth

@@ -3,7 +3,7 @@ DataCount=3
 
 [Data_1]
 Comment=KMenuEdit Global Shortcuts
-DataCount=6
+DataCount=7
 Enabled=true
 Name=KMenuEdit
 SystemGroup=1
@@ -16,14 +16,14 @@ ConditionsCount=0
 [Data_1_1]
 Comment=Comment
 Enabled=true
-Name=Open Konsole
-Type=MENUENTRY_SHORTCUT_ACTION_DATA
+Name=Open Enpass
+Type=SIMPLE_ACTION_DATA
 
 [Data_1_1Actions]
 ActionsCount=1
 
 [Data_1_1Actions0]
-CommandURL=org.kde.konsole.desktop
+CommandURL=enpass.desktop
 Type=MENUENTRY
 
 [Data_1_1Conditions]
@@ -35,21 +35,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_1Triggers0]
-Key=Meta+T
+Key=Meta+Shift+V
 Type=SHORTCUT
-Uuid={d8da2562-6a62-459a-b9bc-20de167ce312}
+Uuid={5eadaaf5-a7d7-497b-be42-486b69eeb729}
 
 [Data_1_2]
 Comment=Comment
 Enabled=true
-Name=Open Enpass
+Name=Open KSysGuard
 Type=SIMPLE_ACTION_DATA
 
 [Data_1_2Actions]
 ActionsCount=1
 
 [Data_1_2Actions0]
-CommandURL=enpass.desktop
+CommandURL=org.kde.ksysguard.desktop
 Type=MENUENTRY
 
 [Data_1_2Conditions]
@@ -61,21 +61,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_2Triggers0]
-Key=Meta+V
+Key=Meta+Shift+S
 Type=SHORTCUT
-Uuid={5eadaaf5-a7d7-497b-be42-486b69eeb729}
+Uuid={0a42811a-6f12-4541-b0ea-4026ebd6fa5c}
 
 [Data_1_3]
 Comment=Comment
 Enabled=true
-Name=Open KSysGuard
+Name=Open System Settings
 Type=SIMPLE_ACTION_DATA
 
 [Data_1_3Actions]
 ActionsCount=1
 
 [Data_1_3Actions0]
-CommandURL=org.kde.ksysguard.desktop
+CommandURL=systemsettings.desktop
 Type=MENUENTRY
 
 [Data_1_3Conditions]
@@ -87,21 +87,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_3Triggers0]
-Key=Meta+H
+Key=Meta+,;Tools
 Type=SHORTCUT
-Uuid={0a42811a-6f12-4541-b0ea-4026ebd6fa5c}
+Uuid={dce4f073-f3aa-434b-9784-160aaa41d763}
 
 [Data_1_4]
 Comment=Comment
 Enabled=true
-Name=Open System Settings
+Name=Open YAC Reader
 Type=SIMPLE_ACTION_DATA
 
 [Data_1_4Actions]
 ActionsCount=1
 
 [Data_1_4Actions0]
-CommandURL=systemsettings.desktop
+CommandURL=YACReader.desktop
 Type=MENUENTRY
 
 [Data_1_4Conditions]
@@ -113,21 +113,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_4Triggers0]
-Key=Meta+,;Tools
+Key=Meta+Shift+Y
 Type=SHORTCUT
-Uuid={dce4f073-f3aa-434b-9784-160aaa41d763}
+Uuid={60caaefd-902d-44a0-9073-c5bfcaf39455}
 
 [Data_1_5]
 Comment=Comment
 Enabled=true
-Name=Open YAC Reader
+Name=Open KCharSelect
 Type=SIMPLE_ACTION_DATA
 
 [Data_1_5Actions]
 ActionsCount=1
 
 [Data_1_5Actions0]
-CommandURL=YACReader.desktop
+CommandURL=org.kde.kcharselect.desktop
 Type=MENUENTRY
 
 [Data_1_5Conditions]
@@ -139,21 +139,21 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_5Triggers0]
-Key=Meta+Y
+Key=Meta+.
 Type=SHORTCUT
-Uuid={60caaefd-902d-44a0-9073-c5bfcaf39455}
+Uuid={6ef95682-4c6e-4c94-a0ec-a1d2b81ed87e}
 
 [Data_1_6]
 Comment=Comment
 Enabled=true
-Name=Open GnuCash
+Name=Open KOrganizer
 Type=SIMPLE_ACTION_DATA
 
 [Data_1_6Actions]
 ActionsCount=1
 
 [Data_1_6Actions0]
-CommandURL=gnucash.desktop
+CommandURL=org.kde.korganizer.desktop
 Type=MENUENTRY
 
 [Data_1_6Conditions]
@@ -165,9 +165,35 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_1_6Triggers0]
-Key=Meta+C
+Key=Meta+Shift+O
 Type=SHORTCUT
-Uuid={347f6366-9f4c-4cd3-8c95-6fbe45380e99}
+Uuid={174484f8-ce99-4f17-a751-65dab783c632}
+
+[Data_1_7]
+Comment=Comment
+Enabled=true
+Name=Open KTorrent
+Type=SIMPLE_ACTION_DATA
+
+[Data_1_7Actions]
+ActionsCount=1
+
+[Data_1_7Actions0]
+CommandURL=org.kde.ktorrent.desktop
+Type=MENUENTRY
+
+[Data_1_7Conditions]
+Comment=
+ConditionsCount=0
+
+[Data_1_7Triggers]
+Comment=Simple_action
+TriggersCount=1
+
+[Data_1_7Triggers0]
+Key=Meta+Shift+T
+Type=SHORTCUT
+Uuid={d4398f24-a434-4e64-bed1-91912dae476d}
 
 [Data_2]
 Comment=Command Global Shortcuts
@@ -203,7 +229,7 @@ Comment=Simple_action
 TriggersCount=1
 
 [Data_2_1Triggers0]
-Key=Meta+K
+Key=Meta+?
 Type=SHORTCUT
 Uuid={d688d6f5-a229-4bed-8ffb-20484940d15e}
 
