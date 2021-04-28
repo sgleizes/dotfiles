@@ -1,0 +1,23 @@
+[Desktop Entry]
+Name=Transparent folder view
+
+
+Type=Service
+Icon=org.kde.plasma.folder
+X-KDE-ParentApp=
+X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
+
+
+X-KDE-PluginInfo-Name=org.kde.desktopcontainment-trans
+X-KDE-PluginInfo-Version=2.0
+X-KDE-PluginInfo-Category=File System
+X-KDE-PluginInfo-License=GPL-2.0+
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-ContainmentType=Desktop
+X-Plasma-API=declarativeappletscript
+X-Plasma-DropMimeTypes=inode/directory
+X-Plasma-Provides=org.kde.plasma.filemanagement
+
+X-Plasma-MainScript=ui/main.qml
+X-Plasma-RequiredExtensions=LaunchApp,http,localio,networkio
+
