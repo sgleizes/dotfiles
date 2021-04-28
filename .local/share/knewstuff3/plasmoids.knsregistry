@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE khotnewstuff3>
 <hotnewstuffregistry>
- <stuff category="399">
-  <name>Chili Clock</name>
+ <stuff category="105">
+  <name>Transparent folder view</name>
   <providerid>https://api.kde-look.org/ocs/v1/</providerid>
-  <author>marianarlt</author>
-  <homepage>https://store.kde.org/p/1245902</homepage>
+  <author>thevladsoft</author>
+  <homepage>https://store.kde.org/p/1490722</homepage>
   <licence></licence>
   <version>2.0</version>
-  <rating>75</rating>
-  <downloads>43661</downloads>
-  <installedfile>/tmp/org.kde.plasma.chiliclock.tar.gz</installedfile>
-  <id>1245902</id>
-  <releasedate>2019-06-23</releasedate>
-  <summary>The hottest clock around!&lt;br />
-· Formats not found in any other clock, including custom!&lt;br />
-· Disable the separator with a simple check box!&lt;br />
-· Option for manual font size!&lt;br />
-· Correctly calculated width at any time and date!&lt;br />
-· Manual spacing and offsetting!&lt;br />
+  <rating>61</rating>
+  <downloads>702</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.desktopcontainment-trans</installedfile>
+  <id>1490722</id>
+  <releasedate>2021-03-13</releasedate>
+  <summary>Folder view fork that can have a transparent background independently of the desktop theme, and can hide icons with a double-click in an empty area. You can use it both as a plasmoid, or as an alternative for the desktop (right click on the desktop, "configure desktop...", etc.).&lt;br />
 &lt;br...</summary>
   <changelog></changelog>
-  <preview>https://cn.opendesktop.org/cache/100x100-0/img/c/8/8/1/2e3d478b3cdfe43f6c902d3c667f6e43060d.png</preview>
-  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/c/8/8/1/2e3d478b3cdfe43f6c902d3c667f6e43060d.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1NjEzNDU3MTAiLCJvIjoiMSIsInMiOiI4YTA0MTgzZGFlMTJiYTIyYzA4ZDQ1M2U4M2Y2YjMzODgzMjA1OTMyMTRjMTdhMTFmMzU0MGY0OTY2NTZiNjliNGFlMDNjZGQ5NzQwMzhkYzUwNWZkYzllOGJmZWJjOGIyZmZkNDBkNmIyYzk1OTFmMjk3ZDZkMjc5NzZmNjg3MCIsInQiOjE1ODY2MDQ3MjcsInN0ZnAiOm51bGwsInN0aXAiOiIxODUuNi4yMzQuMTczIn0.5F4SzQSrztpQhIX09G8vAJZo66IDcHxETMAwDA0lcYQ/org.kde.plasma.chiliclock.tar.gz</payload>
-  <tags>gplv3,linux,unix,extension,kde,plasma##majorversion=5,widget,plasma,plasmoid,clock</tags>
+  <preview>https://cn.opendesktop.org/cache/100x100-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</preview>
+  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</previewBig>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2MTU2NzczNjciLCJvIjoiMSIsInMiOiIzNjg1NmY5NjIwNDcxN2M1YTc0MDMxMTdhY2YzMDU0ODYxYjM1MTJmMzE1NGUzYWZkZTRkODcyMDcxZDNiM2EyNDg5ZDg2NDEzYzcyNmZlZDRjNGFlM2UwZTAyOWYzZTZhMzQ2YzUyZDIxOTMwMmU5MWNiNDk3NDIwMzY0YTNiNCIsInQiOjE2MTk1NjM1NzcsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.LsrNVUe1fGx-PRwscEdl5ipF1x6v896NngDpHcoooms/org.kde.folder-trans.v2.0.plasmoid</payload>
+  <tags>linux,unix,extension,kde,plasma,plasma##majorversion=5,widget,gplv3,efi</tags>
+  <status>installed</status>
+ </stuff>
+ <stuff category="105">
+  <name>Public IP Address widget</name>
+  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
+  <author>davide-sd</author>
+  <homepage>https://store.kde.org/p/1289644</homepage>
+  <licence></licence>
+  <version>1.2</version>
+  <rating>75</rating>
+  <downloads>11365</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/com.github.davide-sd.ipaddress</installedfile>
+  <id>1289644</id>
+  <releasedate>2020-05-27</releasedate>
+  <summary>&lt;strong>NOTE&lt;/strong>&lt;br />
+There are two version available:&lt;br />
+&lt;ul>&lt;li> The file &lt;em>v1.1.com.github.davide-sd.ipaddress.pasmoid&lt;/em>: this is the old version, IP address only.&lt;/li>&lt;li> The file &lt;em>com.github.davide-sd.ipaddress.pasmoid&lt;/em>: the new version, IP address + VPN...</summary>
+  <changelog></changelog>
+  <preview>https://cn.opendesktop.org/cache/100x100-0/img/1/d/e/4/0e3cd27c37a855172f54d8be9f3b2003471d.png</preview>
+  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/1/d/e/4/0e3cd27c37a855172f54d8be9f3b2003471d.png</previewBig>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1OTA0OTY3NDEiLCJvIjoiMSIsInMiOiI5NWQxNTIzNDM5MDBiZmNiNzY4YWE5Zjg1MDg0NGViODRhYTQ3MGQ4YjMwNGQyMGIzYWExZjEwNGEzOTRkZDBjNGM4ZTlhMGM2NzhmMDFjNTdiNjdiNjMxNDI5YjFmYTVhMTMyMGVlOTdkZWIzNTAyZmQ4ZmYzNjc5YzU1MWRhZCIsInQiOjE2MTk2NTQzNDgsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.6elNUvg7jZm4pcTu0iprPbJ7psRTkEsEwL5qtr5uXNY/com.github.davide-sd.ipaddress.plasmoid</payload>
+  <tags>gplv2-later,original-product,linux,unix,extension,kde,plasma,plasma##majorversion=5,widget,address,network,public,ipinfo,vpn</tags>
   <status>installed</status>
  </stuff>
  <stuff category="425">
@@ -34,9 +51,9 @@
   <homepage>https://store.kde.org/p/1198939</homepage>
   <licence></licence>
   <version>0.1</version>
-  <rating>78</rating>
-  <downloads>15856</downloads>
-  <installedfile>/tmp/psydev/1512019617-sysmon.plasmoid</installedfile>
+  <rating>76</rating>
+  <downloads>20594</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/com.github.burlog.plasmoid-sysmon</installedfile>
   <id>1198939</id>
   <releasedate>2017-11-30</releasedate>
   <summary>The sysmon plasmoid is based on KDE standard system load plasmoids which are constrained to some chosen metrics like CPU load. In contrast, the sysmon can show any metric provided by the System Monitor data source engine.&lt;br />
@@ -46,30 +63,8 @@ Installation is pretty simple and straight forward:&lt;br />
   <changelog></changelog>
   <preview>https://cn.opendesktop.org/cache/100x100-0/img/9/b/1/1/80c49cb3b256814e4a191e931781cc1121c9.png</preview>
   <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/9/b/1/1/80c49cb3b256814e4a191e931781cc1121c9.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1MTIwMTk2MTciLCJvIjoiMSIsInMiOiIxYzRjZWYyNmE0M2YzODNiN2I5OWU3ZTI3NzUxYWExNGZkMjQyNjEzODNkNmJhMzk0OGNiZmQzZGRhYzhiOTQzMDRhMWYxZGExMTE4M2I2NTI4ZmI4ZTRiZTM5NzJiODJmZWRmMWI4MmIyZmU2YTE5NGM2YzNhNjE2N2QzYjBkMCIsInQiOjE1OTAxNzc0MTUsInN0ZnAiOm51bGwsInN0aXAiOiIxODUuNi4yMzQuMTczIn0.Ojx-9V9c3sgEO6IefhJUYN5Uzk66axEqLYIyXPTbLgg/1512019617-sysmon.plasmoid</payload>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1MTIwMTk2MTciLCJvIjoiMSIsInMiOiI3OWFkYzM1NjY5YmVlZWEyYTI5MTg0OWM5NWY5ZDFmMTFmNjA4NmJlMDIzY2Y4ODRkMmE5YjFhMmY1NjFiZDI3MzY3YzNkYzkwMzMwNDUxM2QyMzc3NzNkMjg3NGVjOGQ0MjQyMDVhMzlhZDNkNmI5ZDVjOGQ3ZTllYmQ2YjI3NiIsInQiOjE2MTk2NTQzODQsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.a7K48I1k7p663ti6gQH-dBk1eL7VlbAyFtaQSAYYKY8/1512019617-sysmon.plasmoid</payload>
   <tags>linux,unix,extension,plasma##majorversion=5,widget,kde,plasma,monitoring</tags>
-  <status>installed</status>
- </stuff>
- <stuff category="105">
-  <name>Public IP Address widget</name>
-  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
-  <author>davide-sd</author>
-  <homepage>https://store.kde.org/p/1289644</homepage>
-  <licence></licence>
-  <version>1.0</version>
-  <rating>66</rating>
-  <downloads>5254</downloads>
-  <installedfile>/tmp/psydev/com.github.davide-sd.ipaddress.plasmoid</installedfile>
-  <id>1289644</id>
-  <releasedate>2019-11-08</releasedate>
-  <summary>Plasma 5 widget for showing informations about your public IP address. This is useful for informational purposes and to monitor VPN geolocation.&lt;br />
-&lt;br />
-The expanded view shows a map with informations requested from ipinfo.com: you can copy to clipboard the different informations by...</summary>
-  <changelog></changelog>
-  <preview>https://cn.opendesktop.org/cache/100x100-0/img/1/d/e/4/0e3cd27c37a855172f54d8be9f3b2003471d.png</preview>
-  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/1/d/e/4/0e3cd27c37a855172f54d8be9f3b2003471d.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1NzMyMjM0MTkiLCJvIjoiMSIsInMiOiI1ZjE2NWJlZGJhODM2MmUzZDQ4MjZmMGQzYjE5MGI2MDNmOTg0ZTRmN2I4ZGE2ZGFkMTYzMzgxOTljM2EyY2NmYzM3NzdjODg1MzQ1YjZkZjhmZTFiZGI4MDJhOTQ1M2UyZDA0MjdhZDJkNjY5ZjBiMzFkOTJhYmE1YTJjYTUzNyIsInQiOjE1OTAxODIwMjAsInN0ZnAiOm51bGwsInN0aXAiOiIxODUuNi4yMzQuMTczIn0.Jo2q2K9lqA2D04WqbQLJnJPVYMUW7RNxRjZsXVV-Fvc/com.github.davide-sd.ipaddress.plasmoid</payload>
-  <tags>gplv2-later,original-product,linux,unix,extension,kde,plasma,plasma##majorversion=5,widget,address,network,public,ipinfo</tags>
   <status>installed</status>
  </stuff>
  <stuff category="424">
@@ -79,9 +74,9 @@ The expanded view shows a map with informations requested from ipinfo.com: you c
   <homepage>https://store.kde.org/p/998917</homepage>
   <licence></licence>
   <version>1.6.10</version>
-  <rating>88</rating>
-  <downloads>122269</downloads>
-  <installedfile>/tmp/plasma-applet-weather-widget.plasmoid</installedfile>
+  <rating>86</rating>
+  <downloads>160511</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.weatherWidget</installedfile>
   <id>998917</id>
   <releasedate>2017-10-06</releasedate>
   <summary>Plasmoid for showing weather information from yr.no and Open Weather Map servers.&lt;br />
@@ -94,7 +89,7 @@ Features:&lt;br />
   <changelog></changelog>
   <preview>https://cn.opendesktop.org/cache/100x100-0/img//hive/content-pre1/169572-1.png</preview>
   <previewBig>https://cn.opendesktop.org/cache/770x540-0/img//hive/content-pre1/169572-1.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1MDczMzI3NTAiLCJvIjoiMSIsInMiOiI0ZDY3MTkyZjkwZTZiMTkzZTQyOGU0OTY5YTk5NTdmYTJlODkyNjE1N2NmNTdkMWNkYzNlMDMzM2NmNmY0NGI5NTdkODUzZTZkN2VhNjhhZDZmYWY5NmY5ODMzZGRmYjgyYzgxMDYwMDBmNzJkYjYwYWE3ZDFkYmE1N2FmYzY2NSIsInQiOjE1ODY2MDQ3NDQsInN0ZnAiOm51bGwsInN0aXAiOiIxODUuNi4yMzQuMTczIn0.G-BTwYQ6bO26J-mTY8LU9afusZ_5QqhRhYaLqC-Lnkc/plasma-applet-weather-widget.plasmoid</payload>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1MDczMzI3NTAiLCJvIjoiMSIsInMiOiJjN2U3MjA1ODg1ZWVjZDRhMDM3OGZkMTE1ZmU1OGVlMDBlODZmODMzNTljZjMxM2UxOGFhYWU1MTc3OWM3NjE4NTdiODE4NTdmY2NlNzc1NDQwMTdkYTQxMTQ4ODM4YzQ3MjcyY2NkMTQ2NjQwYWUxOTIzOTYxZmFiMzIwODQ5NCIsInQiOjE2MTk2NTQ0MjMsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.wuO5hK6q-LMdDiTxoVbUbFV3oi8xO9RYZLZLh8tYvJU/plasma-applet-weather-widget.plasmoid</payload>
   <tags>linux,unix,extension,plasma##majorversion=5,widget,kde,plasma,weather</tags>
   <status>installed</status>
  </stuff>
