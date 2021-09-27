@@ -1,6 +1,6 @@
 [General]
 JPEGQuality=10612
-SideBarPage=operations
+LastUsedVersion=210800
 ViewBackgroundValue=27
 
 [ImageView]
@@ -13,4 +13,5 @@ Gwenview_Volume=1
 PrintHeight=20.6
 
 [SideBar]
-IsVisible ViewMode=false
+IsVisible BrowseMode=false
+IsVisible ViewMode=true
