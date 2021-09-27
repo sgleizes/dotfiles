@@ -12,6 +12,7 @@ setopt extendedglob # enable '#', '~', '^' operators and flags in patterns
 
 # Deduce the path to the parent directory.
 YADM_DIR="${0:h}"
+YADM_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/yadm"
 
 # Paths to repository configuration files.
 : ${YADM_GITCONFIG:=$YADM_DIR/gitconfig}
@@ -81,7 +82,7 @@ function configure_repo {
 
   # Hook the local git configuration and ignore patterns.
   yadm gitconfig include.path $YADM_GITCONFIG
-  ln -sfn $YADM_GITIGNORE $YADM_DIR/repo.git/info/exclude
+  ln -sfn $YADM_GITIGNORE $YADM_DATA_DIR/repo.git/info/exclude
 
   # Enable per-worktree configuration.
   yadm gitconfig extensions.worktreeConfig true
