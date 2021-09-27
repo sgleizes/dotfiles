@@ -7,12 +7,16 @@ outlineWidth=1
 [UniversalSettings]
 badges3DStyle=false
 canDisableBorders=false
+contextMenuActionsAlwaysShown=
 currentLayout=Main
+inAdvancedModeForEditSettings=true
+isAvailableGeometryBroadcastedToPlasma=false
 lastNonAssignedLayout=Main
 launchers=
-memoryUsage=0
+memoryUsage=1
 metaPressAndHoldEnabled=true
 mouseSensitivity=2
 screenTrackerInterval=2500
 showInfoWindow=true
+singleModeLayoutName=Main
 version=2
