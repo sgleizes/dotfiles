@@ -26,8 +26,8 @@
 #   distinct variables the form `local var=` is used to preserve compatibility with these shells.
 #
 
-# shellcheck shell=sh disable=SC1090 disable=SC1007
-XSH_VERSION='0.3.0'
+# shellcheck shell=sh disable=SC1090 disable=SC1007 disable=SC3043
+XSH_VERSION='0.3.1'
 
 # Figure out the name of the current shell.
 XSHELL="${ZSH_NAME:-${0##*/}}"
@@ -46,7 +46,7 @@ XSH_RUNCOM_PREFIX="${XSH_RUNCOM_PREFIX:-@}"
 # Usage: xsh [options...] <command> [args...]
 # Commands:
 #   bootstrap                      Bootstrap xsh for the current or specified shells.
-#   create                         Create new module runcoms.
+#   create <module> [runcoms]      Create new module runcoms.
 #   help [command]                 Display help information.
 #   init                           Source the xsh init file for the current shell.
 #   list                           List registered modules.
@@ -93,7 +93,8 @@ xsh() {
 
   # Begin runcom benchmark.
   if [ "$XSH_BENCHMARK" ] && [ "$_XSH_COMMAND" = 'runcom' ]; then
-    [ "$ZSH_NAME" ] && typeset -F SECONDS=0 || _begin=$(date '+%s%3N')
+    # shellcheck disable=SC3044
+    [ "$ZSH_NAME" ] && typeset -F SECONDS=0 || _begin=$(_xsh_time)
   fi
 
   # Source all units marked for loading during xsh execution.
@@ -103,9 +104,10 @@ xsh() {
 
   # End runcom benchmark.
   if [ "$XSH_BENCHMARK" ] && [ "$_XSH_COMMAND" = 'runcom' ]; then
+    # shellcheck disable=SC3028
     [ "$ZSH_NAME" ] \
       && _elapsed="${$(( SECONDS * 1000 ))%.*}" \
-      || _elapsed=$(( $(date +%s%3N) - _begin ))
+      || _elapsed=$(( $(_xsh_time) - _begin ))
     _xsh_log "$_XSH_RUNCOM runcom [${_elapsed}ms]"
   fi
 
@@ -205,7 +207,7 @@ _xsh_bootstrap() {
 
       [ "$sh" = 'zsh' ] && rcpath="${ZDOTDIR:-$HOME}" || rcpath="$HOME"
       if [ "$(readlink "$rcpath/.${rc##*/}")" != "$rc" ]; then
-        command ln -vs --backup=numbered "$rc" "$rcpath/.${rc##*/}" || err=1
+        _xsh_link "$rc" "$rcpath/.${rc##*/}" || err=1
       fi
     done
 
@@ -482,7 +484,8 @@ _xsh_source_unit() {
 
   # Begin unit benchmark.
   if [ "$XSH_BENCHMARK" ] && [ "$XSH_VERBOSE" ]; then
-    [ "$ZSH_NAME" ] && typeset -F SECONDS=0 || _begin=$(date '+%s%3N')
+    # shellcheck disable=SC3044
+    [ "$ZSH_NAME" ] && typeset -F SECONDS=0 || _begin=$(_xsh_time)
   fi
 
   # Source the unit or select the appropriate emulation mode for zsh.
@@ -503,9 +506,10 @@ _xsh_source_unit() {
 
     # End unit benchmark.
     if [ "$XSH_BENCHMARK" ]; then
+      # shellcheck disable=SC3028
       [ "$ZSH_NAME" ] \
         && _elapsed="${$(( SECONDS * 1000 ))%.*}" \
-        || _elapsed=$(( $(date +%s%3N) - _begin ))
+        || _elapsed=$(( $(_xsh_time) - _begin ))
       _xsh_log "${1#$XSH_CONFIG_DIR/} [${_elapsed}ms]$_errstatus"
     else
       _xsh_log "${1#$XSH_CONFIG_DIR/}$_errstatus"
@@ -633,6 +637,29 @@ _xsh_module_header() {
   printf '%s' "$mod" | head -c 1 | tr '[:lower:]' '[:upper:]'
   printf '%s' "$mod" | tail -c '+2' | tr '-' ' '
   printf ' configuration module%s.' "$sh_desc"
+}
+
+# Create a symbolic link, backing up the destination file if it already exists.
+#
+# Usage: _xsh_link <target> <dest>
+# Arguments:
+#   target  The link target.
+#   dest    The link destination.
+_xsh_link() {
+  local ln='ln'
+  command -v gln >/dev/null && ln='gln'
+
+  command "$ln" -vs --backup=numbered "$@"
+}
+
+# Print the current time in milliseconds.
+#
+# Usage: _xsh_time
+_xsh_time() {
+  local date='date'
+  command -v gdate >/dev/null && date='gdate'
+
+  "$date" '+%s%3N'
 }
 
 # Print a log message with a prefix corresponding to the xsh nesting level.
