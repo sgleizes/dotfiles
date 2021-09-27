@@ -47,6 +47,7 @@ PACKAGE_LIST=(
   rsync
   strace
   subversion
+  tealdeer
   trash-cli
   tree
   unison
@@ -70,7 +71,6 @@ AUR_PACKAGE_LIST=(
   nordvpn-bin
   pistol-git
   ponysay-git
-  tealdeer-bin
   tmux-git
   tmux-xpanes
   todotxt
