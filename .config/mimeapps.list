@@ -57,3 +57,4 @@ x-scheme-handler/mailspring=mailspring.desktop
 x-scheme-handler/mailto=mailspring.desktop;
 x-scheme-handler/sgnl=signal-desktop.desktop
 x-scheme-handler/tg=userapp-Telegram Desktop-5Z62V0.desktop
+x-scheme-handler/signalcaptcha=signal.desktop
