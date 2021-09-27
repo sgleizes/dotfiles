@@ -6,6 +6,11 @@
 /*
 !/.git*
 
+# YADM encrypted archive
+!/yadm/
+/yadm/**
+!/yadm/archive
+
 # Interesting KDE paths.
 !/knewstuff3/
 !/konsole/

@@ -8,7 +8,7 @@
 !/.*/
 
 # Path to the yadm repository.
-.config/yadm/repo.git/
+.local/share/yadm/repo.git/
 
 # Private toplevel dotfiles.
 /.ssh/
