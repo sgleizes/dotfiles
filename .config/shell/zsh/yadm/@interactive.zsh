@@ -64,7 +64,13 @@ function yadm-sync {
 # stashing files which are tracked on the master branch and all staged files in the
 # main worktree. The intent is to avoid checking out filtered version of desktop files.
 function yadm-merge {
-  local master files
+  local repo master files
+
+  repo="$(yadm rev-parse --git-dir)"
+  if [[ ! "$repo" ]]; then
+    print -P ':: %F{red}ERROR%f: yadm repository does not exist'
+    return 1
+  fi
 
   master="$(yadm worktree list | grep master | awk '{print $1}')"
   if [[ ! "$master" ]]; then
@@ -72,7 +78,7 @@ function yadm-merge {
     return 1
   fi
 
-  files=( $(git -C $master ls-files) $(yadm diff --name-only --cached) )
+  files=( $(git -C $master ls-files -ci -X $repo/info/sparse-checkout) $(yadm diff --name-only --cached) )
   yadm stash push -- ':/:'${^files} || return 1
   yadm merge --no-edit master
   yadm stash pop
