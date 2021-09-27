@@ -126,7 +126,7 @@ widgetStyle=Breeze
 Theme=breeze-dark
 
 [KDE]
-AnimationDurationFactor=0.5
+AnimationDurationFactor=0.35355339059327373
 ColorScheme=Breeze
 LookAndFeelPackage=org.kde.breezedark.desktop
 ShowDeleteCommand=false
