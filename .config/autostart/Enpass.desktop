@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Enpass
+Exec= /opt/enpass/Enpass -minimize
+Icon=enpass.png
+Comment=The best password manager
+X-KDE-autostart-after=panel
+X-GNOME-Autostart-Delay=12
+X-GNOME-Autostart-enabled=true

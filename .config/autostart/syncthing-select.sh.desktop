@@ -1,0 +1,20 @@
+[Desktop Entry]
+Comment[en_US]=
+Comment=
+Exec=/home/psydev/.config/plasma-workspace/login/syncthing-select.sh
+GenericName[en_US]=
+GenericName=
+Icon=dialog-scripts
+MimeType=
+Name[en_US]=syncthing-select.sh
+Name=syncthing-select.sh
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-AutostartScript=true
+X-KDE-SubstituteUID=false
+X-KDE-Username=
