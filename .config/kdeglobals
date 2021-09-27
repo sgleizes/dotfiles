@@ -109,6 +109,7 @@ emoticonsTheme=EmojiOne
 parseMode=2
 
 [General]
+BrowserApplication=firefox.desktop
 ColorScheme=BreezeHighContrast
 Name=Breeze Dark
 UseSystemBell=true

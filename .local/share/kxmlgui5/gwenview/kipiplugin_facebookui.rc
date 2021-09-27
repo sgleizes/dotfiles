@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<gui version="3" name="kipiplugin_facebook">
+<gui name="kipiplugin_facebook" version="3">
  <MenuBar>
   <Menu name="Export">
    <text>&amp;Export</text>

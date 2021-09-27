@@ -1,16 +1,8 @@
-<!DOCTYPE gui>
-<gui translationDomain="kxmlgui5" version="60" name="gwenview">
- <MenuBar alreadyVisited="1">
-  <Menu alreadyVisited="1" name="file" noMerge="1">
-   <text translationDomain="kxmlgui5">&amp;File</text>
-   <Action name="file_open"/>
-   <Action name="file_open_recent"/>
-   <Separator weakSeparator="1"/>
-   <Action name="file_save"/>
-   <Action name="file_save_as"/>
-   <Separator weakSeparator="1"/>
-   <Action name="file_print"/>
-   <Separator weakSeparator="1"/>
+<?xml version='1.0'?>
+<!DOCTYPE gui SYSTEM 'kpartgui.dtd'>
+<gui name="gwenview" version="63">
+ <MenuBar>
+  <Menu name="file">
    <Action name="file_save"/>
    <Action name="file_save_as"/>
    <Separator/>
@@ -22,18 +14,32 @@
    <Action name="add_folder_to_places"/>
    <Separator/>
    <Action name="quit"/>
-   <Separator weakSeparator="1"/>
-   <Action name="file_quit"/>
   </Menu>
-  <Menu alreadyVisited="1" name="edit" noMerge="1">
-   <text translationDomain="kxmlgui5">&amp;Edit</text>
-   <Action name="edit_undo"/>
-   <Action name="edit_redo"/>
-   <Separator weakSeparator="1"/>
-   <Action name="edit_cut"/>
-   <Action name="edit_copy"/>
-   <Action name="edit_paste"/>
-   <Separator weakSeparator="1"/>
+  <Menu name="view">
+   <Action name="browse"/>
+   <Action name="view"/>
+   <Separator/>
+   <Action name="fullscreen"/>
+   <Separator/>
+   <Action name="toggle_slideshow"/>
+   <Separator/>
+   <Action name="view_actual_size"/>
+   <Action name="view_zoom_to_fit"/>
+   <Action name="view_zoom_in"/>
+   <Action name="view_zoom_out"/>
+   <Action name="view_toggle_birdeyeview"/>
+   <Separator/>
+   <Action name="view_background_colormode_auto"/>
+   <Action name="view_background_colormode_light"/>
+   <Action name="view_background_colormode_neutral"/>
+   <Action name="view_background_colormode_dark"/>
+   <Separator/>
+   <Action name="sort_by"/>
+   <Action name="thumbnail_details"/>
+   <Separator/>
+   <Action name="toggle_sidebar"/>
+  </Menu>
+  <Menu name="edit">
    <Action name="edit_undo"/>
    <Action name="edit_redo"/>
    <Separator/>
@@ -42,8 +48,8 @@
    <Action name="edit_paste"/>
    <Separator/>
    <Action name="edit_tags"/>
-   <Menu name="rating" noMerge="1">
-    <text translationDomain="gwenview">&amp;Rating</text>
+   <Menu name="rating">
+    <text>&amp;Rating</text>
     <Action name="rate_0"/>
     <Action name="rate_1"/>
     <Action name="rate_2"/>
@@ -61,42 +67,7 @@
    <Action name="crop"/>
    <Action name="red_eye_reduction"/>
   </Menu>
-  <Menu alreadyVisited="1" name="view" noMerge="1">
-   <text translationDomain="kxmlgui5">&amp;View</text>
-   <Action name="view_actual_size"/>
-   <Separator weakSeparator="1"/>
-   <Action name="view_zoom_in"/>
-   <Action name="view_zoom_out"/>
-   <Separator weakSeparator="1"/>
-   <Action name="browse"/>
-   <Action name="view"/>
-   <Separator/>
-   <Action name="fullscreen"/>
-   <Separator/>
-   <Action name="toggle_slideshow"/>
-   <Separator/>
-   <Action name="view_actual_size"/>
-   <Action name="view_zoom_to_fit"/>
-   <Action name="view_zoom_in"/>
-   <Action name="view_zoom_out"/>
-   <Separator/>
-   <Action name="sort_by"/>
-   <Action name="thumbnail_details"/>
-   <Separator/>
-   <Action name="toggle_sidebar"/>
-   <Separator weakSeparator="1"/>
-   <Action name="fullscreen"/>
-  </Menu>
-  <Menu alreadyVisited="1" name="go" noMerge="1">
-   <text translationDomain="kxmlgui5">&amp;Go</text>
-   <Action name="go_up"/>
-   <Separator weakSeparator="1"/>
-   <Action name="go_previous"/>
-   <Action name="go_next"/>
-   <Separator weakSeparator="1"/>
-   <Action name="go_first"/>
-   <Action name="go_last"/>
-   <Separator weakSeparator="1"/>
+  <Menu name="go">
    <Action name="go_first"/>
    <Action name="go_previous"/>
    <Action name="go_next"/>
@@ -106,11 +77,11 @@
    <Separator/>
    <Action name="go_start_page"/>
   </Menu>
-  <Menu name="plugins" noMerge="1">
-   <text translationDomain="gwenview">&amp;Plugins</text>
+  <Menu name="plugins">
+   <text>&amp;Plugins</text>
   </Menu>
-  <Menu alreadyVisited="1" name="settings" noMerge="1">
-   <text translationDomain="gwenview">&amp;Settings</text>
+  <Menu name="settings" noMerge="1">
+   <text>&amp;Settings</text>
    <!--
         Disable merging because we do not want the "fullscreen" action to appear
         here, since it is already in the "view" menu.
@@ -123,21 +94,8 @@
    <Action name="options_configure_toolbars"/>
    <Action name="options_configure"/>
   </Menu>
-  <Separator weakSeparator="1"/>
-  <Menu name="help" noMerge="1">
-   <text translationDomain="kxmlgui5">&amp;Help</text>
-   <Action name="help_contents"/>
-   <Action name="help_whats_this"/>
-   <Separator weakSeparator="1"/>
-   <Action name="help_report_bug"/>
-   <Separator weakSeparator="1"/>
-   <Action name="help_donate"/>
-   <Separator weakSeparator="1"/>
-   <Action name="help_about_app"/>
-   <Action name="help_about_kde"/>
-  </Menu>
  </MenuBar>
- <ToolBar alreadyVisited="1" name="mainToolBar" noMerge="1">
+ <ToolBar name="mainToolBar" alreadyVisited="1" noMerge="1">
   <text translationDomain="gwenview">Main Toolbar</text>
   <Action name="go_start_page"/>
   <Separator name="separator_0"/>
@@ -155,4 +113,7 @@
   <Separator name="separator_4"/>
   <Action name="share"/>
  </ToolBar>
+ <ActionProperties scheme="Default">
+  <Action name="fullscreen" priority="0"/>
+ </ActionProperties>
 </gui>

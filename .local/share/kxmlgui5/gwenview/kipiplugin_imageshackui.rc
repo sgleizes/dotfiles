@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<gui version="3" name="kipiplugin_imageshack">
+<gui name="kipiplugin_imageshack" version="3">
  <MenuBar>
   <Menu name="Export">
    <text>&amp;Export</text>

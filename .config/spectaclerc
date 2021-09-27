@@ -1,7 +1,6 @@
 [General]
 alwaysRememberRegion=false
 autoSaveImage=false
-copyImageToClipboard=false
 printKeyActionRunning=0
 rememberLastRectangularRegion=true
 showMagnifier=false

@@ -458,7 +458,7 @@ plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][69]
 immutability=1
-plugin=org.kde.kdeconnect
+plugin=org.kde.plasma.keyboardlayout
 
 [Containments][7][Applets][69][Configuration]
 
@@ -477,6 +477,12 @@ brightColors=true
 passiveStates=
 selectedConfig=0
 size=20,25
+
+[Containments][7][Applets][72]
+immutability=1
+plugin=org.kde.kdeconnect
+
+[Containments][7][Applets][72][Configuration]
 
 [Containments][7][Configuration]
 
@@ -502,6 +508,8 @@ FillMode=2
 Provider=bing
 
 [Containments][72]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
 activityId=880691c7-fa6e-4255-a852-acde63acc631
 formfactor=0
 immutability=1
@@ -579,7 +587,8 @@ Image=file:///usr/share/wallpapers/Autumn/contents/images/2560x1600.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][88]
-ItemGeometriesHorizontal=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,288,176,0;
+ItemGeometries-1920x1080=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,320,192,0;
+ItemGeometriesHorizontal=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,320,192,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
 immutability=1
@@ -621,7 +630,6 @@ plugin=org.kde.desktopcontainment-trans
 wallpaperplugin=
 
 [Containments][88][Applets][79][Configuration][General]
-toolTips=true
 url=file:///home/psydev/Downloads
 
 [Containments][88][Applets][85]
@@ -691,6 +699,19 @@ Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
 [Containments][88][Wallpaper][org.kde.potd][General]
 FillMode=2
 Provider=bing
+
+[Containments][89]
+activityId=880691c7-fa6e-4255-a852-acde63acc631
+formfactor=0
+immutability=1
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
+[Containments][89][Configuration]
+
+[Containments][89][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
 
 [Containments1Appletsts][51][Configuration][config]
 max_value=2000

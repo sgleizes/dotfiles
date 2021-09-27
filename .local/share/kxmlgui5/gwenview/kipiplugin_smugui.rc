@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<gui version="2" name="kipiplugin_smug">
+<gui name="kipiplugin_smug" version="2">
  <MenuBar>
   <Menu name="Import">
    <text>&amp;Import</text>

@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<gui version="4" name="kipiplugin_sendimages">
+<gui name="kipiplugin_sendimages" version="4">
  <MenuBar>
   <Menu name="Export">
    <text>&amp;Export</text>

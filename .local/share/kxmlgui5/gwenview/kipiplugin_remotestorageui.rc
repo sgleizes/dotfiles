@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM 'kpartgui.dtd'>
-<gui version="2" name="kipiplugin_remotestorage">
+<gui name="kipiplugin_remotestorage" version="2">
  <MenuBar>
   <Menu name="Import">
    <text>&amp;Import</text>
