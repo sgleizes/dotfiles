@@ -30,7 +30,7 @@
   clean = "sed -E '/\\s*\\[.*(\\$Version|Dialog).*\\]/,/^\\s*$/d;/^(last|cropRegion|window-position)/d'"
 
 [filter "lutris-interface-state"]
-  clean = "sed -E '/(width|height)/d'"
+  clean = "sed -E '/(width|height|window_|selected)/d'"
 
 [filter "vlc-interface-state"]
   clean = "sed -n '/\\[.*Profiles\\]/,/^\\s*$/p'"
