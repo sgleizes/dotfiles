@@ -1,6 +1,5 @@
 [Compositing]
 Backend=OpenGL
-Enabled=true
 GLCore=true
 GLPreferBufferSwap=a
 GLTextureFilter=2
