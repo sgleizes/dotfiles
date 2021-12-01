@@ -87,7 +87,6 @@ For some programs, a configuration file is provided in [.config](.config).
 - [tldr](https://github.com/tldr-pages/tldr) / [tealdeer](https://github.com/dbrgn/tealdeer/) - Simplified and community-driven man pages.
 - [tmux](https://github.com/tmux/tmux) - Terminal multiplexer.
 - [tmux-xpanes](https://github.com/greymd/tmux-xpanes) - Awesome tmux-based terminal divider.
-- [todo.txt-cli](https://github.com/todotxt/todo.txt-cli) - Simple and extensible todo.txt management.
 - [trash-cli](https://github.com/sindresorhus/trash-cli) - Move files and folders to the trash.
 - [unison](https://www.cis.upenn.edu/~bcpierce/unison/) - Bidirectional file synchronization.
 - [wget](https://www.gnu.org/software/wget/) - Downloading remote files.

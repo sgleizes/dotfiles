@@ -1,9 +1,0 @@
-#!/bin/bash
-#
-# Override the rm command for notes support.
-#
-
-[ "$1" = "usage" ] && exit 0
-
-shift
-"$TODO_SH" del "$@"

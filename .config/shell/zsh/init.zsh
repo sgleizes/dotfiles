@@ -35,7 +35,6 @@ xsh module pager      interactive:env
 xsh module rclone     interactive
 xsh module restic     interactive
 xsh module ripgrep    interactive
-xsh module todotxt    interactive
 xsh module trash      interactive:logout
 xsh module unison     interactive:login
 xsh module yadm       interactive # load before git
