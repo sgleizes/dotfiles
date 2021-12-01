@@ -1475,9 +1475,9 @@ Customize bindings.
                              #'evil-forward-word-begin)
         ;; Prefer visible headings to same-level
         :ni "C-S-k"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-backward-paragraph
-                             #'org-backward-heading-same-level) ; org-previous-visible-heading)
+                             #'org-previous-visible-heading) ; org-backward-heading-same-level)
         :ni "C-S-j"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'org-forward-paragraph
-                             #'org-forward-heading-same-level) ; org-next-visible-heading)
+                             #'org-next-visible-heading) ; org-forward-heading-same-level)
         ;; Allow subtree traversal
         :ni "C-S-h"   (cmds! (bound-and-true-p evil-insert-state-minor-mode) #'evil-backward-word-begin
                              #'org-up-element)
