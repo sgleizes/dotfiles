@@ -70,16 +70,7 @@ plugin=org.kde.weatherWidget
 layoutType=Compact
 
 [Containments][2][Applets][33][Configuration][General]
-places=[{"providerId":"yrno","placeIdentifier":"Luxembourg/Luxembourg/Luxembourg","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"2960316","placeAlias":"Luxembourg"},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy, France"},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon, France"},{"providerId":"owm","placeIdentifier":"6451007","placeAlias":"Annemasse, France"}]
-
-[Containments][2][Applets][35]
-immutability=1
-plugin=gr.ictpro.jsalatas.plasma.pstate
-
-[Containments][2][Applets][35][Configuration]
-
-[Containments][2][Applets][35][Configuration][General]
-useSudoForReading=false
+places=[{"providerId":"yrno","placeIdentifier":"France/Rhône-Alpes/Saint-Pierreville","placeAlias":"Saint-Pierreville"},{"providerId":"yrno","placeIdentifier":"France/Rhône-Alpes/Le Pouzin","placeAlias":"Le Pouzin"},{"providerId":"yrno","placeIdentifier":"France/Rhône-Alpes/Mouxy","placeAlias":"Mouxy"},{"providerId":"yrno","placeIdentifier":"France/Rhône-Alpes/Morillon","placeAlias":"Morillon"},{"providerId":"owm","placeIdentifier":"3033912","placeAlias":"Bédarrides"}]
 
 [Containments][2][Applets][36]
 immutability=1
@@ -103,7 +94,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][45][Configuration][General]
 expanding=false
-length=20
+length=16
 
 [Containments][2][Applets][47]
 immutability=1
@@ -252,7 +243,7 @@ plugin=org.kde.plasma.panelspacer
 
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=631
+length=668
 
 [Containments][2][Applets][6]
 immutability=1
@@ -273,9 +264,10 @@ showActivityName=false
 [Containments][2][Configuration]
 
 [Containments][2][General]
-AppletOrder=35;47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;60
+AppletOrder=47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;60
 
 [Containments][61]
+ItemGeometries-1920x1080=
 ItemGeometriesHorizontal=
 activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
 formfactor=0
@@ -328,6 +320,9 @@ FillMode=2
 Provider=unsplash
 
 [Containments][65]
+ItemGeometries-1920x1080=Applet-91:688,656,272,272,0;
+ItemGeometries-2560x1440=
+ItemGeometriesHorizontal=
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
 immutability=1
@@ -464,13 +459,13 @@ plugin=org.kde.plasma.keyboardlayout
 
 [Containments][7][Applets][70]
 immutability=1
-plugin=org.kde.plasma.printmanager
+plugin=org.kde.plasma.manage-inputmethod
 
 [Containments][7][Applets][70][Configuration]
 
 [Containments][7][Applets][71]
 immutability=1
-plugin=martchus.syncthingplasmoid
+plugin=gr.ictpro.jsalatas.plasma.pstate
 
 [Containments][7][Applets][71][Configuration]
 brightColors=true
@@ -478,17 +473,29 @@ passiveStates=
 selectedConfig=0
 size=20,25
 
+[Containments][7][Applets][71][Configuration][General]
+hasNativeBackend=true
+monitorWhenHidden=true
+slowPollingInterval=120
+
 [Containments][7][Applets][72]
 immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][7][Applets][72][Configuration]
+selectedConfig=0
+
+[Containments][7][Applets][73]
+immutability=1
+plugin=org.kde.plasma.printmanager
+
+[Containments][7][Applets][73][Configuration]
 
 [Containments][7][Configuration]
 
 [Containments][7][General]
-extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout
-knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout
+extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
+knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
 
 [Containments][70]
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
@@ -630,6 +637,7 @@ plugin=org.kde.desktopcontainment-trans
 wallpaperplugin=
 
 [Containments][88][Applets][79][Configuration][General]
+iconSize=2
 url=file:///home/psydev/Downloads
 
 [Containments][88][Applets][85]
@@ -688,7 +696,6 @@ url=file:///home/psydev
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=577
 ToolBoxButtonY=24
-arrangement=1
 filterMimeTypes=\\0
 iconSize=2
 sortMode=-1
@@ -711,6 +718,19 @@ wallpaperplugin=org.kde.image
 [Containments][89][Configuration]
 
 [Containments][89][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
+
+[Containments][90]
+activityId=e1fb771e-29d1-4641-a442-b99b55616702
+formfactor=0
+immutability=1
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
+[Containments][90][Configuration]
+
+[Containments][90][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
 
 [Containments1Appletsts][51][Configuration][config]
@@ -799,6 +819,35 @@ pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"
 [Containments82Appletsts][79][Configuration][General]
 url=file:///home/psydev/Downloads
 
+[Containments88Appletsts][77][Configuration][General]
+interval=86400
+leftClickOpenImage=false
+pauseOnMouseOver=false
+randomize=false
+useBackground=false
+
+[Containments88Appletsts][77][Configuration][Paths]
+pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"folder"}
+
 [Containments88Appletsts][79][Configuration][General]
+iconSize=2
 sortMode=-1
+url=file:///home/psydev/Downloads
+
+[Containments88Appletsts][85][Configuration][General]
+filterMimeTypes=inode/directory
+filterMode=1
+filterPattern=Audios Books Pictures Tracks Videos
+iconSize=2
+textLines=1
+url=file:///home/psydev
+
+[Containments88Appletsts][86][Configuration][General]
+filterMimeTypes=inode/directory
+filterMode=1
+filterPattern=Documents Resources Notes
+iconSize=2
+labelMode=0
+textLines=1
+url=file:///home/psydev
 
