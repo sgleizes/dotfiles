@@ -1,6 +1,6 @@
 [Config]
 bing_locale=en-us
-clean_history=all
+clean_history=quick
 google_locale=en
 max_search_suggestions=10
 minimum_letter_count=3
