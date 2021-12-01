@@ -48,6 +48,9 @@ Right=None
 Top=None
 TopLeft=ActivityManager
 
+[KDE]
+AnimationDurationFactor=0.25
+
 [ModifierOnlyShortcuts]
 Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose
 
