@@ -73,7 +73,6 @@ AUR_PACKAGE_LIST=(
   ponysay-git
   tmux-git
   tmux-xpanes
-  todotxt
 )
 
 # Configure the local yadm repository.

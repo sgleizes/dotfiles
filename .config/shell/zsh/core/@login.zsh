@@ -46,6 +46,7 @@ export WGETRC="$XDG_CONFIG_HOME/wget/config"
 # XDG_DATA_HOME environment overrides.
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node/repl_history"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export SSB_HOME="$XDG_DATA_HOME/zoom"
 
 # XDG_CACHE_HOME environment overrides.
 export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
