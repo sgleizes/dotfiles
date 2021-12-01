@@ -355,9 +355,17 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
 [Containments][67][Configuration]
+
+[Containments][67][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+
+[Containments][67][Wallpaper][org.kde.potd][General]
+Category=1111682
+FillMode=2
+Provider=unsplash
 
 [Containments][68]
 activityId=e1fb771e-29d1-4641-a442-b99b55616702
@@ -522,7 +530,7 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
 [Containments][72][Configuration]
 
@@ -538,6 +546,11 @@ url=file:///home/psydev/Videos
 [Containments][72][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
 SlidePaths=/usr/share/wallpapers
+
+[Containments][72][Wallpaper][org.kde.potd][General]
+Category=1065374
+FillMode=2
+Provider=unsplash
 
 [Containments][73]
 activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
@@ -577,7 +590,7 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
 [Containments][84][Configuration]
 
@@ -592,6 +605,11 @@ url=file:///home/psydev/Games
 [Containments][84][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Autumn/contents/images/2560x1600.jpg
 SlidePaths=/usr/share/wallpapers
+
+[Containments][84][Wallpaper][org.kde.potd][General]
+Category=1111682
+FillMode=2
+Provider=unsplash
 
 [Containments][88]
 ItemGeometries-1920x1080=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,320,192,0;
@@ -713,12 +731,17 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
 [Containments][89][Configuration]
 
 [Containments][89][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
+
+[Containments][89][Wallpaper][org.kde.potd][General]
+Category=1339090
+FillMode=2
+Provider=unsplash
 
 [Containments][90]
 activityId=e1fb771e-29d1-4641-a442-b99b55616702

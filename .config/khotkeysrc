@@ -792,6 +792,10 @@ SingleClick[$d]
 contrast[$d]
 widgetStyle[$d]
 
+[KScreen]
+ScaleFactor[$d]
+ScreenScaleFactors[$d]
+
 [Main]
 AlreadyImported=defaults,konqueror_gestures_kde321,kde32b1,konsole
 Disabled=false
