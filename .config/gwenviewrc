@@ -15,3 +15,6 @@ PrintHeight=15
 [SideBar]
 IsVisible BrowseMode=false
 IsVisible ViewMode=true
+
+[ThumbnailView]
+ThumbnailSize=216

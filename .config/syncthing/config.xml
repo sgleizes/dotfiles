@@ -37,7 +37,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="bynfj-7gewp" label="Videos" path="/home/psydev/Videos" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="bynfj-7gewp" label="Videos" path="/home/psydev/Videos" type="sendonly" rescanIntervalS="3600" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -47,7 +47,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -61,7 +61,7 @@
         <maxConflicts>10</maxConflicts>
         <disableSparseFiles>false</disableSparseFiles>
         <disableTempIndexes>false</disableTempIndexes>
-        <paused>true</paused>
+        <paused>false</paused>
         <weakHashThresholdPct>25</weakHashThresholdPct>
         <markerName>.stfolder</markerName>
         <copyOwnershipFromParent>false</copyOwnershipFromParent>
@@ -83,7 +83,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -145,7 +145,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="ivzyx-swktr" label="Audios" path="/home/psydev/Audios" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="ivzyx-swktr" label="Audios" path="/home/psydev/Audios" type="sendonly" rescanIntervalS="3600" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -155,7 +155,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -181,7 +181,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="k4vrv-c6k6y" label="Books" path="/home/psydev/Books" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="k4vrv-c6k6y" label="Books" path="/home/psydev/Books" type="sendonly" rescanIntervalS="3600" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -191,7 +191,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -253,7 +253,7 @@
         <caseSensitiveFS>false</caseSensitiveFS>
         <junctionsAsDirs>false</junctionsAsDirs>
     </folder>
-    <folder id="yacra-yb6qn" label="Resources" path="/home/psydev/Resources" type="sendonly" rescanIntervalS="60" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
+    <folder id="yacra-yb6qn" label="Resources" path="/home/psydev/Resources" type="sendonly" rescanIntervalS="900" fsWatcherEnabled="false" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
             <encryptionPassword></encryptionPassword>
@@ -263,7 +263,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
