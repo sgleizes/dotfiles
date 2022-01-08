@@ -36,16 +36,12 @@ wallpaperplugin=org.kde.image
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
-[Containments][2][Applets][21][Configuration]
-
 [Containments][2][Applets][21][Configuration][General]
-length=385
+length=442
 
 [Containments][2][Applets][30]
 immutability=1
 plugin=org.kde.plasma.chiliclock
-
-[Containments][2][Applets][30][Configuration]
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -64,8 +60,6 @@ use24hFormat=2
 immutability=1
 plugin=org.kde.weatherWidget
 
-[Containments][2][Applets][33][Configuration]
-
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
 
@@ -75,8 +69,6 @@ places=[{"providerId":"yrno","placeIdentifier":"France/Rhône-Alpes/Saint-Pierre
 [Containments][2][Applets][36]
 immutability=1
 plugin=org.kde.plasma.virtualdesktopbar
-
-[Containments][2][Applets][36][Configuration]
 
 [Containments][2][Applets][36][Configuration][General]
 dontOverrideOpacity=true
@@ -90,8 +82,6 @@ plusButtonSymbol=⣿
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
-[Containments][2][Applets][45][Configuration]
-
 [Containments][2][Applets][45][Configuration][General]
 expanding=false
 length=16
@@ -99,8 +89,6 @@ length=16
 [Containments][2][Applets][47]
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
-
-[Containments][2][Applets][47][Configuration]
 
 [Containments][2][Applets][47][Configuration][config]
 default_color=#ff557f
@@ -116,8 +104,6 @@ names=sys.cpu/system/user,sys.cpu/system/sys,sys.cpu/system/nice,sys.cpu/system/
 [Containments][2][Applets][48]
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
-
-[Containments][2][Applets][48][Configuration]
 
 [Containments][2][Applets][48][Configuration][config]
 label=M
@@ -135,8 +121,6 @@ names=sys.mem/physical/application,sys.mem/physical/cached,sys.mem/physical/buf
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
 
-[Containments][2][Applets][49][Configuration]
-
 [Containments][2][Applets][49][Configuration][config]
 label=S
 max_value=4194300
@@ -153,8 +137,6 @@ names=sys.mem/swap/used
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
 
-[Containments][2][Applets][50][Configuration]
-
 [Containments][2][Applets][50][Configuration][config]
 label=E
 max_value=4000
@@ -169,8 +151,6 @@ names=sys.network/interfaces/enp0s31f6/receiver/data,sys.network/interfaces/enp0
 [Containments][2][Applets][51]
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
-
-[Containments][2][Applets][51][Configuration]
 
 [Containments][2][Applets][51][Configuration][config]
 label=W
@@ -187,8 +167,6 @@ names=sys.network/interfaces/wlp3s0/receiver/data,sys.network/interfaces/wlp3s0/
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
 
-[Containments][2][Applets][52][Configuration]
-
 [Containments][2][Applets][52][Configuration][config]
 label=D
 multiplier=1000
@@ -202,8 +180,6 @@ names=sys.disk/sda1_(8:1)/Rate/rblk,sys.disk/sda1_(8:1)/Rate/wblk,sys.disk/sda3_
 [Containments][2][Applets][53]
 immutability=1
 plugin=com.github.davide-sd.ipaddress
-
-[Containments][2][Applets][53][Configuration]
 
 [Containments][2][Applets][53][Configuration][Appearance]
 labelColor=#ffffff
@@ -222,8 +198,6 @@ widgetIconSize=2
 immutability=1
 plugin=com.github.burlog.plasmoid-sysmon
 
-[Containments][2][Applets][54][Configuration]
-
 [Containments][2][Applets][54][Configuration][config]
 label=T
 max_value=100
@@ -239,11 +213,9 @@ names=sys.acpi/Thermal_Zone/1-pch_skylake/Temperature
 immutability=1
 plugin=org.kde.plasma.panelspacer
 
-[Containments][2][Applets][55][Configuration]
-
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=668
+length=626
 
 [Containments][2][Applets][6]
 immutability=1
@@ -256,131 +228,11 @@ SystrayContainmentId=7
 immutability=1
 plugin=org.kde.plasma.showActivityManager
 
-[Containments][2][Applets][60][Configuration]
-
 [Containments][2][Applets][60][Configuration][General]
 showActivityName=false
 
-[Containments][2][Configuration]
-
 [Containments][2][General]
 AppletOrder=47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;60
-
-[Containments][61]
-ItemGeometries-1920x1080=
-ItemGeometriesHorizontal=
-activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
-
-[Containments][61][Configuration]
-
-[Containments][61][General]
-ToolBoxButtonState=topcenter
-ToolBoxButtonX=577
-ToolBoxButtonY=24
-arrangement=1
-iconSize=2
-sortMode=-1
-textLines=1
-url=file:///home/psydev/Projects
-
-[Containments][61][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Work.jpg
-SlidePaths=/usr/share/wallpapers
-
-[Containments][61][Wallpaper][org.kde.potd][General]
-Category=1065376
-FillMode=2
-Provider=epod
-
-[Containments][64]
-activityId=e1fb771e-29d1-4641-a442-b99b55616702
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][64][Configuration]
-
-[Containments][64][General]
-arrangement=1
-iconSize=2
-sortMode=-1
-textLines=1
-url=file:///home/psydev/Projects/perma
-
-[Containments][64][Wallpaper][org.kde.potd][General]
-Category=1065376
-FillMode=2
-Provider=unsplash
-
-[Containments][65]
-ItemGeometries-1920x1080=Applet-91:688,656,272,272,0;
-ItemGeometries-2560x1440=
-ItemGeometriesHorizontal=
-activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][65][Configuration]
-
-[Containments][65][Wallpaper][org.kde.potd][General]
-FillMode=2
-Provider=bing
-
-[Containments][66]
-activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
-
-[Containments][66][Configuration]
-
-[Containments][66][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Work.jpg
-
-[Containments][67]
-activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][67][Configuration]
-
-[Containments][67][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
-
-[Containments][67][Wallpaper][org.kde.potd][General]
-Category=1111682
-FillMode=2
-Provider=unsplash
-
-[Containments][68]
-activityId=e1fb771e-29d1-4641-a442-b99b55616702
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][68][Configuration]
-
-[Containments][68][Wallpaper][org.kde.potd][General]
-Category=1065376
-FillMode=2
-Provider=unsplash
 
 [Containments][7]
 activityId=
@@ -394,8 +246,6 @@ wallpaperplugin=org.kde.image
 immutability=1
 plugin=org.kde.plasma.volume
 
-[Containments][7][Applets][10][Configuration]
-
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
 
@@ -403,13 +253,9 @@ raiseMaximumVolume=true
 immutability=1
 plugin=org.kde.plasma.clipboard
 
-[Containments][7][Applets][11][Configuration]
-
 [Containments][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
-
-[Containments][7][Applets][12][Configuration]
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -418,37 +264,25 @@ popupOnNewDevice=false
 immutability=1
 plugin=org.kde.plasma.keyboardindicator
 
-[Containments][7][Applets][13][Configuration]
-
 [Containments][7][Applets][14]
 immutability=1
 plugin=org.kde.plasma.nightcolorcontrol
-
-[Containments][7][Applets][14][Configuration]
 
 [Containments][7][Applets][15]
 immutability=1
 plugin=org.kde.plasma.notifications
 
-[Containments][7][Applets][15][Configuration]
-
 [Containments][7][Applets][16]
 immutability=1
 plugin=org.kde.plasma.battery
-
-[Containments][7][Applets][16][Configuration]
 
 [Containments][7][Applets][17]
 immutability=1
 plugin=org.kde.plasma.networkmanagement
 
-[Containments][7][Applets][17][Configuration]
-
 [Containments][7][Applets][18]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
-
-[Containments][7][Applets][18][Configuration]
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -457,19 +291,13 @@ global=Meta+M
 immutability=1
 plugin=org.kde.plasma.bluetooth
 
-[Containments][7][Applets][19][Configuration]
-
 [Containments][7][Applets][69]
 immutability=1
 plugin=org.kde.plasma.keyboardlayout
 
-[Containments][7][Applets][69][Configuration]
-
 [Containments][7][Applets][70]
 immutability=1
 plugin=org.kde.plasma.manage-inputmethod
-
-[Containments][7][Applets][70][Configuration]
 
 [Containments][7][Applets][71]
 immutability=1
@@ -488,69 +316,22 @@ slowPollingInterval=120
 
 [Containments][7][Applets][72]
 immutability=1
-plugin=org.kde.kdeconnect
+plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
 selectedConfig=0
 
 [Containments][7][Applets][73]
 immutability=1
+plugin=org.kde.kdeconnect
+
+[Containments][7][Applets][74]
+immutability=1
 plugin=org.kde.plasma.printmanager
-
-[Containments][7][Applets][73][Configuration]
-
-[Containments][7][Configuration]
 
 [Containments][7][General]
 extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
 knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
-
-[Containments][70]
-activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][70][Configuration]
-
-[Containments][70][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
-
-[Containments][70][Wallpaper][org.kde.potd][General]
-FillMode=2
-Provider=bing
-
-[Containments][72]
-ItemGeometries-1920x1080=
-ItemGeometriesHorizontal=
-activityId=880691c7-fa6e-4255-a852-acde63acc631
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][72][Configuration]
-
-[Containments][72][General]
-arrangement=1
-filterMimeTypes=inode/directory
-filterMode=1
-iconSize=2
-sortMode=-1
-textLines=1
-url=file:///home/psydev/Videos
-
-[Containments][72][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
-SlidePaths=/usr/share/wallpapers
-
-[Containments][72][Wallpaper][org.kde.potd][General]
-Category=1065374
-FillMode=2
-Provider=unsplash
 
 [Containments][73]
 activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
@@ -558,25 +339,19 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
-[Containments][73][Configuration]
+[Containments][73][General]
+arrangement=1
+url=file:///home/psydev/Projects/job
 
 [Containments][73][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
 
-[Containments][74]
-activityId=880691c7-fa6e-4255-a852-acde63acc631
-formfactor=0
-immutability=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
-
-[Containments][74][Configuration]
-
-[Containments][74][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+[Containments][73][Wallpaper][org.kde.potd][General]
+Category=1066276
+FillMode=2
+Provider=unsplash
 
 [Containments][80][Applets][79]
 wallpaperplugin=
@@ -591,8 +366,6 @@ immutability=1
 location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
-
-[Containments][84][Configuration]
 
 [Containments][84][General]
 ToolBoxButtonState=topcenter
@@ -612,8 +385,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][88]
-ItemGeometries-1920x1080=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,320,192,0;
-ItemGeometriesHorizontal=Applet-79:0,16,464,1024,0;Applet-85:1456,16,464,192,0;Applet-77:1456,400,464,656,0;Applet-86:1536,208,320,192,0;
+ItemGeometries-1920x1080=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
+ItemGeometriesHorizontal=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
 immutability=1
@@ -624,8 +397,6 @@ wallpaperplugin=org.kde.potd
 [Containments][88][Applets][77]
 immutability=1
 plugin=org.kde.plasma.mediaframe
-
-[Containments][88][Applets][77][Configuration]
 
 [Containments][88][Applets][77][Configuration][General]
 interval=86400
@@ -708,8 +479,6 @@ labelMode=0
 textLines=1
 url=file:///home/psydev
 
-[Containments][88][Configuration]
-
 [Containments][88][General]
 ToolBoxButtonState=topcenter
 ToolBoxButtonX=577
@@ -733,7 +502,9 @@ location=0
 plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
-[Containments][89][Configuration]
+[Containments][89][General]
+arrangement=1
+url=file:///home/psydev/Documents/Habitat/Saint-Pierreville
 
 [Containments][89][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
@@ -749,12 +520,39 @@ formfactor=0
 immutability=1
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.potd
 
-[Containments][90][Configuration]
+[Containments][90][General]
+arrangement=1
+url=file:///home/psydev/Projects/perma
 
 [Containments][90][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
+
+[Containments][90][Wallpaper][org.kde.potd][General]
+Category=1065376
+FillMode=2
+Provider=unsplash
+
+[Containments][91]
+activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+formfactor=0
+immutability=1
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.potd
+
+[Containments][91][General]
+arrangement=1
+url=file:///home/psydev/Projects/env
+
+[Containments][91][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+
+[Containments][91][Wallpaper][org.kde.potd][General]
+Category=1065374
+FillMode=2
+Provider=unsplash
 
 [Containments1Appletsts][51][Configuration][config]
 max_value=2000
@@ -873,4 +671,3 @@ iconSize=2
 labelMode=0
 textLines=1
 url=file:///home/psydev
-

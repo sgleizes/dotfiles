@@ -1,10 +1,11 @@
 [ActivityManager]
 _k_friendly_name=Activity Manager
-switch-to-activity-81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Meta+Volume Mute,none,Switch to activity "Home"
-switch-to-activity-880691c7-fa6e-4255-a852-acde63acc631=Meta+Volume Up,none,Switch to activity "Matrix"
+switch-to-activity-81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Meta+Volume Mute,none,Switch to activity "Self"
+switch-to-activity-880691c7-fa6e-4255-a852-acde63acc631=Meta+Volume Down,none,Switch to activity "Home"
+switch-to-activity-a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=Meta+Volume Up,none,Switch to activity "System"
 switch-to-activity-ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Meta+Monitor Brightness Down,none,Switch to activity "Gaming"
-switch-to-activity-b6d870af-2af7-49fe-bce4-606e462b99c6=Meta+Volume Down,none,Switch to activity "Focus"
-switch-to-activity-e1fb771e-29d1-4641-a442-b99b55616702=Meta+Microphone Mute,none,Switch to activity "Permaculture"
+switch-to-activity-b6d870af-2af7-49fe-bce4-606e462b99c6=Meta+Microphone Mute,none,Switch to activity "Work"
+switch-to-activity-e1fb771e-29d1-4641-a442-b99b55616702=Meta+Monitor Brightness Up,none,Switch to activity "Permaculture"
 
 [KDE Keyboard Layout Switcher]
 Switch keyboard layout to English (US)=none,none,Switch keyboard layout to English (US)
@@ -332,6 +333,7 @@ _launch=Meta+Ctrl+.,Meta+.,Emoji Selector
 ActiveWindowScreenShot=Meta+Print,Meta+Print,Capture Active Window
 CurrentMonitorScreenShot=,none,Capture Current Monitor
 FullScreenScreenShot=Shift+Print,Shift+Print,Capture Entire Desktop
+OpenWithoutScreenshot=none,none,Launch Spectacle without capturing
 RectangularRegionScreenShot=Meta+Shift+Print,Meta+Shift+Print,Capture Rectangular Region
 WindowUnderCursorScreenShot=Meta+Ctrl+Print,Meta+Ctrl+Print,Capture Window Under Cursor
 _k_friendly_name=Spectacle
@@ -363,6 +365,8 @@ activate task manager entry 7=,Meta+7,Activate Task Manager Entry 7
 activate task manager entry 8=,Meta+8,Activate Task Manager Entry 8
 activate task manager entry 9=,Meta+9,Activate Task Manager Entry 9
 activate widget 18=Meta+M,none,Activate Media Player Widget
+activate widget 263=,none,Activate Application Launcher Widget
+activate widget 3=Alt+F1,none,Activate Application Launcher Widget
 activate widget 36=none,none,Activate Virtual Desktop Bar Widget
 activate widget 71=none,none,Activate Syncthing Widget
 clear-history=none,none,Clear Clipboard History
