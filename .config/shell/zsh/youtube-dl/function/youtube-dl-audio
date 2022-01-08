@@ -2,7 +2,7 @@
 # Download audio only to a target directory structured by artist/release.
 #
 
-local target_dir="$HOME/Audios/Pending"
+local target_dir="$HOME/Audios/Inbox"
 local artist='%(artist)s'
 local release='%(playlist)s'
 local args=()

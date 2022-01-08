@@ -11,7 +11,8 @@ path = Tracks
 path = Videos
 
 # Paths to ignore.
-ignore = Path Audios/Pending
+ignore = Path Audios/Inbox
+ignore = Path Pictures/Inbox
 ignore = Path Pictures/Pending
 ignore = Path Pictures/Screenshots
 ignore = Path Pictures/Telegram
