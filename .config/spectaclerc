@@ -1,13 +1,13 @@
 [General]
-alwaysRememberRegion=false
 autoSaveImage=false
 printKeyActionRunning=0
-rememberLastRectangularRegion=true
+rememberLastRectangularRegion=2
 showMagnifier=false
 useLightMaskColour=false
 useReleaseToCapture=false
 
 [GuiConfig]
+captureMode=2
 includePointer=false
 quitAfterSaveCopyExport=true
 

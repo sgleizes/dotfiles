@@ -19,3 +19,6 @@ CloseTabButton=None
 CloseTabOnMiddleMouseButton=true
 ExpandTabWidth=true
 TabBarPosition=Top
+
+[UiSettings]
+ColorScheme=Default

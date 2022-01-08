@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE gui SYSTEM 'kpartgui.dtd'>
-<gui version="17" name="konsole">
+<gui name="konsole" version="19">
  <MenuBar>
   <Menu name="file">
    <text>File</text>
@@ -43,6 +43,7 @@
    <DefineGroup name="session-settings"/>
    <Action name="manage-profiles"/>
    <Action name="show-menubar"/>
+   <Action name="window-colorscheme-menu"/>
    <Separator/>
    <Action name="view-full-screen"/>
    <Separator/>
@@ -66,8 +67,8 @@
   <Action name="split-view-top-bottom"/>
  </ToolBar>
  <ActionProperties>
-  <Action shortcut="" name="clone-tab"/>
-  <Action shortcut="" name="fullscreen"/>
-  <Action shortcut="" name="help_contents"/>
+  <Action name="clone-tab" shortcut=""/>
+  <Action name="fullscreen" shortcut=""/>
+  <Action name="help_contents" shortcut=""/>
  </ActionProperties>
 </gui>
