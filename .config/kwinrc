@@ -66,7 +66,6 @@ desktopchangeosdEnabled=true
 diminactiveEnabled=true
 flipswitchEnabled=true
 highlightwindowEnabled=true
-krohnkiteEnabled=true
 kwin4_effect_fadeEnabled=false
 kwin4_effect_rubberband_maximizeEnabled=false
 kwin4_effect_scaleEnabled=true
