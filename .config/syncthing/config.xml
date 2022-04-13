@@ -1,4 +1,4 @@
-<configuration version="35">
+<configuration version="36">
     <folder id="ankpe-mgyul" label="Notes" path="/home/psydev/Notes" type="sendreceive" rescanIntervalS="3600" fsWatcherEnabled="true" fsWatcherDelayS="10" ignorePerms="false" autoNormalize="true">
         <filesystemType>basic</filesystemType>
         <device id="BTLQ6JH-VPPWHEV-3CQBZEJ-7BWB6JR-3V2HCIP-THSF7XD-WZZTQHX-SUBQIAH" introducedBy="">
@@ -119,7 +119,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -227,7 +227,7 @@
         </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning>
-            <cleanupIntervalS>0</cleanupIntervalS>
+            <cleanupIntervalS>3600</cleanupIntervalS>
             <fsPath></fsPath>
             <fsType>basic</fsType>
         </versioning>
@@ -305,7 +305,6 @@
         <autoAcceptFolders>false</autoAcceptFolders>
         <maxSendKbps>0</maxSendKbps>
         <maxRecvKbps>0</maxRecvKbps>
-        <ignoredFolder time="2021-02-10T18:40:47.351Z" id="ynmgj-xhzxv" label="Photos"></ignoredFolder>
         <maxRequestKiB>0</maxRequestKiB>
         <untrusted>false</untrusted>
         <remoteGUIPort>0</remoteGUIPort>
@@ -410,5 +409,6 @@
             <untrusted>false</untrusted>
             <remoteGUIPort>0</remoteGUIPort>
         </device>
+        <ignores></ignores>
     </defaults>
 </configuration>
