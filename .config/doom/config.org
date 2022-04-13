@@ -275,10 +275,10 @@ literate
 
 #+name: doom-completion
 #+begin_src elisp
-(company +childframe)         ; the ultimate code completion backend
-;;helm                        ; the *other* search engine for love and life
-;;ido                         ; the other *other* search engine...
-(ivy +prescient +icons)       ; a search engine for love and life
+(company +childframe)                ; the ultimate code completion backend
+;;helm                               ; the *other* search engine for love and life
+;;ido                                ; the other *other* search engine...
+(ivy +prescient +icons +childframe)  ; a search engine for love and life
 #+end_src
 
 **** Interface
@@ -3305,36 +3305,75 @@ See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
     (clrhash ivy-rich--ivy-switch-buffer-cache)))
 #+end_src
 
+Customize ivy-posframe.
+- [X] Need a fixed window width with truncate lines
+- [ ] Use different display functions for some commands (e.g. swiper)
+  - Supposed to work but does not
+  - Keep it like this for now, let's see if ivy-posframe is really usable first.
+#+begin_src elisp
+(after! ivy-posframe
+  (setq ivy-posframe-min-height ivy-height
+        ivy-posframe-min-width 90
+        ivy-posframe-size-function #'psydev/ivy-posframe-get-size
+        ivy-posframe-border-width 8
+        ivy-posframe-parameters `((left-fringe . 2)
+                                  (right-fringe . 2)))
+
+  (defun psydev/ivy-posframe-get-size ()
+    "Dynamic, fixed size function used by `ivy-posframe-size-function'."
+    (setq ivy-posframe-width (round (* (frame-width) 0.618))) ; NOTE EDIT
+    (list
+     :height ivy-posframe-height
+     :width ivy-posframe-width
+     :min-height (or ivy-posframe-min-height
+                     (let ((height (+ ivy-height 1)))
+                       (min height (or ivy-posframe-height height))))
+     :min-width (or ivy-posframe-min-width
+                    (let ((width (round (* (frame-width) 0.618))))
+                      (min width (or ivy-posframe-width width))))))
+
+  (setf (alist-get t ivy-posframe-display-functions-alist)
+        ;; #'ivy-posframe-display-at-frame-bottom-center)
+        #'+ivy-display-at-frame-center-near-bottom-fn))
+#+end_src
+
 Extend the default hydra for ivy.
 #+begin_src elisp
 (after! ivy-hydra
   (defhydra+ hydra-ivy (:hint nil :color pink)
     "
- Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
-----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
- _g_ ^ ^ _k_ ^ ^ _u_ | _f_orward _o_ccur | _i_nsert | _c_alling: %-7s(if ivy-calling \"on\" \"off\") _C_ase-fold: %-10`ivy-case-fold-search
- ^↨^ _h_ ^+^ _l_ ^↕^ | _RET_ done     ^^ | _q_uit   | _M_atcher: %-7s(ivy--matcher-desc) _T_runcate: %-11`truncate-lines
- _G_ ^ ^ _j_ ^ ^ _d_ | _TAB_ alt-done ^^ | ^ ^      | _<_/_>_: shrink/grow _m_ark _t_oggle _u_nmark
+
+                                   🔎 Ivy
+
+ Move     ^^^^^^^^^^   Call         ^^^^   Cancel^^   Options^^
+══════════^^^^^^^^^^════════════════^^^^═════════^^══════════^^══════════════════════════════
+ _g_ ^ ^ _k_ ^ ^ _u_   _f_orward _o_ccur   _i_nsert   _c_alling: %-7s(if ivy-calling \"on\" \"off\")  _C_ase-fold: %-10`ivy-case-fold-search
+ ^↕^ _h_ ^+^ _l_ ^🡙^   _RET_ done     ^^   _q_uit     _M_atcher: %-7s(ivy--matcher-desc)  _T_runcate: %-11`truncate-lines
+ _G_ ^ ^ _j_ ^ ^ _d_   _TAB_ alt-done ^^   ^ ^        _<_/_>_: shrink/grow  _m_ark _t_oggle _U_nmark
+
+Action _w_/_s_/_a_: %s(ivy-action-name)
+       _K_ill                                                        _?_: help
 "
     ;; Movement
     ("l" ivy-alt-done)
-    ("h" ivy-backward-delete-char)
+    ("h" ivy-backward-kill-word)
     ;; Restore mark bindings
     ("m" ivy-mark)
-    ("u" ivy-unmark)
+    ("U" ivy-unmark)
     ("<deletechar>" ivy-unmark-backward)
     ("t" ivy-toggle-marks)
     ;; Actions
     ("<escape>" nil)
     ("M-o" nil)
     ("K" (ivy-exit-with-action #'ivy--kill-buffer-action))
-    ))
+    ("?" ivy-help)))
 #+end_src
 
 Customize bindings.
 #+begin_src elisp
 (after! ivy
   (map! :map ivy-minibuffer-map
+        "C-h" #'ivy-backward-kill-word
         "C-<return>" #'ivy-immediate-done))
 #+end_src
 
