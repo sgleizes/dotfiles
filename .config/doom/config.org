@@ -2167,7 +2167,8 @@ Also fix perspective issues: killing twice the elfeed-search buffers was messing
           (with-current-buffer b
             (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
             (kill-buffer b))))
-      (mapc #'kill-buffer show-buffers))))
+      (mapc #'kill-buffer show-buffers))
+    (+workspace/delete "elfeed")))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
@@ -3582,13 +3583,22 @@ Add hooks to improve the usability and readability of the dashboard.
 #+begin_src elisp :tangle yes
 (after! elfeed-dashboard
   ;; Remove ineffective code called on dashboard open, use hook instead.
+  ;; Also create a dedicated perspective for elfeed.
   (defun psydev/elfeed-dashboard ()
     "Open the elfeed dasboard."
     (interactive)
-    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-    (with-current-buffer elfeed-dashboard--buf
-      (elfeed-dashboard-mode)))
+    (progn
+      (+workspace-switch "elfeed" t)
+      (doom/switch-to-scratch-buffer)
+      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+      (with-current-buffer elfeed-dashboard--buf
+        (elfeed-dashboard-mode))
+      (+workspace/display)))
   (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
+
+  ;; Cleanup elfeed on dashboard exit.
+  (add-hook! elfeed-dashboard-mode
+    (add-hook 'kill-buffer-hook #'+rss-cleanup-h nil 'local))
 
   ;; Really update links when opening the dashboard.
   (add-hook! elfeed-dashboard-mode
@@ -3602,8 +3612,7 @@ Add hooks to improve the usability and readability of the dashboard.
   ;; Move point to the first selectable shortcut.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-top ()
-      (goto-line 3)
-      (scroll-down))) ; TODO Does not always work, how to truly reset the view to top?
+      (goto-line 3)))
 
   ;; Disable evil-org-mode for now, I could not find a way to make elfeed-dashboard-mode-map
   ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
