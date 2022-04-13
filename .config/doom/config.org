@@ -4203,6 +4203,165 @@ To make VLF available without delaying startup, just load it in quiet moments.
 ;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 #+end_src
 
+*** Hydra posframe
+
+[[https://github.com/Ladicle/hydra-posframe][This package]] is a hydra extension which shows hydra hints on posframe.
+#+begin_src elisp
+(package! hydra-posframe
+  :recipe (:host github :repo "Ladicle/hydra-posframe"))
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! hydra-posframe
+  :after hydra
+  :config
+  (hydra-posframe-mode)
+  (setq hydra-posframe-border-width 1
+        hydra-posframe-poshandler #'posframe-poshandler-frame-bottom-center
+        hydra-posframe-parameters `((left-fringe . 15)
+                                    (right-fringe . 15)))
+
+  (custom-set-faces!
+    '(hydra-posframe-face :inherit unspecified)
+    '(hydra-posframe-border-face :background "gray30")))
+#+end_src
+
+*** Hydra major mode
+
+[[https://github.com/jerrypnz/major-mode-hydra.el][This package]] allows to create major-mode specific hydras which are bound to the same key.
+It also provides pretty-hydra which allows to create hydras with automatically formatted columns.
+#+begin_src elisp
+(package! major-mode-hydra)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! major-mode-hydra
+  :after hydra
+  :config
+  (setq major-mode-hydra-separator "═"
+        major-mode-hydra-title-generator #'+hydra/major-mode-title-generator)
+
+  ;; Title generator for pretty hydras.
+  (defun +hydra/title-generator--generic (title &optional icon offset)
+    (let ((prefix (when offset (s-repeat offset " ")))
+          (icon (when icon (concat icon " "))))
+      (s-concat prefix icon title)))
+
+  (defun +hydra/title-generator (title &optional icon offset)
+    (+hydra/title-generator--generic
+     title
+     (all-the-icons-faicon icon :v-adjust 0.05)
+     offset))
+
+  (defun +hydra/major-mode-title-generator (mode &optional offset)
+    (+hydra/title-generator--generic
+     (s-concat (s-capitalized-words (s-chop-suffix "-mode" (symbol-name mode))) " commands")
+     (all-the-icons-icon-for-mode mode :v-adjust 0.05)
+     offset)))
+#+end_src
+
+Add a global hydra to change the font-size interactively.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/font-size
+    (:separator "═")
+    ("Font size"
+     (("+" doom/increase-font-size "increase")
+      ("-" doom/decrease-font-size "decrease")
+      ("0" doom/reset-font-size "reset")))))
+#+end_src
+
+Add a global hydra for window management.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/window-management
+    (:separator "═" :title (+hydra/title-generator "Window Management" "windows" 47))
+    ("Switch"
+     (("h" evil-window-left "left")
+      ("j" evil-window-down "down")
+      ("k" evil-window-up "up")
+      ("l" evil-window-right "right"))
+     "Swap"
+     (("H" +evil/window-move-left "left")
+      ("J" +evil/window-move-down "down")
+      ("K" +evil/window-move-up "up")
+      ("L" +evil/window-move-right "right"))
+     "Arrange"
+     (("n" evil-window-new "new")
+      ("d" +workspace/close-window-or-workspace "delete")
+      ("s" evil-window-split "split horiz.")
+      ("v" evil-window-vsplit "split vert.")
+      ("u" winner-undo "undo"))
+     "Focus"
+     (("o" doom/window-enlargen "enlargen")
+      ("mm" doom/window-maximize-buffer "maximize")
+      ("ms" doom/window-maximize-horizontally "maximize horiz.")
+      ("mv" doom/window-maximize-vertically "maximize vert."))
+     "Layout"
+     (("r" evil-window-rotate-downwards "rotate down")
+      ("R" evil-window-rotate-upwards "rotate up")
+      ("\\" rotate-layout "rotate layout"))
+     "Resize"
+     (("<" evil-window-decrease-width "-width")
+      (">" evil-window-increase-width "+width")
+      ("-" evil-window-decrease-height "-height")
+      ("+" evil-window-increase-height "+height")
+      ("=" balance-windows "balance"))
+     "Buffer"
+     (("p" previous-buffer "prev")
+      ("n" next-buffer "next")
+      ("b" +ivy/switch-workspace-buffer "switch")
+      ("f" counsel-find-file "find file")))))
+#+end_src
+
+Add a global hydra for buffer management.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/buffer-management
+    (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 34))
+    ("Tab"
+     (("h" +tabs:previous-or-goto "prev")
+      ("l" +tabs:next-or-goto "next")
+      ("H" centaur-tabs-move-current-tab-to-left "move left")
+      ("L" centaur-tabs-move-current-tab-to-right "move right")
+      ("j" centaur-tabs-forward-group "next group")
+      ("k" centaur-tabs-backward-group "prev group")
+      ("g" centaur-tabs-counsel-switch-group "switch group"))
+     "Switch"
+     (("b" +ivy/switch-workspace-buffer "switch")
+      ("B" +ivy/switch-buffer "switch all")
+      ("n" evil-buffer-new "new")
+      ("x" doom/open-scratch-buffer "scratch")
+      ("f" counsel-find-file "find file"))
+     "Region"
+     (("-" doom/toggle-narrow-buffer "narrow" :toggle (buffer-narrowed-p))
+      ;; TODO: +evil:narrow-buffer : How to specify arg BANG? <!>??
+      ("+" doom/narrow-buffer-indirectly "narrow indirect"))
+     "Save"
+     (("s" basic-save-buffer "save")
+      ("S" evil-write-all "save all")
+      ("u" doom/sudo-save-buffer "sudo save")
+      ("r" revert-buffer "revert"))
+     "Kill"
+     (("z" bury-buffer "bury")
+      ("d" kill-current-buffer "kill")
+      ("D" doom/kill-other-buffers "kill other")
+      ("C-d" doom/kill-all-buffers "kill all")))))
+#+end_src
+
+Bind global hydras.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (map! :leader
+        :desc "Adjust font size"   "-"   #'+hydra/font-size/body
+
+        :prefix "w"
+        :desc "Window management"  "SPC" #'+hydra/window-management/body
+        :prefix "b"
+        :desc "Buffer management"  "SPC" #'+hydra/buffer-management/body
+))
+#+end_src
+
 *** Magit delta
 
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
