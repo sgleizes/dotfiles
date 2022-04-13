@@ -1130,7 +1130,7 @@ Use ~#+TODO~ (or ~#+SEQ_TODO~ / ~#+TYP_TODO~) to define per-file keywords
            "DONE(d!/!)")      ; Task successfully completed
           (sequence
            "IDEA(i)"          ; A captured task or project that must be processed and is not yet ready to do
-           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in the main backlog
+           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in dashboards
            "PROJ(p)"          ; A project, which usually contains other tasks/subprojects
            "|"
            "DONEPROJ(d)")
@@ -1215,21 +1215,21 @@ Configure default tags behavior and appearance.
           (:startgrouptag . nil)
           ("activity"     . ?2)
           (:grouptags     . nil)
-          ("read"         . ?d)
+          ("read"         . ?r)
           ("listen"       . ?a)
-          ("watch"        . ?w)
+          ("watch"        . ?v)
           (:endgrouptag   . nil)
           (:startgrouptag . nil)
           ("task"         . ?3)
           (:grouptags     . nil)
-          ("issue"        . ?i)
+          ("bug"          . ?b)
+          ("improvement"  . ?m)
+          ("feature"      . ?f)
           (:endgrouptag   . nil)
           (:startgrouptag . nil)
           ("context"      . ?4)
           (:grouptags     . nil)
           ("@self"        . ?s)
-          ("@phone"       . ?p)
-          ("@computer"    . ?c)
           ("@home"        . ?h)
           ("@work"        . ?w)
           ("@people"      . ?l)
@@ -1249,25 +1249,33 @@ Configure default tags behavior and appearance.
           ("listen"      . (:foreground "#b5bd68" :weight bold))
           ("watch"       . (:foreground "#b5bd68" :weight bold))
           ;; Task tags
+          ("need"        . (:foreground "#de935f" :weight bold))
           ("issue"       . (:foreground "#cc6666" :weight bold))
           ("bug"         . (:foreground "#cc6666" :weight bold))
           ("improvement" . (:foreground "#de935f" :weight bold))
           ("feature"     . (:foreground "#b5bd68" :weight bold))
           ;; Context tags
           ("@self"       . (:foreground "#8abeb7" :weight bold))
-          ("@phone"      . (:foreground "#8abeb7" :weight bold))
-          ("@computer"   . (:foreground "#8abeb7" :weight bold))
           ("@home"       . (:foreground "#8abeb7" :weight bold))
           ("@work"       . (:foreground "#8abeb7" :weight bold))
-          ("@people"     . (:foreground "#8abeb7" :weight bold))
-          ("@errand"     . (:foreground "#8abeb7" :weight bold)))
-        org-tags-column -132
+          ("@people"     . (:foreground "#8abeb7" :weight bold)))
         org-fast-tag-selection-single-key 't)
   (custom-set-faces!
     ;; '(org-tag :foreground "#717171" :weight normal)
     ;; '(org-tag :foreground "#de935f" :weight normal)
     '(org-tag :foreground "#8abeb7" :weight normal)
     '(org-tag-group :foreground unspecified :weight unspecified)))
+#+end_src
+
+Configure tags alignment.
+#+begin_src elisp
+(after! org
+  (setq org-tags-column -132)
+  ;; Workaround incorrect tag alignments on headings containing links with a title
+  (add-hook 'org-cycle-hook
+            (defun psydev/org-cycle-align-tags (state)
+              (setq org-tags-column (- 3 (window-body-width)))
+              (when (not (memq state '(overview folded))) (org-align-tags 't)))))
 #+end_src
 
 **** Dates & Times
@@ -1291,91 +1299,54 @@ Configure archiving behavior.
 
 **** TODO Agenda
 
-Define default span and starting day for daily/weekly agenda.
+Customize agenda settings.
 #+begin_src elisp
 (after! org
+  ;; Customize window-setup style for agenda.
+  (setq org-agenda-window-setup 'current-window
+        org-agenda-restore-windows-after-quit nil)
+
+  ;; General agenda setup
   (setq org-agenda-files (list org-directory)
+        org-agenda-sticky 't
         org-agenda-span 'week
         org-agenda-start-on-weekday 1
-        org-agenda-start-day nil))
-#+end_src
+        org-agenda-start-day nil)
 
-Show blocked tasks with the dimmed face, customized.
-These are usually projects and are useful to provide context in the backlog.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-dim-blocked-tasks 't)
-  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171" )))
-#+end_src
-
-Add extra files to agenda text search commands.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-text-search-extra-files
-        (list (concat doom-private-dir "config.org"))))
-#+end_src
-
-Configure default sorting.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-sorting-strategy
-        '((agenda habit-down time-up priority-down category-up)
-          (todo category-up priority-down)
-          (tags category-up priority-down)
-          (search category-up))))
-#+end_src
-
-
-***** Diary
-
-Configure diary/agenda integration.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-include-diary nil
-        org-agenda-diary-file (concat org-directory "life.org")))
-#+end_src
-
-***** Filtering
-
-Define some custom filters.
-#+begin_src elisp
-(after! org
-  (defun +org-agenda-filter-by-category (category exclude)
-    "Filter lines in the agenda buffer that have the given category.
-With a `\\[universal-argument]' prefix argument, exclude the lines of that category.
-When there is already a (non-excluding) category filter in place, this command removes the filter."
-    (interactive "P")
-    (if (and org-agenda-filtered-by-category
-             org-agenda-category-filter)
-        (org-agenda-filter-show-all-cat)
-      (cond
-       ((and category exclude)
-        (org-agenda-filter-apply
-         (push (concat "-" category) org-agenda-category-filter) 'category))
-       (category
-        (org-agenda-filter-apply
-         (setq org-agenda-category-filter
-               (list (concat "+" category)))
-         'category)))))
-
-  (defun +org-agenda-filter-astral ()
-    "Remove entries with the Astral category from the agenda."
-    (interactive)
-    (if org-agenda-category-filter
-        (org-agenda-filter-show-all-cat)
-      (+org-agenda-filter-by-category "Astral" 't))))
+  ;; Agenda settings related to items with dates.
+  (setq org-agenda-skip-timestamp-if-done 't
+        org-agenda-skip-scheduled-if-done 't
+        org-agenda-skip-deadline-if-done nil
+        org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
+        org-agenda-skip-timestamp-if-deadline-is-shown nil
+        org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+        org-agenda-skip-scheduled-delay-if-deadline nil
+        org-agenda-show-future-repeats 't))
 #+end_src
 
 ***** Appearance
 
+Add a separator line between days.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-compact-blocks nil
+        org-agenda-format-date
+        (lambda (date)
+          (concat
+           (make-string (window-width) 8943) "\n"
+           (org-agenda-format-date-aligned date)))))
+#+end_src
+
 Configure prefix.
 #+begin_src elisp
 (after! org
+  ;; NOTE: Category is removed from todo/tags/search views since it is redundant with
+  ;; my default org-super-agenda grouping and causes display issues in org-ql-view.
   (setq org-agenda-prefix-format
         '((agenda . " %i %-17:c%?-12t% s")
-          (todo . " %i %-17:c")
-          (tags . " %i %-17:c")
-          (search . " %i %-17:c"))))
+          (todo . " %i ") ; For category: %-17:c
+          (tags . " %i ")
+          (search . " %i "))))
 #+end_src
 
 Configure time grid.
@@ -1389,11 +1360,179 @@ Configure time grid.
         "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
 #+end_src
 
+Do not show blocked tasks as dimmed by default. With my configuration they are usually projects (subtasks not done).
+Also customize the face to be brighter, in case locally enabled.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-dim-blocked-tasks nil)
+  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171")))
+#+end_src
+
+Always highlight the current agenda line.
+#+begin_src elisp
+(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+#+end_src
+
+***** Diary
+
+Configure diary/agenda integration.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-include-diary nil
+        org-agenda-diary-file (concat org-directory "life.org")))
+#+end_src
+
+***** Filtering
+
+Configure the custom tag filter accessible via <RET> from the tag filter prompt in agenda (f t).
+Also accessible via a triple prefix on the main agenda filter command (f f)
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-exclude-events (tag)
+    (when (string= tag "event")
+      (concat "-" tag)))
+  (setq org-agenda-auto-exclude-function #'+org-agenda-exclude-events))
+#+end_src
+
+***** Custom Views
+
+Definition of stuck projects.
+#+begin_src elisp
+(after! org
+  (setq org-stuck-projects
+        '("+TODO=\"PROJ\""
+          ("TODO" "ACTV")
+          ("event" "appointment") "")))
+#+end_src
+
+Configure default sorting.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-up)
+          (todo category-up priority-down)
+          (tags category-up priority-down)
+          (search category-up))))
+#+end_src
+
+Define custom agenda views.
+#+begin_src elisp
+(after! org
+  (defvar +psydev/org-agenda-groups
+        '((:name "Schedule" :time-grid t)
+          (:auto-outline-path t :order 99)))
+
+  (setq org-agenda-custom-commands
+        '(("d" "Agenda for current day" agenda ""
+           ((org-agenda-span 'day)
+            (org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("w" "Agenda for current week" agenda ""
+           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("e" "Appointments for current week" agenda* ""
+           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("l" "Log of the current week" agenda ""
+           ((org-agenda-overriding-header "Activity Log")
+            (org-agenda-archives-mode 't)
+            (org-agenda-start-with-log-mode 'only)
+            (org-agenda-log-mode-items '(closed clock state))
+            (org-agenda-use-time-grid nil)
+            (org-super-agenda-groups nil))))))
+#+end_src
+
+***** Commands
+
+Add interactive functions to cycle todo states from agenda.
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-todo-prev ()
+    (interactive)
+    (org-agenda-todo 'left))
+  (defun +org-agenda-todo-next ()
+    (interactive)
+    (org-agenda-todo 'right)))
+#+end_src
+
+***** Hydra
+
+Define a major-mode-hydra.
+#+begin_src elisp
+(after! org
+  (defun org-agenda-cts ()
+    (and (eq major-mode 'org-agenda-mode)
+         (let ((args (get-text-property
+                      (min (1- (point-max)) (point))
+                      'org-last-args)))
+           (nth 2 args))))
+
+  (major-mode-hydra-define org-agenda-mode
+    (:color red :title (+hydra/major-mode-title-generator 'org-agenda-mode 55))
+    ("Span"
+     (("zd" org-agenda-day-view (format "%s day" (if (eq 'day (org-agenda-cts)) "[x]" "[ ]")))
+      ("zw" org-agenda-week-view (format "%s week" (if (eq 'week (org-agenda-cts)) "[x]" "[ ]")))
+      ("zt" org-agenda-fortnight-view (format "%s fortnight" (if (eq 'fortnight (org-agenda-cts)) "[x]" "[ ]")))
+      ("zm" org-agenda-month-view (format "%s month" (if (eq 'month (org-agenda-cts)) "[x]" "[ ]")))
+      ("zy" org-agenda-year-view (format "%s year" (if (eq 'year (org-agenda-cts)) "[x]" "[ ]")))
+      ("]" org-agenda-later "later")
+      ("[" org-agenda-earlier "earlier"))
+     "View"
+     (("zg" org-agenda-toggle-time-grid (format "time grid: % -3S" org-agenda-use-time-grid))
+      ("ze" org-agenda-entry-text-mode (format "text: % -3S" org-agenda-entry-text-mode))
+      ("zA" (org-agenda-archives-mode 'files) (format "archive: %s" org-agenda-archives-mode))
+      ("zl" org-agenda-log-mode (format "log: % -3S" org-agenda-show-log))
+      ("zL" (org-agenda-log-mode '(4)) "log all")
+      ("zc" (org-agenda-log-mode 'clockcheck) "clockcheck")
+      ("zr" org-agenda-clockreport-mode (format "clockreport: % -3S" org-agenda-clockreport-mode)))
+     "Filter"
+     (("fc" org-agenda-filter-by-category "category")
+      ("fh" org-agenda-filter-by-top-headline "top heading")
+      ("ft" org-agenda-filter-by-tag "tag")
+      ("fr" org-agenda-filter-by-regexp "regexp")
+      ("ff" org-agenda-filter "edit")
+      ("F" org-agenda-filter-remove-all "remove"))
+     "Open"
+     (("zf" org-agenda-follow-mode (format "follow: % -3S" org-agenda-follow-mode))
+      ("S-RET" org-agenda-recenter "view other")
+      ("M-RET" org-agenda-tree-to-indirect-buffer "view indirect")
+      ("C-RET" org-agenda-goto "open other"))
+     "Action"
+     (("d" org-agenda-date-prompt "date")
+      ("a" org-agenda-add-note "note" :color blue)
+      ("i" org-agenda-diary-entry "journal" :color blue)
+      ("r" org-agenda-refile "refile")
+      ("D" org-agenda-archive-default-with-confirmation "archive"))
+     "Mark"
+     (("m" org-agenda-bulk-toggle "toggle")
+      ("M" org-agenda-bulk-toggle-all "toggle all")
+      ("U" org-agenda-bulk-unmark-all "unmark all")
+      ("x" org-agenda-bulk-action "action")
+
+      ("q" nil :color blue)
+      ("<escape>" nil :color blue)))))
+#+end_src
+
 ***** Bindings
 
 Customize bindings.
 #+begin_src elisp
 (after! evil-org-agenda
+  ;; Leader bindings
+  ;; TODO: Remove the which-key description which are not overridden...
+  (map!
+   :leader
+   ;; Simplify agenda commands in notes prefix.
+   (:prefix "n"
+    :desc "Org agenda"     "a" #'org-agenda
+    "m" nil)
+
+   ;; Unbind agenda commands in open prefix.
+   (:prefix "o"
+    "a" nil
+    "A" nil))
+
+  ;; Agenda bindings
   (map! :map evil-org-agenda-mode-map
         ;; Avoid spurious bindings kicking in with ESC
         :g [escape]   #'transient-noop
@@ -1405,23 +1544,30 @@ Customize bindings.
         :m [M-return] #'org-agenda-tree-to-indirect-buffer
         :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
 
-        ;; Add equivalence for org-mode bindings (HJKL equivalents)
+        ;; Move cursor by items instead of lines by default
+        :m "j" #'org-agenda-next-line
+        :m "k" #'org-agenda-previous-line
+        :m "M-j" #'org-agenda-next-item
+        :m "M-k" #'org-agenda-previous-item
+        :m "C-j" #'outline-next-heading
+        :m "C-k" #'outline-previous-heading
+
+        ;; Add equivalence for org-mode bindings
         :m "C-M-k"    #'org-agenda-priority-up
         :m "C-M-j"    #'org-agenda-priority-down
-        :m "C-M-h"    #'org-agenda-do-date-earlier
-        :m "C-M-l"    #'org-agenda-do-date-later
+        :m "C-M-h"    #'+org-agenda-todo-prev
+        :m "C-M-l"    #'+org-agenda-todo-next
         :m "C-M-S-h"  #'org-agenda-todo-previousset
         :m "C-M-S-l"  #'org-agenda-todo-nextset
 
         ;; Bind filter commands to 'f' prefix
         :m "ff"       #'org-agenda-filter
-        :m "f^"       #'org-agenda-filter-by-top-headline
+        :m "fh"       #'org-agenda-filter-by-top-headline
         :m "fc"       #'org-agenda-filter-by-category
         :m "fe"       #'org-agenda-filter-by-effort
         :m "fr"       #'org-agenda-filter-by-regexp
-        :m "ft"       #'org-agenda-filter-by-tag
+        :m "fq"       #'org-agenda-filter-by-tag
         :m "fl"       #'org-agenda-limit-interactively
-        :m "fA"       #'+org-agenda-filter-astral
         :m "F"        #'org-agenda-filter-remove-all
         :m "s^"       nil
         :m "sc"       nil
@@ -1435,7 +1581,7 @@ Customize bindings.
         :m "sH"       #'org-agenda-holidays
         :m "sm"       #'org-agenda-phases-of-moon
         :m "ss"       #'org-agenda-sunrise-sunset
-        :m "st"       #'org-agenda-show-tags
+        :m "sq"       #'org-agenda-show-tags
         :m "sd"       #'org-agenda-convert-date
         :m "gh"       nil
         :m "gm"       nil
@@ -1447,7 +1593,9 @@ Customize bindings.
         :m "S"        #'org-save-all-org-buffers
         :m "M"        #'org-agenda-bulk-toggle-all
         :m "D"        #'org-agenda-archive-default-with-confirmation
-        :m "T"        #'org-agenda-todo-nextset
+        :m "T"        #'org-agenda-set-tags
+        :m "p"        #'org-agenda-priority
+        :m "d"        #'org-agenda-date-prompt
         :m "cd"       #'org-agenda-date-prompt
         :m ">"        #'org-agenda-remove-restriction-lock
 
@@ -1459,8 +1607,329 @@ Customize bindings.
         ;; Bind missing agenda-equivalent of frequent org commands
         :localleader
         "a"           #'org-attach
-        "p"           #'org-agenda-priority))
+        "p"           #'org-agenda-priority
+        "T"           #'org-timer-set-timer
+        "SPC"         #'major-mode-hydra
+
+        :prefix "d"
+        "t"           #'org-agenda-date-prompt))
 #+end_src
+
+**** Views
+***** Org QL Views
+
+Interactive functions to display custom Org QL Views.
+#+begin_src elisp
+(after! org-ql
+  (defvar +psydev/org-view-scope 'buffer
+    "The currently selected scope for Org Views.
+
+The special symbol `buffer' means to use the current buffer.")
+  (defvar +psydev/org-view-context nil
+    "The currently selected context tag for Org Views.
+
+The special symbol `none' means to not match headlines with any context tag.")
+  (defvar +psydev/org-view-tags nil
+    "The currently selected tags for Org Views.")
+
+  ;; ✴✳🏵🌼☘
+  (defvar +psydev/org-view-groups-dashboard
+    '((:name "📅 Scheduled" :scheduled t)
+      (:name "🌀 Projects" :todo "PROJ")
+      (:auto-outline-path t))
+    "Org super agenda groups for dashboard views.")
+
+  (defvar +psydev/org-view-groups-planning
+    '((:name "🔥 Active" :todo "ACTV") ;
+      (:name "⭕ Top Priorities" :and (:priority>= "B" :not (:todo "PROJ")))
+      (:name "📅 Scheduled" :scheduled t)
+      (:name "🌀 Projects" :todo "PROJ")
+      ;; Life-specific heading groups
+      (:name "🎧 Musique" :and (:outline-path-regexp "Musique" :tag "listen"))
+      (:name "🎥 Cinéma" :and (:outline-path-regexp "Cinéma" :tag "watch"))
+      ;; Default groups
+      (:auto-outline-path t))
+    "Org super agenda groups for planning views.")
+
+  (defvar +psydev/org-view-groups-backlog
+    '((:name "🎯 Goals" :transformer #'+psydev/org-view-goals-transformer :todo nil)
+      (:auto-outline-path t))
+    "Org super agenda groups for backlog views.")
+
+  (defun +psydev/org-view-goals-transformer (item)
+    (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+      (s-replace-regexp "Goals\\|Objectifs" (car (last (org-get-outline-path))) item)))
+
+  (defun +psydev/org-view-upcoming ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (or (scheduled)
+                      (deadline auto))
+                  (not (done)))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups '((:auto-planning t))
+     :title "Upcoming"))
+
+  (defun +psydev/org-view-dashboard ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (todo)
+                  (not (todo "SMDY" "IDEA"))
+                  (not (ancestors (todo "SMDY" "IDEA")))
+                  (or (todo "ACTV") (priority '>= "B")))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-dashboard
+     :title "Dashboard"))
+
+  (defun +psydev/org-view-planning ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (todo)
+                  (not (todo "SMDY" "IDEA"))
+                  (not (ancestors (todo "SMDY" "IDEA"))))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-planning
+     :title "Planning"))
+
+  (defun +psydev/org-view-backlog ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (or (todo)
+                      (heading-regexp "^\\(Goals\\|Objectifs\\)$"))
+                  (not (tags "read" "listen" "watch")))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-backlog
+     :title "Backlog"))
+
+  (cl-defun +psydev/org-view-make (&key buffers-files query narrow super-groups sort title context tags)
+    (let ((buffers-files (cond ((equal buffers-files 'buffer) (current-buffer))
+                               (buffers-files)
+                               (t #'org-agenda-files)))
+          (query (append query (+psydev/org-view-make-query context tags)))
+          (sort (or sort '(priority scheduled))))
+      (org-ql-search buffers-files query
+        :narrow narrow
+        :super-groups super-groups
+        :sort sort
+        :title (+psydev/org-view--make-title title buffers-files context tags))))
+
+  (defun +psydev/org-view-make-query (&optional context tags)
+    (append
+     (when context
+       (if (eq context 'none)
+           '((not (tags-regexp "@.+")))
+         `((tags ,context))))
+     (when tags `((tags ,@tags)))))
+
+  (defun +psydev/org-view--make-title (name &optional buffers-files context tags)
+    (let ((source (when buffers-files (format " in %s" buffers-files)))
+          (suffix (mapconcat (lambda (it) (format "%s" it))
+                             (remove nil (list context tags))
+                             " ")))
+      (cond ((and name (not (string-empty-p suffix))) (concat name source ": " suffix))
+            ((and (not name) suffix) suffix)
+            (t (concat name source))))))
+#+end_src
+
+***** Sidebar
+
+Define sidebar views.
+#+begin_src elisp
+(after! org-sidebar
+  (defun +psydev/org-sidebar--daily-agenda-fn (source-buffer)
+    "Return an Org Agenda buffer showing the daily agenda in SOURCE-BUFFER."
+    (save-window-excursion (org-agenda nil "d"))
+    org-agenda-buffer)
+
+  (defun +psydev/org-sidebar--upcoming-fn (source-buffer)
+    "Return an Org QL View buffer showing unscheduled, un-deadlined items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Upcoming*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-upcoming)))
+      display-buffer))
+  (defun +psydev/org-sidebar-agenda-upcoming ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--daily-agenda-fn +psydev/org-sidebar--upcoming-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--dashboard-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Dashboard*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-dashboard)))
+      display-buffer))
+  (defun +psydev/org-sidebar-dashboard ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--planning-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Planning*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-planning)))
+      display-buffer))
+  (defun +psydev/org-sidebar-planning ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--planning-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--backlog-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Backlog*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-backlog)))
+      display-buffer))
+  (defun +psydev/org-sidebar-backlog ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--backlog-fn)))
+      (org-sidebar-toggle)))
+
+  (setq org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn +psydev/org-sidebar--planning-fn)))
+#+end_src
+
+***** Hydra
+
+Define a view dispatcher hydra.
+#+begin_src elisp
+(after! (org-ql pretty-hydra)
+  (defun +hydra/org-view--format-view-head (name)
+    (concat name " "
+            (when (not (eq +psydev/org-view-scope #'org-agenda-files)) "<")
+            (when +psydev/org-view-context "@")
+            (when +psydev/org-view-tags "+")))
+  (defun +hydra/org-view--format-tree-head (name)
+    (concat name " "
+            (when +psydev/org-view-context "@")
+            (when +psydev/org-view-tags "+")))
+  (defun +hydra/org-view--format-context-head (val)
+    (format "%s %s" (if (equal +psydev/org-view-context val) "[x]" "[ ]") val))
+  (defun +hydra/org-view--format-tag-head (tag)
+    (format "%s %s" (if (member tag +psydev/org-view-tags) "[x]" "[ ]") tag))
+
+  (defun +hydra/org-view--set-scope (scope)
+    (cl-case scope
+      ('buffer (progn (setq +psydev/org-view-scope 'buffer)))
+      ('file (let ((file (read-file-name "Select File: " org-directory nil (confirm-nonexistent-file-or-buffer))))
+               (when file
+                 (setq +psydev/org-view-scope file))))
+      (t (progn (setq +psydev/org-view-scope #'org-agenda-files)))))
+
+  (pretty-hydra-define +hydra/org-view
+    (:color teal :separator "═" :title (+hydra/title-generator "Org Views" "tasks" 51))
+    ("Agenda"
+     (("ad" (org-agenda current-prefix-arg "d") "day agenda")
+      ("aw" (org-agenda current-prefix-arg "w") "week agenda")
+      ("ae" (org-agenda current-prefix-arg "e") "week events")
+      ("al" (org-agenda current-prefix-arg "l") "week log"))
+     "View"
+     (("u" +psydev/org-view-upcoming (+hydra/org-view--format-view-head "upcoming") :width 13)
+      ("d" +psydev/org-view-dashboard (+hydra/org-view--format-view-head "dashboard") :width 13)
+      ("p" +psydev/org-view-planning (+hydra/org-view--format-view-head "planning") :width 13)
+      ("b" +psydev/org-view-backlog (+hydra/org-view--format-view-head "backlog") :width 13))
+     "Tree"
+     (("tp" (org-ql-sparse-tree
+             (append '(and (todo "PROJ"))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "project") :width 10)
+      ("tt" (org-ql-sparse-tree
+             (append '(and (todo))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "todo") :width 10)
+      ("tm" (org-ql-sparse-tree
+             (append '(and (tags))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "tag") :width 10)
+      ;; NOTE: Occur command does not support tags as it would hardly make sense
+      ("to" (progn (org-check-for-org-mode)
+                   (unless +psydev/org-view-context
+                     (error "Cannot show occurrences of unset context"))
+                   (when (eq +psydev/org-view-context 'none)
+                     (error "Cannot show occurrences of `none' context"))
+                   (org-occur +psydev/org-view-context))
+       (+hydra/org-view--format-tree-head "occur") :width 10))
+     "Scope (<)"
+     (("<" (+hydra/org-view--set-scope 'all)
+       (format "%s all" (if (eq +psydev/org-view-scope #'org-agenda-files) "[x]" "[ ]")) :width 18
+       :color red)
+      ("/" (+hydra/org-view--set-scope 'file)
+       (if (and (stringp +psydev/org-view-scope) (s-starts-with-p "/" +psydev/org-view-scope))
+           (format "[x] %s" (file-name-nondirectory +psydev/org-view-scope))
+         (format "[ ] select file")) :width 18
+       :color red)
+      ("." (+hydra/org-view--set-scope 'buffer)
+       (format "%s current buffer" (if (equal +psydev/org-view-scope 'buffer) "[x]" "[ ]")) :width 18
+       :color red))
+     "Context (@)"
+     (("@" (setq +psydev/org-view-context nil)
+       (format "%s all" (if (not +psydev/org-view-context) "[x]" "[ ]")) :width 11
+       :color red)
+      ("!" (setq +psydev/org-view-context 'none) (+hydra/org-view--format-context-head 'none) :width 11 :color red)
+      ("s" (setq +psydev/org-view-context "@self") (+hydra/org-view--format-context-head "@self") :width 11 :color red)
+      ("h" (setq +psydev/org-view-context "@home") (+hydra/org-view--format-context-head "@home") :width 11 :color red)
+      ("w" (setq +psydev/org-view-context "@work") (+hydra/org-view--format-context-head "@work") :width 11 :color red)
+      ("P" (setq +psydev/org-view-context "@people") (+hydra/org-view--format-context-head "@people") :width 11 :color red))
+     "Tags (+)"
+     (("+" (setq +psydev/org-view-tags nil)
+       (format "%s all" (if (not +psydev/org-view-tags) "[x]" "[ ]")) :width 10
+       :color red)
+      ("r" (add-to-list '+psydev/org-view-tags "read") (+hydra/org-view--format-tag-head "read") :width 10 :color red)
+      ("l" (add-to-list '+psydev/org-view-tags "listen") (+hydra/org-view--format-tag-head "listen") :width 10 :color red)
+      ("v" (add-to-list '+psydev/org-view-tags "watch") (+hydra/org-view--format-tag-head "watch") :width 10 :color red)
+      ("n" (add-to-list '+psydev/org-view-tags "need") (+hydra/org-view--format-tag-head "need") :width 10 :color red)
+
+      ("q" nil)
+      ("<escape>" nil)))))
+#+end_src
+
+***** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org-ql
+  ;; Leader bindings
+  (map! :leader
+   :prefix "n"
+   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
+   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
+   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
+   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
+   :desc "Org planning"           "P" #'+psydev/org-view-planning
+   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
+   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org view"               "v" #'+hydra/org-view/body))
+#+end_src
+
+**** TODO Block & Source
+
+Configure code editing behavior.
+#+begin_src elisp
+(after! org
+  (setq org-src-fontify-natively 't
+        org-src-tab-acts-natively 't
+        org-src-preserve-indentation 't
+        org-src-window-setup 'current-window
+        org-src-ask-before-returning-to-edit-buffer nil
+        org-edit-src-persistent-message nil))
+#+end_src
+
 **** TODO Chef
 
 I *need* this in my life. It take a URL to a recipe from a common site, and
@@ -1512,19 +1981,24 @@ Customize org-superstar.
   (add-hook! org-mode #'org-superstar-auto-lightweight-mode))
 #+end_src
 
-Customize org-fancy-priorities.
-Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
-#+begin_src elisp :tangle "packages.el" :comments no
-(package! org-fancy-priorities :disable t)
-#+end_src
+Customize priorities faces.
 #+begin_src elisp
-;; (after! org-fancy-priorities
-;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
-;;         org-priority-faces
-;;         '((65 . error)
-;;           (66 . warning)
-;;           (67 . success)
-;;           (68 . success)))
+(after! org
+  (setq org-priority-faces
+        '((65 . error)
+          (66 . warning)
+          (67 . success)
+          (68 . default) ; Keep default outline face
+          (69 . shadow))))
+#+end_src
+
+**** Popups
+
+Customize popup rules for org-related buffers.
+#+begin_src elisp
+(after! org
+  (set-popup-rules!
+    '(("^\\*Org Src" :ignore t))))
 #+end_src
 
 **** Bindings
@@ -1564,7 +2038,7 @@ Customize bindings.
 (after! evil-org
   (map! :map evil-org-mode-map
         ;; Prefer smart beginning of line to digit argument? (overridden)
-        :m "0"                               #'evil-org-beginning-of-line
+        :m "0"               #'evil-org-beginning-of-line
         ;; Add quick motion bindings
         :ni "C-k"     (cmds! (org-at-table-p) #'+org/table-previous-row
                              (bound-and-true-p evil-insert-state-minor-mode) #'evil-previous-line
@@ -1590,19 +2064,39 @@ Customize bindings.
                              #'org-down-element)
 
         ;; Evil replacements
-        :g "C-M-k"           #'org-shiftup
-        :g "C-M-j"           #'org-shiftdown
-        :g "C-M-h"           #'org-shiftleft
-        :g "C-M-l"           #'org-shiftright
-        :g "C-M-S-k"         #'org-shiftcontrolup
-        :g "C-M-S-j"         #'org-shiftcontroldown
-        :g "C-M-S-h"         #'org-shiftcontrolleft
-        :g "C-M-S-l"         #'org-shiftcontrolright
+        :g "C-M-k"   #'org-shiftup
+        :g "C-M-j"   #'org-shiftdown
+        :g "C-M-h"   #'org-shiftleft
+        :g "C-M-l"   #'org-shiftright
+        :g "C-M-S-k" #'org-shiftcontrolup
+        :g "C-M-S-j" #'org-shiftcontroldown
+        :g "C-M-S-h" #'org-shiftcontrolleft
+        :g "C-M-S-l" #'org-shiftcontrolright
+
+        ;; Move some bindings in org-mode-map so that it can be easily overridden in derived maps.
+        :nv [tab]           nil
+        :nv "TAB"           nil
+        :nv [S-tab]         nil
+        :nv [S-iso-lefttab] nil
+        :nv [backtab]       nil
+        :ni [return]        nil
+        :ni "RET"           nil
+        :i [S-return]       nil
+        :i "S-RET" nil
 
         :map org-mode-map
+        :m [tab]           #'org-cycle
+        :m "TAB"           #'org-cycle
+        :m [S-tab]         #'org-shifttab
+        :m [S-iso-lefttab] #'org-shifttab
+        :m [backtab]       #'org-shifttab
+        :n [return]        #'+org/dwim-at-point
+        :n "RET"           #'+org/dwim-at-point
+        :i [return]        (cmd! (org-return electric-indent-mode))
+        :i "RET"           (cmd! (org-return electric-indent-mode))
         ;; This looks like a fix for doom
-        :n [S-return]        #'+org/shift-return
-        :n "S-RET"           #'+org/shift-return
+        :ni [S-return]     #'+org/shift-return
+        :ni "S-RET"        #'+org/shift-return
 
         ;; M-RET difficult choices
         ;; - normal-mode: org-ctrl-c-ret
@@ -1632,6 +2126,9 @@ Customize bindings.
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
          "X"                 #'org-toggle-radio-button
+         "T"                 #'org-timer-set-timer
+         "e"                 #'org-edit-special
+         "E"                 #'org-export-dispatch
          (:prefix ("s" . "Tree/Subtree")
           "A"                #'org-archive-to-archive-sibling
           "o"                #'org-toggle-ordered-property)))
