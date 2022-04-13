@@ -61,7 +61,7 @@ plugins:
   - mbsync
   - convert
   - playlist
-  # - smartplaylist
+  - smartplaylist
   - play
 
 bandcamp:
@@ -88,12 +88,43 @@ playlist:
   relative_to: playlist
   playlist_dir: ~/Audios/Playlists
 
-# smartplaylist:
-#   relative_to: ~/Audios/Playlists/Smart
-#   playlist_dir: ~/Audios/Playlists/Smart
-#   playlists:
-#     - name: "Phone.m3u"
-#       query: ["context:phone genre+ artist+ album+ track+"]
+smartplaylist:
+  auto: yes
+  relative_to: ~/Audios/Playlists/Genre
+  playlist_dir: ~/Audios/Playlists/Genre
+  playlists:
+    # - name: "Newest.m3u"
+    #   query: ["added:-17w.. added- artist+ album+ track+"]
+    - name: "Metal - Grindcore - Deathcore.m3u"
+      query: ["'genre::(Metal|Grindcore|Deathcore)' genre+ artist+ album+ track+"]
+    - name: "Goa - Trance - Full On.m3u"
+      query: ["'genre::(Goa|Trance|Full On)' genre+ artist+ album+ track+"]
+    - name: "Techno - Minimal - House - IDM.m3u"
+      query: ["'genre::(Techno|Minimal|House|Idm)' genre+ artist+ album+ track+"]
+    - name: "Rock - Pop - Grunge.m3u"
+      query: ["'genre::(Rock|Pop|Grunge)' genre+ artist+ album+ track+"]
+    - name: "Funk - Soul - Disco.m3u"
+      query: ["'genre::(Funk|Soul|Disco)' genre+ artist+ album+ track+"]
+    - name: "Jazz - Blues - Afrobeat.m3u"
+      query: ["'genre::(Jazz|Blues|Afrobeat)' genre+ artist+ album+ track+"]
+    - name: "Reggae - Dub - Ska.m3u"
+      query: ["'genre::(Reggae|Dub|Ska)' genre+ artist+ album+ track+"]
+    - name: "Dubstep - D&B - Breakbeat.m3u"
+      query: ["'genre::(Dubstep|Drum And Bass|Breakbeat)' genre+ artist+ album+ track+"]
+    - name: "Rap - Hip Hop - Chanson.m3u"
+      query: ["'genre::(Rap|Hip Hop|Chanson)' genre+ artist+ album+ track+"]
+    - name: "Trip-Hop - Electro-Swing.m3u"
+      query: ["'genre::(Trip-Hop|Electro-swing)' genre+ artist+ album+ track+"]
+    - name: "Ambient - Chillout - Downtempo.m3u"
+      query: ["'genre::(Ambient|Chillout|Downtempo)' genre+ artist+ album+ track+"]
+    - name: "Classical - New Age.m3u"
+      query: ["'genre::(Classical|New Age)' genre+ artist+ album+ track+"]
+    - name: "Breakcore - Hardcore - Gabber.m3u"
+      query: ["'genre::(Breakcore|Hardcore|Gabber)' genre+ artist+ album+ track+"]
+    - name: "Experimental - Avant-Garde.m3u"
+      query: ["'genre::(Experimental|Avant-Garde)' genre+ artist+ album+ track+"]
+    - name: "Electronic (various).m3u"
+      query: ["'genre::(Electro|Electronic|New Rave|Turntablism)' genre+ artist+ album+ track+"]
 
 play:
   command: strawberry --play --create=Beets
