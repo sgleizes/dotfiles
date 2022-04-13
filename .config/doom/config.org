@@ -692,6 +692,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 
 ** Builtin packages
 *** Dired
+**** Appearance
 
 Customize general dired appearance.
 #+begin_src elisp
@@ -755,6 +756,8 @@ Fix issues with all-the-icons:
   (advice-add 'dired-unsubdir :around #'all-the-icons-dired--refresh-advice)
   (advice-add 'dired-undo :around #'all-the-icons-dired--refresh-advice))
 #+end_src
+
+**** Commands
 
 Add facilities to quickly toggle hidden files and recursive listing.
 #+begin_src elisp
@@ -842,6 +845,90 @@ r,/ : /
       (dired new-path))))
 #+end_src
 
+Run ediff from marked files in dired.
+#+begin_src elisp
+(after! dired
+  ;; From https://oremacs.com/2017/03/18/dired-ediff/
+  (defun +dired-ediff-files ()
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name
+                          "ediff with: "
+                          (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "no more than 2 files should be marked")))))
+#+end_src
+
+**** Hydra
+
+Define a major-mode-hydra.
+#+begin_src elisp
+(after! dired
+  (major-mode-hydra-define dired-mode
+    (:color pink :title (+hydra/major-mode-title-generator 'dired-mode 58))
+    ("Open"
+     (("S-RET" dired-display-file "view other")
+      ("M-RET" dired-view-file "view" :color blue)
+      ("C-RET" dired-find-file-other-window "open other" :color blue)
+      ("F" dired-do-find-marked-files "open marked" :color blue)
+      ("o" dired-do-open "open ext")
+      ("g" +dired-go "goto"))
+     "Display"
+     (("u" dired-undo "undo")
+      ("r" dired-do-redisplay "redisplay")
+      ("M-r" dired-do-redisplay "refresh")
+      ("I" dired-maybe-insert-subdir "insert subdir")
+      ("K" dired-kill-subdir "kill subdir"))
+     "Toggle"
+     (("s" dired-sort-toggle-or-edit "sort")
+      ("M-i" dired-hide-details-mode "details" :toggle dired-hide-details-mode)
+      ("M-v" dired-git-info-mode "git" :toggle dired-git-info-mode)
+      ("M-h" +dired-toggle-hidden-files "hidden" :toggle (dired-switches-all-p dired-actual-switches))
+      ("M-H" dired-omit-mode "omit-mode" :toggle dired-omit-mode)
+      ("M-R" +dired-toggle-recursive "recursive" :toggle (dired-switches-recursive-p dired-actual-switches)))
+     "Mark"
+     (("m" dired-mark "mark")
+      ("U" dired-unmark "unmark")
+      ("M-u" dired-unmark-all-marks "unmark all")
+      ("t" dired-toggle-marks "toggle"))
+     "Basic"
+     (("+" dired-create-directory "mkdir")
+      ("Y" dired-copy-filename-as-kill "yank")
+      ("O" dired-do-chown "chown")
+      ("M-g" dired-do-chggrp "chgrp")
+      ("M" dired-do-chgmode "chmod"))
+     "Organize"
+     (("C" dired-do-copy "copy")
+      ("R" dired-do-rename "rename")
+      ("D" dired-do-delete "delete")
+      ("S" dired-do-symlink "symlink")
+      ("Z" dired-do-compress "archive")
+      ("M-z" dired-do-compress-to "archive to"))
+     "Avanced"
+     (("i" dired-toggle-read-only "wdired" :color blue)
+      ("A" dired-do-find-regexp "find regexp" :color blue)
+      ("Q" dired-do-find-regexp-and-replace "replace regexp" :color blue)
+      ("e" +dired-ediff-files "ediff" :color blue)
+      ("=" dired-diff "diff" :color blue)
+      ("!" dired-do-shell-command "shell cmd" :color blue)
+
+      ("q" nil :color blue)
+      ("<escape>" nil :color blue)))))
+#+end_src
+
+**** Bindings
+
 Customize default bindings.
 #+begin_src elisp
 (map! :after dired
@@ -858,21 +945,36 @@ Customize default bindings.
       :n "<tab>"      #'dired-hide-subdir
       :n "<backtab>"  #'dired-hide-all
       ;; Miscellaneous
-      :n "_"          #'dired-undo
+      :n "u"          #'dired-undo
+      :nv "U"         #'dired-unmark
+      :m "M-u"        #'dired-unmark-all-marks
       :n "K"          #'dired-kill-subdir
-      :n "M-J"        #'dired-goto-subdir
+      :n "M-j"        #'dired-goto-subdir
       :n "s"          #'dired-sort-toggle-or-edit
       :n "o"          #'dired-do-open
       :n "f"          #'dired-create-empty-file
       :n "F"          #'dired-do-find-marked-files
+      :n "M-g"        #'dired-do-chgrp
       :n "M-c"        #'dired-rsync
-      ;; Bind missing visual-mode commands
-      :v "u"          #'dired-unmark
+      :n "M-z"        #'dired-do-compress-to
+      :n "M-r"        #'revert-buffer
+
+      :n "e"          #'+dired-ediff-files
+      :n "M-G"        #'+dired-go
+      :n "M-i"        #'dired-hide-details-mode
+      :n "M-v"        #'dired-git-info-mode
+      :n "M-R"        #'+dired-toggle-recursive
+      :n "M-h"        #'+dired-toggle-hidden-files
+      :n "M-H"        #'dired-omit-mode
+
       :localleader
       "g"             #'+dired-go
+      "d"             #'dired-hide-details-mode
+      "i"             #'dired-git-info-mode
       "r"             #'+dired-toggle-recursive
       "h"             #'+dired-toggle-hidden-files
-      "H"             #'dired-omit-mode)
+      "H"             #'dired-omit-mode
+      "SPC"           #'major-mode-hydra)
 #+end_src
 
 *** Org
