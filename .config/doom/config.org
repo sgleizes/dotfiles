@@ -4504,11 +4504,429 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
   (magit-delta-mode))
 #+end_src
 
-*** Pretty hydra
+*** Org fancy priorities
 
-[[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][This package]] provides a macro for creating hydras with automatically formatted columns.
+Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
 #+begin_src elisp
-(package! pretty-hydra)
+(package! org-fancy-priorities :disable t)
+#+end_src
+
+#+begin_src elisp :tangle yes
+;; (after! org-fancy-priorities
+;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+#+end_src
+
+*** Org Sidebar
+
+[[https://github.com/alphapapa/org-sidebar][This package]] provides a helpful sidebar for Org mode.
+#+begin_src elisp
+(package! org-sidebar)
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-sidebar
+  :config
+  ;; Make org-ql-view windows not selectable by 'other-window'
+  (setq org-ql-view-no-other-window t))
+#+end_src
+
+**** Tree
+
+Make tree sidebar buffers hidden.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (cl-defun org-sidebar-tree-view-buffer (&key (buffer (current-buffer)) &allow-other-keys)
+    "Return a tree-view buffer for BUFFER."
+    (-let* ((buffer-name (format " *Tree: %s*" (buffer-name buffer))) ; NOTE: EDIT
+            ((min max) (with-current-buffer buffer
+                         (list (point-min) (point-max))))
+            (existing-buffer (get-buffer buffer-name))
+            tree-buffer)
+      (when existing-buffer
+        ;; Buffer with name already exists.
+        (if (buffer-base-buffer existing-buffer)
+            ;; Buffer is indirect: kill it so we can remake it.
+            (kill-buffer existing-buffer)
+          ;; Buffer is not indirect: something is probably wrong, so warn.
+          (warn "Existing tree buffer that is not indirect: %s" existing-buffer)))
+      (setf tree-buffer (clone-indirect-buffer buffer-name nil 'norecord))
+      (with-current-buffer tree-buffer
+        (use-local-map org-sidebar-tree-map)
+        (setf mode-line-format nil
+              header-line-format (concat "Tree: " (buffer-name buffer)))
+        (toggle-truncate-lines 1)
+        (centaur-tabs-local-mode 1) ; NOTE: EDIT
+        (save-excursion
+          (goto-char min)
+          (if (org-before-first-heading-p)
+              (progn
+                ;; Narrow buffer to exclude pre-heading content.
+                (outline-next-heading)
+                (setf min (point)))
+            ;; Tree view only shows one subtree: expand its branches.
+            (outline-show-branches)))
+        (narrow-to-region min max)
+        (save-excursion
+          ;; Hide visible entry bodies.
+          (goto-char (point-min))
+          (when (org-before-first-heading-p)
+            (outline-next-visible-heading 1))
+          (cl-loop do (outline-hide-body)
+                   while (outline-next-visible-heading 1)))
+        (unless (org-before-first-heading-p)
+          (outline-back-to-heading)))
+      tree-buffer)))
+#+end_src
+
+Custom toggle function to autofocus the tree sidebar.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  ;;
+  (defun +psydev/org-sidebar-tree-toggle ()
+    (interactive)
+    (org-sidebar-tree-toggle)
+    (let* ((tree-window (--first (window-parameter it 'org-sidebar-tree-window)
+                                 (window-at-side-list nil org-sidebar-tree-side))))
+      (when tree-window (select-window tree-window)))))
+#+end_src
+
+**** Sidebar
+
+Make sure truncate line is enabled instead of toggled.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (remove-hook 'org-ql-sidebar-buffer-setup-hook #'toggle-truncate-lines)
+  (add-hook! 'org-ql-sidebar-buffer-setup-hook
+    (defun psydev/org-sidebar-buffer-setup ()
+      (toggle-truncate-lines 1))))
+#+end_src
+
+Workaround issue displaying sidebar buffers.
+#+begin_src elisp :tangle yes
+;; (after! org-sidebar
+;;   ;; NOTE: This was NOT happening when I started using sidebar, and suddenly started to happen
+;;   ;; while I was working on other emacs stuff. Need to identify the cause for  this.
+;;   (add-hook! 'org-sidebar-window-after-display-hook
+;;     (defun psydev/org-sidebar-fix-display ()
+;;       (force-window-update (selected-window))
+;;       (redisplay))))
+#+end_src
+
+Allow regular org-agenda buffers to be present in sidebar.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (defun org-sidebar-refresh ()
+    "Refresh sidebar buffers.
+  Refreshes the current sidebar buffer and other associated sidebar
+  buffers."
+    (interactive)
+    (save-window-excursion
+      (let ((source-buffer org-sidebar-source-buffer)
+            (display-buffers (buffer-local-value 'org-sidebar-sidebar-buffers org-sidebar-source-buffer)))
+        (--each display-buffers
+          (when (buffer-live-p it)
+            (with-current-buffer it
+              (let ((old-buffer-name (buffer-name)))
+                (cond (org-ql-view-buffers-files (org-ql-view-refresh)) ; NOTE: EDIT
+                      (t (org-agenda-redo)))
+                ;; Restore buffer name (because `org-ql-view-refresh' changes it).
+                (rename-buffer old-buffer-name)
+                (setf org-sidebar-source-buffer source-buffer) ; NOTE: EDIT
+                (org-sidebar--prepare-buffer))))))))
+
+  (defun org-sidebar--prepare-buffer ()
+    "Prepare current buffer as a sidebar buffer.
+  This is not used for `org-sidebar-tree' buffers."
+    (let ((inhibit-read-only t))
+      (when org-ql-view-title ; NOTE: EDIT
+        (setf header-line-format (org-ql-view--header-line-format :title org-ql-view-title)))
+      (use-local-map org-sidebar-map)
+      ;; (goto-char (point-min)) ; TODO Gives initial focus but resets during refresh also...
+      (run-hook-with-args 'org-ql-sidebar-buffer-setup-hook))))
+#+end_src
+
+Improve sidebar window behavior: dedicated, fixed-size, ...
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (cl-defun org-sidebar--display-buffers (buffers &key window-parameters)
+    "Display BUFFERS in the sidebar.
+  WINDOW-PARAMETERS are applied to each window that is displayed."
+    (declare (indent defun))
+    (when-let* ((side-windows (window-at-side-list nil org-sidebar-side))
+                (sidebar-buffers (--select (buffer-local-value 'org-sidebar-source-buffer it)
+                                           (mapcar #'window-buffer side-windows)))
+                (sidebar-windows (mapcar #'get-buffer-window sidebar-buffers)))
+      ;; Delete existing org-sidebar windows on our side.
+      (mapc #'delete-window sidebar-windows))
+    (let ((slot 0)
+          (window-parameters (append (list (cons 'no-delete-other-windows nil))
+                                     window-parameters)))
+      (--each buffers
+        (when-let* ((window (+popup-display-buffer-stacked-side-window-fn ; NOTE: EDIT
+                             it
+                             (list (cons 'side org-sidebar-side)
+                                   (cons 'slot slot)
+                                   (cons 'dedicated t) ; NOTE: EDIT
+                                   (cons 'window-width .20) ; NOTE: EDIT
+                                   (cons 'preserve-size (cons t nil)) ; NOTE: EDIT
+                                   (cons 'window-parameters window-parameters)))))
+          (with-selected-window window
+            (run-hooks 'org-sidebar-window-after-display-hook))
+          (if (eq slot 0)
+              (select-window window)) ; NOTE: EDIT (goto-char call no longer focuses window for some reason)
+          (cl-incf slot))))))
+#+end_src
+
+Improve toggling behavior:
+- Do not toggle off if the given list of function differs from the current sidebar
+- Allow changing view from the sidebar buffer
+- Allow toggling off from the sidebar buffer
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (defvar-local org-sidebar-source-fns nil
+    "Org sidebar functions that this sidebar buffer was generated from.")
+
+  (defun org-sidebar (fns)
+    "Display the Org Sidebar.
+Interactively, display the sidebars configured in
+`org-sidebar-default-fns'.
+FNS should be one or a list of functions which return a buffer to
+be displayed in the sidebar.  Each one is called with the current
+buffer as its argument."
+    (interactive (list org-sidebar-default-fns))
+    (when org-sidebar-sidebar-buffers
+      ;; Kill existing sidebar buffers for the source buffer.
+      (mapc #'kill-buffer org-sidebar-sidebar-buffers)
+      (setf org-sidebar-sidebar-buffers nil))
+    (let* ((source-buffer (current-buffer))
+           (fns (cl-etypecase fns
+                  (list fns)
+                  (atom (list fns))))
+           (display-buffers (cl-loop for fn in fns
+                                     collect (funcall fn source-buffer))))
+      (when display-buffers
+        (setf org-sidebar-sidebar-buffers display-buffers)
+        (--each display-buffers
+          (with-current-buffer it
+            (org-sidebar--prepare-buffer)
+            (setf org-sidebar-source-fns fns) ; NOTE: EDIT
+            (setf org-sidebar-source-buffer source-buffer)))
+        (org-sidebar--display-buffers display-buffers
+          :window-parameters (list (cons 'org-sidebar-window t)
+                                   (cons 'org-sidebar-source-buffer-point-min (point-min)))))))
+
+  (defun org-sidebar-toggle (&optional fns)
+    "Toggle default sidebar window.
+If it is open and shows the view for the current buffer, delete
+it.  Otherwise, show it for current buffer."
+    (interactive)
+    (let* ((fns (or fns org-sidebar-default-fns)) ; NOTE: EDIT
+           (source-buffer (current-buffer))
+           (point-min (point-min))
+           (sidebar-window (--first (window-parameter it 'org-sidebar-window)
+                                    (window-at-side-list nil org-sidebar-side))))
+      ;; NOTE: EDIT: if the sidebar window is selected, use the sidebar source-buffer instead.
+      (if (eq sidebar-window (selected-window))
+          (setq source-buffer
+                (buffer-local-value 'org-sidebar-source-buffer (window-buffer sidebar-window))
+                point-min (with-current-buffer source-buffer (point-min))))
+      ;; We only compare the first sidebar window, but that should be good enough.
+      (if (and sidebar-window
+               (with-current-buffer (window-buffer sidebar-window)
+                 ;; NOTE: EDIT: Compare source functions to avoid toggling off when requesting another view.
+                 (and (eq fns (buffer-local-value 'org-sidebar-source-fns (current-buffer)))
+                      (eq org-sidebar-source-buffer source-buffer)
+                      ;; Compare point-min to detect narrowed buffers.
+                      (eq (window-parameter sidebar-window 'org-sidebar-source-buffer-point-min)
+                          point-min))))
+          ;; Sidebar is for current buffer: delete sidebar windows.
+          (mapc #'delete-window (--select (window-parameter it 'org-sidebar-window)
+                                          (window-at-side-list nil org-sidebar-side)))
+        ;; Sidebar is for a different buffer: show sidebar for current buffer.
+        (with-current-buffer source-buffer ; NOTE: EDIT
+          (org-sidebar fns))))))
+#+end_src
+
+**** Bindings
+
+Integrate with doom/evil bindings.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  ;; Leader bindings
+  (map! :leader :prefix "n"
+    :desc "Org task sidebar"  "t" #'org-sidebar-toggle
+    :desc "Org tree sidebar"  "T" #'+psydev/org-sidebar-tree-toggle)
+
+  ;; Configure bindings to override default org/evil bindings
+  (evil-make-overriding-map org-sidebar-tree-map 'normal)
+  (map! :map org-sidebar-tree-map
+        :n [return]        #'org-sidebar-tree-jump
+        :n "RET"           #'org-sidebar-tree-jump
+        :n [tab]           #'org-sidebar-tree-cycle
+        :n "TAB"           #'org-sidebar-tree-cycle
+        :n [S-tab]         #'org-sidebar-tree-cycle-global
+        :n [S-iso-lefttab] #'org-sidebar-tree-cycle-global
+        :n [backtab]       #'org-sidebar-tree-cycle-global
+
+        :m "q"             #'org-sidebar-tree-toggle)
+  (add-hook! 'org-sidebar-window-after-display-hook #'evil-normalize-keymaps))
+#+end_src
+
+*** Org QL
+
+[[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
+#+begin_src elisp
+(package! org-ql
+  :recipe (:host github :repo "sgleizes/org-ql"))
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-ql
+  :config
+  ;; Do not consider org QL Views as popups and use the same window behavior than agenda.
+  (set-popup-rule! "^\\*Org QL View:" :ignore 't)
+  (setq org-ql-view-display-buffer-action '(display-buffer-same-window))
+
+  ;; This mechanism for selecting org views is not used. Use the org-view hydra instead.
+  (setq org-ql-views nil)
+
+  ;; Override magit's default of `display-buffer-below-selected` and restore original value.
+  ;; It causes `org-ql-view-dispatch` to show in a horizontal split.
+  (setq transient-display-buffer-action
+        '(display-buffer-in-side-window
+          (side . bottom)
+          (dedicated . t)
+          (inhibit-same-window . t)
+          (window-parameters (no-other-window . t)))))
+#+end_src
+
+Customize bindings and integrate with doom/evil.
+#+begin_src elisp :tangle yes
+(after! org-ql
+  ;; Configure bindings to override default evil bindings
+  (evil-make-overriding-map org-ql-view-map 'normal)
+  (map! :map org-ql-view-map
+        :g "q" #'org-agenda-quit
+        :g "r" #'org-ql-view-refresh
+        :g "C-r" #'org-ql-view-dispatch
+        :g "C-s" #'org-ql-view-save)
+  (evil-make-overriding-map org-ql-view-list-map 'normal)
+  (map! :map org-ql-view-list-map
+        :n [return]     #'org-ql-view-switch
+        :n "RET"        #'org-ql-view-switch
+        :n "c"          #'org-ql-view-customize
+        :n "q"          #'bury-buffer))
+#+end_src
+
+*** Org super agenda
+
+[[https://github.com/alphapapa/org-super-agenda][This package]] groups agenda items into sections, rather than having them all in one big list.
+#+begin_src elisp
+(package! org-super-agenda)
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-super-agenda
+  :after org
+  :config
+  (org-super-agenda-mode)
+  (setq org-super-agenda-hide-empty-groups 't
+        org-super-agenda-keep-order nil) ; Perf-hungry, enable if noticing sort issues
+
+  ;; Default super-groups.
+  (setq org-super-agenda-groups
+        '((:auto-outline-path t :order 99))))
+#+end_src
+
+Add selector to org-super-agenda.
+TODO: Contribute this. Now unused though.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (org-super-agenda--defgroup outline-path-regexp
+    "Group items whose outline path match any of the given regular expressions.
+  Argument may be a string or list of strings, each of which should
+  be a regular expression.  You'll probably want to override the
+  section name for this group."
+    :section-name (concat "Outline paths matching regexps: "
+                          (s-join " OR "
+                                  (--map (s-wrap it "\"")
+                                         args)))
+    :let* ((case-fold-search t))
+    :test (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+            (let ((outline-path (s-join "/" (org-get-outline-path))))
+              (cl-loop for regexp in args
+                       thereis (string-match-p regexp outline-path))))))
+#+end_src
+
+Integrate with outline-minor-mode to allow folding agenda days and groups.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (defvar org-super-agenda-auto-fold-groups '())
+
+  ;; Function borrowed from new fork of origami.el https://github.com/emacs-origami/origami.el/blob/master/origami.el#L1024
+  (defun outline-auto-agenda (pattern-or-patterns function)
+    "Search buffer and apply the FUNCTION on each line.
+PATTERN-OR-PATTERNS is a string or a list of strings to search"
+    (interactive)
+    (let ((patterns (if (listp pattern-or-patterns) pattern-or-patterns (list pattern-or-patterns))))
+      (save-excursion
+        (dolist (pattern patterns)
+          (goto-char (point-min))
+          (while (re-search-forward pattern nil t 1)
+            (unless (outline-invisible-p)
+              (funcall function)))))))
+
+  (defun outline-agenda-setup ()
+    (setq org-super-agenda-header-prefix "○ ") ; Needed for outline mode to recognize headings
+    (setq-local outline-regexp "\\([A-Za-z]+\\|⋯\\|○ \\)")
+    (setq-local outline-level #'outline-level)
+    (setq-local outline-blank-line t)
+    (setq-local outline-heading-alist
+                `(("Monday" . 2)
+                  ("Tuesday" . 2)
+                  ("Wednesday" . 2)
+                  ("Thursday" . 2)
+                  ("Friday" . 2)
+                  ("Saturday" . 2)
+                  ("Sunday" . 2)
+                  ("⋯" . 2)
+                  (,org-super-agenda-header-prefix . 3)))
+    (outline-auto-agenda org-super-agenda-auto-fold-groups #'outline-hide-subtree))
+
+  (add-hook! 'org-agenda-mode-hook #'outline-minor-mode)
+  (add-hook! 'org-agenda-finalize-hook #'outline-agenda-setup))
+#+end_src
+
+Make outline ellipsis the same than org ellipsis.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (defvar outline-display-table (make-display-table))
+  (set-display-table-slot outline-display-table 'selective-display
+                          (vector " " (make-glyph-code ?▾ 'escape-glyph)))
+  (defun set-outline-display-table ()
+    (setf buffer-display-table outline-display-table))
+
+  (add-hook 'outline-mode-hook 'set-outline-display-table)
+  (add-hook 'outline-minor-mode-hook 'set-outline-display-table))
+#+end_src
+
+Remap all bindings from org-agenda-mode-map which are not overridden by evil.
+- https://github.com/alphapapa/org-super-agenda/issues/50
+- https://github.com/noctuid/evil-guide#prevent-text-property-maps-from-overriding-evil
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (setq org-super-agenda-header-map (make-sparse-keymap))
+  (map! :map org-super-agenda-header-map
+        "q"             #'org-agenda-quit
+        "r"             #'org-agenda-redo
+
+        :map evil-org-agenda-mode-map
+        :m "TAB"           #'outline-toggle-children
+        :m "<tab>"         #'outline-toggle-children
+        :m "<backtab>"     #'outline-hide-body))
 #+end_src
 
 *** Rainbow delimiters
