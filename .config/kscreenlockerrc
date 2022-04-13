@@ -1,4 +1,5 @@
 [Daemon]
+Autolock=false
 Timeout=10
 
 [Greeter]

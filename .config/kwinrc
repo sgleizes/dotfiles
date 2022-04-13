@@ -52,7 +52,7 @@ TopLeft=ActivityManager
 AnimationDurationFactor=0.25
 
 [ModifierOnlyShortcuts]
-Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose
+Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Overview
 
 [NightColor]
 Active=true
@@ -72,6 +72,7 @@ kwin4_effect_scaleEnabled=true
 kwin4_effect_squashEnabled=false
 magiclampEnabled=true
 minimizeallEnabled=false
+overviewEnabled=true
 sheetEnabled=true
 slidingtooltipsEnabled=false
 synchronizeskipswitcherEnabled=false
