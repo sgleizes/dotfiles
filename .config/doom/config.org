@@ -293,7 +293,7 @@ doom-dashboard                ; a nifty splash screen for Emacs
 hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 hydra
 ;;indent-guides               ; highlighted indent columns
-(ligatures +fira)             ; ligatures and symbols to make your code pretty again
+;;(ligatures +fira)           ; ligatures and symbols to make your code pretty again
 ;;minimap                     ; show a map of the code on the side
 modeline                      ; snazzy, Atom-inspired modeline, plus API
 ;;nav-flash                   ; blink cursor line after big motions
@@ -904,7 +904,7 @@ Configure the behavior of M-RET and friends, and ensure that headings are termin
 Patch doom's org-insert-item variant to better respect blank settings.
 #+begin_src elisp
 (after! org
-  (defun +org--insert-item (direction)
+  (defun psydev/+org--insert-item (direction)
     (let ((context (org-element-lineage
                     (org-element-context)
                     '(table table-row headline inlinetask item plain-list)
@@ -971,7 +971,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
         (org-show-hidden-entry))
       (when (and (bound-and-true-p evil-local-mode)
                  (not (evil-emacs-state-p)))
-        (evil-insert 1)))))
+        (evil-insert 1))))
+  (advice-add #'+org--insert-item :override #'psydev/+org--insert-item))
 #+end_src
 
 Add helper function to help with blank line consistency.
@@ -3258,14 +3259,14 @@ Customize bindings.
 
 Remove annoying programming ligatures.
 #+begin_src elisp
-(cl-delete-if
- (lambda (x)
-   (member (car x)
-           '("[]"
-             "##"
-             "###"
-             "####")))
- +ligatures-fira-font-alist)
+;; (cl-delete-if
+;;  (lambda (x)
+;;    (member (car x)
+;;            '("[]"
+;;              "##"
+;;              "###"
+;;              "####")))
+;;  +ligatures-fira-font-alist)
 #+end_src
 
 *** Lsp
@@ -4246,50 +4247,51 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
 #+end_src
 
 Define a global mode for scroll-on-jump and bind to relevant commands.
+Disabled for now, scrolling does not work nicely in org-mode (or when there is folded content in general)
 #+begin_src elisp :tangle yes
-(use-package! scroll-on-jump
-  :after evil
-  :hook (doom-first-file . scroll-on-jump-mode)
-  :config
-  (setq scroll-on-jump-duration 0.4)
+;; (use-package! scroll-on-jump
+;;   :after evil
+;;   :hook (doom-first-file . scroll-on-jump-mode)
+;;   :config
+;;   (setq scroll-on-jump-duration 0.4)
 
-  ;; XXX: For some really obscure reason, the order in which these functions
-  ;; are declared defines which one will actually work. Currently turning off
-  ;; doesn't work, unless this code is re-evaluated from the emacs instance.
-  ;; If the turn-off function is declared after the turn-on, then turning on
-  ;; will similarly not work. Someone help me understand this plz.
-  (defun scroll-on-jump--turn-off ()
-    (scroll-on-jump-advice-remove set-mark-command)
-    (scroll-on-jump-advice-remove goto-last-change)
-    (scroll-on-jump-advice-remove goto-last-change-reverse)
-    (scroll-on-jump-advice-remove evil-undo)
-    (scroll-on-jump-advice-remove evil-redo)
-    ;; (scroll-on-jump-advice-remove evil-goto-mark)
-    (scroll-on-jump-advice-remove evil-goto-mark-line)
-    (scroll-on-jump-advice-remove evil-ex-search-next)
-    (scroll-on-jump-advice-remove evil-ex-search-previous)
-    (scroll-on-jump-advice-remove evil-ex-search-forward)
-    (scroll-on-jump-advice-remove evil-ex-search-backward))
-  (defun scroll-on-jump--turn-on ()
-    (scroll-on-jump-advice-add set-mark-command)
-    (scroll-on-jump-advice-add goto-last-change)
-    (scroll-on-jump-advice-add goto-last-change-reverse)
-    (scroll-on-jump-advice-add evil-undo)
-    (scroll-on-jump-advice-add evil-redo)
-    ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
-    (scroll-on-jump-advice-add evil-goto-mark-line)
-    (scroll-on-jump-advice-add evil-ex-search-next)
-    (scroll-on-jump-advice-add evil-ex-search-previous)
-    (scroll-on-jump-advice-add evil-ex-search-forward)
-    (scroll-on-jump-advice-add evil-ex-search-backward))
+;;   ;; XXX: For some really obscure reason, the order in which these functions
+;;   ;; are declared defines which one will actually work. Currently turning off
+;;   ;; doesn't work, unless this code is re-evaluated from the emacs instance.
+;;   ;; If the turn-off function is declared after the turn-on, then turning on
+;;   ;; will similarly not work. Someone help me understand this plz.
+;;   (defun scroll-on-jump--turn-off ()
+;;     (scroll-on-jump-advice-remove set-mark-command)
+;;     (scroll-on-jump-advice-remove goto-last-change)
+;;     (scroll-on-jump-advice-remove goto-last-change-reverse)
+;;     ;; (scroll-on-jump-advice-remove evil-undo)
+;;     ;; (scroll-on-jump-advice-remove evil-redo)
+;;     ;; (scroll-on-jump-advice-remove evil-goto-mark)
+;;     (scroll-on-jump-advice-remove evil-goto-mark-line)
+;;     (scroll-on-jump-advice-remove evil-ex-search-next)
+;;     (scroll-on-jump-advice-remove evil-ex-search-previous)
+;;     (scroll-on-jump-advice-remove evil-ex-search-forward)
+;;     (scroll-on-jump-advice-remove evil-ex-search-backward))
+;;   (defun scroll-on-jump--turn-on ()
+;;     (scroll-on-jump-advice-add set-mark-command)
+;;     (scroll-on-jump-advice-add goto-last-change)
+;;     (scroll-on-jump-advice-add goto-last-change-reverse)
+;;     ;; (scroll-on-jump-advice-add evil-undo)
+;;     ;; (scroll-on-jump-advice-add evil-redo)
+;;     ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+;;     (scroll-on-jump-advice-add evil-goto-mark-line)
+;;     (scroll-on-jump-advice-add evil-ex-search-next)
+;;     (scroll-on-jump-advice-add evil-ex-search-previous)
+;;     (scroll-on-jump-advice-add evil-ex-search-forward)
+;;     (scroll-on-jump-advice-add evil-ex-search-backward))
 
-  (define-minor-mode scroll-on-jump-mode
-    "Minor-mode to animate scroll and recenter when the point jumps."
-    :group 'scroll-on-jump
-    :global t
-    (if scroll-on-jump-mode
-        (scroll-on-jump--turn-on)
-      (scroll-on-jump--turn-off))))
+;;   (define-minor-mode scroll-on-jump-mode
+;;     "Minor-mode to animate scroll and recenter when the point jumps."
+;;     :group 'scroll-on-jump
+;;     :global t
+;;     (if scroll-on-jump-mode
+;;         (scroll-on-jump--turn-on)
+;;       (scroll-on-jump--turn-off))))
 #+end_src
 
 *** Systemd
