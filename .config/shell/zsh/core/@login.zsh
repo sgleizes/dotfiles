@@ -86,8 +86,15 @@ mangohud"
 fi
 
 if (( $+commands[wine] )); then
+  # Set default wine prefix.
+  export WINEPREFIX='~/.local/share/wine-default'
+  # Set default wine architecture.
+  export WINEARCH='win32'
   # Disable prompt for wine-gecko install.
-  export WINEDLLOVERRIDES='mshtml='
+  # export WINEDLLOVERRIDES='mshtml='
+  # Workaround vulkan issue with hybrid GPU setups: https://bugs.winehq.org/show_bug.cgi?id=51210
+  # See also https://forum.winehq.org/viewtopic.php?f=8&t=36177
+  export VK_ICD_FILENAMES='/usr/share/vulkan/icd.d/intel_icd.x86_64.json'
 fi
 
 if (( $+commands[go] )); then
