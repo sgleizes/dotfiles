@@ -275,10 +275,10 @@ literate
 
 #+name: doom-completion
 #+begin_src elisp
-(company +childframe)         ; the ultimate code completion backend
-;;helm                        ; the *other* search engine for love and life
-;;ido                         ; the other *other* search engine...
-(ivy +prescient +icons)       ; a search engine for love and life
+(company +childframe)                ; the ultimate code completion backend
+;;helm                               ; the *other* search engine for love and life
+;;ido                                ; the other *other* search engine...
+(ivy +prescient +icons +childframe)  ; a search engine for love and life
 #+end_src
 
 **** Interface
@@ -293,7 +293,7 @@ doom-dashboard                ; a nifty splash screen for Emacs
 hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 hydra
 ;;indent-guides               ; highlighted indent columns
-(ligatures +fira)             ; ligatures and symbols to make your code pretty again
+;;(ligatures +fira)           ; ligatures and symbols to make your code pretty again
 ;;minimap                     ; show a map of the code on the side
 modeline                      ; snazzy, Atom-inspired modeline, plus API
 ;;nav-flash                   ; blink cursor line after big motions
@@ -305,7 +305,7 @@ treemacs                      ; a project drawer, like neotree but cooler
 unicode                       ; extended unicode support for various languages
 vc-gutter                     ; vcs diff in the fringe
 vi-tilde-fringe               ; fringe tildes to mark beyond EOB
-(window-select +numbers)      ; visually switch windows
+window-select                 ; visually switch windows
 workspaces                    ; tab emulation, persistence & separate workspaces
 ;;zen                         ; distraction-free coding or writing
 #+end_src
@@ -335,7 +335,7 @@ snippets                      ; my elves. They type so I don't have to
 (dired +icons)                ; making dired pretty [functional]
 electric                      ; smarter, keyword-based electric-indent
 (ibuffer +icons)              ; interactive buffer management
-(undo +tree)                  ; persistent, smarter undo for your inevitable mistakes
+undo                          ; persistent, smarter undo for your inevitable mistakes
 vc                            ; version-control and Emacs, sitting in a tree
 #+end_src
 
@@ -503,7 +503,8 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
 
 Let's make graphical frames slightly transparent.
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(add-to-list 'default-frame-alist
+             '(alpha . (90 . 90)))
 #+end_src
 
 Do not show encoding in the modeline if the value is the default =LF UTF-8=.
@@ -557,10 +558,11 @@ if in terminal."
     (remove-hook! doom-first-file #'centaur-tabs-mode)
     (remove-hook! doom-first-file #'beacon-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
-    (remove-hook! '(doom-dashboard-mode-hook
-                    term-mode-hook
-                    vterm-mode-hook)
-      #'centaur-tabs-local-mode)
+    ;; Since upgrading, the first-file hook seems to trigger before this hook, so I disable the hook manually...
+    (centaur-tabs-mode -1)
+    (beacon-mode -1)
+    (evil-goggles-mode -1)
+    ;; Disable flyspell hooks
     (remove-hook! '(org-mode-hook
                     markdown-mode-hook
                     TeX-mode-hook
@@ -690,6 +692,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 
 ** Builtin packages
 *** Dired
+**** Appearance
 
 Customize general dired appearance.
 #+begin_src elisp
@@ -753,6 +756,8 @@ Fix issues with all-the-icons:
   (advice-add 'dired-unsubdir :around #'all-the-icons-dired--refresh-advice)
   (advice-add 'dired-undo :around #'all-the-icons-dired--refresh-advice))
 #+end_src
+
+**** Commands
 
 Add facilities to quickly toggle hidden files and recursive listing.
 #+begin_src elisp
@@ -840,6 +845,90 @@ r,/ : /
       (dired new-path))))
 #+end_src
 
+Run ediff from marked files in dired.
+#+begin_src elisp
+(after! dired
+  ;; From https://oremacs.com/2017/03/18/dired-ediff/
+  (defun +dired-ediff-files ()
+    (interactive)
+    (let ((files (dired-get-marked-files))
+          (wnd (current-window-configuration)))
+      (if (<= (length files) 2)
+          (let ((file1 (car files))
+                (file2 (if (cdr files)
+                           (cadr files)
+                         (read-file-name
+                          "ediff with: "
+                          (dired-dwim-target-directory)))))
+            (if (file-newer-than-file-p file1 file2)
+                (ediff-files file2 file1)
+              (ediff-files file1 file2))
+            (add-hook 'ediff-after-quit-hook-internal
+                      (lambda ()
+                        (setq ediff-after-quit-hook-internal nil)
+                        (set-window-configuration wnd))))
+        (error "no more than 2 files should be marked")))))
+#+end_src
+
+**** Hydra
+
+Define a major-mode-hydra.
+#+begin_src elisp
+(after! dired
+  (major-mode-hydra-define dired-mode
+    (:color pink :title (+hydra/major-mode-title-generator 'dired-mode 58))
+    ("Open"
+     (("S-RET" dired-display-file "view other")
+      ("M-RET" dired-view-file "view" :color blue)
+      ("C-RET" dired-find-file-other-window "open other" :color blue)
+      ("F" dired-do-find-marked-files "open marked" :color blue)
+      ("o" dired-do-open "open ext")
+      ("g" +dired-go "goto"))
+     "Display"
+     (("u" dired-undo "undo")
+      ("r" dired-do-redisplay "redisplay")
+      ("M-r" dired-do-redisplay "refresh")
+      ("I" dired-maybe-insert-subdir "insert subdir")
+      ("K" dired-kill-subdir "kill subdir"))
+     "Toggle"
+     (("s" dired-sort-toggle-or-edit "sort")
+      ("M-i" dired-hide-details-mode "details" :toggle dired-hide-details-mode)
+      ("M-v" dired-git-info-mode "git" :toggle dired-git-info-mode)
+      ("M-h" +dired-toggle-hidden-files "hidden" :toggle (dired-switches-all-p dired-actual-switches))
+      ("M-H" dired-omit-mode "omit-mode" :toggle dired-omit-mode)
+      ("M-R" +dired-toggle-recursive "recursive" :toggle (dired-switches-recursive-p dired-actual-switches)))
+     "Mark"
+     (("m" dired-mark "mark")
+      ("U" dired-unmark "unmark")
+      ("M-u" dired-unmark-all-marks "unmark all")
+      ("t" dired-toggle-marks "toggle"))
+     "Basic"
+     (("+" dired-create-directory "mkdir")
+      ("Y" dired-copy-filename-as-kill "yank")
+      ("O" dired-do-chown "chown")
+      ("M-g" dired-do-chggrp "chgrp")
+      ("M" dired-do-chgmode "chmod"))
+     "Organize"
+     (("C" dired-do-copy "copy")
+      ("R" dired-do-rename "rename")
+      ("D" dired-do-delete "delete")
+      ("S" dired-do-symlink "symlink")
+      ("Z" dired-do-compress "archive")
+      ("M-z" dired-do-compress-to "archive to"))
+     "Avanced"
+     (("i" dired-toggle-read-only "wdired" :color blue)
+      ("A" dired-do-find-regexp "find regexp" :color blue)
+      ("Q" dired-do-find-regexp-and-replace "replace regexp" :color blue)
+      ("e" +dired-ediff-files "ediff" :color blue)
+      ("=" dired-diff "diff" :color blue)
+      ("!" dired-do-shell-command "shell cmd" :color blue)
+
+      ("q" nil :color blue)
+      ("<escape>" nil :color blue)))))
+#+end_src
+
+**** Bindings
+
 Customize default bindings.
 #+begin_src elisp
 (map! :after dired
@@ -856,21 +945,36 @@ Customize default bindings.
       :n "<tab>"      #'dired-hide-subdir
       :n "<backtab>"  #'dired-hide-all
       ;; Miscellaneous
-      :n "_"          #'dired-undo
+      :n "u"          #'dired-undo
+      :nv "U"         #'dired-unmark
+      :m "M-u"        #'dired-unmark-all-marks
       :n "K"          #'dired-kill-subdir
-      :n "M-J"        #'dired-goto-subdir
+      :n "M-j"        #'dired-goto-subdir
       :n "s"          #'dired-sort-toggle-or-edit
       :n "o"          #'dired-do-open
       :n "f"          #'dired-create-empty-file
       :n "F"          #'dired-do-find-marked-files
+      :n "M-g"        #'dired-do-chgrp
       :n "M-c"        #'dired-rsync
-      ;; Bind missing visual-mode commands
-      :v "u"          #'dired-unmark
+      :n "M-z"        #'dired-do-compress-to
+      :n "M-r"        #'revert-buffer
+
+      :n "e"          #'+dired-ediff-files
+      :n "M-G"        #'+dired-go
+      :n "M-i"        #'dired-hide-details-mode
+      :n "M-v"        #'dired-git-info-mode
+      :n "M-R"        #'+dired-toggle-recursive
+      :n "M-h"        #'+dired-toggle-hidden-files
+      :n "M-H"        #'dired-omit-mode
+
       :localleader
       "g"             #'+dired-go
+      "d"             #'dired-hide-details-mode
+      "i"             #'dired-git-info-mode
       "r"             #'+dired-toggle-recursive
       "h"             #'+dired-toggle-hidden-files
-      "H"             #'dired-omit-mode)
+      "H"             #'dired-omit-mode
+      "SPC"           #'major-mode-hydra)
 #+end_src
 
 *** Org
@@ -902,7 +1006,7 @@ Configure the behavior of M-RET and friends, and ensure that headings are termin
 Patch doom's org-insert-item variant to better respect blank settings.
 #+begin_src elisp
 (after! org
-  (defun +org--insert-item (direction)
+  (defun psydev/+org--insert-item (direction)
     (let ((context (org-element-lineage
                     (org-element-context)
                     '(table table-row headline inlinetask item plain-list)
@@ -969,7 +1073,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
         (org-show-hidden-entry))
       (when (and (bound-and-true-p evil-local-mode)
                  (not (evil-emacs-state-p)))
-        (evil-insert 1)))))
+        (evil-insert 1))))
+  (advice-add #'+org--insert-item :override #'psydev/+org--insert-item))
 #+end_src
 
 Add helper function to help with blank line consistency.
@@ -1025,7 +1130,7 @@ Use ~#+TODO~ (or ~#+SEQ_TODO~ / ~#+TYP_TODO~) to define per-file keywords
            "DONE(d!/!)")      ; Task successfully completed
           (sequence
            "IDEA(i)"          ; A captured task or project that must be processed and is not yet ready to do
-           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in the main backlog
+           "SMDY(s)"          ; A task or project that could be done someday, but should not appear in dashboards
            "PROJ(p)"          ; A project, which usually contains other tasks/subprojects
            "|"
            "DONEPROJ(d)")
@@ -1110,21 +1215,21 @@ Configure default tags behavior and appearance.
           (:startgrouptag . nil)
           ("activity"     . ?2)
           (:grouptags     . nil)
-          ("read"         . ?d)
+          ("read"         . ?r)
           ("listen"       . ?a)
-          ("watch"        . ?w)
+          ("watch"        . ?v)
           (:endgrouptag   . nil)
           (:startgrouptag . nil)
           ("task"         . ?3)
           (:grouptags     . nil)
-          ("issue"        . ?i)
+          ("bug"          . ?b)
+          ("improvement"  . ?m)
+          ("feature"      . ?f)
           (:endgrouptag   . nil)
           (:startgrouptag . nil)
           ("context"      . ?4)
           (:grouptags     . nil)
           ("@self"        . ?s)
-          ("@phone"       . ?p)
-          ("@computer"    . ?c)
           ("@home"        . ?h)
           ("@work"        . ?w)
           ("@people"      . ?l)
@@ -1144,25 +1249,33 @@ Configure default tags behavior and appearance.
           ("listen"      . (:foreground "#b5bd68" :weight bold))
           ("watch"       . (:foreground "#b5bd68" :weight bold))
           ;; Task tags
+          ("need"        . (:foreground "#de935f" :weight bold))
           ("issue"       . (:foreground "#cc6666" :weight bold))
           ("bug"         . (:foreground "#cc6666" :weight bold))
           ("improvement" . (:foreground "#de935f" :weight bold))
           ("feature"     . (:foreground "#b5bd68" :weight bold))
           ;; Context tags
           ("@self"       . (:foreground "#8abeb7" :weight bold))
-          ("@phone"      . (:foreground "#8abeb7" :weight bold))
-          ("@computer"   . (:foreground "#8abeb7" :weight bold))
           ("@home"       . (:foreground "#8abeb7" :weight bold))
           ("@work"       . (:foreground "#8abeb7" :weight bold))
-          ("@people"     . (:foreground "#8abeb7" :weight bold))
-          ("@errand"     . (:foreground "#8abeb7" :weight bold)))
-        org-tags-column -132
+          ("@people"     . (:foreground "#8abeb7" :weight bold)))
         org-fast-tag-selection-single-key 't)
   (custom-set-faces!
     ;; '(org-tag :foreground "#717171" :weight normal)
     ;; '(org-tag :foreground "#de935f" :weight normal)
     '(org-tag :foreground "#8abeb7" :weight normal)
     '(org-tag-group :foreground unspecified :weight unspecified)))
+#+end_src
+
+Configure tags alignment.
+#+begin_src elisp
+(after! org
+  (setq org-tags-column -132)
+  ;; Workaround incorrect tag alignments on headings containing links with a title
+  (add-hook 'org-cycle-hook
+            (defun psydev/org-cycle-align-tags (state)
+              (setq org-tags-column (- 3 (window-body-width)))
+              (when (not (memq state '(overview folded))) (org-align-tags 't)))))
 #+end_src
 
 **** Dates & Times
@@ -1186,91 +1299,54 @@ Configure archiving behavior.
 
 **** TODO Agenda
 
-Define default span and starting day for daily/weekly agenda.
+Customize agenda settings.
 #+begin_src elisp
 (after! org
+  ;; Customize window-setup style for agenda.
+  (setq org-agenda-window-setup 'current-window
+        org-agenda-restore-windows-after-quit nil)
+
+  ;; General agenda setup
   (setq org-agenda-files (list org-directory)
+        org-agenda-sticky 't
         org-agenda-span 'week
         org-agenda-start-on-weekday 1
-        org-agenda-start-day nil))
-#+end_src
+        org-agenda-start-day nil)
 
-Show blocked tasks with the dimmed face, customized.
-These are usually projects and are useful to provide context in the backlog.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-dim-blocked-tasks 't)
-  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171" )))
-#+end_src
-
-Add extra files to agenda text search commands.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-text-search-extra-files
-        (list (concat doom-private-dir "config.org"))))
-#+end_src
-
-Configure default sorting.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-sorting-strategy
-        '((agenda habit-down time-up priority-down category-up)
-          (todo category-up priority-down)
-          (tags category-up priority-down)
-          (search category-up))))
-#+end_src
-
-
-***** Diary
-
-Configure diary/agenda integration.
-#+begin_src elisp
-(after! org
-  (setq org-agenda-include-diary nil
-        org-agenda-diary-file (concat org-directory "life.org")))
-#+end_src
-
-***** Filtering
-
-Define some custom filters.
-#+begin_src elisp
-(after! org
-  (defun +org-agenda-filter-by-category (category exclude)
-    "Filter lines in the agenda buffer that have the given category.
-With a `\\[universal-argument]' prefix argument, exclude the lines of that category.
-When there is already a (non-excluding) category filter in place, this command removes the filter."
-    (interactive "P")
-    (if (and org-agenda-filtered-by-category
-             org-agenda-category-filter)
-        (org-agenda-filter-show-all-cat)
-      (cond
-       ((and category exclude)
-        (org-agenda-filter-apply
-         (push (concat "-" category) org-agenda-category-filter) 'category))
-       (category
-        (org-agenda-filter-apply
-         (setq org-agenda-category-filter
-               (list (concat "+" category)))
-         'category)))))
-
-  (defun +org-agenda-filter-astral ()
-    "Remove entries with the Astral category from the agenda."
-    (interactive)
-    (if org-agenda-category-filter
-        (org-agenda-filter-show-all-cat)
-      (+org-agenda-filter-by-category "Astral" 't))))
+  ;; Agenda settings related to items with dates.
+  (setq org-agenda-skip-timestamp-if-done 't
+        org-agenda-skip-scheduled-if-done 't
+        org-agenda-skip-deadline-if-done nil
+        org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
+        org-agenda-skip-timestamp-if-deadline-is-shown nil
+        org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
+        org-agenda-skip-scheduled-delay-if-deadline nil
+        org-agenda-show-future-repeats 't))
 #+end_src
 
 ***** Appearance
 
+Add a separator line between days.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-compact-blocks nil
+        org-agenda-format-date
+        (lambda (date)
+          (concat
+           (make-string (window-width) 8943) "\n"
+           (org-agenda-format-date-aligned date)))))
+#+end_src
+
 Configure prefix.
 #+begin_src elisp
 (after! org
+  ;; NOTE: Category is removed from todo/tags/search views since it is redundant with
+  ;; my default org-super-agenda grouping and causes display issues in org-ql-view.
   (setq org-agenda-prefix-format
         '((agenda . " %i %-17:c%?-12t% s")
-          (todo . " %i %-17:c")
-          (tags . " %i %-17:c")
-          (search . " %i %-17:c"))))
+          (todo . " %i ") ; For category: %-17:c
+          (tags . " %i ")
+          (search . " %i "))))
 #+end_src
 
 Configure time grid.
@@ -1284,11 +1360,179 @@ Configure time grid.
         "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
 #+end_src
 
+Do not show blocked tasks as dimmed by default. With my configuration they are usually projects (subtasks not done).
+Also customize the face to be brighter, in case locally enabled.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-dim-blocked-tasks nil)
+  (custom-set-faces! '(org-agenda-dimmed-todo-face :foreground "#717171")))
+#+end_src
+
+Always highlight the current agenda line.
+#+begin_src elisp
+(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+#+end_src
+
+***** Diary
+
+Configure diary/agenda integration.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-include-diary nil
+        org-agenda-diary-file (concat org-directory "life.org")))
+#+end_src
+
+***** Filtering
+
+Configure the custom tag filter accessible via <RET> from the tag filter prompt in agenda (f t).
+Also accessible via a triple prefix on the main agenda filter command (f f)
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-exclude-events (tag)
+    (when (string= tag "event")
+      (concat "-" tag)))
+  (setq org-agenda-auto-exclude-function #'+org-agenda-exclude-events))
+#+end_src
+
+***** Custom Views
+
+Definition of stuck projects.
+#+begin_src elisp
+(after! org
+  (setq org-stuck-projects
+        '("+TODO=\"PROJ\""
+          ("TODO" "ACTV")
+          ("event" "appointment") "")))
+#+end_src
+
+Configure default sorting.
+#+begin_src elisp
+(after! org
+  (setq org-agenda-sorting-strategy
+        '((agenda habit-down time-up priority-down category-up)
+          (todo category-up priority-down)
+          (tags category-up priority-down)
+          (search category-up))))
+#+end_src
+
+Define custom agenda views.
+#+begin_src elisp
+(after! org
+  (defvar +psydev/org-agenda-groups
+        '((:name "Schedule" :time-grid t)
+          (:auto-outline-path t :order 99)))
+
+  (setq org-agenda-custom-commands
+        '(("d" "Agenda for current day" agenda ""
+           ((org-agenda-span 'day)
+            (org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("w" "Agenda for current week" agenda ""
+           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("e" "Appointments for current week" agenda* ""
+           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+
+          ("l" "Log of the current week" agenda ""
+           ((org-agenda-overriding-header "Activity Log")
+            (org-agenda-archives-mode 't)
+            (org-agenda-start-with-log-mode 'only)
+            (org-agenda-log-mode-items '(closed clock state))
+            (org-agenda-use-time-grid nil)
+            (org-super-agenda-groups nil))))))
+#+end_src
+
+***** Commands
+
+Add interactive functions to cycle todo states from agenda.
+#+begin_src elisp
+(after! org
+  (defun +org-agenda-todo-prev ()
+    (interactive)
+    (org-agenda-todo 'left))
+  (defun +org-agenda-todo-next ()
+    (interactive)
+    (org-agenda-todo 'right)))
+#+end_src
+
+***** Hydra
+
+Define a major-mode-hydra.
+#+begin_src elisp
+(after! org
+  (defun org-agenda-cts ()
+    (and (eq major-mode 'org-agenda-mode)
+         (let ((args (get-text-property
+                      (min (1- (point-max)) (point))
+                      'org-last-args)))
+           (nth 2 args))))
+
+  (major-mode-hydra-define org-agenda-mode
+    (:color red :title (+hydra/major-mode-title-generator 'org-agenda-mode 55))
+    ("Span"
+     (("zd" org-agenda-day-view (format "%s day" (if (eq 'day (org-agenda-cts)) "[x]" "[ ]")))
+      ("zw" org-agenda-week-view (format "%s week" (if (eq 'week (org-agenda-cts)) "[x]" "[ ]")))
+      ("zt" org-agenda-fortnight-view (format "%s fortnight" (if (eq 'fortnight (org-agenda-cts)) "[x]" "[ ]")))
+      ("zm" org-agenda-month-view (format "%s month" (if (eq 'month (org-agenda-cts)) "[x]" "[ ]")))
+      ("zy" org-agenda-year-view (format "%s year" (if (eq 'year (org-agenda-cts)) "[x]" "[ ]")))
+      ("]" org-agenda-later "later")
+      ("[" org-agenda-earlier "earlier"))
+     "View"
+     (("zg" org-agenda-toggle-time-grid (format "time grid: % -3S" org-agenda-use-time-grid))
+      ("ze" org-agenda-entry-text-mode (format "text: % -3S" org-agenda-entry-text-mode))
+      ("zA" (org-agenda-archives-mode 'files) (format "archive: %s" org-agenda-archives-mode))
+      ("zl" org-agenda-log-mode (format "log: % -3S" org-agenda-show-log))
+      ("zL" (org-agenda-log-mode '(4)) "log all")
+      ("zc" (org-agenda-log-mode 'clockcheck) "clockcheck")
+      ("zr" org-agenda-clockreport-mode (format "clockreport: % -3S" org-agenda-clockreport-mode)))
+     "Filter"
+     (("fc" org-agenda-filter-by-category "category")
+      ("fh" org-agenda-filter-by-top-headline "top heading")
+      ("ft" org-agenda-filter-by-tag "tag")
+      ("fr" org-agenda-filter-by-regexp "regexp")
+      ("ff" org-agenda-filter "edit")
+      ("F" org-agenda-filter-remove-all "remove"))
+     "Open"
+     (("zf" org-agenda-follow-mode (format "follow: % -3S" org-agenda-follow-mode))
+      ("S-RET" org-agenda-recenter "view other")
+      ("M-RET" org-agenda-tree-to-indirect-buffer "view indirect")
+      ("C-RET" org-agenda-goto "open other"))
+     "Action"
+     (("d" org-agenda-date-prompt "date")
+      ("a" org-agenda-add-note "note" :color blue)
+      ("i" org-agenda-diary-entry "journal" :color blue)
+      ("r" org-agenda-refile "refile")
+      ("D" org-agenda-archive-default-with-confirmation "archive"))
+     "Mark"
+     (("m" org-agenda-bulk-toggle "toggle")
+      ("M" org-agenda-bulk-toggle-all "toggle all")
+      ("U" org-agenda-bulk-unmark-all "unmark all")
+      ("x" org-agenda-bulk-action "action")
+
+      ("q" nil :color blue)
+      ("<escape>" nil :color blue)))))
+#+end_src
+
 ***** Bindings
 
 Customize bindings.
 #+begin_src elisp
 (after! evil-org-agenda
+  ;; Leader bindings
+  ;; TODO: Remove the which-key description which are not overridden...
+  (map!
+   :leader
+   ;; Simplify agenda commands in notes prefix.
+   (:prefix "n"
+    :desc "Org agenda"     "a" #'org-agenda
+    "m" nil)
+
+   ;; Unbind agenda commands in open prefix.
+   (:prefix "o"
+    "a" nil
+    "A" nil))
+
+  ;; Agenda bindings
   (map! :map evil-org-agenda-mode-map
         ;; Avoid spurious bindings kicking in with ESC
         :g [escape]   #'transient-noop
@@ -1300,23 +1544,30 @@ Customize bindings.
         :m [M-return] #'org-agenda-tree-to-indirect-buffer
         :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
 
-        ;; Add equivalence for org-mode bindings (HJKL equivalents)
+        ;; Move cursor by items instead of lines by default
+        :m "j" #'org-agenda-next-line
+        :m "k" #'org-agenda-previous-line
+        :m "M-j" #'org-agenda-next-item
+        :m "M-k" #'org-agenda-previous-item
+        :m "C-j" #'outline-next-heading
+        :m "C-k" #'outline-previous-heading
+
+        ;; Add equivalence for org-mode bindings
         :m "C-M-k"    #'org-agenda-priority-up
         :m "C-M-j"    #'org-agenda-priority-down
-        :m "C-M-h"    #'org-agenda-do-date-earlier
-        :m "C-M-l"    #'org-agenda-do-date-later
+        :m "C-M-h"    #'+org-agenda-todo-prev
+        :m "C-M-l"    #'+org-agenda-todo-next
         :m "C-M-S-h"  #'org-agenda-todo-previousset
         :m "C-M-S-l"  #'org-agenda-todo-nextset
 
         ;; Bind filter commands to 'f' prefix
         :m "ff"       #'org-agenda-filter
-        :m "f^"       #'org-agenda-filter-by-top-headline
+        :m "fh"       #'org-agenda-filter-by-top-headline
         :m "fc"       #'org-agenda-filter-by-category
         :m "fe"       #'org-agenda-filter-by-effort
         :m "fr"       #'org-agenda-filter-by-regexp
-        :m "ft"       #'org-agenda-filter-by-tag
+        :m "fq"       #'org-agenda-filter-by-tag
         :m "fl"       #'org-agenda-limit-interactively
-        :m "fA"       #'+org-agenda-filter-astral
         :m "F"        #'org-agenda-filter-remove-all
         :m "s^"       nil
         :m "sc"       nil
@@ -1330,7 +1581,7 @@ Customize bindings.
         :m "sH"       #'org-agenda-holidays
         :m "sm"       #'org-agenda-phases-of-moon
         :m "ss"       #'org-agenda-sunrise-sunset
-        :m "st"       #'org-agenda-show-tags
+        :m "sq"       #'org-agenda-show-tags
         :m "sd"       #'org-agenda-convert-date
         :m "gh"       nil
         :m "gm"       nil
@@ -1342,7 +1593,9 @@ Customize bindings.
         :m "S"        #'org-save-all-org-buffers
         :m "M"        #'org-agenda-bulk-toggle-all
         :m "D"        #'org-agenda-archive-default-with-confirmation
-        :m "T"        #'org-agenda-todo-nextset
+        :m "T"        #'org-agenda-set-tags
+        :m "p"        #'org-agenda-priority
+        :m "d"        #'org-agenda-date-prompt
         :m "cd"       #'org-agenda-date-prompt
         :m ">"        #'org-agenda-remove-restriction-lock
 
@@ -1354,8 +1607,329 @@ Customize bindings.
         ;; Bind missing agenda-equivalent of frequent org commands
         :localleader
         "a"           #'org-attach
-        "p"           #'org-agenda-priority))
+        "p"           #'org-agenda-priority
+        "T"           #'org-timer-set-timer
+        "SPC"         #'major-mode-hydra
+
+        :prefix "d"
+        "t"           #'org-agenda-date-prompt))
 #+end_src
+
+**** Views
+***** Org QL Views
+
+Interactive functions to display custom Org QL Views.
+#+begin_src elisp
+(after! org-ql
+  (defvar +psydev/org-view-scope 'buffer
+    "The currently selected scope for Org Views.
+
+The special symbol `buffer' means to use the current buffer.")
+  (defvar +psydev/org-view-context nil
+    "The currently selected context tag for Org Views.
+
+The special symbol `none' means to not match headlines with any context tag.")
+  (defvar +psydev/org-view-tags nil
+    "The currently selected tags for Org Views.")
+
+  ;; ✴✳🏵🌼☘
+  (defvar +psydev/org-view-groups-dashboard
+    '((:name "📅 Scheduled" :scheduled t)
+      (:name "🌀 Projects" :todo "PROJ")
+      (:auto-outline-path t))
+    "Org super agenda groups for dashboard views.")
+
+  (defvar +psydev/org-view-groups-planning
+    '((:name "🔥 Active" :todo "ACTV") ;
+      (:name "⭕ Top Priorities" :and (:priority>= "B" :not (:todo "PROJ")))
+      (:name "📅 Scheduled" :scheduled t)
+      (:name "🌀 Projects" :todo "PROJ")
+      ;; Life-specific heading groups
+      (:name "🎧 Musique" :and (:outline-path-regexp "Musique" :tag "listen"))
+      (:name "🎥 Cinéma" :and (:outline-path-regexp "Cinéma" :tag "watch"))
+      ;; Default groups
+      (:auto-outline-path t))
+    "Org super agenda groups for planning views.")
+
+  (defvar +psydev/org-view-groups-backlog
+    '((:name "🎯 Goals" :transformer #'+psydev/org-view-goals-transformer :todo nil)
+      (:auto-outline-path t))
+    "Org super agenda groups for backlog views.")
+
+  (defun +psydev/org-view-goals-transformer (item)
+    (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+      (s-replace-regexp "Goals\\|Objectifs" (car (last (org-get-outline-path))) item)))
+
+  (defun +psydev/org-view-upcoming ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (or (scheduled)
+                      (deadline auto))
+                  (not (done)))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups '((:auto-planning t))
+     :title "Upcoming"))
+
+  (defun +psydev/org-view-dashboard ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (todo)
+                  (not (todo "SMDY" "IDEA"))
+                  (not (ancestors (todo "SMDY" "IDEA")))
+                  (or (todo "ACTV") (priority '>= "B")))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-dashboard
+     :title "Dashboard"))
+
+  (defun +psydev/org-view-planning ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (todo)
+                  (not (todo "SMDY" "IDEA"))
+                  (not (ancestors (todo "SMDY" "IDEA"))))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-planning
+     :title "Planning"))
+
+  (defun +psydev/org-view-backlog ()
+    (interactive)
+    (+psydev/org-view-make
+     :buffers-files +psydev/org-view-scope
+     :narrow t
+     :query '(and (or (todo)
+                      (heading-regexp "^\\(Goals\\|Objectifs\\)$"))
+                  (not (tags "read" "listen" "watch")))
+     :context +psydev/org-view-context
+     :tags +psydev/org-view-tags
+     :super-groups +psydev/org-view-groups-backlog
+     :title "Backlog"))
+
+  (cl-defun +psydev/org-view-make (&key buffers-files query narrow super-groups sort title context tags)
+    (let ((buffers-files (cond ((equal buffers-files 'buffer) (current-buffer))
+                               (buffers-files)
+                               (t #'org-agenda-files)))
+          (query (append query (+psydev/org-view-make-query context tags)))
+          (sort (or sort '(priority scheduled))))
+      (org-ql-search buffers-files query
+        :narrow narrow
+        :super-groups super-groups
+        :sort sort
+        :title (+psydev/org-view--make-title title buffers-files context tags))))
+
+  (defun +psydev/org-view-make-query (&optional context tags)
+    (append
+     (when context
+       (if (eq context 'none)
+           '((not (tags-regexp "@.+")))
+         `((tags ,context))))
+     (when tags `((tags ,@tags)))))
+
+  (defun +psydev/org-view--make-title (name &optional buffers-files context tags)
+    (let ((source (when buffers-files (format " in %s" buffers-files)))
+          (suffix (mapconcat (lambda (it) (format "%s" it))
+                             (remove nil (list context tags))
+                             " ")))
+      (cond ((and name (not (string-empty-p suffix))) (concat name source ": " suffix))
+            ((and (not name) suffix) suffix)
+            (t (concat name source))))))
+#+end_src
+
+***** Sidebar
+
+Define sidebar views.
+#+begin_src elisp
+(after! org-sidebar
+  (defun +psydev/org-sidebar--daily-agenda-fn (source-buffer)
+    "Return an Org Agenda buffer showing the daily agenda in SOURCE-BUFFER."
+    (save-window-excursion (org-agenda nil "d"))
+    org-agenda-buffer)
+
+  (defun +psydev/org-sidebar--upcoming-fn (source-buffer)
+    "Return an Org QL View buffer showing unscheduled, un-deadlined items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Upcoming*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-upcoming)))
+      display-buffer))
+  (defun +psydev/org-sidebar-agenda-upcoming ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--daily-agenda-fn +psydev/org-sidebar--upcoming-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--dashboard-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Dashboard*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-dashboard)))
+      display-buffer))
+  (defun +psydev/org-sidebar-dashboard ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--planning-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Planning*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-planning)))
+      display-buffer))
+  (defun +psydev/org-sidebar-planning ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--planning-fn)))
+      (org-sidebar-toggle)))
+
+  (defun +psydev/org-sidebar--backlog-fn (source-buffer)
+    "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
+    (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Backlog*")))
+      (let ((org-ql-view-buffer display-buffer)
+            (+psydev/org-view-scope 'buffer))
+        (save-window-excursion (+psydev/org-view-backlog)))
+      display-buffer))
+  (defun +psydev/org-sidebar-backlog ()
+    (interactive)
+    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--backlog-fn)))
+      (org-sidebar-toggle)))
+
+  (setq org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn +psydev/org-sidebar--planning-fn)))
+#+end_src
+
+***** Hydra
+
+Define a view dispatcher hydra.
+#+begin_src elisp
+(after! (org-ql pretty-hydra)
+  (defun +hydra/org-view--format-view-head (name)
+    (concat name " "
+            (when (not (eq +psydev/org-view-scope #'org-agenda-files)) "<")
+            (when +psydev/org-view-context "@")
+            (when +psydev/org-view-tags "+")))
+  (defun +hydra/org-view--format-tree-head (name)
+    (concat name " "
+            (when +psydev/org-view-context "@")
+            (when +psydev/org-view-tags "+")))
+  (defun +hydra/org-view--format-context-head (val)
+    (format "%s %s" (if (equal +psydev/org-view-context val) "[x]" "[ ]") val))
+  (defun +hydra/org-view--format-tag-head (tag)
+    (format "%s %s" (if (member tag +psydev/org-view-tags) "[x]" "[ ]") tag))
+
+  (defun +hydra/org-view--set-scope (scope)
+    (cl-case scope
+      ('buffer (progn (setq +psydev/org-view-scope 'buffer)))
+      ('file (let ((file (read-file-name "Select File: " org-directory nil (confirm-nonexistent-file-or-buffer))))
+               (when file
+                 (setq +psydev/org-view-scope file))))
+      (t (progn (setq +psydev/org-view-scope #'org-agenda-files)))))
+
+  (pretty-hydra-define +hydra/org-view
+    (:color teal :separator "═" :title (+hydra/title-generator "Org Views" "tasks" 51))
+    ("Agenda"
+     (("ad" (org-agenda current-prefix-arg "d") "day agenda")
+      ("aw" (org-agenda current-prefix-arg "w") "week agenda")
+      ("ae" (org-agenda current-prefix-arg "e") "week events")
+      ("al" (org-agenda current-prefix-arg "l") "week log"))
+     "View"
+     (("u" +psydev/org-view-upcoming (+hydra/org-view--format-view-head "upcoming") :width 13)
+      ("d" +psydev/org-view-dashboard (+hydra/org-view--format-view-head "dashboard") :width 13)
+      ("p" +psydev/org-view-planning (+hydra/org-view--format-view-head "planning") :width 13)
+      ("b" +psydev/org-view-backlog (+hydra/org-view--format-view-head "backlog") :width 13))
+     "Tree"
+     (("tp" (org-ql-sparse-tree
+             (append '(and (todo "PROJ"))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "project") :width 10)
+      ("tt" (org-ql-sparse-tree
+             (append '(and (todo))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "todo") :width 10)
+      ("tm" (org-ql-sparse-tree
+             (append '(and (tags))
+                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+       (+hydra/org-view--format-tree-head "tag") :width 10)
+      ;; NOTE: Occur command does not support tags as it would hardly make sense
+      ("to" (progn (org-check-for-org-mode)
+                   (unless +psydev/org-view-context
+                     (error "Cannot show occurrences of unset context"))
+                   (when (eq +psydev/org-view-context 'none)
+                     (error "Cannot show occurrences of `none' context"))
+                   (org-occur +psydev/org-view-context))
+       (+hydra/org-view--format-tree-head "occur") :width 10))
+     "Scope (<)"
+     (("<" (+hydra/org-view--set-scope 'all)
+       (format "%s all" (if (eq +psydev/org-view-scope #'org-agenda-files) "[x]" "[ ]")) :width 18
+       :color red)
+      ("/" (+hydra/org-view--set-scope 'file)
+       (if (and (stringp +psydev/org-view-scope) (s-starts-with-p "/" +psydev/org-view-scope))
+           (format "[x] %s" (file-name-nondirectory +psydev/org-view-scope))
+         (format "[ ] select file")) :width 18
+       :color red)
+      ("." (+hydra/org-view--set-scope 'buffer)
+       (format "%s current buffer" (if (equal +psydev/org-view-scope 'buffer) "[x]" "[ ]")) :width 18
+       :color red))
+     "Context (@)"
+     (("@" (setq +psydev/org-view-context nil)
+       (format "%s all" (if (not +psydev/org-view-context) "[x]" "[ ]")) :width 11
+       :color red)
+      ("!" (setq +psydev/org-view-context 'none) (+hydra/org-view--format-context-head 'none) :width 11 :color red)
+      ("s" (setq +psydev/org-view-context "@self") (+hydra/org-view--format-context-head "@self") :width 11 :color red)
+      ("h" (setq +psydev/org-view-context "@home") (+hydra/org-view--format-context-head "@home") :width 11 :color red)
+      ("w" (setq +psydev/org-view-context "@work") (+hydra/org-view--format-context-head "@work") :width 11 :color red)
+      ("P" (setq +psydev/org-view-context "@people") (+hydra/org-view--format-context-head "@people") :width 11 :color red))
+     "Tags (+)"
+     (("+" (setq +psydev/org-view-tags nil)
+       (format "%s all" (if (not +psydev/org-view-tags) "[x]" "[ ]")) :width 10
+       :color red)
+      ("r" (add-to-list '+psydev/org-view-tags "read") (+hydra/org-view--format-tag-head "read") :width 10 :color red)
+      ("l" (add-to-list '+psydev/org-view-tags "listen") (+hydra/org-view--format-tag-head "listen") :width 10 :color red)
+      ("v" (add-to-list '+psydev/org-view-tags "watch") (+hydra/org-view--format-tag-head "watch") :width 10 :color red)
+      ("n" (add-to-list '+psydev/org-view-tags "need") (+hydra/org-view--format-tag-head "need") :width 10 :color red)
+
+      ("q" nil)
+      ("<escape>" nil)))))
+#+end_src
+
+***** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org-ql
+  ;; Leader bindings
+  (map! :leader
+   :prefix "n"
+   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
+   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
+   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
+   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
+   :desc "Org planning"           "P" #'+psydev/org-view-planning
+   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
+   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org view"               "v" #'+hydra/org-view/body))
+#+end_src
+
+**** TODO Block & Source
+
+Configure code editing behavior.
+#+begin_src elisp
+(after! org
+  (setq org-src-fontify-natively 't
+        org-src-tab-acts-natively 't
+        org-src-preserve-indentation 't
+        org-src-window-setup 'current-window
+        org-src-ask-before-returning-to-edit-buffer nil
+        org-edit-src-persistent-message nil))
+#+end_src
+
 **** TODO Chef
 
 I *need* this in my life. It take a URL to a recipe from a common site, and
@@ -1407,19 +1981,24 @@ Customize org-superstar.
   (add-hook! org-mode #'org-superstar-auto-lightweight-mode))
 #+end_src
 
-Customize org-fancy-priorities.
-Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
-#+begin_src elisp :tangle "packages.el" :comments no
-(package! org-fancy-priorities :disable t)
-#+end_src
+Customize priorities faces.
 #+begin_src elisp
-;; (after! org-fancy-priorities
-;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
-;;         org-priority-faces
-;;         '((65 . error)
-;;           (66 . warning)
-;;           (67 . success)
-;;           (68 . success)))
+(after! org
+  (setq org-priority-faces
+        '((65 . error)
+          (66 . warning)
+          (67 . success)
+          (68 . default) ; Keep default outline face
+          (69 . shadow))))
+#+end_src
+
+**** Popups
+
+Customize popup rules for org-related buffers.
+#+begin_src elisp
+(after! org
+  (set-popup-rules!
+    '(("^\\*Org Src" :ignore t))))
 #+end_src
 
 **** Bindings
@@ -1459,7 +2038,7 @@ Customize bindings.
 (after! evil-org
   (map! :map evil-org-mode-map
         ;; Prefer smart beginning of line to digit argument? (overridden)
-        :m "0"                               #'evil-org-beginning-of-line
+        :m "0"               #'evil-org-beginning-of-line
         ;; Add quick motion bindings
         :ni "C-k"     (cmds! (org-at-table-p) #'+org/table-previous-row
                              (bound-and-true-p evil-insert-state-minor-mode) #'evil-previous-line
@@ -1485,19 +2064,39 @@ Customize bindings.
                              #'org-down-element)
 
         ;; Evil replacements
-        :g "C-M-k"           #'org-shiftup
-        :g "C-M-j"           #'org-shiftdown
-        :g "C-M-h"           #'org-shiftleft
-        :g "C-M-l"           #'org-shiftright
-        :g "C-M-S-k"         #'org-shiftcontrolup
-        :g "C-M-S-j"         #'org-shiftcontroldown
-        :g "C-M-S-h"         #'org-shiftcontrolleft
-        :g "C-M-S-l"         #'org-shiftcontrolright
+        :g "C-M-k"   #'org-shiftup
+        :g "C-M-j"   #'org-shiftdown
+        :g "C-M-h"   #'org-shiftleft
+        :g "C-M-l"   #'org-shiftright
+        :g "C-M-S-k" #'org-shiftcontrolup
+        :g "C-M-S-j" #'org-shiftcontroldown
+        :g "C-M-S-h" #'org-shiftcontrolleft
+        :g "C-M-S-l" #'org-shiftcontrolright
+
+        ;; Move some bindings in org-mode-map so that it can be easily overridden in derived maps.
+        :nv [tab]           nil
+        :nv "TAB"           nil
+        :nv [S-tab]         nil
+        :nv [S-iso-lefttab] nil
+        :nv [backtab]       nil
+        :ni [return]        nil
+        :ni "RET"           nil
+        :i [S-return]       nil
+        :i "S-RET" nil
 
         :map org-mode-map
+        :m [tab]           #'org-cycle
+        :m "TAB"           #'org-cycle
+        :m [S-tab]         #'org-shifttab
+        :m [S-iso-lefttab] #'org-shifttab
+        :m [backtab]       #'org-shifttab
+        :n [return]        #'+org/dwim-at-point
+        :n "RET"           #'+org/dwim-at-point
+        :i [return]        (cmd! (org-return electric-indent-mode))
+        :i "RET"           (cmd! (org-return electric-indent-mode))
         ;; This looks like a fix for doom
-        :n [S-return]        #'+org/shift-return
-        :n "S-RET"           #'+org/shift-return
+        :ni [S-return]     #'+org/shift-return
+        :ni "S-RET"        #'+org/shift-return
 
         ;; M-RET difficult choices
         ;; - normal-mode: org-ctrl-c-ret
@@ -1527,6 +2126,9 @@ Customize bindings.
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
          "X"                 #'org-toggle-radio-button
+         "T"                 #'org-timer-set-timer
+         "e"                 #'org-edit-special
+         "E"                 #'org-export-dispatch
          (:prefix ("s" . "Tree/Subtree")
           "A"                #'org-archive-to-archive-sibling
           "o"                #'org-toggle-ordered-property)))
@@ -1565,12 +2167,14 @@ See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-em
 *** Undo tree
 
 Customize undo-tree visualizer.
+Disabled since I've fallback to undo-fu as undo-tree is too unstable (and slow).
+See https://github.com/hlissner/doom-emacs/issues/1407
 #+begin_src elisp
-(use-package! undo-tree
-  :config
-  (setq undo-tree-visualizer-diff nil)
-  :bind (:map evil-normal-state-map
-         ("U" . undo-tree-visualize)))
+;; (use-package! undo-tree
+;;   :config
+;;   (setq undo-tree-visualizer-diff nil)
+;;   :bind (:map evil-normal-state-map
+;;          ("U" . undo-tree-visualize)))
 #+end_src
 
 ** General packages
@@ -1601,9 +2205,9 @@ Configure localization settings.
         calendar-time-display-form
         '(24-hours ":" minutes
                    (if time-zone " (") time-zone (if time-zone ")"))
-        calendar-latitude 49.61167
-        calendar-longitude 6.13
-        calendar-location-name "Luxembourg"))
+        calendar-latitude 44.81537
+        calendar-longitude 4.48834
+        calendar-location-name "Saint-Pierreville"))
 #+end_src
 
 **** Diary
@@ -1627,7 +2231,7 @@ Adapt sunrise/sunset diary sexp.
   "String of *local* time of sunrise and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     "🌅 %s (%s de jour)"
+     " %s (%s de jour)" ;🌅
      (if (car l)
          (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
        "Aucun Lever du Soleil")
@@ -1647,7 +2251,7 @@ Accurate to a few seconds."
   "String of *local* time of sunset and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     "🌅 %s"
+     " %s" ;🌅
      (if (cadr l)
          (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
        "Aucun Coucher du Soleil"))))
@@ -1713,9 +2317,9 @@ Customize solar/lunar phase names.
 #+begin_src elisp
 (after! calendar
   (setq lunar-phase-names
-        '("🌕 Nouvelle Lune"
+        '("🌑 Nouvelle Lune"
           "🌓 Premier Quartier de Lune"
-          "🌑 Pleine Lune"
+          "🌕 Pleine Lune"
           "🌗 Dernier Quartier de Lune")
         solar-n-hemi-seasons
         '("Equinoxe de Printemps"
@@ -1869,9 +2473,11 @@ and restrict buffer list to workspace buffers.
 (use-package! centaur-tabs
   :config
   (setq centaur-tabs-style "bar"
-        centaur-tabs-height 32
-        centaur-tabs-gray-out-icons nil
         centaur-tabs-set-bar 'under
+        centaur-tabs-height 32
+        centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons nil
+        centaur-tabs-show-new-tab-button t
         x-underline-at-descent-line t)
   (centaur-tabs-headline-match)
   ;; Override rules for grouping buffers.
@@ -1919,11 +2525,7 @@ visiting a file.  The current buffer is always included."
                            ((buffer-file-name b) b)
                            ((char-equal ?\  (aref (buffer-name b) 0)) nil)
                            ((buffer-live-p b) b)))
-                      (doom-buffer-list)))))
-  :hook
-  (doom-dashboard-mode . centaur-tabs-local-mode)
-  (term-mode . centaur-tabs-local-mode)
-  (vterm-mode . centaur-tabs-local-mode))
+                      (doom-buffer-list))))))
 #+end_src
 
 Provide additional bindings for centaur-tabs functions.
@@ -1932,36 +2534,37 @@ Provide additional bindings for centaur-tabs functions.
   ;; Remove previous which-key descriptions.
   ;; TODO: Encapsulate in a function and use a regex.
   ;; TODO Move these bindings in a more appropriate, doom-related section
-  (cl-delete-if
-   (lambda (x)
-     (member (car x)
-             '(("\\`M-SPC b k\\'")
-               ("\\`SPC b k\\'")
-               ("\\`M-SPC b K\\'")
-               ("\\`SPC b K\\'")
-               ("\\`M-SPC b l\\'")
-               ("\\`SPC b l\\'")
-               ("\\`M-SPC b O\\'")
-               ("\\`SPC b O\\'")
-               ("\\`M-SPC b n\\'")
-               ("\\`SPC b n\\'")
-               ("\\`M-SPC b N\\'")
-               ("\\`SPC b N\\'")
-               ("\\`M-SPC b p\\'")
-               ("\\`SPC b p\\'"))))
-   which-key-replacement-alist)
+  ;; XXX: Breaks emacs...
+  ;; (cl-delete-if
+  ;;  (lambda (x)
+  ;;    (member (car x)
+  ;;            '(("\\`M-SPC b k\\'")
+  ;;              ("\\`SPC b k\\'")
+  ;;              ("\\`M-SPC b K\\'")
+  ;;              ("\\`SPC b K\\'")
+  ;;              ("\\`M-SPC b l\\'")
+  ;;              ("\\`SPC b l\\'")
+  ;;              ("\\`M-SPC b O\\'")
+  ;;              ("\\`SPC b O\\'")
+  ;;              ("\\`M-SPC b n\\'")
+  ;;              ("\\`SPC b n\\'")
+  ;;              ("\\`M-SPC b N\\'")
+  ;;              ("\\`SPC b N\\'")
+  ;;              ("\\`M-SPC b p\\'")
+  ;;              ("\\`SPC b p\\'"))))
+  ;;  which-key-replacement-alist)
 
   (map!
    ;; Rebind buffer switching to tab switching commands.
-   :g [remap previous-buffer] #'centaur-tabs-backward
-   :g [remap next-buffer]     #'centaur-tabs-forward
+   :g [remap previous-buffer] #'+tabs:previous-or-goto
+   :g [remap next-buffer]     #'+tabs:next-or-goto
    ;; Tab manipulation
-   :g "C-<next>"    #'centaur-tabs-forward
-   :g "C-<prior>"   #'centaur-tabs-backward
+   :g "C-<next>"    #'+tabs:next-or-goto
+   :g "C-<prior>"   #'+tabs:previous-or-goto
    :g "C-M-<next>"  #'centaur-tabs-forward-group
    :g "C-M-<prior>" #'centaur-tabs-backward-group
-   :n "gt"          #'centaur-tabs-forward
-   :n "gb"          #'centaur-tabs-backward
+   :n "gt"          #'+tabs:next-or-goto
+   :n "gb"          #'+tabs:previous-or-goto
    :n "gT"          #'centaur-tabs-forward-group
    :n "gB"          #'centaur-tabs-backward-group
    :n "]B"          #'centaur-tabs-forward-group
@@ -1975,13 +2578,13 @@ Provide additional bindings for centaur-tabs functions.
    :desc "Next buffer group"     "j" #'centaur-tabs-forward-group
    :desc "Previous buffer group" "k" #'centaur-tabs-backward-group
    ;; Tab movement
-   :desc "Next tab"              "l" #'centaur-tabs-forward
-   :desc "Previous tab"          "h" #'centaur-tabs-backward
+   :desc "Next tab"              "l" #'+tabs:next-or-goto
+   :desc "Previous tab"          "h" #'+tabs:previous-or-goto
    :desc "Move tab right"        "L" #'centaur-tabs-move-current-tab-to-right
    :desc "Move tab left"         "H" #'centaur-tabs-move-current-tab-to-left
    ;; Other stuff
-   :desc "Kill all buffers"      "D" #'doom/kill-all-buffers
-   :desc "Kill other buffers"    "K" #'doom/kill-other-buffers
+   :desc "Kill other buffers"    "D" #'doom/kill-other-buffers
+   :desc "Kill all buffers"      "C-d" #'doom/kill-all-buffers
    :desc ""                      "O" nil
    :desc "New empty buffer"      "n" #'evil-buffer-new
    :desc "New empty buffer"      "N" nil
@@ -2163,7 +2766,8 @@ Also fix perspective issues: killing twice the elfeed-search buffers was messing
           (with-current-buffer b
             (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
             (kill-buffer b))))
-      (mapc #'kill-buffer show-buffers))))
+      (mapc #'kill-buffer show-buffers))
+    (+workspace/delete "elfeed")))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
@@ -2743,7 +3347,7 @@ A complete example:
                         '(concat "+" (completing-read "Tag: " (elfeed-db-get-all-tags))))))
            (body (append '(:title (concat (propertize "Filter: " 'face 'minibuffer-prompt)
                                           (propertize elfeed-search-filter 'face 'elfeed-search-filter-face))
-                           :color amaranth :hint t :quit-key "q")
+                           :color amaranth :hint t :separator "═" :quit-key "<escape>")
                          body))
            (heads (cl-loop for (heading views) on views by #'cddr
                            collect heading
@@ -2806,7 +3410,7 @@ The custom filter hydra.
 (unpackaged/elfeed-search-view-hydra-define
   psydev/elfeed-search-filter-hydra
   (:foreign-keys warn)
-  ("Views"
+  ("Filter"
    (("<tab>" (lambda () (elfeed-search-live-filter)) "Set")
     ;; FIXME: For some obscure reason, using cl-sublis to substitute with a lambda results in a
     ;; stack overflow. The lambda is copied here to avoid the substitution as a workaround.
@@ -2925,9 +3529,10 @@ Configure bindings.
 
 Customize general evil options.
 #+begin_src elisp
-(setq evil-want-fine-undo t     ; By default while in insert all changes are one big blob. Be more granular
-      evil-move-cursor-back nil ; Leave cursor in place when exiting insert-mode
-      evil-cross-lines t)       ; Allow horizontal ops to move to the next
+(setq evil-want-fine-undo t          ; By default while in insert all changes are one big blob. Be more granular
+      evil-move-cursor-back nil      ; Leave cursor in place when exiting insert-mode
+      evil-cross-lines t             ; Allow horizontal ops to move to the next
+      evil-kill-on-visual-paste nil) ; Do not kill replaced text in visual mode
 #+end_src
 
 Enable evil-mode in the minibuffer. Or not.
@@ -2936,69 +3541,57 @@ Enable evil-mode in the minibuffer. Or not.
 ;;   :custom (evil-collection-setup-minibuffer t))
 #+end_src
 
+Add a delete operator that does not add to kill-ring.
+#+begin_src elisp
+(after! evil
+  (evil-define-operator evil-black-hole-delete (beg end type)
+    (interactive "<R>")
+    (evil-delete beg end type ?_)))
+#+end_src
+
 Customize options for evil extensions.
 #+begin_src elisp
 (after! evil-multiedit
   (setq evil-multiedit-follow-matches t))
 #+end_src
 
-Fix evil scroll [[https://github.com/emacs-evil/evil/issues/1322][not taking tab-bar height into account]].
-#+begin_src elisp
-(defun evil-posn-x-y (position)
-  "Return the x and y coordinates in POSITION.
-This function returns y offset from the top of the buffer area including
-the header line and the tab line (on Emacs 27 and later versions).
-
-On Emacs 24 and later versions, the y-offset returned by
-`posn-at-point' is relative to the text area excluding the header
-line and the tab line, while y offset taken by `posn-at-x-y' is relative to
-the buffer area including the header line and the tab line.
-This asymmetry is by design according to GNU Emacs team.
-This function fixes the asymmetry between them.
-
-Learned from mozc.el."
-  (let ((xy (posn-x-y position)))
-    (when header-line-format
-      (setcdr xy (+ (cdr xy)
-                    (or (and (fboundp 'window-header-line-height)
-                             (window-header-line-height))
-                        evil-cached-header-line-height
-                        (setq evil-cached-header-line-height (evil-header-line-height))))))
-    (when (fboundp 'window-tab-line-height)
-      (setcdr xy (+ (cdr xy) (window-tab-line-height))))
-    xy))
-#+end_src
-
 Replace evil-mc bindings by a convenient hydra.
 #+begin_src elisp
-(defhydra evil-mc-hydra (:color pink
-                         :hint nil
-                         :pre (evil-mc-pause-cursors))
-  "
-^Match^            ^Line-wise^           ^Manual^
-^^^^^^----------------------------------------------------
-_a_: match all     _J_: make & go down   _z_: toggle here
-_m_: make & next   _K_: make & go up     _r_: remove last
-_M_: make & prev   ^ ^                   _R_: remove all
-_n_: skip & next   ^ ^                   _p_: pause/resume
-_N_: skip & prev
+(after! pretty-hydra
+  (defhydra evil-mc-hydra
+    (:color pink
+     :hint nil
+     :pre (evil-mc-pause-cursors)
+     :post (evil-mc-resume-cursors))
+    "
+
+                       🤯 Multiple Cursors
+
+ ^Match^            ^Line-wise^                 ^Manual^
+═^═^════════════════^═^═════════════════════════^═^════════════════════
+ _a_: match all     _J_: make & go down         _z_: toggle here
+ _m_: make & next   _K_: make & go up           _r_: remove last/region
+ _M_: make & prev   _I_: make in region (beg)   _R_: remove all
+ _n_: skip & next   _A_: make in region (end)   _p_: pause/resume
+ _N_: skip & prev
 
 Current pattern: %`evil-mc-pattern
-
 "
-  ("a" #'evil-mc-make-all-cursors)
-  ("m" #'evil-mc-make-and-goto-next-match)
-  ("M" #'evil-mc-make-and-goto-prev-match)
-  ("n" #'evil-mc-skip-and-goto-next-match)
-  ("N" #'evil-mc-skip-and-goto-prev-match)
-  ("J" #'evil-mc-make-cursor-move-next-line)
-  ("K" #'evil-mc-make-cursor-move-prev-line)
-  ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
-  ("r" #'+multiple-cursors/evil-mc-undo-cursor)
-  ("R" #'evil-mc-undo-all-cursors)
-  ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
-  ("q" #'evil-mc-resume-cursors "quit" :color blue)
-  ("<escape>" #'evil-mc-resume-cursors "quit" :color blue))
+    ("a" #'evil-mc-make-all-cursors)
+    ("m" #'evil-mc-make-and-goto-next-match)
+    ("M" #'evil-mc-make-and-goto-prev-match)
+    ("n" #'evil-mc-skip-and-goto-next-match)
+    ("N" #'evil-mc-skip-and-goto-prev-match)
+    ("J" #'evil-mc-make-cursor-move-next-line)
+    ("K" #'evil-mc-make-cursor-move-prev-line)
+    ("I" #'evil-mc-make-cursor-in-visual-selection-beg :color blue)
+    ("A" #'evil-mc-make-cursor-in-visual-selection-end :color blue)
+    ("z" #'+multiple-cursors/evil-mc-toggle-cursor-here)
+    ("r" #'+multiple-cursors/evil-mc-undo-cursor)
+    ("R" #'evil-mc-undo-all-cursors)
+    ("p" #'+multiple-cursors/evil-mc-toggle-cursors)
+    ("q" nil :color blue)
+    ("<escape>" nil :color blue)))
 #+end_src
 
 Provide more consistent navigation bindings and add missing evil bindings.
@@ -3006,6 +3599,7 @@ Add the missing arrow-key variants of the window navigation commands.
 #+begin_src elisp
 (map!
  ;; Bind missing evil bindings
+ :m "<backspace>"     #'evil-black-hole-delete
  :nv "gX"             #'evil-exchange-cancel
  :nv "god"            #'evil-quick-diff
  :nv "goD"            #'evil-quick-diff-cancel
@@ -3026,14 +3620,21 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ ;; Rearrange some yank/paste commands
+ :n "M-p"             #'evil-paste-pop
+ :n "C-p"             #'+default/yank-pop
+ (:map evil-mc-key-map
+  :nv "C-p" nil
+  :nv "C-n" nil)
+ ;; Rebind multiple-cursors hydra
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
   :nv "z"             #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
- :nm "]w"             #'evil-window-next
- :nm "[w"             #'evil-window-prev
+ :m "]w"              #'evil-window-next
+ :m "[w"              #'evil-window-prev
  ;; Bind more motion/editing commands to hjkl
  :i "C-k"             #'evil-previous-line
  :i "C-j"             #'evil-next-line
@@ -3091,7 +3692,14 @@ Customize evil-goggles visual hints.
     '(evil-goggles-change-face :inherit custom-invalid)
     '(evil-goggles-delete-face :inherit custom-invalid))
   (setq evil-goggles-enable-delete t
-        evil-goggles-enable-change t))
+        evil-goggles-enable-change t)
+
+  ;; Add custom delete command to the list of commands
+  (pushnew! evil-goggles--commands
+            '(evil-black-hole-delete
+              :face evil-goggles-delete-face
+              :switch evil-goggles-enable-delete
+              :advice evil-goggles--generic-blocking-advice)))
 #+end_src
 
 *** Flyspell
@@ -3194,36 +3802,75 @@ See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
     (clrhash ivy-rich--ivy-switch-buffer-cache)))
 #+end_src
 
+Customize ivy-posframe.
+- [X] Need a fixed window width with truncate lines
+- [ ] Use different display functions for some commands (e.g. swiper)
+  - Supposed to work but does not
+  - Keep it like this for now, let's see if ivy-posframe is really usable first.
+#+begin_src elisp
+(after! ivy-posframe
+  (setq ivy-posframe-min-height ivy-height
+        ivy-posframe-min-width 90
+        ivy-posframe-size-function #'psydev/ivy-posframe-get-size
+        ivy-posframe-border-width 8
+        ivy-posframe-parameters `((left-fringe . 2)
+                                  (right-fringe . 2)))
+
+  (defun psydev/ivy-posframe-get-size ()
+    "Dynamic, fixed size function used by `ivy-posframe-size-function'."
+    (setq ivy-posframe-width (round (* (frame-width) 0.618))) ; NOTE EDIT
+    (list
+     :height ivy-posframe-height
+     :width ivy-posframe-width
+     :min-height (or ivy-posframe-min-height
+                     (let ((height (+ ivy-height 1)))
+                       (min height (or ivy-posframe-height height))))
+     :min-width (or ivy-posframe-min-width
+                    (let ((width (round (* (frame-width) 0.618))))
+                      (min width (or ivy-posframe-width width))))))
+
+  (setf (alist-get t ivy-posframe-display-functions-alist)
+        ;; #'ivy-posframe-display-at-frame-bottom-center)
+        #'+ivy-display-at-frame-center-near-bottom-fn))
+#+end_src
+
 Extend the default hydra for ivy.
 #+begin_src elisp
 (after! ivy-hydra
   (defhydra+ hydra-ivy (:hint nil :color pink)
     "
- Move     ^^^^^^^^^^ | Call         ^^^^ | Cancel^^ | Options^^ | Action _w_/_s_/_a_: %s(ivy-action-name)
-----------^^^^^^^^^^-+--------------^^^^-+-------^^-+--------^^-+---------------------------------
- _g_ ^ ^ _k_ ^ ^ _u_ | _f_orward _o_ccur | _i_nsert | _c_alling: %-7s(if ivy-calling \"on\" \"off\") _C_ase-fold: %-10`ivy-case-fold-search
- ^↨^ _h_ ^+^ _l_ ^↕^ | _RET_ done     ^^ | _q_uit   | _M_atcher: %-7s(ivy--matcher-desc) _T_runcate: %-11`truncate-lines
- _G_ ^ ^ _j_ ^ ^ _d_ | _TAB_ alt-done ^^ | ^ ^      | _<_/_>_: shrink/grow _m_ark _t_oggle _u_nmark
+
+                                   🔎 Ivy
+
+ Move     ^^^^^^^^^^   Call         ^^^^   Cancel^^   Options^^
+══════════^^^^^^^^^^════════════════^^^^═════════^^══════════^^══════════════════════════════
+ _g_ ^ ^ _k_ ^ ^ _u_   _f_orward _o_ccur   _i_nsert   _c_alling: %-7s(if ivy-calling \"on\" \"off\")  _C_ase-fold: %-10`ivy-case-fold-search
+ ^↕^ _h_ ^+^ _l_ ^🡙^   _RET_ done     ^^   _q_uit     _M_atcher: %-7s(ivy--matcher-desc)  _T_runcate: %-11`truncate-lines
+ _G_ ^ ^ _j_ ^ ^ _d_   _TAB_ alt-done ^^   ^ ^        _<_/_>_: shrink/grow  _m_ark _t_oggle _U_nmark
+
+Action _w_/_s_/_a_: %s(ivy-action-name)
+       _K_ill                                                        _?_: help
 "
     ;; Movement
     ("l" ivy-alt-done)
-    ("h" ivy-backward-delete-char)
+    ("h" ivy-backward-kill-word)
     ;; Restore mark bindings
     ("m" ivy-mark)
-    ("u" ivy-unmark)
+    ("U" ivy-unmark)
     ("<deletechar>" ivy-unmark-backward)
     ("t" ivy-toggle-marks)
     ;; Actions
     ("<escape>" nil)
     ("M-o" nil)
     ("K" (ivy-exit-with-action #'ivy--kill-buffer-action))
-    ))
+    ("?" ivy-help)))
 #+end_src
 
 Customize bindings.
 #+begin_src elisp
 (after! ivy
   (map! :map ivy-minibuffer-map
+        "C-h" #'ivy-backward-kill-word
         "C-<return>" #'ivy-immediate-done))
 #+end_src
 
@@ -3231,14 +3878,14 @@ Customize bindings.
 
 Remove annoying programming ligatures.
 #+begin_src elisp
-(cl-delete-if
- (lambda (x)
-   (member (car x)
-           '("[]"
-             "##"
-             "###"
-             "####")))
- +ligatures-fira-font-alist)
+;; (cl-delete-if
+;;  (lambda (x)
+;;    (member (car x)
+;;            '("[]"
+;;              "##"
+;;              "###"
+;;              "####")))
+;;  +ligatures-fira-font-alist)
 #+end_src
 
 *** Lsp
@@ -3512,6 +4159,12 @@ This file shouldn't be byte compiled.
   (add-hook! doom-first-file #'beacon-mode))
 #+end_src
 
+*** Centaur tabs
+
+#+begin_src elisp
+(package! centaur-tabs :pin "cde3469d77")
+#+end_src
+
 *** Command logging
 
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
@@ -3548,13 +4201,22 @@ Add hooks to improve the usability and readability of the dashboard.
 #+begin_src elisp :tangle yes
 (after! elfeed-dashboard
   ;; Remove ineffective code called on dashboard open, use hook instead.
+  ;; Also create a dedicated perspective for elfeed.
   (defun psydev/elfeed-dashboard ()
     "Open the elfeed dasboard."
     (interactive)
-    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-    (with-current-buffer elfeed-dashboard--buf
-      (elfeed-dashboard-mode)))
+    (progn
+      (+workspace-switch "elfeed" t)
+      (doom/switch-to-scratch-buffer)
+      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+      (with-current-buffer elfeed-dashboard--buf
+        (elfeed-dashboard-mode))
+      (+workspace/display)))
   (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
+
+  ;; Cleanup elfeed on dashboard exit.
+  (add-hook! elfeed-dashboard-mode
+    (add-hook 'kill-buffer-hook #'+rss-cleanup-h nil 'local))
 
   ;; Really update links when opening the dashboard.
   (add-hook! elfeed-dashboard-mode
@@ -3568,8 +4230,7 @@ Add hooks to improve the usability and readability of the dashboard.
   ;; Move point to the first selectable shortcut.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-top ()
-      (goto-line 3)
-      (scroll-down))) ; TODO Does not always work, how to truly reset the view to top?
+      (goto-line 3)))
 
   ;; Disable evil-org-mode for now, I could not find a way to make elfeed-dashboard-mode-map
   ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
@@ -3697,6 +4358,7 @@ Add top level binding.
 Configure basic settings and setup goodies.
 #+begin_src elisp :tangle yes
 (use-package! elfeed-goodies
+  :after elfeed
   :config
   ;; Disable font-lock-mode in elfeed buffers (prevents faces from being applied)
   (setq font-lock-global-modes '(not elfeed-search-mode))
@@ -4159,6 +4821,165 @@ To make VLF available without delaying startup, just load it in quiet moments.
 ;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 #+end_src
 
+*** Hydra posframe
+
+[[https://github.com/Ladicle/hydra-posframe][This package]] is a hydra extension which shows hydra hints on posframe.
+#+begin_src elisp
+(package! hydra-posframe
+  :recipe (:host github :repo "Ladicle/hydra-posframe"))
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! hydra-posframe
+  :after hydra
+  :config
+  (hydra-posframe-mode)
+  (setq hydra-posframe-border-width 1
+        hydra-posframe-poshandler #'posframe-poshandler-frame-bottom-center
+        hydra-posframe-parameters `((left-fringe . 15)
+                                    (right-fringe . 15)))
+
+  (custom-set-faces!
+    '(hydra-posframe-face :inherit unspecified)
+    '(hydra-posframe-border-face :background "gray30")))
+#+end_src
+
+*** Hydra major mode
+
+[[https://github.com/jerrypnz/major-mode-hydra.el][This package]] allows to create major-mode specific hydras which are bound to the same key.
+It also provides pretty-hydra which allows to create hydras with automatically formatted columns.
+#+begin_src elisp
+(package! major-mode-hydra)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! major-mode-hydra
+  :after hydra
+  :config
+  (setq major-mode-hydra-separator "═"
+        major-mode-hydra-title-generator #'+hydra/major-mode-title-generator)
+
+  ;; Title generator for pretty hydras.
+  (defun +hydra/title-generator--generic (title &optional icon offset)
+    (let ((prefix (when offset (s-repeat offset " ")))
+          (icon (when icon (concat icon " "))))
+      (s-concat prefix icon title)))
+
+  (defun +hydra/title-generator (title &optional icon offset)
+    (+hydra/title-generator--generic
+     title
+     (all-the-icons-faicon icon :v-adjust 0.05)
+     offset))
+
+  (defun +hydra/major-mode-title-generator (mode &optional offset)
+    (+hydra/title-generator--generic
+     (s-concat (s-capitalized-words (s-chop-suffix "-mode" (symbol-name mode))) " commands")
+     (all-the-icons-icon-for-mode mode :v-adjust 0.05)
+     offset)))
+#+end_src
+
+Add a global hydra to change the font-size interactively.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/font-size
+    (:separator "═")
+    ("Font size"
+     (("+" doom/increase-font-size "increase")
+      ("-" doom/decrease-font-size "decrease")
+      ("0" doom/reset-font-size "reset")))))
+#+end_src
+
+Add a global hydra for window management.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/window-management
+    (:separator "═" :title (+hydra/title-generator "Window Management" "windows" 47))
+    ("Switch"
+     (("h" evil-window-left "left")
+      ("j" evil-window-down "down")
+      ("k" evil-window-up "up")
+      ("l" evil-window-right "right"))
+     "Swap"
+     (("H" +evil/window-move-left "left")
+      ("J" +evil/window-move-down "down")
+      ("K" +evil/window-move-up "up")
+      ("L" +evil/window-move-right "right"))
+     "Arrange"
+     (("n" evil-window-new "new")
+      ("d" +workspace/close-window-or-workspace "delete")
+      ("s" evil-window-split "split horiz.")
+      ("v" evil-window-vsplit "split vert.")
+      ("u" winner-undo "undo"))
+     "Focus"
+     (("o" doom/window-enlargen "enlargen")
+      ("mm" doom/window-maximize-buffer "maximize")
+      ("ms" doom/window-maximize-horizontally "maximize horiz.")
+      ("mv" doom/window-maximize-vertically "maximize vert."))
+     "Layout"
+     (("r" evil-window-rotate-downwards "rotate down")
+      ("R" evil-window-rotate-upwards "rotate up")
+      ("\\" rotate-layout "rotate layout"))
+     "Resize"
+     (("<" evil-window-decrease-width "-width")
+      (">" evil-window-increase-width "+width")
+      ("-" evil-window-decrease-height "-height")
+      ("+" evil-window-increase-height "+height")
+      ("=" balance-windows "balance"))
+     "Buffer"
+     (("p" previous-buffer "prev")
+      ("n" next-buffer "next")
+      ("b" +ivy/switch-workspace-buffer "switch")
+      ("f" counsel-find-file "find file")))))
+#+end_src
+
+Add a global hydra for buffer management.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (pretty-hydra-define +hydra/buffer-management
+    (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 34))
+    ("Tab"
+     (("h" +tabs:previous-or-goto "prev")
+      ("l" +tabs:next-or-goto "next")
+      ("H" centaur-tabs-move-current-tab-to-left "move left")
+      ("L" centaur-tabs-move-current-tab-to-right "move right")
+      ("j" centaur-tabs-forward-group "next group")
+      ("k" centaur-tabs-backward-group "prev group")
+      ("g" centaur-tabs-counsel-switch-group "switch group"))
+     "Switch"
+     (("b" +ivy/switch-workspace-buffer "switch")
+      ("B" +ivy/switch-buffer "switch all")
+      ("n" evil-buffer-new "new")
+      ("x" doom/open-scratch-buffer "scratch")
+      ("f" counsel-find-file "find file"))
+     "Region"
+     (("-" doom/toggle-narrow-buffer "narrow" :toggle (buffer-narrowed-p))
+      ;; TODO: +evil:narrow-buffer : How to specify arg BANG? <!>??
+      ("+" doom/narrow-buffer-indirectly "narrow indirect"))
+     "Save"
+     (("s" basic-save-buffer "save")
+      ("S" evil-write-all "save all")
+      ("u" doom/sudo-save-buffer "sudo save")
+      ("r" revert-buffer "revert"))
+     "Kill"
+     (("z" bury-buffer "bury")
+      ("d" kill-current-buffer "kill")
+      ("D" doom/kill-other-buffers "kill other")
+      ("C-d" doom/kill-all-buffers "kill all")))))
+#+end_src
+
+Bind global hydras.
+#+begin_src elisp :tangle yes
+(after! pretty-hydra
+  (map! :leader
+        :desc "Adjust font size"   "-"   #'+hydra/font-size/body
+
+        :prefix "w"
+        :desc "Window management"  "SPC" #'+hydra/window-management/body
+        :prefix "b"
+        :desc "Buffer management"  "SPC" #'+hydra/buffer-management/body
+))
+#+end_src
+
 *** Magit delta
 
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
@@ -4180,11 +5001,429 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
   (magit-delta-mode))
 #+end_src
 
-*** Pretty hydra
+*** Org fancy priorities
 
-[[https://github.com/jerrypnz/major-mode-hydra.el#pretty-hydra][This package]] provides a macro for creating hydras with automatically formatted columns.
+Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
 #+begin_src elisp
-(package! pretty-hydra)
+(package! org-fancy-priorities :disable t)
+#+end_src
+
+#+begin_src elisp :tangle yes
+;; (after! org-fancy-priorities
+;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+#+end_src
+
+*** Org Sidebar
+
+[[https://github.com/alphapapa/org-sidebar][This package]] provides a helpful sidebar for Org mode.
+#+begin_src elisp
+(package! org-sidebar)
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-sidebar
+  :config
+  ;; Make org-ql-view windows not selectable by 'other-window'
+  (setq org-ql-view-no-other-window t))
+#+end_src
+
+**** Tree
+
+Make tree sidebar buffers hidden.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (cl-defun org-sidebar-tree-view-buffer (&key (buffer (current-buffer)) &allow-other-keys)
+    "Return a tree-view buffer for BUFFER."
+    (-let* ((buffer-name (format " *Tree: %s*" (buffer-name buffer))) ; NOTE: EDIT
+            ((min max) (with-current-buffer buffer
+                         (list (point-min) (point-max))))
+            (existing-buffer (get-buffer buffer-name))
+            tree-buffer)
+      (when existing-buffer
+        ;; Buffer with name already exists.
+        (if (buffer-base-buffer existing-buffer)
+            ;; Buffer is indirect: kill it so we can remake it.
+            (kill-buffer existing-buffer)
+          ;; Buffer is not indirect: something is probably wrong, so warn.
+          (warn "Existing tree buffer that is not indirect: %s" existing-buffer)))
+      (setf tree-buffer (clone-indirect-buffer buffer-name nil 'norecord))
+      (with-current-buffer tree-buffer
+        (use-local-map org-sidebar-tree-map)
+        (setf mode-line-format nil
+              header-line-format (concat "Tree: " (buffer-name buffer)))
+        (toggle-truncate-lines 1)
+        (centaur-tabs-local-mode 1) ; NOTE: EDIT
+        (save-excursion
+          (goto-char min)
+          (if (org-before-first-heading-p)
+              (progn
+                ;; Narrow buffer to exclude pre-heading content.
+                (outline-next-heading)
+                (setf min (point)))
+            ;; Tree view only shows one subtree: expand its branches.
+            (outline-show-branches)))
+        (narrow-to-region min max)
+        (save-excursion
+          ;; Hide visible entry bodies.
+          (goto-char (point-min))
+          (when (org-before-first-heading-p)
+            (outline-next-visible-heading 1))
+          (cl-loop do (outline-hide-body)
+                   while (outline-next-visible-heading 1)))
+        (unless (org-before-first-heading-p)
+          (outline-back-to-heading)))
+      tree-buffer)))
+#+end_src
+
+Custom toggle function to autofocus the tree sidebar.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  ;;
+  (defun +psydev/org-sidebar-tree-toggle ()
+    (interactive)
+    (org-sidebar-tree-toggle)
+    (let* ((tree-window (--first (window-parameter it 'org-sidebar-tree-window)
+                                 (window-at-side-list nil org-sidebar-tree-side))))
+      (when tree-window (select-window tree-window)))))
+#+end_src
+
+**** Sidebar
+
+Make sure truncate line is enabled instead of toggled.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (remove-hook 'org-ql-sidebar-buffer-setup-hook #'toggle-truncate-lines)
+  (add-hook! 'org-ql-sidebar-buffer-setup-hook
+    (defun psydev/org-sidebar-buffer-setup ()
+      (toggle-truncate-lines 1))))
+#+end_src
+
+Workaround issue displaying sidebar buffers.
+#+begin_src elisp :tangle yes
+;; (after! org-sidebar
+;;   ;; NOTE: This was NOT happening when I started using sidebar, and suddenly started to happen
+;;   ;; while I was working on other emacs stuff. Need to identify the cause for  this.
+;;   (add-hook! 'org-sidebar-window-after-display-hook
+;;     (defun psydev/org-sidebar-fix-display ()
+;;       (force-window-update (selected-window))
+;;       (redisplay))))
+#+end_src
+
+Allow regular org-agenda buffers to be present in sidebar.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (defun org-sidebar-refresh ()
+    "Refresh sidebar buffers.
+  Refreshes the current sidebar buffer and other associated sidebar
+  buffers."
+    (interactive)
+    (save-window-excursion
+      (let ((source-buffer org-sidebar-source-buffer)
+            (display-buffers (buffer-local-value 'org-sidebar-sidebar-buffers org-sidebar-source-buffer)))
+        (--each display-buffers
+          (when (buffer-live-p it)
+            (with-current-buffer it
+              (let ((old-buffer-name (buffer-name)))
+                (cond (org-ql-view-buffers-files (org-ql-view-refresh)) ; NOTE: EDIT
+                      (t (org-agenda-redo)))
+                ;; Restore buffer name (because `org-ql-view-refresh' changes it).
+                (rename-buffer old-buffer-name)
+                (setf org-sidebar-source-buffer source-buffer) ; NOTE: EDIT
+                (org-sidebar--prepare-buffer))))))))
+
+  (defun org-sidebar--prepare-buffer ()
+    "Prepare current buffer as a sidebar buffer.
+  This is not used for `org-sidebar-tree' buffers."
+    (let ((inhibit-read-only t))
+      (when org-ql-view-title ; NOTE: EDIT
+        (setf header-line-format (org-ql-view--header-line-format :title org-ql-view-title)))
+      (use-local-map org-sidebar-map)
+      ;; (goto-char (point-min)) ; TODO Gives initial focus but resets during refresh also...
+      (run-hook-with-args 'org-ql-sidebar-buffer-setup-hook))))
+#+end_src
+
+Improve sidebar window behavior: dedicated, fixed-size, ...
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (cl-defun org-sidebar--display-buffers (buffers &key window-parameters)
+    "Display BUFFERS in the sidebar.
+  WINDOW-PARAMETERS are applied to each window that is displayed."
+    (declare (indent defun))
+    (when-let* ((side-windows (window-at-side-list nil org-sidebar-side))
+                (sidebar-buffers (--select (buffer-local-value 'org-sidebar-source-buffer it)
+                                           (mapcar #'window-buffer side-windows)))
+                (sidebar-windows (mapcar #'get-buffer-window sidebar-buffers)))
+      ;; Delete existing org-sidebar windows on our side.
+      (mapc #'delete-window sidebar-windows))
+    (let ((slot 0)
+          (window-parameters (append (list (cons 'no-delete-other-windows nil))
+                                     window-parameters)))
+      (--each buffers
+        (when-let* ((window (+popup-display-buffer-stacked-side-window-fn ; NOTE: EDIT
+                             it
+                             (list (cons 'side org-sidebar-side)
+                                   (cons 'slot slot)
+                                   (cons 'dedicated t) ; NOTE: EDIT
+                                   (cons 'window-width .20) ; NOTE: EDIT
+                                   (cons 'preserve-size (cons t nil)) ; NOTE: EDIT
+                                   (cons 'window-parameters window-parameters)))))
+          (with-selected-window window
+            (run-hooks 'org-sidebar-window-after-display-hook))
+          (if (eq slot 0)
+              (select-window window)) ; NOTE: EDIT (goto-char call no longer focuses window for some reason)
+          (cl-incf slot))))))
+#+end_src
+
+Improve toggling behavior:
+- Do not toggle off if the given list of function differs from the current sidebar
+- Allow changing view from the sidebar buffer
+- Allow toggling off from the sidebar buffer
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  (defvar-local org-sidebar-source-fns nil
+    "Org sidebar functions that this sidebar buffer was generated from.")
+
+  (defun org-sidebar (fns)
+    "Display the Org Sidebar.
+Interactively, display the sidebars configured in
+`org-sidebar-default-fns'.
+FNS should be one or a list of functions which return a buffer to
+be displayed in the sidebar.  Each one is called with the current
+buffer as its argument."
+    (interactive (list org-sidebar-default-fns))
+    (when org-sidebar-sidebar-buffers
+      ;; Kill existing sidebar buffers for the source buffer.
+      (mapc #'kill-buffer org-sidebar-sidebar-buffers)
+      (setf org-sidebar-sidebar-buffers nil))
+    (let* ((source-buffer (current-buffer))
+           (fns (cl-etypecase fns
+                  (list fns)
+                  (atom (list fns))))
+           (display-buffers (cl-loop for fn in fns
+                                     collect (funcall fn source-buffer))))
+      (when display-buffers
+        (setf org-sidebar-sidebar-buffers display-buffers)
+        (--each display-buffers
+          (with-current-buffer it
+            (org-sidebar--prepare-buffer)
+            (setf org-sidebar-source-fns fns) ; NOTE: EDIT
+            (setf org-sidebar-source-buffer source-buffer)))
+        (org-sidebar--display-buffers display-buffers
+          :window-parameters (list (cons 'org-sidebar-window t)
+                                   (cons 'org-sidebar-source-buffer-point-min (point-min)))))))
+
+  (defun org-sidebar-toggle (&optional fns)
+    "Toggle default sidebar window.
+If it is open and shows the view for the current buffer, delete
+it.  Otherwise, show it for current buffer."
+    (interactive)
+    (let* ((fns (or fns org-sidebar-default-fns)) ; NOTE: EDIT
+           (source-buffer (current-buffer))
+           (point-min (point-min))
+           (sidebar-window (--first (window-parameter it 'org-sidebar-window)
+                                    (window-at-side-list nil org-sidebar-side))))
+      ;; NOTE: EDIT: if the sidebar window is selected, use the sidebar source-buffer instead.
+      (if (eq sidebar-window (selected-window))
+          (setq source-buffer
+                (buffer-local-value 'org-sidebar-source-buffer (window-buffer sidebar-window))
+                point-min (with-current-buffer source-buffer (point-min))))
+      ;; We only compare the first sidebar window, but that should be good enough.
+      (if (and sidebar-window
+               (with-current-buffer (window-buffer sidebar-window)
+                 ;; NOTE: EDIT: Compare source functions to avoid toggling off when requesting another view.
+                 (and (eq fns (buffer-local-value 'org-sidebar-source-fns (current-buffer)))
+                      (eq org-sidebar-source-buffer source-buffer)
+                      ;; Compare point-min to detect narrowed buffers.
+                      (eq (window-parameter sidebar-window 'org-sidebar-source-buffer-point-min)
+                          point-min))))
+          ;; Sidebar is for current buffer: delete sidebar windows.
+          (mapc #'delete-window (--select (window-parameter it 'org-sidebar-window)
+                                          (window-at-side-list nil org-sidebar-side)))
+        ;; Sidebar is for a different buffer: show sidebar for current buffer.
+        (with-current-buffer source-buffer ; NOTE: EDIT
+          (org-sidebar fns))))))
+#+end_src
+
+**** Bindings
+
+Integrate with doom/evil bindings.
+#+begin_src elisp :tangle yes
+(after! org-sidebar
+  ;; Leader bindings
+  (map! :leader :prefix "n"
+    :desc "Org task sidebar"  "t" #'org-sidebar-toggle
+    :desc "Org tree sidebar"  "T" #'+psydev/org-sidebar-tree-toggle)
+
+  ;; Configure bindings to override default org/evil bindings
+  (evil-make-overriding-map org-sidebar-tree-map 'normal)
+  (map! :map org-sidebar-tree-map
+        :n [return]        #'org-sidebar-tree-jump
+        :n "RET"           #'org-sidebar-tree-jump
+        :n [tab]           #'org-sidebar-tree-cycle
+        :n "TAB"           #'org-sidebar-tree-cycle
+        :n [S-tab]         #'org-sidebar-tree-cycle-global
+        :n [S-iso-lefttab] #'org-sidebar-tree-cycle-global
+        :n [backtab]       #'org-sidebar-tree-cycle-global
+
+        :m "q"             #'org-sidebar-tree-toggle)
+  (add-hook! 'org-sidebar-window-after-display-hook #'evil-normalize-keymaps))
+#+end_src
+
+*** Org QL
+
+[[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
+#+begin_src elisp
+(package! org-ql
+  :recipe (:host github :repo "sgleizes/org-ql"))
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-ql
+  :config
+  ;; Do not consider org QL Views as popups and use the same window behavior than agenda.
+  (set-popup-rule! "^\\*Org QL View:" :ignore 't)
+  (setq org-ql-view-display-buffer-action '(display-buffer-same-window))
+
+  ;; This mechanism for selecting org views is not used. Use the org-view hydra instead.
+  (setq org-ql-views nil)
+
+  ;; Override magit's default of `display-buffer-below-selected` and restore original value.
+  ;; It causes `org-ql-view-dispatch` to show in a horizontal split.
+  (setq transient-display-buffer-action
+        '(display-buffer-in-side-window
+          (side . bottom)
+          (dedicated . t)
+          (inhibit-same-window . t)
+          (window-parameters (no-other-window . t)))))
+#+end_src
+
+Customize bindings and integrate with doom/evil.
+#+begin_src elisp :tangle yes
+(after! org-ql
+  ;; Configure bindings to override default evil bindings
+  (evil-make-overriding-map org-ql-view-map 'normal)
+  (map! :map org-ql-view-map
+        :g "q" #'org-agenda-quit
+        :g "r" #'org-ql-view-refresh
+        :g "C-r" #'org-ql-view-dispatch
+        :g "C-s" #'org-ql-view-save)
+  (evil-make-overriding-map org-ql-view-list-map 'normal)
+  (map! :map org-ql-view-list-map
+        :n [return]     #'org-ql-view-switch
+        :n "RET"        #'org-ql-view-switch
+        :n "c"          #'org-ql-view-customize
+        :n "q"          #'bury-buffer))
+#+end_src
+
+*** Org super agenda
+
+[[https://github.com/alphapapa/org-super-agenda][This package]] groups agenda items into sections, rather than having them all in one big list.
+#+begin_src elisp
+(package! org-super-agenda)
+#+end_src
+
+Configuration and integration with doom.
+#+begin_src elisp :tangle yes
+(use-package! org-super-agenda
+  :after org
+  :config
+  (org-super-agenda-mode)
+  (setq org-super-agenda-hide-empty-groups 't
+        org-super-agenda-keep-order nil) ; Perf-hungry, enable if noticing sort issues
+
+  ;; Default super-groups.
+  (setq org-super-agenda-groups
+        '((:auto-outline-path t :order 99))))
+#+end_src
+
+Add selector to org-super-agenda.
+TODO: Contribute this. Now unused though.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (org-super-agenda--defgroup outline-path-regexp
+    "Group items whose outline path match any of the given regular expressions.
+  Argument may be a string or list of strings, each of which should
+  be a regular expression.  You'll probably want to override the
+  section name for this group."
+    :section-name (concat "Outline paths matching regexps: "
+                          (s-join " OR "
+                                  (--map (s-wrap it "\"")
+                                         args)))
+    :let* ((case-fold-search t))
+    :test (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
+            (let ((outline-path (s-join "/" (org-get-outline-path))))
+              (cl-loop for regexp in args
+                       thereis (string-match-p regexp outline-path))))))
+#+end_src
+
+Integrate with outline-minor-mode to allow folding agenda days and groups.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (defvar org-super-agenda-auto-fold-groups '())
+
+  ;; Function borrowed from new fork of origami.el https://github.com/emacs-origami/origami.el/blob/master/origami.el#L1024
+  (defun outline-auto-agenda (pattern-or-patterns function)
+    "Search buffer and apply the FUNCTION on each line.
+PATTERN-OR-PATTERNS is a string or a list of strings to search"
+    (interactive)
+    (let ((patterns (if (listp pattern-or-patterns) pattern-or-patterns (list pattern-or-patterns))))
+      (save-excursion
+        (dolist (pattern patterns)
+          (goto-char (point-min))
+          (while (re-search-forward pattern nil t 1)
+            (unless (outline-invisible-p)
+              (funcall function)))))))
+
+  (defun outline-agenda-setup ()
+    (setq org-super-agenda-header-prefix "○ ") ; Needed for outline mode to recognize headings
+    (setq-local outline-regexp "\\([A-Za-z]+\\|⋯\\|○ \\)")
+    (setq-local outline-level #'outline-level)
+    (setq-local outline-blank-line t)
+    (setq-local outline-heading-alist
+                `(("Monday" . 2)
+                  ("Tuesday" . 2)
+                  ("Wednesday" . 2)
+                  ("Thursday" . 2)
+                  ("Friday" . 2)
+                  ("Saturday" . 2)
+                  ("Sunday" . 2)
+                  ("⋯" . 2)
+                  (,org-super-agenda-header-prefix . 3)))
+    (outline-auto-agenda org-super-agenda-auto-fold-groups #'outline-hide-subtree))
+
+  (add-hook! 'org-agenda-mode-hook #'outline-minor-mode)
+  (add-hook! 'org-agenda-finalize-hook #'outline-agenda-setup))
+#+end_src
+
+Make outline ellipsis the same than org ellipsis.
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (defvar outline-display-table (make-display-table))
+  (set-display-table-slot outline-display-table 'selective-display
+                          (vector " " (make-glyph-code ?▾ 'escape-glyph)))
+  (defun set-outline-display-table ()
+    (setf buffer-display-table outline-display-table))
+
+  (add-hook 'outline-mode-hook 'set-outline-display-table)
+  (add-hook 'outline-minor-mode-hook 'set-outline-display-table))
+#+end_src
+
+Remap all bindings from org-agenda-mode-map which are not overridden by evil.
+- https://github.com/alphapapa/org-super-agenda/issues/50
+- https://github.com/noctuid/evil-guide#prevent-text-property-maps-from-overriding-evil
+#+begin_src elisp :tangle yes
+(after! org-super-agenda
+  (setq org-super-agenda-header-map (make-sparse-keymap))
+  (map! :map org-super-agenda-header-map
+        "q"             #'org-agenda-quit
+        "r"             #'org-agenda-redo
+
+        :map evil-org-agenda-mode-map
+        :m "TAB"           #'outline-toggle-children
+        :m "<tab>"         #'outline-toggle-children
+        :m "<backtab>"     #'outline-hide-body))
 #+end_src
 
 *** Rainbow delimiters
@@ -4212,50 +5451,51 @@ FIXME: Breaks log view for a particular file with patch (^L characters on commit
 #+end_src
 
 Define a global mode for scroll-on-jump and bind to relevant commands.
+Disabled for now, scrolling does not work nicely in org-mode (or when there is folded content in general)
 #+begin_src elisp :tangle yes
-(use-package! scroll-on-jump
-  :after evil
-  :hook (doom-first-file . scroll-on-jump-mode)
-  :config
-  (setq scroll-on-jump-duration 0.4)
+;; (use-package! scroll-on-jump
+;;   :after evil
+;;   :hook (doom-first-file . scroll-on-jump-mode)
+;;   :config
+;;   (setq scroll-on-jump-duration 0.4)
 
-  ;; XXX: For some really obscure reason, the order in which these functions
-  ;; are declared defines which one will actually work. Currently turning off
-  ;; doesn't work, unless this code is re-evaluated from the emacs instance.
-  ;; If the turn-off function is declared after the turn-on, then turning on
-  ;; will similarly not work. Someone help me understand this plz.
-  (defun scroll-on-jump--turn-off ()
-    (scroll-on-jump-advice-remove set-mark-command)
-    (scroll-on-jump-advice-remove goto-last-change)
-    (scroll-on-jump-advice-remove goto-last-change-reverse)
-    (scroll-on-jump-advice-remove evil-undo)
-    (scroll-on-jump-advice-remove evil-redo)
-    ;; (scroll-on-jump-advice-remove evil-goto-mark)
-    (scroll-on-jump-advice-remove evil-goto-mark-line)
-    (scroll-on-jump-advice-remove evil-ex-search-next)
-    (scroll-on-jump-advice-remove evil-ex-search-previous)
-    (scroll-on-jump-advice-remove evil-ex-search-forward)
-    (scroll-on-jump-advice-remove evil-ex-search-backward))
-  (defun scroll-on-jump--turn-on ()
-    (scroll-on-jump-advice-add set-mark-command)
-    (scroll-on-jump-advice-add goto-last-change)
-    (scroll-on-jump-advice-add goto-last-change-reverse)
-    (scroll-on-jump-advice-add evil-undo)
-    (scroll-on-jump-advice-add evil-redo)
-    ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
-    (scroll-on-jump-advice-add evil-goto-mark-line)
-    (scroll-on-jump-advice-add evil-ex-search-next)
-    (scroll-on-jump-advice-add evil-ex-search-previous)
-    (scroll-on-jump-advice-add evil-ex-search-forward)
-    (scroll-on-jump-advice-add evil-ex-search-backward))
+;;   ;; XXX: For some really obscure reason, the order in which these functions
+;;   ;; are declared defines which one will actually work. Currently turning off
+;;   ;; doesn't work, unless this code is re-evaluated from the emacs instance.
+;;   ;; If the turn-off function is declared after the turn-on, then turning on
+;;   ;; will similarly not work. Someone help me understand this plz.
+;;   (defun scroll-on-jump--turn-off ()
+;;     (scroll-on-jump-advice-remove set-mark-command)
+;;     (scroll-on-jump-advice-remove goto-last-change)
+;;     (scroll-on-jump-advice-remove goto-last-change-reverse)
+;;     ;; (scroll-on-jump-advice-remove evil-undo)
+;;     ;; (scroll-on-jump-advice-remove evil-redo)
+;;     ;; (scroll-on-jump-advice-remove evil-goto-mark)
+;;     (scroll-on-jump-advice-remove evil-goto-mark-line)
+;;     (scroll-on-jump-advice-remove evil-ex-search-next)
+;;     (scroll-on-jump-advice-remove evil-ex-search-previous)
+;;     (scroll-on-jump-advice-remove evil-ex-search-forward)
+;;     (scroll-on-jump-advice-remove evil-ex-search-backward))
+;;   (defun scroll-on-jump--turn-on ()
+;;     (scroll-on-jump-advice-add set-mark-command)
+;;     (scroll-on-jump-advice-add goto-last-change)
+;;     (scroll-on-jump-advice-add goto-last-change-reverse)
+;;     ;; (scroll-on-jump-advice-add evil-undo)
+;;     ;; (scroll-on-jump-advice-add evil-redo)
+;;     ;; (scroll-on-jump-advice-add evil-goto-mark) ; Also triggers on paste - undesired
+;;     (scroll-on-jump-advice-add evil-goto-mark-line)
+;;     (scroll-on-jump-advice-add evil-ex-search-next)
+;;     (scroll-on-jump-advice-add evil-ex-search-previous)
+;;     (scroll-on-jump-advice-add evil-ex-search-forward)
+;;     (scroll-on-jump-advice-add evil-ex-search-backward))
 
-  (define-minor-mode scroll-on-jump-mode
-    "Minor-mode to animate scroll and recenter when the point jumps."
-    :group 'scroll-on-jump
-    :global t
-    (if scroll-on-jump-mode
-        (scroll-on-jump--turn-on)
-      (scroll-on-jump--turn-off))))
+;;   (define-minor-mode scroll-on-jump-mode
+;;     "Minor-mode to animate scroll and recenter when the point jumps."
+;;     :group 'scroll-on-jump
+;;     :global t
+;;     (if scroll-on-jump-mode
+;;         (scroll-on-jump--turn-on)
+;;       (scroll-on-jump--turn-off))))
 #+end_src
 
 *** Systemd
@@ -4309,7 +5549,7 @@ Disable font-lock mode in tldr-mode buffers.
 
 [[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
 #+begin_src elisp
-(package! xclip :pin "2951c6b62b")
+(package! xclip :pin "ef2ad92f31")
 #+end_src
 
 #+begin_src elisp :tangle yes
@@ -4319,7 +5559,7 @@ Disable font-lock mode in tldr-mode buffers.
     ;; xsel, pb{copy,paste}, wl-copy, termux-clipboard-get, or getclip (cygwin);
     ;; depending on what is available.
     (and (require 'xclip nil t)
-         (xclip-mode +1))))
+         (with-demoted-errors "%s" (xclip-mode +1)))))
 #+end_src
 
 ** Language packages
