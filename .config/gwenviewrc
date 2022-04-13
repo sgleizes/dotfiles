@@ -1,6 +1,7 @@
 [General]
 JPEGQuality=10612
 LastUsedVersion=210800
+SideBarPage=folders
 ViewBackgroundValue=27
 
 [ImageView]
@@ -14,7 +15,6 @@ PrintHeight=15
 
 [SideBar]
 IsVisible BrowseMode=false
-IsVisible ViewMode=true
 
 [ThumbnailView]
-ThumbnailSize=216
+ThumbnailSize=260
