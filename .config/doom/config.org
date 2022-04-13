@@ -305,7 +305,7 @@ treemacs                      ; a project drawer, like neotree but cooler
 unicode                       ; extended unicode support for various languages
 vc-gutter                     ; vcs diff in the fringe
 vi-tilde-fringe               ; fringe tildes to mark beyond EOB
-(window-select +numbers)      ; visually switch windows
+window-select                 ; visually switch windows
 workspaces                    ; tab emulation, persistence & separate workspaces
 ;;zen                         ; distraction-free coding or writing
 #+end_src
@@ -335,7 +335,7 @@ snippets                      ; my elves. They type so I don't have to
 (dired +icons)                ; making dired pretty [functional]
 electric                      ; smarter, keyword-based electric-indent
 (ibuffer +icons)              ; interactive buffer management
-(undo +tree)                  ; persistent, smarter undo for your inevitable mistakes
+undo                          ; persistent, smarter undo for your inevitable mistakes
 vc                            ; version-control and Emacs, sitting in a tree
 #+end_src
 
@@ -503,7 +503,8 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
 
 Let's make graphical frames slightly transparent.
 #+begin_src elisp
-(add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+(add-to-list 'default-frame-alist
+             '(alpha . (90 . 90)))
 #+end_src
 
 Do not show encoding in the modeline if the value is the default =LF UTF-8=.
@@ -557,10 +558,11 @@ if in terminal."
     (remove-hook! doom-first-file #'centaur-tabs-mode)
     (remove-hook! doom-first-file #'beacon-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
-    (remove-hook! '(doom-dashboard-mode-hook
-                    term-mode-hook
-                    vterm-mode-hook)
-      #'centaur-tabs-local-mode)
+    ;; Since upgrading, the first-file hook seems to trigger before this hook, so I disable the hook manually...
+    (centaur-tabs-mode -1)
+    (beacon-mode -1)
+    (evil-goggles-mode -1)
+    ;; Disable flyspell hooks
     (remove-hook! '(org-mode-hook
                     markdown-mode-hook
                     TeX-mode-hook
@@ -1565,12 +1567,14 @@ See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-em
 *** Undo tree
 
 Customize undo-tree visualizer.
+Disabled since I've fallback to undo-fu as undo-tree is too unstable (and slow).
+See https://github.com/hlissner/doom-emacs/issues/1407
 #+begin_src elisp
-(use-package! undo-tree
-  :config
-  (setq undo-tree-visualizer-diff nil)
-  :bind (:map evil-normal-state-map
-         ("U" . undo-tree-visualize)))
+;; (use-package! undo-tree
+;;   :config
+;;   (setq undo-tree-visualizer-diff nil)
+;;   :bind (:map evil-normal-state-map
+;;          ("U" . undo-tree-visualize)))
 #+end_src
 
 ** General packages
@@ -1601,9 +1605,9 @@ Configure localization settings.
         calendar-time-display-form
         '(24-hours ":" minutes
                    (if time-zone " (") time-zone (if time-zone ")"))
-        calendar-latitude 49.61167
-        calendar-longitude 6.13
-        calendar-location-name "Luxembourg"))
+        calendar-latitude 44.81537
+        calendar-longitude 4.48834
+        calendar-location-name "Saint-Pierreville"))
 #+end_src
 
 **** Diary
@@ -1627,7 +1631,7 @@ Adapt sunrise/sunset diary sexp.
   "String of *local* time of sunrise and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     "🌅 %s (%s de jour)"
+     " %s (%s de jour)" ;🌅
      (if (car l)
          (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
        "Aucun Lever du Soleil")
@@ -1647,7 +1651,7 @@ Accurate to a few seconds."
   "String of *local* time of sunset and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     "🌅 %s"
+     " %s" ;🌅
      (if (cadr l)
          (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
        "Aucun Coucher du Soleil"))))
@@ -1713,9 +1717,9 @@ Customize solar/lunar phase names.
 #+begin_src elisp
 (after! calendar
   (setq lunar-phase-names
-        '("🌕 Nouvelle Lune"
+        '("🌑 Nouvelle Lune"
           "🌓 Premier Quartier de Lune"
-          "🌑 Pleine Lune"
+          "🌕 Pleine Lune"
           "🌗 Dernier Quartier de Lune")
         solar-n-hemi-seasons
         '("Equinoxe de Printemps"
@@ -1869,9 +1873,11 @@ and restrict buffer list to workspace buffers.
 (use-package! centaur-tabs
   :config
   (setq centaur-tabs-style "bar"
-        centaur-tabs-height 32
-        centaur-tabs-gray-out-icons nil
         centaur-tabs-set-bar 'under
+        centaur-tabs-height 32
+        centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons nil
+        centaur-tabs-show-new-tab-button t
         x-underline-at-descent-line t)
   (centaur-tabs-headline-match)
   ;; Override rules for grouping buffers.
@@ -1919,11 +1925,7 @@ visiting a file.  The current buffer is always included."
                            ((buffer-file-name b) b)
                            ((char-equal ?\  (aref (buffer-name b) 0)) nil)
                            ((buffer-live-p b) b)))
-                      (doom-buffer-list)))))
-  :hook
-  (doom-dashboard-mode . centaur-tabs-local-mode)
-  (term-mode . centaur-tabs-local-mode)
-  (vterm-mode . centaur-tabs-local-mode))
+                      (doom-buffer-list))))))
 #+end_src
 
 Provide additional bindings for centaur-tabs functions.
@@ -1932,36 +1934,37 @@ Provide additional bindings for centaur-tabs functions.
   ;; Remove previous which-key descriptions.
   ;; TODO: Encapsulate in a function and use a regex.
   ;; TODO Move these bindings in a more appropriate, doom-related section
-  (cl-delete-if
-   (lambda (x)
-     (member (car x)
-             '(("\\`M-SPC b k\\'")
-               ("\\`SPC b k\\'")
-               ("\\`M-SPC b K\\'")
-               ("\\`SPC b K\\'")
-               ("\\`M-SPC b l\\'")
-               ("\\`SPC b l\\'")
-               ("\\`M-SPC b O\\'")
-               ("\\`SPC b O\\'")
-               ("\\`M-SPC b n\\'")
-               ("\\`SPC b n\\'")
-               ("\\`M-SPC b N\\'")
-               ("\\`SPC b N\\'")
-               ("\\`M-SPC b p\\'")
-               ("\\`SPC b p\\'"))))
-   which-key-replacement-alist)
+  ;; XXX: Breaks emacs...
+  ;; (cl-delete-if
+  ;;  (lambda (x)
+  ;;    (member (car x)
+  ;;            '(("\\`M-SPC b k\\'")
+  ;;              ("\\`SPC b k\\'")
+  ;;              ("\\`M-SPC b K\\'")
+  ;;              ("\\`SPC b K\\'")
+  ;;              ("\\`M-SPC b l\\'")
+  ;;              ("\\`SPC b l\\'")
+  ;;              ("\\`M-SPC b O\\'")
+  ;;              ("\\`SPC b O\\'")
+  ;;              ("\\`M-SPC b n\\'")
+  ;;              ("\\`SPC b n\\'")
+  ;;              ("\\`M-SPC b N\\'")
+  ;;              ("\\`SPC b N\\'")
+  ;;              ("\\`M-SPC b p\\'")
+  ;;              ("\\`SPC b p\\'"))))
+  ;;  which-key-replacement-alist)
 
   (map!
    ;; Rebind buffer switching to tab switching commands.
-   :g [remap previous-buffer] #'centaur-tabs-backward
-   :g [remap next-buffer]     #'centaur-tabs-forward
+   :g [remap previous-buffer] #'+tabs:previous-or-goto
+   :g [remap next-buffer]     #'+tabs:next-or-goto
    ;; Tab manipulation
-   :g "C-<next>"    #'centaur-tabs-forward
-   :g "C-<prior>"   #'centaur-tabs-backward
+   :g "C-<next>"    #'+tabs:next-or-goto
+   :g "C-<prior>"   #'+tabs:previous-or-goto
    :g "C-M-<next>"  #'centaur-tabs-forward-group
    :g "C-M-<prior>" #'centaur-tabs-backward-group
-   :n "gt"          #'centaur-tabs-forward
-   :n "gb"          #'centaur-tabs-backward
+   :n "gt"          #'+tabs:next-or-goto
+   :n "gb"          #'+tabs:previous-or-goto
    :n "gT"          #'centaur-tabs-forward-group
    :n "gB"          #'centaur-tabs-backward-group
    :n "]B"          #'centaur-tabs-forward-group
@@ -1975,13 +1978,13 @@ Provide additional bindings for centaur-tabs functions.
    :desc "Next buffer group"     "j" #'centaur-tabs-forward-group
    :desc "Previous buffer group" "k" #'centaur-tabs-backward-group
    ;; Tab movement
-   :desc "Next tab"              "l" #'centaur-tabs-forward
-   :desc "Previous tab"          "h" #'centaur-tabs-backward
+   :desc "Next tab"              "l" #'+tabs:next-or-goto
+   :desc "Previous tab"          "h" #'+tabs:previous-or-goto
    :desc "Move tab right"        "L" #'centaur-tabs-move-current-tab-to-right
    :desc "Move tab left"         "H" #'centaur-tabs-move-current-tab-to-left
    ;; Other stuff
-   :desc "Kill all buffers"      "D" #'doom/kill-all-buffers
-   :desc "Kill other buffers"    "K" #'doom/kill-other-buffers
+   :desc "Kill other buffers"    "D" #'doom/kill-other-buffers
+   :desc "Kill all buffers"      "C-d" #'doom/kill-all-buffers
    :desc ""                      "O" nil
    :desc "New empty buffer"      "n" #'evil-buffer-new
    :desc "New empty buffer"      "N" nil
@@ -2925,15 +2928,24 @@ Configure bindings.
 
 Customize general evil options.
 #+begin_src elisp
-(setq evil-want-fine-undo t     ; By default while in insert all changes are one big blob. Be more granular
-      evil-move-cursor-back nil ; Leave cursor in place when exiting insert-mode
-      evil-cross-lines t)       ; Allow horizontal ops to move to the next
+(setq evil-want-fine-undo t          ; By default while in insert all changes are one big blob. Be more granular
+      evil-move-cursor-back nil      ; Leave cursor in place when exiting insert-mode
+      evil-cross-lines t             ; Allow horizontal ops to move to the next
+      evil-kill-on-visual-paste nil) ; Do not kill replaced text in visual mode
 #+end_src
 
 Enable evil-mode in the minibuffer. Or not.
 #+begin_src elisp
 ;; (use-package! evil-collection
 ;;   :custom (evil-collection-setup-minibuffer t))
+#+end_src
+
+Add a delete operator that does not add to kill-ring.
+#+begin_src elisp
+(after! evil
+  (evil-define-operator evil-black-hole-delete (beg end type)
+    (interactive "<R>")
+    (evil-delete beg end type ?_)))
 #+end_src
 
 Customize options for evil extensions.
@@ -3006,6 +3018,7 @@ Add the missing arrow-key variants of the window navigation commands.
 #+begin_src elisp
 (map!
  ;; Bind missing evil bindings
+ :m "<backspace>"     #'evil-black-hole-delete
  :nv "gX"             #'evil-exchange-cancel
  :nv "god"            #'evil-quick-diff
  :nv "goD"            #'evil-quick-diff-cancel
@@ -3026,14 +3039,21 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ ;; Rearrange some yank/paste commands
+ :n "M-p"             #'evil-paste-pop
+ :n "C-p"             #'+default/yank-pop
+ (:map evil-mc-key-map
+  :nv "C-p" nil
+  :nv "C-n" nil)
+ ;; Rebind multiple-cursors hydra
  (:when (featurep! :editor multiple-cursors)
   :prefix "g"
   :nv "z"             #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
- :nm "]w"             #'evil-window-next
- :nm "[w"             #'evil-window-prev
+ :m "]w"              #'evil-window-next
+ :m "[w"              #'evil-window-prev
  ;; Bind more motion/editing commands to hjkl
  :i "C-k"             #'evil-previous-line
  :i "C-j"             #'evil-next-line
@@ -3091,7 +3111,14 @@ Customize evil-goggles visual hints.
     '(evil-goggles-change-face :inherit custom-invalid)
     '(evil-goggles-delete-face :inherit custom-invalid))
   (setq evil-goggles-enable-delete t
-        evil-goggles-enable-change t))
+        evil-goggles-enable-change t)
+
+  ;; Add custom delete command to the list of commands
+  (pushnew! evil-goggles--commands
+            '(evil-black-hole-delete
+              :face evil-goggles-delete-face
+              :switch evil-goggles-enable-delete
+              :advice evil-goggles--generic-blocking-advice)))
 #+end_src
 
 *** Flyspell
@@ -3512,6 +3539,12 @@ This file shouldn't be byte compiled.
   (add-hook! doom-first-file #'beacon-mode))
 #+end_src
 
+*** Centaur tabs
+
+#+begin_src elisp
+(package! centaur-tabs :pin "cde3469d77")
+#+end_src
+
 *** Command logging
 
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
@@ -3697,6 +3730,7 @@ Add top level binding.
 Configure basic settings and setup goodies.
 #+begin_src elisp :tangle yes
 (use-package! elfeed-goodies
+  :after elfeed
   :config
   ;; Disable font-lock-mode in elfeed buffers (prevents faces from being applied)
   (setq font-lock-global-modes '(not elfeed-search-mode))
@@ -4309,7 +4343,7 @@ Disable font-lock mode in tldr-mode buffers.
 
 [[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
 #+begin_src elisp
-(package! xclip :pin "2951c6b62b")
+(package! xclip :pin "ef2ad92f31")
 #+end_src
 
 #+begin_src elisp :tangle yes
@@ -4319,7 +4353,7 @@ Disable font-lock mode in tldr-mode buffers.
     ;; xsel, pb{copy,paste}, wl-copy, termux-clipboard-get, or getclip (cygwin);
     ;; depending on what is available.
     (and (require 'xclip nil t)
-         (xclip-mode +1))))
+         (with-demoted-errors "%s" (xclip-mode +1)))))
 #+end_src
 
 ** Language packages
