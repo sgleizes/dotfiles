@@ -1,0 +1,4 @@
+[System]
+disableOpenCL=false
+useHighDpiPixmaps=false
+useHighDpiScaling=false
