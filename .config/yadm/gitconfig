@@ -46,3 +46,6 @@
 
 [filter "projectM-interface-state"]
   clean = "sed -E '/^(pos|playlistPos|playlistWindowSize|PlaylistFile)/d'"
+
+[filter "gpxsee-interface-state"]
+  clean = "sed -E '/\\s*\\[Window\\]/,/^\\s*$/d'"
