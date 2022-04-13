@@ -7,7 +7,7 @@ useLightMaskColour=false
 useReleaseToCapture=false
 
 [GuiConfig]
-captureMode=2
+captureMode=5
 includePointer=false
 quitAfterSaveCopyExport=true
 
