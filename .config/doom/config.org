@@ -1749,7 +1749,7 @@ Also fix perspective issues: killing twice the elfeed-search buffers was messing
             (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
             (kill-buffer b))))
       (mapc #'kill-buffer show-buffers))
-    (+workspace/delete "elfeed")))
+    (+workspace/delete +rss-workspace-name)))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
@@ -2519,7 +2519,8 @@ Configure dashboard.
 #+begin_src elisp
 (use-package! elfeed-dashboard
   :config
-  (setq elfeed-dashboard-file (concat org-directory "elfeed/dashboard.org"))
+  (setq elfeed-dashboard-file (concat org-directory "elfeed/dashboard.org")
+        +rss-workspace-name "elfeed")
   ;; Update feed counts on elfeed-quit
   ;; FIXME: Too slow, fallback to manual update
   ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
@@ -2535,7 +2536,7 @@ Add hooks to improve the usability and readability of the dashboard.
     "Open the elfeed dasboard."
     (interactive)
     (progn
-      (+workspace-switch "elfeed" t)
+      (+workspace-switch +rss-workspace-name t)
       (doom/switch-to-scratch-buffer)
       (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
       (with-current-buffer elfeed-dashboard--buf
