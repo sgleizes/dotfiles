@@ -3636,21 +3636,40 @@ Patch doom's org-insert-item variant to better respect blank settings.
       (pcase (org-element-type context)
         ;; Add a new list item (carrying over checkboxes if necessary)
         ((or `item `plain-list)
-         ;; Position determines where org-insert-todo-heading and org-insert-item
-         ;; insert the new list item.
-         (if (eq direction 'above)
-             (org-beginning-of-item)
-           (org-end-of-item)
-           (backward-char))
-         (org-insert-item (org-element-property :checkbox context))
-         ;; Handle edge case where current item is empty and bottom of list is
-         ;; flush against a new heading.
-         (when (and (eq direction 'below)
-                    (eq (org-element-property :contents-begin context)
-                        (org-element-property :contents-end context)))
-           (org-end-of-item)
-           (org-end-of-line)))
-
+         (let ((orig-point (point)))
+           ;; Position determines where org-insert-todo-heading and `org-insert-item'
+           ;; insert the new list item.
+           (if (eq direction 'above)
+               (org-beginning-of-item)
+             (end-of-line))
+           (let* ((ctx-item? (eq 'item (org-element-type context)))
+                  (ctx-cb (org-element-property :contents-begin context))
+                  ;; Hack to handle edge case where the point is at the
+                  ;; beginning of the first item
+                  (beginning-of-list? (and (not ctx-item?)
+                                           (= ctx-cb orig-point)))
+                  (item-context (if beginning-of-list?
+                                    (org-element-context)
+                                  context))
+                  ;; Horrible hack to handle edge case where the
+                  ;; line of the bullet is empty
+                  (ictx-cb (org-element-property :contents-begin item-context))
+                  (empty? (and (eq direction 'below)
+                               ;; in case contents-begin is nil, or contents-begin
+                               ;; equals the position end of the line, the item is
+                               ;; empty
+                               (or (not ictx-cb)
+                                   (= ictx-cb
+                                      (1+ (point))))))
+                  (pre-insert-point (point)))
+             ;; Insert dummy content, so that `org-insert-item'
+             ;; inserts content below this item
+             (when empty?
+               (insert " "))
+             (org-insert-item (org-element-property :checkbox context))
+             ;; Remove dummy content
+             (when empty?
+               (delete-region pre-insert-point (1+ pre-insert-point))))))
         ;; Add a new table row
         ((or `table `table-row)
          (pcase direction
@@ -3670,14 +3689,15 @@ Patch doom's org-insert-item variant to better respect blank settings.
            (pcase direction
              (`below
               (let (org-insert-heading-respect-content
-                    (blank? (org--blank-before-heading-p)))
+                    (blank? (org--blank-before-heading-p))) ; NOTE: EDIT
                 (goto-char (line-end-position))
                 (org-end-of-subtree)
-                ;; FIXME: Respect blank settings, at least when inserting headlines below.
+                ;; NOTE: BEGIN: Respect blank settings, at least when inserting headlines below.
                 (insert "\n")
                 (unless (and blank? (org-previous-line-empty-p))
                   (org-N-empty-lines-before-current (if blank? 1 0)))
                 (insert (make-string level ?*) " ")))
+             ;; NOTE: END
              (`above
               (org-back-to-heading)
               (insert (make-string level ?*) " ")
@@ -3735,6 +3755,7 @@ exist after each headings's drawers."
                        ;; Insert blank lines before entry content
                        (forward-line)
                        (while (and (org-at-planning-p)
+                                   (not (looking-at-p "\n"))
                                    (< (point) (point-max)))
                          ;; Skip planning lines
                          (forward-line))
@@ -4782,7 +4803,8 @@ Customize bindings.
         :m "C-<iso-lefttab>" #'org-ctrl-c-tab
 
         (:localleader
-         "SPC"               #'+org/fix-blank-lines
+         "f"                 #'+org/fix-blank-lines
+         "F"                 #'org-footnote-action
          "D"                 #'org-insert-drawer
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
@@ -5718,4 +5740,3 @@ Disable for now. I find it less clear than the default letters, and it also crea
 #+begin_src elisp
 (package! xclip :pin "ef2ad92f31")
 #+end_src
-
