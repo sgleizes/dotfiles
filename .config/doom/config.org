@@ -4021,6 +4021,23 @@ Configure time grid.
         "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
 #+end_src
 
+Customize org scheduled/deadline faces.
+#+begin_src elisp
+(after! org
+  (setq org-deadline-faces
+        '((1.001 . error)
+          (1.0 . org-imminent-deadline)
+          (0.5 . org-upcoming-deadline)
+          (0.0 . org-upcoming-distant-deadline)))
+  (custom-set-faces!
+    '(org-scheduled :foreground unspecified :inherit default)
+    '(org-scheduled-today :foreground "#ffffff")
+    '(org-scheduled-previously :foreground "#ffffff")
+    '(org-upcoming-distant-deadline :foreground unspecified :weight light :inherit org-warning)
+    '(org-upcoming-deadline :foreground unspecified :inherit org-warning)
+    '(org-imminent-deadline :weight semi-bold :inherit org-warning)))
+#+end_src
+
 Do not show blocked tasks as dimmed by default. With my configuration they are usually projects (subtasks not done).
 Also customize the face to be brighter, in case locally enabled.
 #+begin_src elisp
@@ -4567,14 +4584,14 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
-   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
-   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
-   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
-   :desc "Org planning"           "P" #'+psydev/org-view-planning
-   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
-   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
+   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
+   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
+   :desc "Org planning"           "p" #'+psydev/org-view-planning
+   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
+   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
+   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
    :desc "Org view"               "v" #'+hydra/org-view/body))
 #+end_src
 
@@ -4589,6 +4606,30 @@ Configure code editing behavior.
         org-src-window-setup 'current-window
         org-src-ask-before-returning-to-edit-buffer nil
         org-edit-src-persistent-message nil))
+#+end_src
+
+Fix ~evil-org-edit-src-exit~ remove evil-write to prevent error when no filename is provided.
+#+begin_src elisp
+(after! evil-org
+  (defun evil-org-edit-src-exit ()
+    "Fallback to `evil-edit-src-exit'."
+    (interactive)
+    (mapc #'call-interactively '(org-edit-src-exit))))
+#+end_src
+
+Fix ~evil-save-modified-and-close~ for org-mode temporary buffers.
+#+begin_src elisp
+(after! evil-org
+  (evil-define-command evil-save-modified-and-close (file &optional bang)
+    "Saves the current buffer and closes the window."
+    :repeat nil
+    (interactive "<f><!>")
+    (if (and (local-variable-p 'org-finish-function)
+             (fboundp org-finish-function))
+        (funcall org-finish-function)
+      (when (buffer-modified-p)
+        (evil-write nil nil nil file bang))
+      (evil-quit))))
 #+end_src
 
 *** TODO Chef
@@ -4675,30 +4716,6 @@ Customize popup rules for org-related buffers.
 #+end_src
 
 *** Bindings
-
-Fix ~evil-org-edit-src-exit~ remove evil-write to prevent error when no filename is provided.
-#+begin_src elisp
-(after! evil-org
-  (defun evil-org-edit-src-exit ()
-    "Fallback to `evil-edit-src-exit'."
-    (interactive)
-    (mapc #'call-interactively '(org-edit-src-exit))))
-#+end_src
-
-Fix ~evil-save-modified-and-close~ for org-mode temporary buffers.
-#+begin_src elisp
-(after! evil-org
-  (evil-define-command evil-save-modified-and-close (file &optional bang)
-    "Saves the current buffer and closes the window."
-    :repeat nil
-    (interactive "<f><!>")
-    (if (and (local-variable-p 'org-finish-function)
-             (fboundp org-finish-function))
-        (funcall org-finish-function)
-      (when (buffer-modified-p)
-        (evil-write nil nil nil file bang))
-      (evil-quit))))
-#+end_src
 
 Restore original TAB behavior to cycle through current subtree recursively.
 #+begin_src elisp
