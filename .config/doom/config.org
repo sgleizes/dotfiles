@@ -880,6 +880,15 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 
 ** Better jumper
 
+Add post-jump hook to show context around point in org-mode.
+#+begin_src elisp
+(after! better-jumper
+  (add-hook! 'better-jumper-post-jump-hook
+    (defun +psydev/org-better-jumper-visibility ()
+      (when (derived-mode-p 'org-mode)
+        (org-show-set-visibility 'lineage)))))
+#+end_src
+
 Bind better-jumper functions to a doom-like alternative.
 #+begin_src elisp
 (after! better-jumper
@@ -3581,6 +3590,7 @@ Add shortcut to man command.
 #+end_src
 
 ** Org
+*** General Settings
 
 Change the default org directory.
 #+begin_src elisp
@@ -3592,6 +3602,15 @@ Configure region behavior for org commands.
 (after! org
   (setq org-loop-over-headlines-in-active-region 'start-level
         org-agenda-loop-over-headlines-in-active-region 't))
+#+end_src
+
+Configure the context shown when revealing an org heading.
+#+begin_src elisp
+(setq org-show-context-detail
+      '((agenda . local)
+        (bookmark-jump . lineage)
+        (isearch . lineage)
+        (default . ancestors)))
 #+end_src
 
 *** Document Structure
@@ -3678,6 +3697,23 @@ Patch doom's org-insert-item variant to better respect blank settings.
                  (not (evil-emacs-state-p)))
         (evil-insert 1))))
   (advice-add #'+org--insert-item :override #'psydev/+org--insert-item))
+#+end_src
+
+Add functions to move to prev/next (potentially invisible) heading
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-previous-heading (arg)
+    "Move to the previous (potentially invisible) heading.
+With ARG, repeats or can move forward if negative."
+    (interactive "p")
+    (outline-previous-heading)
+    (org-show-set-visibility 'minimal))
+  (defun +psydev/org-next-heading (arg)
+    "Move to the next (potentially invisible) heading.
+With ARG, repeats or can move forward if negative."
+    (interactive "p")
+    (outline-next-heading)
+    (org-show-set-visibility 'minimal)))
 #+end_src
 
 Add helper function to help with blank line consistency.
@@ -4596,6 +4632,18 @@ Customize priorities faces.
           (69 . shadow))))
 #+end_src
 
+*** Integration
+
+Advise functions that jump to locations to show context around point in org-mode.
+#+begin_src elisp
+(after! (evil-vars undo-fu goto-chg)
+  (defadvice! +psydev/org-jump-visibility (&rest _)
+    :after (list evil-undo-function evil-redo-function
+                 #'goto-last-change)
+    (when (derived-mode-p 'org-mode)
+      (org-show-set-visibility 'lineage))))
+#+end_src
+
 *** Popups
 
 Customize popup rules for org-related buffers.
@@ -4676,6 +4724,15 @@ Customize bindings.
         :g "C-M-S-j"        #'org-shiftcontroldown
         :g "C-M-S-h"        #'org-shiftcontrolleft
         :g "C-M-S-l"        #'org-shiftcontrolright
+
+        ;; Bind custom implementation of prev/next fold commands for org-mode.
+        ;; FIXME: +fold/next stopped working in org-mode at some point in 2021...
+        :m "zj"             #'+psydev/org-next-heading
+        :m "zk"             #'+psydev/org-previous-heading
+
+        ;; Bind org-reveal to something more accessible and consistent.
+        :n "z <return>"     #'org-reveal
+        :n "z RET"          #'org-reveal
 
         ;; Move some bindings in org-mode-map so that it can be easily overridden in derived maps.
         :nv [tab]           nil
