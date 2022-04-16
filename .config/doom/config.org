@@ -3018,12 +3018,13 @@ Add goodies-specific bindings.
 #+end_src
 
 ** Evil
+*** Settings
 
 Customize general evil options.
 #+begin_src elisp
 (setq evil-want-fine-undo t          ; By default while in insert all changes are one big blob. Be more granular
       evil-move-cursor-back nil      ; Leave cursor in place when exiting insert-mode
-      evil-cross-lines t             ; Allow horizontal ops to move to the next
+      evil-cross-lines nil           ; Allow horizontal ops to move to the next line (or not)
       evil-kill-on-visual-paste nil) ; Do not kill replaced text in visual mode
 #+end_src
 
@@ -3041,11 +3042,32 @@ Add a delete operator that does not add to kill-ring.
     (evil-delete beg end type ?_)))
 #+end_src
 
+*** Extensions
+
 Customize options for evil extensions.
 #+begin_src elisp
 (after! evil-multiedit
   (setq evil-multiedit-follow-matches t))
 #+end_src
+
+Fix incompatibility between evil-mc and evil-move-cursor-back.
+TODO: Contribute this.
+#+begin_src elisp
+(after! evil-mc
+  (defun evil-mc-execute-evil-change ()
+    "Execute an `evil-change' command."
+    (let ((point (point)))
+      (evil-with-state normal
+        (unless (or (not evil-move-cursor-back) ; NOTE: EDIT
+                    (and region (< (evil-mc-get-region-mark region)
+                                   (evil-mc-get-region-point region)))
+                    (eq point (point-at-bol)))
+          (evil-forward-char 1 nil t))
+        (evil-mc-execute-with-region-or-macro 'evil-change)
+        (evil-maybe-remove-spaces nil)))))
+#+end_src
+
+*** Hydra
 
 Replace evil-mc bindings by a convenient hydra.
 #+begin_src elisp
@@ -3086,6 +3108,8 @@ Current pattern: %`evil-mc-pattern
     ("<escape>" nil :color blue)))
 #+end_src
 
+*** Bindings
+
 Provide more consistent navigation bindings and add missing evil bindings.
 Add the missing arrow-key variants of the window navigation commands.
 #+begin_src elisp
@@ -3096,6 +3120,10 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "god"            #'evil-quick-diff
  :nv "goD"            #'evil-quick-diff-cancel
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+ ;; Customize RET behavior for normal/insert modes
+ :i "<return>"        #'+default/newline
+ :i "S-<return>"      #'newline-and-indent ;; NOTE: Difference with default-indent-new-line is not clear
+ :n "S-<return>"      #'newline-and-indent
  ;; Rebind fold commands
  :m "TAB"             #'+fold/toggle
  :m "<tab>"           #'+fold/toggle
@@ -3120,8 +3148,7 @@ Add the missing arrow-key variants of the window navigation commands.
   :nv "C-n" nil)
  ;; Rebind multiple-cursors hydra
  (:when (featurep! :editor multiple-cursors)
-  :prefix "g"
-  :nv "z"             #'evil-mc-hydra/body)
+  :nv "M-z"             #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
@@ -3146,7 +3173,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :m "C-S-l"           #'evil-forward-WORD-end
  :g "M-k"             #'drag-stuff-up
  :g "M-j"             #'drag-stuff-down
- :g "M-h"             #'evil/shift-left
+ :g "M-h"             #'evil-shift-left
  :g "M-l"             #'evil-shift-right
  :g "M-K"             #'drag-stuff-up
  :g "M-J"             #'drag-stuff-down
