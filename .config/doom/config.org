@@ -193,8 +193,7 @@ clients, file templates and snippets.
       user-mail-address "stephane.gleizes@gmail.com")
 #+end_src
 
-** Doom configuration
-*** Modules
+** Doom Modules
 :PROPERTIES:
 :header-args:elisp: :tangle no
 :END:
@@ -206,7 +205,7 @@ also have flags applied to tweak their behavior.
 
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#modules][doom documentation]] and the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/modules.org][modules appendix]].
 
-**** Structure
+*** Structure
 
 #+name: init.el
 #+begin_src elisp :tangle "init.el" :noweb no-export :comments no
@@ -256,7 +255,7 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
        )
 #+end_src
 
-**** Configuration
+*** Configuration
 
 #+name: doom-config
 #+begin_src elisp
@@ -271,7 +270,7 @@ literate
 ;;layout                      ; auie,ctsrnm is the superior home row
 #+end_src
 
-**** Completion
+*** Completion
 
 #+name: doom-completion
 #+begin_src elisp
@@ -281,7 +280,7 @@ literate
 (ivy +prescient +icons +childframe)  ; a search engine for love and life
 #+end_src
 
-**** Interface
+*** Interface
 
 #+name: doom-ui
 #+begin_src elisp
@@ -310,7 +309,7 @@ workspaces                    ; tab emulation, persistence & separate workspaces
 ;;zen                         ; distraction-free coding or writing
 #+end_src
 
-**** Editor
+*** Editor
 
 #+name: doom-editor
 #+begin_src elisp
@@ -328,7 +327,7 @@ snippets                      ; my elves. They type so I don't have to
 ;;word-wrap                   ; soft wrapping with language-aware indent
 #+end_src
 
-**** Builtins
+*** Builtins
 
 #+name: doom-emacs
 #+begin_src elisp
@@ -339,7 +338,7 @@ undo                          ; persistent, smarter undo for your inevitable mis
 vc                            ; version-control and Emacs, sitting in a tree
 #+end_src
 
-**** Terminal
+*** Terminal
 
 #+name: doom-term
 #+begin_src elisp
@@ -349,7 +348,7 @@ vc                            ; version-control and Emacs, sitting in a tree
 vterm                         ; the best terminal emulation in Emacs
 #+end_src
 
-**** Checkers
+*** Checkers
 
 #+name: doom-checkers
 #+begin_src elisp
@@ -358,7 +357,7 @@ syntax                        ; tasing you for every semicolon you forget
 ;;grammar                     ; tasing grammar mistake every you make
 #+end_src
 
-**** Tools
+*** Tools
 
 #+name: doom-tools
 #+begin_src elisp
@@ -384,7 +383,7 @@ taskrunner                    ; taskrunner for all your projects
 ;;upload                      ; map local to remote projects via ssh/ftp
 #+end_src
 
-**** System
+*** System
 
 #+name: doom-os
 #+begin_src elisp
@@ -392,7 +391,7 @@ taskrunner                    ; taskrunner for all your projects
 ;;tty                         ; improve the terminal Emacs experience
 #+end_src
 
-**** Language support
+*** Language support
 
 We can be rather liberal with enabling support for languages as the associated
 packages/configuration are (usually) only loaded when first opening an
@@ -459,7 +458,7 @@ markdown                      ; writing docs for people to ignore
 yaml                          ; JSON, but readable
 #+end_src
 
-**** Applications
+*** Applications
 
 #+name: doom-email
 #+begin_src elisp
@@ -476,8 +475,8 @@ calendar
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
-*** Appearance
-**** Fonts
+** Appearance
+*** Fonts
 
 Doom exposes five (optional) variables for controlling fonts in Doom, they are:
 + doom-font
@@ -509,7 +508,7 @@ Add a global hydra to change the font-size interactively.
         "-"   #'+hydra/font-size/body))
 #+end_src
 
-**** Theme and modeline
+*** Theme and modeline
 
 #+begin_src elisp
 (setq doom-theme 'doom-tomorrow-night)
@@ -532,7 +531,7 @@ Do not show encoding in the modeline if the value is the default =LF UTF-8=.
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding)
 #+end_src
 
-**** Dashboard
+*** Dashboard
 
 Customize the splash image of the doom dashboard.
 #+begin_src elisp
@@ -549,7 +548,7 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
            '(lambda () (setq-local hl-line-range-function #'doom-dashboard-hl-button)))
 #+end_src
 
-*** General settings
+** General settings
 
 Tweak various general settings to more opinionated values.
 #+begin_src elisp
@@ -568,7 +567,7 @@ Tweak various general settings to more opinionated values.
 (global-subword-mode 1)                    ; Iterate through CamelCase words
 #+end_src
 
-*** Indentation
+** Indentation
 
 Set default values for the various indentation settings.
 Even though ~dtrt-indent~ will properly update these by analyzing existing
@@ -604,7 +603,7 @@ files, it is still necessary to set the desired value for new files.
               smie-indent-basic       tab-width)
 #+end_src
 
-*** Terminal
+** Terminal
 
 Improve terminal integration. Taken from the ~tty~ module.
 #+begin_src elisp
@@ -645,7 +644,7 @@ if in terminal."
 (add-hook! 'after-make-frame-functions '+doom-disable-graphical-modes)
 #+end_src
 
-*** Frames
+** Frames
 
 Automatically maximize and focus new graphical frames.
 #+begin_src elisp
@@ -657,7 +656,7 @@ Automatically maximize and focus new graphical frames.
 (add-hook 'after-make-frame-functions 'raise-frame-and-give-focus)
 #+end_src
 
-*** Workspaces
+** Workspaces
 
 Add an API to create default workspace names for specific applications.
 #+begin_src elisp
@@ -674,8 +673,8 @@ Add an API to create default workspace names for specific applications.
     (set-frame-parameter frame 'workspace (+workspace-current-name))))
 #+end_src
 
-*** Windows
-**** Settings
+** Windows
+*** Settings
 
 Focus the new window on vertical/horizontal splits.
 #+begin_src elisp
@@ -690,7 +689,7 @@ Prompt for the workspace buffer to show on new window.
   (+ivy/switch-workspace-buffer))
 #+end_src
 
-**** Hydra
+*** Hydra
 
 Add a global hydra for window management.
 #+begin_src elisp
@@ -741,7 +740,7 @@ Add a global hydra for window management.
       ("." counsel-find-file "find file")))))
 #+end_src
 
-**** Bindings
+*** Bindings
 
 Customize window management bindings.
 #+begin_src elisp
@@ -791,8 +790,8 @@ Customize window management bindings.
  "C-S-s"              nil)
 #+end_src
 
-*** Buffers
-**** Hydra
+** Buffers
+*** Hydra
 
 Add a global hydra for buffer management.
 #+begin_src elisp
@@ -829,7 +828,7 @@ Add a global hydra for buffer management.
       ("C-d" doom/kill-all-buffers "kill all")))))
 #+end_src
 
-**** Bindings
+*** Bindings
 
 #+begin_src elisp
 (after! pretty-hydra
@@ -840,7 +839,7 @@ Add a global hydra for buffer management.
 
 See [[*Centaur tabs][Centaur Tabs]].
 
-*** Line numbers
+** Line numbers
 
 Relative line numbers are fantastic for knowing how far away line numbers are,
 then =12 <UP>= gets you exactly where you think.
