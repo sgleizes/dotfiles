@@ -48,7 +48,7 @@ immutability=1
 plugin=org.kde.plasma.chiliclock
 
 [Containments][2][Applets][30][Configuration]
-PreloadWeight=100
+PreloadWeight=92
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -68,7 +68,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=20
+PreloadWeight=12
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -265,7 +265,7 @@ immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][6][Configuration]
-PreloadWeight=100
+PreloadWeight=92
 SystrayContainmentId=7
 
 [Containments][2][Applets][60]
@@ -298,7 +298,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -315,7 +315,7 @@ immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=62
+PreloadWeight=74
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -339,7 +339,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=10
+PreloadWeight=2
 
 [Containments][7][Applets][16]
 immutability=1
@@ -353,14 +353,14 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=81
+PreloadWeight=73
 
 [Containments][7][Applets][18]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=100
+PreloadWeight=92
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -370,7 +370,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][19][Configuration]
-PreloadWeight=35
+PreloadWeight=27
 
 [Containments][7][Applets][69]
 immutability=1
@@ -407,7 +407,7 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=20
+PreloadWeight=17
 selectedConfig=0
 
 [Containments][7][Applets][73]
@@ -492,7 +492,8 @@ Provider=unsplash
 
 [Containments][88]
 ItemGeometries-1920x1080=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
-ItemGeometriesHorizontal=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
+ItemGeometries-2560x1440=Applet-77:0,432,464,608,0;Applet-79:1456,448,464,592,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;
+ItemGeometriesHorizontal=Applet-77:0,432,464,608,0;Applet-79:1456,448,464,592,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
 immutability=1

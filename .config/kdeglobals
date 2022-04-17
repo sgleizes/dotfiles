@@ -138,7 +138,7 @@ parseMode=2
 
 [General]
 BrowserApplication=firefox.desktop
-ColorSchemeHash=9163139877916089673a361083a2231d380293d7
+ColorSchemeHash=d0b3d2da363261958945ede41bfed4e1744dd286
 Name=Breeze Dark
 UseSystemBell=true
 XftHintStyle=hintslight
