@@ -12,9 +12,17 @@ bind -T root 'C-q' detach-client
 # Clear both the screen and tmux history buffer.
 bind -T root 'C-l' send-keys 'C-l' \; run 'sleep 0.1' \; clear-history
 
+# Root bindings to cycle windows easily.
+bind -T root 'M-]'  next-window
+bind -T root 'M-['  previous-window
+
 # Root bindings to enter copy-mode automatically.
 bind -T root 'S-PPage' copy-mode -eu
 bind -T root 'S-Up'    copy-mode -e \; send -X scroll-up
+
+#
+# Mouse
+#
 
 # Enable mouse support by default.
 set -g mouse on
@@ -174,6 +182,8 @@ bind -N 'Respawn the current pane' 'C-r' confirm-before -p "respawn-pane #P? (y/
 
 # Pane selection.
 bind -N 'List and select a pane by index' 'p'   display-panes
+bind -N 'Select the next pane'         -r ']'   select-pane -t :.+
+bind -N 'Select the previous pane'     -r '['   select-pane -t :.-
 bind -N 'Select the next pane'         -r 'C-p' select-pane -t :.+
 bind -N 'Select the previous pane'     -r 'M-p' select-pane -t :.-
 bind -N 'Select the pane above the active pane'           'Up'    select-pane -U
