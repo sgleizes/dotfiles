@@ -3469,11 +3469,15 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 
 ** Ivy
 
-Enable Ivy buffer previews. This only applies to workspace buffer switching,
-as it seems that previewing buffers from other workspaces adds them to the
+Disable Ivy buffer previews. It seems that previewing buffers from other workspaces adds them to the
 current workspace, which is totally unwanted behavior.
+Also, this setting creates really unwanted behavior when selecting other ivy actions than the default.
+The action is executed on every selected item, as well as during some other ivy commands.
+Finally, when switching workspace buffer and cycling though actions in hydra with w/s,
+when reaching the 'find-file' action, the ivy buffer changes to find-file.
 #+begin_src elisp
-(setq +ivy-buffer-preview t)
+(after! ivy
+  (setq +ivy-buffer-preview nil))
 #+end_src
 
 Override doom's ~+ivy-format-function-line-or-arrow~ and use the line highlight,
@@ -3544,38 +3548,53 @@ Extend the default hydra for ivy.
   (defhydra+ hydra-ivy (:hint nil :color pink)
     "
 
-                                   🔎 Ivy
-
- Move     ^^^^^^^^^^   Call         ^^^^   Cancel^^   Options^^
-══════════^^^^^^^^^^════════════════^^^^═════════^^══════════^^══════════════════════════════
- _g_ ^ ^ _k_ ^ ^ _u_   _f_orward _o_ccur   _i_nsert   _c_alling: %-7s(if ivy-calling \"on\" \"off\")  _C_ase-fold: %-10`ivy-case-fold-search
- ^↕^ _h_ ^+^ _l_ ^🡙^   _RET_ done     ^^   _q_uit     _M_atcher: %-7s(ivy--matcher-desc)  _T_runcate: %-11`truncate-lines
- _G_ ^ ^ _j_ ^ ^ _d_   _TAB_ alt-done ^^   ^ ^        _<_/_>_: shrink/grow  _m_ark _t_oggle _U_nmark
+                                 🔎 Ivy
 
 Action _w_/_s_/_a_: %s(ivy-action-name)
-       _K_ill                                                        _?_: help
+
+ Move     ^^^^^^^^^^   Call      ^^^^   Mark  ^^   Options^^
+══════════^^^^^^^^^^═════════════^^^^═══════^^══════════^^══════════════════════════════
+ _g_ ^ ^ _k_ ^ ^ _u_   _o_ccur _e_dit   _m_ark     _c_alling: %-7s(if ivy-calling \"on\" \"off\")  _C_ase-fold: %-10`ivy-case-fold-search
+ ^↕^ _h_ ^+^ _l_ ^🡙^   _RET_   done^^   _t_oggle   _M_atcher: %-7s(ivy--matcher-desc)^^^^^^^^^^^^  _T_runcate: %-11`truncate-lines
+ _G_ ^ ^ _j_ ^ ^ _d_   _M-RET_ call^^   _U_nmark   _<_/_>_: shrink/grow^^^^^^^^^^^^^^^^^^^^^^^^^^  _?_: help
+
 "
     ;; Movement
     ("l" ivy-alt-done)
     ("h" ivy-backward-kill-word)
     ;; Restore mark bindings
-    ("m" ivy-mark)
-    ("U" ivy-unmark)
+    ("m"            ivy-mark)
+    ("U"            ivy-unmark)
     ("<deletechar>" ivy-unmark-backward)
-    ("t" ivy-toggle-marks)
-    ;; Actions
+    ("t"            ivy-toggle-marks)
+    ;; Miscellaneous
     ("<escape>" nil)
-    ("M-o" nil)
-    ("K" (ivy-exit-with-action #'ivy--kill-buffer-action))
-    ("?" ivy-help)))
+    ("M-o"      nil)
+    ("C-j"      #'ivy-next-line) ; Forced to rebind, no way to restore as foreign-key?
+    ("M-RET"    #'ivy-call)
+    ("e"        #'+ivy/woccur :color blue)
+    ("?"        ivy-help)))
 #+end_src
 
 Customize bindings.
 #+begin_src elisp
 (after! ivy
   (map! :map ivy-minibuffer-map
-        "C-h" #'ivy-backward-kill-word
-        "C-<return>" #'ivy-immediate-done))
+        "C-h"        #'ivy-backward-kill-word
+        "C-<return>" #'ivy-immediate-done
+        "M-a"        #'ivy-read-action
+        "M-t"        #'ivy-toggle-marks
+        "M-m"        #'ivy-mark
+        "M-u"        #'ivy-unmark
+        "M-j"        #'ivy-next-history-element
+        "M-k"        #'ivy-previous-history-element
+
+        :map (ivy-occur-mode-map ivy-occur-grep-mode-map)
+        :n "M-RET"   #'ivy-occur-press
+        :n "a"       #'ivy-occur-read-action
+        :n "c"       #'ivy-occur-toggle-calling
+        :n "d"       #'ivy-occur-delete-candidate
+        :n "C-o"     #'ivy-occur-dispatch))
 #+end_src
 
 ** Ligatures
