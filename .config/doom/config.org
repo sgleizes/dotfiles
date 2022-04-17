@@ -100,20 +100,20 @@ done
 #+end_src
 
 The desktop entry must now be modified to use the above script and icon:
-#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
+#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop :mkdirp yes
 [Desktop Entry]
-Categories=Development;TextEditor;
-Comment=Edit text
-Exec=emacs-xclient %F
+Name=Emacs (Client)
 GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacs-xclient %F
 Icon=doom-emacs
-Keywords=Text;Editor;
-MimeType=text/x-tex;text/x-pascal;text/x-moc;text/x-makefile;text/x-java;text/x-csrc;text/x-csrc;text/x-chdr;text/x-c++src;text/x-c++hdr;text/tcl;text/plain;application/x-shellscript;
-Name=Emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;
+Keywords=emacsclient;
 StartupNotify=true
 StartupWMClass=Emacs
-Terminal=false
-Type=Application
 #+end_src
 
 ** Ediff launcher
@@ -5256,9 +5256,9 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
 
 (after! evil-org-agenda
   (map! :map evil-org-agenda-mode-map
-        :m "TAB"           #'outline-toggle-children
-        :m "<tab>"         #'outline-toggle-children
-        :m "<backtab>"     #'outline-hide-body))
+        :m "TAB"           #'outline-cycle
+        :m "<tab>"         #'outline-cycle
+        :m "<backtab>"     #'outline-cycle-buffer))
 #+end_src
 
 ** Projectile
