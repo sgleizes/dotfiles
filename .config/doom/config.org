@@ -3091,6 +3091,52 @@ TODO: Contribute this.
         (evil-maybe-remove-spaces nil)))))
 #+end_src
 
+*** Commands
+
+Add a command to duplicate the current line or region.
+#+begin_src elisp
+(defun duplicate-line-or-region (arg)
+  "Duplicates the current line or region ARG times.
+If there's no region, the current line will be duplicated. However, if
+there's a region, all lines that region covers will be duplicated."
+  (interactive "p")
+  (let (beg end (origin (point)))
+    ;; Reuse drag-stuff implementation functions
+    (let* ((markp mark-active)
+           (evilp (when markp (drag-stuff--evil-p)))
+           (vtype (when markp (if evilp (evil-visual-type) nil)))
+           (mark-line (when markp (drag-stuff--line-at-mark)))
+           (point-line (when markp (drag-stuff--line-at-point)))
+           (mark-col (when markp (drag-stuff--col-at-mark)))
+           (point-col (when markp (drag-stuff--col-at-point)))
+           (bounds (when markp (drag-stuff-whole-lines-region)))
+           (beg (if markp (car bounds) (line-beginning-position)))
+           (end (if markp (car (cdr bounds)) (line-end-position)))
+           (region (buffer-substring-no-properties beg end))
+           (deactivate-mark nil))
+
+      ;; Duplicate line/region
+      (dotimes (i arg)
+        (goto-char end)
+        (newline)
+        (insert region)
+        (setq end (point)))
+
+      ;; Restore region
+      (message "%s / %s" markp arg)
+      (if markp
+          (progn
+            (goto-line mark-line)
+            (move-to-column mark-col)
+            (exchange-point-and-mark)
+            (goto-line point-line)
+            (move-to-column point-col)
+            (when evilp
+              (evil-visual-make-selection (mark) (point))
+              (when (eq vtype 'line) (evil-visual-line (mark) (point)))))
+        (goto-char origin)))))
+#+end_src
+
 *** Hydra
 
 Replace evil-mc bindings by a convenient hydra.
@@ -3144,6 +3190,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "god"            #'evil-quick-diff
  :nv "goD"            #'evil-quick-diff-cancel
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
+ :textobj "B"         nil nil
  ;; Customize RET behavior for normal/insert modes
  :i "<return>"        #'+default/newline
  :i "S-<return>"      #'newline-and-indent ;; NOTE: Difference with default-indent-new-line is not clear
@@ -3167,6 +3214,7 @@ Add the missing arrow-key variants of the window navigation commands.
  ;; Rearrange some yank/paste commands
  :n "M-p"             #'evil-paste-pop
  :n "C-p"             #'+default/yank-pop
+ :n "M-y"             #'duplicate-line-or-region
  (:map evil-mc-key-map
   :nv "C-p" nil
   :nv "C-n" nil)
