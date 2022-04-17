@@ -755,8 +755,8 @@ Add a global hydra for window management.
 Customize window management bindings.
 #+begin_src elisp
 (map!
- :n "]w"          #'evil-window-next
- :n "[w"          #'evil-window-prev
+ :m "]w"          #'evil-window-next
+ :m "[w"          #'evil-window-prev
 
  :map evil-window-map
  :desc "Window management"
@@ -848,6 +848,15 @@ Add a global hydra for buffer management.
 #+end_src
 
 See [[*Centaur tabs][Centaur Tabs]].
+
+** Images
+
+Override quit binding from popups that prevents the buffer from being killed.
+#+begin_src elisp
+(after! image-mode
+  (map! :map image-mode-map
+        :n "q" #'kill-current-buffer))
+#+end_src
 
 ** Line numbers
 
@@ -1341,9 +1350,7 @@ Customize general dired appearance.
       (unless dired-hide-details-mode
         (add-to-invisibility-spec 'dired-hide-details-information))))
   ;; Disable evil-snipe as it shadows bindings for some reason.
-  (add-hook! dired-mode
-    (defun dired-disable-evil-snipe ()
-      (evil-snipe-local-mode 0))))
+  (add-hook! dired-mode #'turn-off-evil-snipe-override-mode))
 
 (use-package! fd-dired
   :config
@@ -1609,8 +1616,7 @@ Customize default bindings.
       "i"             #'dired-git-info-mode
       "r"             #'+dired-toggle-recursive
       "h"             #'+dired-toggle-hidden-files
-      "H"             #'dired-omit-mode
-      "SPC"           #'major-mode-hydra)
+      "H"             #'dired-omit-mode)
 #+end_src
 
 ** Ediff
@@ -3170,8 +3176,6 @@ Add the missing arrow-key variants of the window navigation commands.
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
  :m "[ TAB"           #'+workspace/switch-left
- :m "]w"              #'evil-window-next
- :m "[w"              #'evil-window-prev
  ;; Bind more motion/editing commands to hjkl
  :i "C-k"             #'evil-previous-line
  :i "C-j"             #'evil-next-line
@@ -3383,7 +3387,11 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
     (+hydra/title-generator--generic
      (s-concat (s-capitalized-words (s-chop-suffix "-mode" (symbol-name mode))) " commands")
      (all-the-icons-icon-for-mode mode :v-adjust 0.05)
-     offset)))
+     offset))
+
+  (map! :map global-map
+        :localleader
+        :g "SPC" #'major-mode-hydra))
 #+end_src
 
 ** Hydra posframe
@@ -4296,7 +4304,6 @@ Customize bindings.
         "a"           #'org-attach
         "p"           #'org-agenda-priority
         "T"           #'org-timer-set-timer
-        "SPC"         #'major-mode-hydra
 
         :prefix "d"
         "t"           #'org-agenda-date-prompt))
@@ -5457,10 +5464,12 @@ Customize bindings.
 (after! treemacs-evil
   (defun treemacs-toggle-node-nested ()
     (interactive)
-    (treemacs-toggle-node "0"))
+    (treemacs-toggle-node '(4)))
+
   (defun treemacs-visit-node-nofocus ()
     (interactive)
-    (treemacs-visit-node-default "0"))
+    (treemacs-visit-node-default '(4)))
+
   (evil-define-key* 'treemacs treemacs-mode-map
     (kbd "h")          #'treemacs-goto-parent-node
     (kbd "l")          #'treemacs-toggle-node
@@ -5470,8 +5479,7 @@ Customize bindings.
     (kbd "C")          #'treemacs-copy-file
     (kbd "M")          #'treemacs-move-file
     (kbd "x")          #'treemacs-delete
-    (kbd "<S-return>") #'treemacs-visit-node-nofocus
-    (kbd "<M-return>") #'treemacs-peek)
+    (kbd "<S-return>") #'treemacs-visit-node-nofocus)
   (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
 
