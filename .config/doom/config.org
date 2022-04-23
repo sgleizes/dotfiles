@@ -1327,6 +1327,9 @@ and restrict buffer list to workspace buffers.
         x-underline-at-descent-line t)
   (centaur-tabs-headline-match)
 
+  ;; FIXME: Workaround https://github.com/ema2159/centaur-tabs/issues/181
+  (centaur-tabs-group-by-projectile-project)
+
   ;; Override rules for grouping buffers.
   (defun centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
