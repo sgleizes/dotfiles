@@ -991,10 +991,18 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+begin_src elisp
 (use-package! beacon
   :config
+  ;; Configure appearance and duration settings
   (setq beacon-color 0.7
         beacon-size 24
         beacon-blink-delay 0.2
         beacon-blink-duration 0.2)
+  ;; Configure when the beacon should blink
+  (setq beacon-blink-when-buffer-changes t
+        beacon-blink-when-window-changes t
+        beacon-blink-when-focused nil
+        beacon-blink-when-window-scrolls nil
+        beacon-blink-when-point-moves-horizontally nil
+        beacon-blink-when-point-moves-vertically nil)
   (nconc beacon-dont-blink-commands
          '(evil-ex-search-next
            evil-ex-search-previous
@@ -1002,6 +1010,9 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
            evil-ex-search-backward
            evil-ex-search-word-forward
            evil-ex-search-word-backward))
+  ;; Prevent "stuck" beacon on doom dashboard.
+  (nconc beacon-dont-blink-major-modes
+         '(+doom-dashboard-mode))
   ;; FIXME: Persp-mode must be doing something after the hook that cancels the blink.
   ;; (add-hook! 'persp-activated-functions
   ;;   (defun beacon--on-persp-activate (_target)
