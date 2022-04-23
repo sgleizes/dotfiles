@@ -493,9 +493,29 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
       doom-big-font (font-spec :family "Fira Code" :size 18))
 #+end_src
 
+Set preferred order for all-the-icons fonts, since some unicode characters override each other.
+#+begin_src elisp
+(after! all-the-icons
+  (defun psydev/doom-init-all-the-icons-fonts-h ()
+    (when (fboundp 'set-fontset-font)
+      (dolist (font (list
+                     "all-the-icons"
+                     "FontAwesome"
+                     "Material Icons"
+                     "file-icons"
+                     "github-octicons"
+                     "Weather Icons"))
+        (set-fontset-font t 'unicode font nil 'append))
+      ;; Specific overrides for some icons
+      (set-fontset-font t (cons ? ?) "Weather Icons" nil 'prepend))))
+(advice-add #'doom-init-all-the-icons-fonts-h :override #'psydev/doom-init-all-the-icons-fonts-h)
+#+end_src
+
 Add a global hydra to change the font-size interactively.
 #+begin_src elisp
 (after! pretty-hydra
+  (setq doom-font-increment 1)
+
   (pretty-hydra-define +hydra/font-size
     (:separator "═")
     ("Font size"
@@ -545,7 +565,26 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 (defun doom-dashboard-hl-button ()
   (cons (- (point) 5) (line-end-position)))
 (add-hook! +doom-dashboard-mode
-           '(lambda () (setq-local hl-line-range-function #'doom-dashboard-hl-button)))
+           (setq-local hl-line-range-function #'doom-dashboard-hl-button))
+#+end_src
+
+*** Faces
+
+Customize some general faces.
+#+begin_src elisp
+(custom-set-faces!
+  ;; Use hl-line faces that are lighter instead of darker (in dark theme).
+  '(hl-line :background "#242628")
+  '(solaire-hl-line-face :background "#1d1f21")
+  ;; Use a slightly lighter region face.
+  '(region :background "#3d3e3f")
+  ;; Restore lazy-highlight face to be the same than highlight.
+  ;; This changed when upgrading to 28.1, not sure why precisely.
+  '(lazy-highlight :foreground unspecified
+                   :distant-foregound unspecified
+                   :background unspecified
+                   :weight unspecified
+                   :inherit highlight))
 #+end_src
 
 ** General settings
@@ -565,6 +604,16 @@ Tweak various general settings to more opinionated values.
       uniquify-buffer-name-style 'forward) ; Use path to uniquify buffer names
 
 (global-subword-mode 1)                    ; Iterate through CamelCase words
+#+end_src
+
+** General bindings
+
+Customize various general bindings.
+#+begin_src elisp
+(map! :leader
+      :prefix "h"
+      "I" #'Info-goto-emacs-key-command-node
+      "K" #'describe-keymap)
 #+end_src
 
 ** Indentation
@@ -699,6 +748,17 @@ Prompt for the workspace buffer to show on new window.
   (+ivy/switch-workspace-buffer))
 #+end_src
 
+*** Popups
+
+Customize general popup rules.
+#+begin_src elisp
+(after! popup
+  (set-popup-rules!
+    ;; Do not quit buffers in `help-mode', `helpful-mode' from other windows.
+    '(("^\\*\\([Hh]elp\\|Apropos\\)"
+       :slot 2 :vslot -8 :size 0.42 :select t :quit 'current))))
+#+end_src
+
 *** Hydra
 
 Add a global hydra for window management.
@@ -755,8 +815,8 @@ Add a global hydra for window management.
 Customize window management bindings.
 #+begin_src elisp
 (map!
- :m "]w"          #'evil-window-next
- :m "[w"          #'evil-window-prev
+ :nv "]w"          #'evil-window-next
+ :nv "[w"          #'evil-window-prev
 
  :map evil-window-map
  :desc "Window management"
@@ -765,15 +825,15 @@ Customize window management bindings.
  "a"                  #'ace-window
  "]"                  #'evil-window-next
  "["                  #'evil-window-prev
- ;; "<left>"             #'evil-window-left
- ;; "<down>"             #'evil-window-down
- ;; "<up>"               #'evil-window-up
- ;; "<right>"            #'evil-window-right
- ;; ;; Moving windows
- ;; "S-<left>"           #'+evil/window-move-left
- ;; "S-<down>"           #'+evil/window-move-down
- ;; "S-<up>"             #'+evil/window-move-up
- ;; "S-<right>"          #'+evil/window-move-right
+ "<left>"             #'evil-window-left
+ "<down>"             #'evil-window-down
+ "<up>"               #'evil-window-up
+ "<right>"            #'evil-window-right
+ ;; Moving windows
+ "S-<left>"           #'+evil/window-move-left
+ "S-<down>"           #'+evil/window-move-down
+ "S-<up>"             #'+evil/window-move-up
+ "S-<right>"          #'+evil/window-move-right
  ;; Popups
  "p"                  #'+popup/other        ; Better than C-x p
  "P"                  #'+popup/toggle       ; Alternative to C-`
@@ -808,7 +868,7 @@ Add a global hydra for buffer management.
 (after! pretty-hydra
   (pretty-hydra-define +hydra/buffer-management
     (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 34))
-    ("Tab"
+    ("Tabs"
      (("h" +tabs:previous-or-goto "prev")
       ("l" +tabs:next-or-goto "next")
       ("H" centaur-tabs-move-current-tab-to-left "move left")
@@ -950,7 +1010,8 @@ Adapt sunrise/sunset diary sexp.
   "String of *local* time of sunrise and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     " %s (%s de jour)" ;🌅
+     "%s %s (%s de jour)"
+     (all-the-icons-wicon "sunrise" :height 1.0 :v-adjust 0)
      (if (car l)
          (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
        "Aucun Lever du Soleil")
@@ -970,7 +1031,8 @@ Accurate to a few seconds."
   "String of *local* time of sunset and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     " %s" ;🌅
+     "%s %s"
+     (all-the-icons-wicon "sunset" :height 1.0 :v-adjust 0)
      (if (cadr l)
          (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
        "Aucun Coucher du Soleil"))))
@@ -4105,7 +4167,18 @@ Configure time grid.
         "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
 #+end_src
 
-Customize org scheduled/deadline faces.
+Customize general org agenda faces.
+#+begin_src elisp
+(after! org
+  (custom-set-faces!
+    '(org-agenda-date :foreground unspecified :inherit outline-3)
+    '(org-agenda-date-today :foreground unspecified :inherit outline-1)
+    '(org-agenda-date-weekend :foreground unspecified :inherit org-agenda-date)
+    '(org-agenda-date-weekend-today :inherit org-agenda-date-today)
+    '(org-super-agenda-header :inherit org-agenda-structure)))
+#+end_src
+
+Customize org scheduled/deadline/clocked faces.
 #+begin_src elisp
 (after! org
   (setq org-deadline-faces
@@ -4119,7 +4192,8 @@ Customize org scheduled/deadline faces.
     '(org-scheduled-previously :foreground "#ffffff")
     '(org-upcoming-distant-deadline :foreground unspecified :weight light :inherit org-warning)
     '(org-upcoming-deadline :foreground unspecified :inherit org-warning)
-    '(org-imminent-deadline :weight semi-bold :inherit org-warning)))
+    '(org-imminent-deadline :weight semi-bold :inherit org-warning)
+    '(org-agenda-clocking :background unspecified :foreground "#de935f" :inherit org-block)))
 #+end_src
 
 Do not show blocked tasks as dimmed by default. With my configuration they are usually projects (subtasks not done).
@@ -4132,7 +4206,7 @@ Also customize the face to be brighter, in case locally enabled.
 
 Always highlight the current agenda line.
 #+begin_src elisp
-(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+(add-hook! org-agenda-mode (hl-line-mode 1))
 #+end_src
 
 **** Diary
@@ -4773,7 +4847,7 @@ Customize priorities faces.
         '((65 . error)
           (66 . warning)
           (67 . success)
-          (68 . default) ; Keep default outline face
+          (68 . dired-directory)
           (69 . shadow))))
 #+end_src
 
