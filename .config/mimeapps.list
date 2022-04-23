@@ -20,6 +20,7 @@ audio/x-speex+ogg=vlc.desktop;org.strawberrymusicplayer.strawberry.desktop;org.k
 audio/x-vorbis+ogg=vlc.desktop;org.strawberrymusicplayer.strawberry.desktop;org.kde.kwave.desktop;
 audio/x-wav=vlc.desktop;org.strawberrymusicplayer.strawberry.desktop;org.kde.kwave.desktop;
 text/plain=emacs.desktop;org.kde.kate.desktop;libreoffice-writer.desktop;okularApplication_txt.desktop;wine-extension-txt.desktop;
+video/webm=vlc.desktop;
 video/x-matroska=vlc.desktop;
 x-scheme-handler/tg=userapp-Telegram Desktop-5Z62V0.desktop;
 
@@ -52,6 +53,7 @@ audio/x-vorbis+ogg=vlc.desktop;
 audio/x-wav=vlc.desktop;
 text/html=userapp-Firefox-D3SRI0.desktop
 text/plain=emacs.desktop;
+video/webm=vlc.desktop;
 video/x-matroska=vlc.desktop;
 x-scheme-handler/chrome=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/ftp=userapp-Firefox-D3SRI0.desktop
