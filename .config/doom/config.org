@@ -4359,12 +4359,94 @@ Configure org-clock.
 #+end_src
 
 *** Refiling & Archiving
+**** Settings
+
+Configure org-refile.
+#+begin_src elisp
+(after! org
+  (setq org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes nil
+        org-refile-targets
+        '((nil :maxlevel . 4)
+          (org-agenda-files :maxlevel . 4))
+        org-refile-target-verify-function #'+psydev/org-refile-target-verify))
+#+end_src
 
 Configure archiving behavior.
 #+begin_src elisp
 (after! org
   (setq org-archive-location "archive/%s_archive::datetree/"
-        org-export-with-archived-trees nil))
+        org-archive-mark-done t
+        org-export-with-archived-trees nil)
+
+  ;; Do not keep archive buffers alive.
+  (add-hook! 'org-archive-hook
+             (defun +psydev/kill-archive-buffers ()
+               (doom/kill-matching-buffers "\\.org_archive$"))))
+#+end_src
+
+**** Refile target filters
+
+Define target filter functions.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-refile-target-verify ()
+    "Remove TODO-items that are not projects from refile targets."
+    (let ((todo (org-get-todo-state)))
+      (if (and todo (not (equal todo "PROJ")))
+          (progn (org-end-of-subtree) nil)
+        t)))
+
+  (defun +psydev/org-refile-target-verify-context ()
+    "Remove TODO-items that are not projects, and headings not matching GTD context from refile targets."
+    (let ((tags (org-get-tags-at))
+          (todo (org-get-todo-state)))
+      (unless (or (and todo (not (equal todo "PROJ")))
+                  (and +psydev/org-view-context
+                       (if (eq +psydev/org-view-context 'none)
+                           (cl-member-if (lambda (tag) (string-match-p "^@.+" tag)) tags)
+                         (not (member +psydev/org-view-context tags)))))
+        t))))
+#+end_src
+
+Prevent refiling at file toplevel in agenda files.
+#+begin_src elisp
+(after! org
+  (defun psydev/org-refile-filter-targets (orig-fun &rest args)
+    (let ((targets (apply orig-fun args))
+          (agenda-files (mapcar #'file-name-nondirectory (org-agenda-files))))
+      (cl-remove-if (lambda (x)
+                      (member (car x) agenda-files))
+                    targets)))
+  (advice-add 'org-refile-get-targets :around #'psydev/org-refile-filter-targets))
+#+end_src
+
+**** Refile commands
+
+Define additional refile commands.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-refile-to-context (&rest _)
+    "Refile current heading to targets in the currently selected scope and context."
+    (interactive "P")
+    (let* ((scope (unless (eq +psydev/org-view-scope 'buffer) +psydev/org-view-scope))
+           (org-refile-targets `((,scope :maxlevel . 4)))
+           (org-refile-target-verify-function #'+psydev/org-refile-target-verify-context)
+           current-prefix-arg)
+      (call-interactively #'org-refile))))
+#+end_src
+
+**** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        :prefix ("r" . "Refile")
+        "R"  #'org-refile-reverse
+        "x"  #'+psydev/org-refile-to-context))
 #+end_src
 
 *** Agenda
