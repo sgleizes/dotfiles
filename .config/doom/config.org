@@ -1829,7 +1829,7 @@ Customize default doom-theme faces for ~ediff~.
 
 ** Elfeed
 
-Configure elfeed and elfeed-org.
+Configure elfeed general settings.
 #+begin_src elisp
 (use-package! elfeed
   :config
@@ -1838,14 +1838,6 @@ Configure elfeed and elfeed-org.
         elfeed-sort-order 'ascending)
   (elfeed-set-max-connections 8) ; default is 16
   (elfeed-set-timeout 60))       ; default is 30
-
-(use-package! elfeed-org
-  :after org
-  :config
-  (setq elfeed-search-filter "+unread +starred "
-        rmh-elfeed-org-files (list (concat org-directory "elfeed/feed.org"))
-        rmh-elfeed-org-tree-id "feed")
-  (elfeed-org))
 #+end_src
 
 *** Integration
@@ -1870,40 +1862,6 @@ If IGNORE-REGION-P is non-nil, only return the entry under point."
                                      (car selected)
                                    selected))))))
   (advice-add #'elfeed-search-selected :override #'psydev/elfeed-search-selected))
-#+end_src
-
-Add advice to elfeed-update to make sure the list of feed is up to date.
-#+begin_src elisp
-(after! elfeed-org
-  (defadvice elfeed-update (before configure-elfeed activate)
-    "Load all feed settings before elfeed updates."
-    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
-#+end_src
-
-Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
-Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
-#+begin_src elisp
-(after! elfeed-org
-  (defun +rss-cleanup-h ()
-    "Clean up after an elfeed session. Kills all elfeed buffers."
-    (interactive)
-    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
-    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
-    ;;     (switch-to-buffer elfeed-dashboard--buf))
-    ;; FIXME This seems to break the perspective as well, reason not understood
-    ;; (let ((buf (switch-to-prev-buffer)))
-    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
-    ;;     (switch-to-buffer (doom-fallback-buffer))))
-    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
-          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
-          kill-buffer-query-functions)
-      (dolist (b search-buffers)
-        (when (not (eq b (current-buffer)))
-          (with-current-buffer b
-            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
-            (kill-buffer b))))
-      (mapc #'kill-buffer show-buffers))
-    (+workspace/delete +rss-workspace-name)))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
@@ -1951,14 +1909,14 @@ inserted. "
                  while (not (eobp))
                  do (progn
                       (forward-line 1)
-                      (incf offset))
+                      (cl-incf offset))
 
                  for current-data = (entry-date offset)
                  if (not (equal current-data prev-data))
                  do (when current-data
                       (insert-date current-data)
                       (setq prev-data current-data))
-                 else do (incf largest-group-size)
+                 else do (cl-incf largest-group-size)
 
                  finally do (when (< largest-group-size min-group-size)
                               (ov-clear))))))
@@ -2628,7 +2586,7 @@ Mark entries older than 2 weeks as read.
 
 Configure bindings.
 #+begin_src elisp
-(map! :after elfeed-org
+(map! :after elfeed
       :map elfeed-search-mode-map
       :n  "C-j"        #'psydev/elfeed-forward-day
       :n  "C-k"        #'psydev/elfeed-backward-day
@@ -2661,6 +2619,65 @@ Configure bindings.
       :n "C-k"        #'evil-backward-paragraph)
 #+end_src
 
+** Elfeed org
+
+Configure elfeed-org.
+#+begin_src elisp
+(use-package! elfeed-org
+  :after elfeed
+  :config
+  (setq elfeed-search-filter "+unread +starred "
+        rmh-elfeed-org-files (list "~/Notes/elfeed/feed.org")
+        rmh-elfeed-org-tree-id "feed"
+        rmh-elfeed-org-ignore-tag "ignore"
+        rmh-elfeed-org-auto-ignore-invalid-feeds nil)
+  (elfeed-org))
+#+end_src
+
+Prevent elfeed-org from opening source buffers unexpectedly.
+#+begin_src elisp
+(after! elfeed-org
+  (defadvice! +psydev/consistent-elfeed-org-buffers (fn &rest args)
+    :around #'rmh-elfeed-org-import-headlines-from-files
+    (save-excursion (apply fn args))))
+#+end_src
+
+Add advice to elfeed-update to make sure the list of feed is up to date.
+#+begin_src elisp
+(after! elfeed-org
+  (defadvice elfeed-update (before configure-elfeed activate)
+    "Load all feed settings before elfeed updates."
+    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
+#+end_src
+
+Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
+Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
+#+begin_src elisp
+(after! elfeed-org
+  (defun psydev/+rss-cleanup-h ()
+    "Clean up after an elfeed session. Kills all elfeed buffers."
+    (interactive)
+    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
+    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
+    ;;     (switch-to-buffer elfeed-dashboard--buf))
+    ;; FIXME This seems to break the perspective as well, reason not understood
+    ;; (let ((buf (switch-to-prev-buffer)))
+    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
+    ;;     (switch-to-buffer (doom-fallback-buffer))))
+    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
+          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
+          kill-buffer-query-functions)
+      (dolist (b search-buffers)
+        (when (not (eq b (current-buffer)))
+          (with-current-buffer b
+            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
+            (kill-buffer b))))
+      (mapc #'kill-buffer show-buffers))
+    ;; (+workspace/delete +rss-workspace-name)
+    )
+  (advice-add #'+rss-cleanup-h :override #'psydev/+rss-cleanup-h))
+#+end_src
+
 ** Elfeed dashboard
 
 Disable evil-snipe.
@@ -2673,12 +2690,17 @@ Configure dashboard.
 #+begin_src elisp
 (use-package! elfeed-dashboard
   :config
-  (setq elfeed-dashboard-file (concat org-directory "elfeed/dashboard.org")
+  (setq elfeed-dashboard-file "~/Notes/elfeed/dashboard.org"
         +rss-workspace-name "elfeed")
   ;; Update feed counts on elfeed-quit
   ;; FIXME: Too slow, fallback to manual update
   ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
-  )
+
+  (defun psydev/elfeed-dashboard-all ()
+    "Open the full version of the elfeed dashboard"
+    (interactive)
+    (let ((elfeed-dashboard-file "~/Notes/elfeed/dashboard-all.org"))
+      (elfeed-dashboard))))
 #+end_src
 
 Add hooks to improve the usability and readability of the dashboard.
@@ -2689,13 +2711,30 @@ Add hooks to improve the usability and readability of the dashboard.
   (defun psydev/elfeed-dashboard ()
     "Open the elfeed dasboard."
     (interactive)
-    (progn
-      (+workspace-switch +rss-workspace-name t)
-      (doom/switch-to-scratch-buffer)
-      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-      (with-current-buffer elfeed-dashboard--buf
-        (elfeed-dashboard-mode))
-      (+workspace/display)))
+    ;; NOTE: Dedicated workspace version.
+    ;; (+workspace-switch +rss-workspace-name t)
+    ;; (doom/switch-to-scratch-buffer)
+
+    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+    (with-current-buffer elfeed-dashboard--buf
+      (elfeed-dashboard-mode))
+
+    ;; NOTE: Sidebar version (use find-file-noselect above).
+    ;; (pop-to-buffer elfeed-dashboard--buf
+    ;;                '(display-buffer-in-side-window
+    ;;                  ;; +popup-display-buffer-stacked-side-window-fn
+    ;;                  .
+    ;;                  ((side . right)
+    ;;                    (slot . 0)
+    ;;                    ;; (vslot . 0)
+    ;;                    (dedicated . t)
+    ;;                    (window-width . 60)
+    ;;                    (preserve-size . (t . nil))
+    ;;                    (window-parameters . '((no-delete-other-windows . nil))))
+    ;;                  ))
+
+    ;; (+workspace/display)
+    )
   (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
 
   ;; Cleanup elfeed on dashboard exit.
@@ -2707,7 +2746,7 @@ Add hooks to improve the usability and readability of the dashboard.
     (defun psydev/elfeed-dashboard-setup ()
       ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
       (setq elfeed-dashboard--buf (current-buffer))
-      ;; FIXME: Too slow, fallback to manual update
+      ;; FIXME: Slow, fallback to manual update?
       ;; (elfeed-dashboard-update-links)
       ))
 
@@ -2720,18 +2759,22 @@ Add hooks to improve the usability and readability of the dashboard.
   ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-override-keymap ()
-      ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
-      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-      ;; (elfeed-dashboard-update-links)
-
       (evil-org-mode 0)))
 
   ;; Take advantage of org-mode capabilities to improve prettiness.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-prettify ()
+      (rename-buffer (concat "elfeed/" (file-name-base elfeed-dashboard-file)))
+      (solaire-mode 1)
+      (centaur-tabs-local-mode 1)
+      (psydev/elfeed-dashboard-emphasis)
+      (when (not org-link-descriptive)
+        (org-toggle-link-display))
       (let ((org-image-actual-width 188))
         (org-toggle-inline-images 'include-linked))
-      (psydev/elfeed-dashboard-emphasis)
+      (setq-local tab-width 1) ; For whitespace-mode and alignment tabs
+      (setq-local fill-column 54)
+      (visual-fill-column-mode 1)
       (+org-pretty-mode 1)))
 
   ;; Remove emphasis that can appear in feed titles.
@@ -2747,12 +2790,24 @@ Add hooks to improve the usability and readability of the dashboard.
     "Edit dashboard."
     (interactive)
     (+org-pretty-mode 0)
+    (setq-local tab-width 2)
     (org-toggle-inline-images)
     (evil-org-mode 1)
     (setq buffer-read-only nil)
     (org-mode)
-    (psydev/elfeed-dashboard-emphasis))
-  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit))
+    (org-toggle-link-display)
+    (psydev/elfeed-dashboard-emphasis)
+    (centaur-tabs-local-mode -1)
+    (solaire-mode 0)
+    (visual-fill-column-mode -1)
+    (rename-buffer (file-name-nondirectory elfeed-dashboard-file)))
+  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit)
+
+  ;; Do not enable whitespace-mode in elfeed-dasboard (tabs used for icon alignment)
+  (defadvice! psydev/elfeed-dashboard-prevent-whitespace-mode (fn &rest args)
+    :around #'doom-highlight-non-default-indentation-h
+    (unless (eq major-mode 'elfeed-dashboard-mode)
+      (apply fn args))))
 #+end_src
 
 Add custom command to open elfeed or the dashboard entry at point.
@@ -2828,7 +2883,8 @@ Add top level binding.
 (map! :after elfeed-dashboard
       :leader
       (:prefix-map ("o" . "open")
-       :desc "Elfeed" "n" #'elfeed-dashboard))
+       :desc "Elfeed" "n" #'elfeed-dashboard
+       :desc "Elfeed (all)" "N" #'psydev/elfeed-dashboard-all))
 #+end_src
 
 ** Elfeed goodies
@@ -2859,6 +2915,9 @@ Configure basic settings and setup goodies.
     "Setup Elfeed with adaptive header bar and entries."
     (interactive)
     (add-hook 'elfeed-show-mode-hook #'elfeed-goodies/show-mode-setup)
+    (add-hook 'elfeed-show-mode-hook
+              (defun psydev/elfeed-show-mode-fill-column ()
+                (setq visual-fill-column-width 85)))
     (add-hook 'elfeed-new-entry-hook #'elfeed-goodies/html-decode-title)
     (when (boundp 'elfeed-new-entry-parse-hook)
       (add-hook 'elfeed-new-entry-parse-hook #'elfeed-goodies/parse-author))
@@ -2978,7 +3037,7 @@ Patch the header drawing function for ~elfeed-show-mode~.
              (title-faces (elfeed-search--faces (elfeed-entry-tags elfeed-show-entry)))
 
              (tags (mapconcat
-                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
                     (tags elfeed-show-entry) ","))
              ;; (tags (mapconcat #'symbol-name (tags elfeed-show-entry) ","))
              (feed (elfeed-entry-feed elfeed-show-entry))
@@ -3066,7 +3125,7 @@ Add functions to define how icons are selected for each entry.
         ("bitchute" (all-the-icons-faicon "circle-o-notch" :height 0.85 :v-adjust 0)) ; ""
         ("youtube"  (all-the-icons-faicon "youtube-play"   :height 0.9  :v-adjust 0)) ; ""
         ("twitter"  (all-the-icons-faicon "twitter"        :height 1.0  :v-adjust 0)) ; ""
-        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 1.0  :v-adjust 0)) ; ""
+        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 0.9  :v-adjust 0)) ; ""
         ("github"   (all-the-icons-faicon "github"         :height 1.0  :v-adjust 0)) ; ""
         (_ "  ")))))
 #+end_src
@@ -3100,7 +3159,7 @@ Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa
 
              ;; Tags
              (tags (mapconcat
-                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
                     (tags entry) ","))
              ;; (tags-width elfeed-goodies/tag-column-width)                     ; Fixed alignment
              (tags-width (min (length tags) elfeed-goodies/tag-column-width)) ; Dynamic Alignment
@@ -5854,6 +5913,19 @@ See https://github.com/hlissner/doom-emacs/issues/1407
 ;;          ("U" . undo-tree-visualize)))
 #+end_src
 
+** Visual fill column
+
+#+begin_src elisp
+(use-package! visual-fill-column
+  :config
+  (setq-default visual-fill-column-center-text t)
+  (setq visual-fill-column-adjust-for-text-scale t
+        visual-fill-column-fringes-outside-margins t
+        visual-fill-column-enable-sensible-window-split nil)
+  (add-hook! (helpful-mode elfeed-show-mode)
+             #'visual-fill-column-mode))
+#+end_src
+
 ** Vterm
 
 Configure vterm buffer naming scheme.
@@ -6117,6 +6189,13 @@ Disable for now. I find it less clear than the default letters, and it also crea
 #+begin_src elisp :tangle yes
 (use-package! treemacs-all-the-icons
   :after treemacs)
+#+end_src
+
+** Visual fill column
+
+[[https://codeberg.org/joostkremers/visual-fill-column][This package]] allows for wrapping visual-line-mode buffers at fill-column.
+#+begin_src elisp
+(package! visual-fill-column)
 #+end_src
 
 ** Window layouts
