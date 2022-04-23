@@ -927,10 +927,9 @@ Add a global hydra for buffer management.
       ("n" evil-buffer-new "new")
       ("x" doom/open-scratch-buffer "scratch")
       ("f" counsel-find-file "find file"))
-     "Region"
-     (("-" doom/toggle-narrow-buffer "narrow" :toggle (buffer-narrowed-p))
-      ;; TODO: +evil:narrow-buffer : How to specify arg BANG? <!>??
-      ("+" doom/narrow-buffer-indirectly "narrow indirect"))
+     "Narrowing"
+     (("-" doom/toggle-narrow-buffer "toggle" :toggle (buffer-narrowed-p))
+      ("w" doom/widen-indirectly-narrowed-buffer "widen indirect" :toggle doom--narrowed-base-buffer))
      "Save"
      (("s" basic-save-buffer "save")
       ("S" evil-write-all "save all")
@@ -956,6 +955,8 @@ Add a global hydra for buffer management.
         :prefix "b"
         :desc "Buffer management"
         "SPC" #'+hydra/buffer-management/body
+        :desc "Widen buffer"
+        "w"   #'doom/widen-indirectly-narrowed-buffer
         "`"   #'switch-to-windows-last-persp-buffer
         "~"   #'switch-to-windows-last-unreal-buffer))
 #+end_src
@@ -3263,6 +3264,56 @@ there's a region, all lines that region covers will be duplicated."
         (goto-char origin)))))
 #+end_src
 
+Rework narrow operator.
+#+begin_src elisp
+(after! evil
+;;   (defun doom/narrow-buffer-indirectly (beg end)
+;;     "Restrict editing in this buffer to the current region, indirectly.
+
+;; This recursively creates indirect clones of the current buffer so that the
+;; narrowing doesn't affect other windows displaying the same buffer. Call
+;; `doom/widen-indirectly-narrowed-buffer' to undo it (incrementally).
+
+;; Inspired from http://demonastery.org/2013/04/emacs-evil-narrow-region/"
+;;     (interactive
+;;      (list (when (region-active-p) (or (bound-and-true-p evil-visual-beginning) (region-beginning)))
+;;            (when (region-active-p) (or (bound-and-true-p evil-visual-end)       (region-end)))))
+;;     (message "%s/%s" beg end)
+;;     (unless (and beg end)
+;;       (setq beg (line-beginning-position)
+;;             end (line-end-position)))
+;;     (deactivate-mark)
+;;     (let ((orig-buffer (current-buffer)))
+;;       (with-current-buffer (switch-to-buffer (clone-indirect-buffer nil nil))
+;;         (narrow-to-region beg end)
+;;         (setq-local doom--narrowed-base-buffer orig-buffer))))
+
+  (defun narrow-to-region-indirect (beg end)
+    "Restrict editing in this buffer to the current region, indirectly."
+    (interactive "r")
+    (deactivate-mark)
+    (let ((orig-buffer (current-buffer))
+          (buf (clone-indirect-buffer nil nil)))
+      (with-current-buffer buf
+        (narrow-to-region beg end))
+      (switch-to-buffer buf)
+      (setq-local doom--narrowed-base-buffer orig-buffer)))
+
+  (evil-define-operator +evil:narrow-buffer (beg end)
+    "Narrow the buffer to region between BEG and END."
+    :move-point nil
+    (interactive "<r>")
+    (narrow-to-region beg end))
+
+  ;; FIXME: When called with region and prefix, the face for the region stays stuck even though region is deactivated.
+  ;; This does not happen when calling 'doom/narrow-buffer-indirectly' directly
+  (evil-define-operator +evil:narrow-buffer-indirect (beg end)
+    "Narrow the buffer to region between BEG and END, indirectly."
+    :move-point nil
+    (interactive "<r>")
+    (narrow-to-region-indirect beg end)))
+#+end_src
+
 *** Hydra
 
 Replace evil-mc bindings by a convenient hydra.
@@ -3337,6 +3388,10 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ ;; Rearrange some narrow/indirect buffer commands
+ :nv "zn"             #'+evil:narrow-buffer
+ :nv "zN"             #'+evil:narrow-buffer-indirect
+ :nv "zw"             #'doom/widen-indirectly-narrowed-buffer
  ;; Rearrange some yank/paste commands
  :n "M-p"             #'evil-paste-pop
  :n "C-p"             #'+default/yank-pop
@@ -4355,6 +4410,30 @@ Add interactive functions to cycle todo states from agenda.
     (org-agenda-todo 'right)))
 #+end_src
 
+Improve behavior of indirect-buffer spawning.
+NOTE: This is not ideal but should work for my usage.
+Does not integrate well with dired-view-file, which seems to permanently add 'q' binding on org buffers...
+It could be interesting to use a similar approach than dired-view-file for agenda indirect buffers.
+#+begin_src elisp
+(after! org-agenda
+  (defadvice! +psydev/org-agenda-indirect-buffer (&rest _)
+    :after #'org-agenda-tree-to-indirect-buffer
+    (unless current-prefix-arg
+      (select-window (get-buffer-window org-agenda-last-indirect-buffer))
+      (centaur-tabs-local-mode 1)
+      (use-local-map (copy-keymap (current-local-map)))
+      (local-set-key "q" #'kill-buffer-and-window)))
+
+  (defun +psydev/org-agenda-tree-to-indirect-buffer-new ()
+    (interactive)
+    (let ((orig-buffer (current-buffer))
+          (current-prefix-arg '(4)))
+      (message "%s" orig-buffer)
+      (call-interactively 'org-agenda-tree-to-indirect-buffer)
+      (with-current-buffer org-last-indirect-buffer
+        (setq-local doom--narrowed-base-buffer orig-buffer)))))
+#+end_src
+
 **** Hydra
 
 Define a major-mode-hydra.
@@ -4435,83 +4514,85 @@ Customize bindings.
   ;; Agenda bindings
   (map! :map evil-org-agenda-mode-map
         ;; Avoid spurious bindings kicking in with ESC
-        :g [escape]   #'transient-noop
+        :g [escape]     #'transient-noop
         ;; This is more consistent for me
-        :m [C-return] #'org-agenda-goto
-        :m "C-RET"    #'org-agenda-goto
-        :m [S-return] #'org-agenda-recenter
-        :m "S-RET"    #'org-agenda-recenter
-        :m [M-return] #'org-agenda-tree-to-indirect-buffer
-        :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
+        :m [C-return]   #'org-agenda-goto
+        :m "C-RET"      #'org-agenda-goto
+        :m [S-return]   #'org-agenda-recenter
+        :m "S-RET"      #'org-agenda-recenter
+        :m [M-return]   #'org-agenda-tree-to-indirect-buffer
+        :m "M-RET"      #'org-agenda-tree-to-indirect-buffer
+        :m [M-S-return] #'+psydev/org-agenda-tree-to-indirect-buffer-new
+        :m "M-S-RET"    #'+psydev/org-agenda-tree-to-indirect-buffer-new
 
         ;; Move cursor by items instead of lines by default
-        :m "j" #'org-agenda-next-line
-        :m "k" #'org-agenda-previous-line
-        :m "M-j" #'org-agenda-next-item
-        :m "M-k" #'org-agenda-previous-item
-        :m "C-j" #'outline-next-heading
-        :m "C-k" #'outline-previous-heading
+        :m "j"          #'org-agenda-next-line
+        :m "k"          #'org-agenda-previous-line
+        :m "M-j"        #'org-agenda-next-item
+        :m "M-k"        #'org-agenda-previous-item
+        :m "C-j"        #'outline-next-heading
+        :m "C-k"        #'outline-previous-heading
 
         ;; Add equivalence for org-mode bindings
-        :m "C-M-k"    #'org-agenda-priority-up
-        :m "C-M-j"    #'org-agenda-priority-down
-        :m "C-M-h"    #'+org-agenda-todo-prev
-        :m "C-M-l"    #'+org-agenda-todo-next
-        :m "C-M-S-h"  #'org-agenda-todo-previousset
-        :m "C-M-S-l"  #'org-agenda-todo-nextset
+        :m "C-M-k"      #'org-agenda-priority-up
+        :m "C-M-j"      #'org-agenda-priority-down
+        :m "C-M-h"      #'+org-agenda-todo-prev
+        :m "C-M-l"      #'+org-agenda-todo-next
+        :m "C-M-S-h"    #'org-agenda-todo-previousset
+        :m "C-M-S-l"    #'org-agenda-todo-nextset
 
         ;; Bind filter commands to 'f' prefix
-        :m "ff"       #'org-agenda-filter
-        :m "fh"       #'org-agenda-filter-by-top-headline
-        :m "fc"       #'org-agenda-filter-by-category
-        :m "fe"       #'org-agenda-filter-by-effort
-        :m "fr"       #'org-agenda-filter-by-regexp
-        :m "fq"       #'org-agenda-filter-by-tag
-        :m "fl"       #'org-agenda-limit-interactively
-        :m "F"        #'org-agenda-filter-remove-all
-        :m "s^"       nil
-        :m "sc"       nil
-        :m "se"       nil
-        :m "sr"       nil
-        :m "st"       nil
-        :m "ss"       nil
+        :m "ff"         #'org-agenda-filter
+        :m "fh"         #'org-agenda-filter-by-top-headline
+        :m "fc"         #'org-agenda-filter-by-category
+        :m "fe"         #'org-agenda-filter-by-effort
+        :m "fr"         #'org-agenda-filter-by-regexp
+        :m "fq"         #'org-agenda-filter-by-tag
+        :m "fl"         #'org-agenda-limit-interactively
+        :m "F"          #'org-agenda-filter-remove-all
+        :m "s^"         nil
+        :m "sc"         nil
+        :m "se"         nil
+        :m "sr"         nil
+        :m "st"         nil
+        :m "ss"         nil
 
         ;; Bind "show" commands to 's' prefix
-        :m "sh"       #'org-habit-toggle-display-in-agenda
-        :m "sH"       #'org-agenda-holidays
-        :m "sm"       #'org-agenda-phases-of-moon
-        :m "ss"       #'org-agenda-sunrise-sunset
-        :m "sq"       #'org-agenda-show-tags
-        :m "sd"       #'org-agenda-convert-date
-        :m "gh"       nil
-        :m "gm"       nil
-        :m "gs"       nil
-        :m "gt"       nil
-        :m "gC"       nil
+        :m "sh"         #'org-habit-toggle-display-in-agenda
+        :m "sH"         #'org-agenda-holidays
+        :m "sm"         #'org-agenda-phases-of-moon
+        :m "ss"         #'org-agenda-sunrise-sunset
+        :m "sq"         #'org-agenda-show-tags
+        :m "sd"         #'org-agenda-convert-date
+        :m "gh"         nil
+        :m "gm"         nil
+        :m "gs"         nil
+        :m "gt"         nil
+        :m "gC"         nil
 
         ;; Bind additional commands
-        :m "S"        #'org-save-all-org-buffers
-        :m "M"        #'org-agenda-bulk-toggle-all
-        :m "D"        #'org-agenda-archive-default-with-confirmation
-        :m "T"        #'org-agenda-set-tags
-        :m "p"        #'org-agenda-priority
-        :m "d"        #'org-agenda-date-prompt
-        :m "cd"       #'org-agenda-date-prompt
-        :m ">"        #'org-agenda-remove-restriction-lock
+        :m "S"          #'org-save-all-org-buffers
+        :m "M"          #'org-agenda-bulk-toggle-all
+        :m "D"          #'org-agenda-archive-default-with-confirmation
+        :m "T"          #'org-agenda-set-tags
+        :m "p"          #'org-agenda-priority
+        :m "d"          #'org-agenda-date-prompt
+        :m "cd"         #'org-agenda-date-prompt
+        :m ">"          #'org-agenda-remove-restriction-lock
 
         :map org-agenda-mode-map
         ;; Unbind obsolete and/or misleading bindings
-        :m "C-SPC"    nil
-        :m "o"        #'org-agenda-open-link
+        :m "C-SPC"      nil
+        :m "o"          #'org-agenda-open-link
 
         ;; Bind missing agenda-equivalent of frequent org commands
         :localleader
-        "a"           #'org-attach
-        "p"           #'org-agenda-priority
-        "T"           #'org-timer-set-timer
+        "a"             #'org-attach
+        "p"             #'org-agenda-priority
+        "T"             #'org-timer-set-timer
 
         :prefix "d"
-        "t"           #'org-agenda-date-prompt))
+        "t"             #'org-agenda-date-prompt))
 #+end_src
 
 *** Views
@@ -4936,6 +5017,19 @@ Customize popup rules for org-related buffers.
     '(("^\\*Org Src" :ignore t))))
 #+end_src
 
+*** Commands
+
+Add a command to always spawn new indirect buffers.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-tree-to-indirect-buffer-new ()
+    (interactive)
+    (let ((orig-buffer (current-buffer))
+          (current-prefix-arg '(4)))
+      (call-interactively 'org-tree-to-indirect-buffer)
+      (setq-local doom--narrowed-base-buffer orig-buffer))))
+#+end_src
+
 *** Bindings
 
 Restore original TAB behavior to cycle through current subtree recursively.
@@ -4983,6 +5077,10 @@ Customize bindings.
         :g "C-M-S-j"        #'org-shiftcontroldown
         :g "C-M-S-h"        #'org-shiftcontrolleft
         :g "C-M-S-l"        #'org-shiftcontrolright
+
+        ;; Consistent narrowing commands with other modes.
+        :nv "zn"            #'org-narrow-to-subtree
+        :nv "zN"            #'+psydev/org-tree-to-indirect-buffer-new
 
         ;; Bind custom implementation of prev/next fold commands for org-mode.
         ;; FIXME: +fold/next stopped working in org-mode at some point in 2021...
@@ -5481,6 +5579,19 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
         :m "TAB"           #'outline-cycle
         :m "<tab>"         #'outline-cycle
         :m "<backtab>"     #'outline-cycle-buffer))
+#+end_src
+
+** Perspective
+
+Do not save indirect buffers in session.
+FIXME: Saving the 'vars' argument in [[file:~/.config/emacs/modules/ui/workspaces/config.el::defvar +workspaces--indirect-buffers-to-restore nil][doom's workspace configuration]] breaks the session file.
+It is then impossible to load the session file (Invalid read syntax: #).
+Also it seems that without saving 'vars', indirect buffers are restored as clones of the base buffer, so not useful at all.
+See also https://github.com/Bad-ptr/persp-mode.el/issues/93
+#+begin_src elisp
+(add-hook! 'persp-filter-save-buffers-functions
+  (defun +workspaces-indirect-buffer-p (buf)
+    (buffer-base-buffer buf)))
 #+end_src
 
 ** Projectile
