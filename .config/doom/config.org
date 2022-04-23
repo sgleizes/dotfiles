@@ -861,6 +861,51 @@ Customize window management bindings.
 #+end_src
 
 ** Buffers
+*** Commands
+
+Add a command to switch to the window's MRU unreal buffer (i.e. hidden buffer in doom).
+#+begin_src elisp
+(defun last-persp-buffer (&optional window count)
+  "Get window's last COUNT-th perspective buffer."
+  (let* ((buffer (window-buffer window))
+         (prev-buffers
+          (if persp-mode
+              (cl-remove-if-not (lambda (b) (and (persp-contain-buffer-p b)
+                                                 (not (eq buffer b))))
+                                (window-prev-buffers window)
+                                :key #'car)
+            (window-prev-buffers))))
+    (car (nthcdr (or (- count 1) 0) prev-buffers))))
+
+(defun switch-to-windows-last-persp-buffer (count)
+  "Switch to current window's last COUNT-th perspective buffer."
+  (interactive "p")
+  (let ((previous-place (last-persp-buffer nil count)))
+    (when previous-place
+      (switch-to-buffer (car previous-place))
+      (goto-char (car (last previous-place))))))
+
+(defun last-unreal-buffer (&optional window count)
+  "Get window's last COUNT-th unreal buffer."
+  (let* ((buffer (window-buffer window))
+         (prev-buffers
+          (cl-remove-if-not (lambda (b) (and (or (doom-special-buffer-p b)
+                                                 (doom-non-file-visiting-buffer-p b))
+                                             (not (buffer-base-buffer b))
+                                             (not (eq buffer b))))
+                            (window-prev-buffers window)
+                            :key #'car)))
+    (car (nthcdr (or (- count 1) 0) prev-buffers))))
+
+(defun switch-to-windows-last-unreal-buffer (count)
+  "Switch to current window's last COUNT-th unrealective buffer."
+  (interactive "p")
+  (let ((previous-place (last-unreal-buffer nil count)))
+    (when previous-place
+      (switch-to-buffer (car previous-place))
+      (goto-char (car (last previous-place))))))
+#+end_src
+
 *** Hydra
 
 Add a global hydra for buffer management.
@@ -902,9 +947,17 @@ Add a global hydra for buffer management.
 
 #+begin_src elisp
 (after! pretty-hydra
-  (map! :leader :prefix "b"
+  ;; TODO: Override which-key descriptions...
+  (map! :leader
+        "`"   #'switch-to-windows-last-persp-buffer
+        :desc "Switch to last unreal buffer"
+        "~"   #'switch-to-windows-last-unreal-buffer
+
+        :prefix "b"
         :desc "Buffer management"
-        "SPC" #'+hydra/buffer-management/body))
+        "SPC" #'+hydra/buffer-management/body
+        "`"   #'switch-to-windows-last-persp-buffer
+        "~"   #'switch-to-windows-last-unreal-buffer))
 #+end_src
 
 See [[*Centaur tabs][Centaur Tabs]].
