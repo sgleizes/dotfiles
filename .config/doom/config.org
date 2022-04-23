@@ -493,9 +493,29 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
       doom-big-font (font-spec :family "Fira Code" :size 18))
 #+end_src
 
+Set preferred order for all-the-icons fonts, since some unicode characters override each other.
+#+begin_src elisp
+(after! all-the-icons
+  (defun psydev/doom-init-all-the-icons-fonts-h ()
+    (when (fboundp 'set-fontset-font)
+      (dolist (font (list
+                     "all-the-icons"
+                     "FontAwesome"
+                     "Material Icons"
+                     "file-icons"
+                     "github-octicons"
+                     "Weather Icons"))
+        (set-fontset-font t 'unicode font nil 'append))
+      ;; Specific overrides for some icons
+      (set-fontset-font t (cons ? ?) "Weather Icons" nil 'prepend))))
+(advice-add #'doom-init-all-the-icons-fonts-h :override #'psydev/doom-init-all-the-icons-fonts-h)
+#+end_src
+
 Add a global hydra to change the font-size interactively.
 #+begin_src elisp
 (after! pretty-hydra
+  (setq doom-font-increment 1)
+
   (pretty-hydra-define +hydra/font-size
     (:separator "═")
     ("Font size"
@@ -545,7 +565,26 @@ Fix visually disturbing ~hl-line~ range in the dashboard.
 (defun doom-dashboard-hl-button ()
   (cons (- (point) 5) (line-end-position)))
 (add-hook! +doom-dashboard-mode
-           '(lambda () (setq-local hl-line-range-function #'doom-dashboard-hl-button)))
+           (setq-local hl-line-range-function #'doom-dashboard-hl-button))
+#+end_src
+
+*** Faces
+
+Customize some general faces.
+#+begin_src elisp
+(custom-set-faces!
+  ;; Use hl-line faces that are lighter instead of darker (in dark theme).
+  '(hl-line :background "#242628")
+  '(solaire-hl-line-face :background "#1d1f21")
+  ;; Use a slightly lighter region face.
+  '(region :background "#3d3e3f")
+  ;; Restore lazy-highlight face to be the same than highlight.
+  ;; This changed when upgrading to 28.1, not sure why precisely.
+  '(lazy-highlight :foreground unspecified
+                   :distant-foregound unspecified
+                   :background unspecified
+                   :weight unspecified
+                   :inherit highlight))
 #+end_src
 
 ** General settings
@@ -565,6 +604,16 @@ Tweak various general settings to more opinionated values.
       uniquify-buffer-name-style 'forward) ; Use path to uniquify buffer names
 
 (global-subword-mode 1)                    ; Iterate through CamelCase words
+#+end_src
+
+** General bindings
+
+Customize various general bindings.
+#+begin_src elisp
+(map! :leader
+      :prefix "h"
+      "I" #'Info-goto-emacs-key-command-node
+      "K" #'describe-keymap)
 #+end_src
 
 ** Indentation
@@ -699,6 +748,17 @@ Prompt for the workspace buffer to show on new window.
   (+ivy/switch-workspace-buffer))
 #+end_src
 
+*** Popups
+
+Customize general popup rules.
+#+begin_src elisp
+(after! popup
+  (set-popup-rules!
+    ;; Do not quit buffers in `help-mode', `helpful-mode' from other windows.
+    '(("^\\*\\([Hh]elp\\|Apropos\\)"
+       :slot 2 :vslot -8 :size 0.42 :select t :quit 'current))))
+#+end_src
+
 *** Hydra
 
 Add a global hydra for window management.
@@ -755,8 +815,8 @@ Add a global hydra for window management.
 Customize window management bindings.
 #+begin_src elisp
 (map!
- :m "]w"          #'evil-window-next
- :m "[w"          #'evil-window-prev
+ :nv "]w"          #'evil-window-next
+ :nv "[w"          #'evil-window-prev
 
  :map evil-window-map
  :desc "Window management"
@@ -765,15 +825,15 @@ Customize window management bindings.
  "a"                  #'ace-window
  "]"                  #'evil-window-next
  "["                  #'evil-window-prev
- ;; "<left>"             #'evil-window-left
- ;; "<down>"             #'evil-window-down
- ;; "<up>"               #'evil-window-up
- ;; "<right>"            #'evil-window-right
- ;; ;; Moving windows
- ;; "S-<left>"           #'+evil/window-move-left
- ;; "S-<down>"           #'+evil/window-move-down
- ;; "S-<up>"             #'+evil/window-move-up
- ;; "S-<right>"          #'+evil/window-move-right
+ "<left>"             #'evil-window-left
+ "<down>"             #'evil-window-down
+ "<up>"               #'evil-window-up
+ "<right>"            #'evil-window-right
+ ;; Moving windows
+ "S-<left>"           #'+evil/window-move-left
+ "S-<down>"           #'+evil/window-move-down
+ "S-<up>"             #'+evil/window-move-up
+ "S-<right>"          #'+evil/window-move-right
  ;; Popups
  "p"                  #'+popup/other        ; Better than C-x p
  "P"                  #'+popup/toggle       ; Alternative to C-`
@@ -801,6 +861,51 @@ Customize window management bindings.
 #+end_src
 
 ** Buffers
+*** Commands
+
+Add a command to switch to the window's MRU unreal buffer (i.e. hidden buffer in doom).
+#+begin_src elisp
+(defun last-persp-buffer (&optional window count)
+  "Get window's last COUNT-th perspective buffer."
+  (let* ((buffer (window-buffer window))
+         (prev-buffers
+          (if persp-mode
+              (cl-remove-if-not (lambda (b) (and (persp-contain-buffer-p b)
+                                                 (not (eq buffer b))))
+                                (window-prev-buffers window)
+                                :key #'car)
+            (window-prev-buffers))))
+    (car (nthcdr (or (- count 1) 0) prev-buffers))))
+
+(defun switch-to-windows-last-persp-buffer (count)
+  "Switch to current window's last COUNT-th perspective buffer."
+  (interactive "p")
+  (let ((previous-place (last-persp-buffer nil count)))
+    (when previous-place
+      (switch-to-buffer (car previous-place))
+      (goto-char (car (last previous-place))))))
+
+(defun last-unreal-buffer (&optional window count)
+  "Get window's last COUNT-th unreal buffer."
+  (let* ((buffer (window-buffer window))
+         (prev-buffers
+          (cl-remove-if-not (lambda (b) (and (or (doom-special-buffer-p b)
+                                                 (doom-non-file-visiting-buffer-p b))
+                                             (not (buffer-base-buffer b))
+                                             (not (eq buffer b))))
+                            (window-prev-buffers window)
+                            :key #'car)))
+    (car (nthcdr (or (- count 1) 0) prev-buffers))))
+
+(defun switch-to-windows-last-unreal-buffer (count)
+  "Switch to current window's last COUNT-th unrealective buffer."
+  (interactive "p")
+  (let ((previous-place (last-unreal-buffer nil count)))
+    (when previous-place
+      (switch-to-buffer (car previous-place))
+      (goto-char (car (last previous-place))))))
+#+end_src
+
 *** Hydra
 
 Add a global hydra for buffer management.
@@ -808,7 +913,7 @@ Add a global hydra for buffer management.
 (after! pretty-hydra
   (pretty-hydra-define +hydra/buffer-management
     (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 34))
-    ("Tab"
+    ("Tabs"
      (("h" +tabs:previous-or-goto "prev")
       ("l" +tabs:next-or-goto "next")
       ("H" centaur-tabs-move-current-tab-to-left "move left")
@@ -822,10 +927,9 @@ Add a global hydra for buffer management.
       ("n" evil-buffer-new "new")
       ("x" doom/open-scratch-buffer "scratch")
       ("f" counsel-find-file "find file"))
-     "Region"
-     (("-" doom/toggle-narrow-buffer "narrow" :toggle (buffer-narrowed-p))
-      ;; TODO: +evil:narrow-buffer : How to specify arg BANG? <!>??
-      ("+" doom/narrow-buffer-indirectly "narrow indirect"))
+     "Narrowing"
+     (("-" doom/toggle-narrow-buffer "toggle" :toggle (buffer-narrowed-p))
+      ("w" doom/widen-indirectly-narrowed-buffer "widen indirect" :toggle doom--narrowed-base-buffer))
      "Save"
      (("s" basic-save-buffer "save")
       ("S" evil-write-all "save all")
@@ -842,9 +946,19 @@ Add a global hydra for buffer management.
 
 #+begin_src elisp
 (after! pretty-hydra
-  (map! :leader :prefix "b"
+  ;; TODO: Override which-key descriptions...
+  (map! :leader
+        "`"   #'switch-to-windows-last-persp-buffer
+        :desc "Switch to last unreal buffer"
+        "~"   #'switch-to-windows-last-unreal-buffer
+
+        :prefix "b"
         :desc "Buffer management"
-        "SPC" #'+hydra/buffer-management/body))
+        "SPC" #'+hydra/buffer-management/body
+        :desc "Widen buffer"
+        "w"   #'doom/widen-indirectly-narrowed-buffer
+        "`"   #'switch-to-windows-last-persp-buffer
+        "~"   #'switch-to-windows-last-unreal-buffer))
 #+end_src
 
 See [[*Centaur tabs][Centaur Tabs]].
@@ -878,10 +992,18 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
 #+begin_src elisp
 (use-package! beacon
   :config
+  ;; Configure appearance and duration settings
   (setq beacon-color 0.7
         beacon-size 24
         beacon-blink-delay 0.2
         beacon-blink-duration 0.2)
+  ;; Configure when the beacon should blink
+  (setq beacon-blink-when-buffer-changes t
+        beacon-blink-when-window-changes t
+        beacon-blink-when-focused nil
+        beacon-blink-when-window-scrolls nil
+        beacon-blink-when-point-moves-horizontally nil
+        beacon-blink-when-point-moves-vertically nil)
   (nconc beacon-dont-blink-commands
          '(evil-ex-search-next
            evil-ex-search-previous
@@ -889,6 +1011,9 @@ See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_start
            evil-ex-search-backward
            evil-ex-search-word-forward
            evil-ex-search-word-backward))
+  ;; Prevent "stuck" beacon on doom dashboard.
+  (nconc beacon-dont-blink-major-modes
+         '(+doom-dashboard-mode))
   ;; FIXME: Persp-mode must be doing something after the hook that cancels the blink.
   ;; (add-hook! 'persp-activated-functions
   ;;   (defun beacon--on-persp-activate (_target)
@@ -950,7 +1075,8 @@ Adapt sunrise/sunset diary sexp.
   "String of *local* time of sunrise and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     " %s (%s de jour)" ;🌅
+     "%s %s (%s de jour)"
+     (all-the-icons-wicon "sunrise" :height 1.0 :v-adjust 0)
      (if (car l)
          (concat "Lever du Soleil " (apply 'solar-time-string (car l)))
        "Aucun Lever du Soleil")
@@ -970,7 +1096,8 @@ Accurate to a few seconds."
   "String of *local* time of sunset and daylight on Gregorian DATE."
   (let ((l (solar-sunrise-sunset date)))
     (format
-     " %s" ;🌅
+     "%s %s"
+     (all-the-icons-wicon "sunset" :height 1.0 :v-adjust 0)
      (if (cadr l)
          (concat "Coucher du Soleil " (apply 'solar-time-string (cadr l)))
        "Aucun Coucher du Soleil"))))
@@ -1199,6 +1326,9 @@ and restrict buffer list to workspace buffers.
         centaur-tabs-show-new-tab-button t
         x-underline-at-descent-line t)
   (centaur-tabs-headline-match)
+
+  ;; FIXME: Workaround https://github.com/ema2159/centaur-tabs/issues/181
+  (centaur-tabs-group-by-projectile-project)
 
   ;; Override rules for grouping buffers.
   (defun centaur-tabs-buffer-groups ()
@@ -1699,7 +1829,7 @@ Customize default doom-theme faces for ~ediff~.
 
 ** Elfeed
 
-Configure elfeed and elfeed-org.
+Configure elfeed general settings.
 #+begin_src elisp
 (use-package! elfeed
   :config
@@ -1708,14 +1838,6 @@ Configure elfeed and elfeed-org.
         elfeed-sort-order 'ascending)
   (elfeed-set-max-connections 8) ; default is 16
   (elfeed-set-timeout 60))       ; default is 30
-
-(use-package! elfeed-org
-  :after org
-  :config
-  (setq elfeed-search-filter "+unread +starred "
-        rmh-elfeed-org-files (list (concat org-directory "elfeed/feed.org"))
-        rmh-elfeed-org-tree-id "feed")
-  (elfeed-org))
 #+end_src
 
 *** Integration
@@ -1740,40 +1862,6 @@ If IGNORE-REGION-P is non-nil, only return the entry under point."
                                      (car selected)
                                    selected))))))
   (advice-add #'elfeed-search-selected :override #'psydev/elfeed-search-selected))
-#+end_src
-
-Add advice to elfeed-update to make sure the list of feed is up to date.
-#+begin_src elisp
-(after! elfeed-org
-  (defadvice elfeed-update (before configure-elfeed activate)
-    "Load all feed settings before elfeed updates."
-    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
-#+end_src
-
-Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
-Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
-#+begin_src elisp
-(after! elfeed-org
-  (defun +rss-cleanup-h ()
-    "Clean up after an elfeed session. Kills all elfeed buffers."
-    (interactive)
-    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
-    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
-    ;;     (switch-to-buffer elfeed-dashboard--buf))
-    ;; FIXME This seems to break the perspective as well, reason not understood
-    ;; (let ((buf (switch-to-prev-buffer)))
-    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
-    ;;     (switch-to-buffer (doom-fallback-buffer))))
-    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
-          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
-          kill-buffer-query-functions)
-      (dolist (b search-buffers)
-        (when (not (eq b (current-buffer)))
-          (with-current-buffer b
-            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
-            (kill-buffer b))))
-      (mapc #'kill-buffer show-buffers))
-    (+workspace/delete +rss-workspace-name)))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
@@ -1821,14 +1909,14 @@ inserted. "
                  while (not (eobp))
                  do (progn
                       (forward-line 1)
-                      (incf offset))
+                      (cl-incf offset))
 
                  for current-data = (entry-date offset)
                  if (not (equal current-data prev-data))
                  do (when current-data
                       (insert-date current-data)
                       (setq prev-data current-data))
-                 else do (incf largest-group-size)
+                 else do (cl-incf largest-group-size)
 
                  finally do (when (< largest-group-size min-group-size)
                               (ov-clear))))))
@@ -2498,7 +2586,7 @@ Mark entries older than 2 weeks as read.
 
 Configure bindings.
 #+begin_src elisp
-(map! :after elfeed-org
+(map! :after elfeed
       :map elfeed-search-mode-map
       :n  "C-j"        #'psydev/elfeed-forward-day
       :n  "C-k"        #'psydev/elfeed-backward-day
@@ -2531,6 +2619,65 @@ Configure bindings.
       :n "C-k"        #'evil-backward-paragraph)
 #+end_src
 
+** Elfeed org
+
+Configure elfeed-org.
+#+begin_src elisp
+(use-package! elfeed-org
+  :after elfeed
+  :config
+  (setq elfeed-search-filter "+unread +starred "
+        rmh-elfeed-org-files (list "~/Notes/elfeed/feed.org")
+        rmh-elfeed-org-tree-id "feed"
+        rmh-elfeed-org-ignore-tag "ignore"
+        rmh-elfeed-org-auto-ignore-invalid-feeds nil)
+  (elfeed-org))
+#+end_src
+
+Prevent elfeed-org from opening source buffers unexpectedly.
+#+begin_src elisp
+(after! elfeed-org
+  (defadvice! +psydev/consistent-elfeed-org-buffers (fn &rest args)
+    :around #'rmh-elfeed-org-import-headlines-from-files
+    (save-excursion (apply fn args))))
+#+end_src
+
+Add advice to elfeed-update to make sure the list of feed is up to date.
+#+begin_src elisp
+(after! elfeed-org
+  (defadvice elfeed-update (before configure-elfeed activate)
+    "Load all feed settings before elfeed updates."
+    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
+#+end_src
+
+Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
+Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
+#+begin_src elisp
+(after! elfeed-org
+  (defun psydev/+rss-cleanup-h ()
+    "Clean up after an elfeed session. Kills all elfeed buffers."
+    (interactive)
+    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
+    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
+    ;;     (switch-to-buffer elfeed-dashboard--buf))
+    ;; FIXME This seems to break the perspective as well, reason not understood
+    ;; (let ((buf (switch-to-prev-buffer)))
+    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
+    ;;     (switch-to-buffer (doom-fallback-buffer))))
+    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
+          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
+          kill-buffer-query-functions)
+      (dolist (b search-buffers)
+        (when (not (eq b (current-buffer)))
+          (with-current-buffer b
+            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
+            (kill-buffer b))))
+      (mapc #'kill-buffer show-buffers))
+    ;; (+workspace/delete +rss-workspace-name)
+    )
+  (advice-add #'+rss-cleanup-h :override #'psydev/+rss-cleanup-h))
+#+end_src
+
 ** Elfeed dashboard
 
 Disable evil-snipe.
@@ -2543,12 +2690,17 @@ Configure dashboard.
 #+begin_src elisp
 (use-package! elfeed-dashboard
   :config
-  (setq elfeed-dashboard-file (concat org-directory "elfeed/dashboard.org")
+  (setq elfeed-dashboard-file "~/Notes/elfeed/dashboard.org"
         +rss-workspace-name "elfeed")
   ;; Update feed counts on elfeed-quit
   ;; FIXME: Too slow, fallback to manual update
   ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
-  )
+
+  (defun psydev/elfeed-dashboard-all ()
+    "Open the full version of the elfeed dashboard"
+    (interactive)
+    (let ((elfeed-dashboard-file "~/Notes/elfeed/dashboard-all.org"))
+      (elfeed-dashboard))))
 #+end_src
 
 Add hooks to improve the usability and readability of the dashboard.
@@ -2559,13 +2711,30 @@ Add hooks to improve the usability and readability of the dashboard.
   (defun psydev/elfeed-dashboard ()
     "Open the elfeed dasboard."
     (interactive)
-    (progn
-      (+workspace-switch +rss-workspace-name t)
-      (doom/switch-to-scratch-buffer)
-      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-      (with-current-buffer elfeed-dashboard--buf
-        (elfeed-dashboard-mode))
-      (+workspace/display)))
+    ;; NOTE: Dedicated workspace version.
+    ;; (+workspace-switch +rss-workspace-name t)
+    ;; (doom/switch-to-scratch-buffer)
+
+    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
+    (with-current-buffer elfeed-dashboard--buf
+      (elfeed-dashboard-mode))
+
+    ;; NOTE: Sidebar version (use find-file-noselect above).
+    ;; (pop-to-buffer elfeed-dashboard--buf
+    ;;                '(display-buffer-in-side-window
+    ;;                  ;; +popup-display-buffer-stacked-side-window-fn
+    ;;                  .
+    ;;                  ((side . right)
+    ;;                    (slot . 0)
+    ;;                    ;; (vslot . 0)
+    ;;                    (dedicated . t)
+    ;;                    (window-width . 60)
+    ;;                    (preserve-size . (t . nil))
+    ;;                    (window-parameters . '((no-delete-other-windows . nil))))
+    ;;                  ))
+
+    ;; (+workspace/display)
+    )
   (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
 
   ;; Cleanup elfeed on dashboard exit.
@@ -2577,7 +2746,7 @@ Add hooks to improve the usability and readability of the dashboard.
     (defun psydev/elfeed-dashboard-setup ()
       ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
       (setq elfeed-dashboard--buf (current-buffer))
-      ;; FIXME: Too slow, fallback to manual update
+      ;; FIXME: Slow, fallback to manual update?
       ;; (elfeed-dashboard-update-links)
       ))
 
@@ -2590,18 +2759,22 @@ Add hooks to improve the usability and readability of the dashboard.
   ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-override-keymap ()
-      ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
-      (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-      ;; (elfeed-dashboard-update-links)
-
       (evil-org-mode 0)))
 
   ;; Take advantage of org-mode capabilities to improve prettiness.
   (add-hook! elfeed-dashboard-mode
     (defun psydev/elfeed-dashboard-prettify ()
+      (rename-buffer (concat "elfeed/" (file-name-base elfeed-dashboard-file)))
+      (solaire-mode 1)
+      (centaur-tabs-local-mode 1)
+      (psydev/elfeed-dashboard-emphasis)
+      (when (not org-link-descriptive)
+        (org-toggle-link-display))
       (let ((org-image-actual-width 188))
         (org-toggle-inline-images 'include-linked))
-      (psydev/elfeed-dashboard-emphasis)
+      (setq-local tab-width 1) ; For whitespace-mode and alignment tabs
+      (setq-local fill-column 54)
+      (visual-fill-column-mode 1)
       (+org-pretty-mode 1)))
 
   ;; Remove emphasis that can appear in feed titles.
@@ -2617,12 +2790,24 @@ Add hooks to improve the usability and readability of the dashboard.
     "Edit dashboard."
     (interactive)
     (+org-pretty-mode 0)
+    (setq-local tab-width 2)
     (org-toggle-inline-images)
     (evil-org-mode 1)
     (setq buffer-read-only nil)
     (org-mode)
-    (psydev/elfeed-dashboard-emphasis))
-  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit))
+    (org-toggle-link-display)
+    (psydev/elfeed-dashboard-emphasis)
+    (centaur-tabs-local-mode -1)
+    (solaire-mode 0)
+    (visual-fill-column-mode -1)
+    (rename-buffer (file-name-nondirectory elfeed-dashboard-file)))
+  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit)
+
+  ;; Do not enable whitespace-mode in elfeed-dasboard (tabs used for icon alignment)
+  (defadvice! psydev/elfeed-dashboard-prevent-whitespace-mode (fn &rest args)
+    :around #'doom-highlight-non-default-indentation-h
+    (unless (eq major-mode 'elfeed-dashboard-mode)
+      (apply fn args))))
 #+end_src
 
 Add custom command to open elfeed or the dashboard entry at point.
@@ -2698,7 +2883,8 @@ Add top level binding.
 (map! :after elfeed-dashboard
       :leader
       (:prefix-map ("o" . "open")
-       :desc "Elfeed" "n" #'elfeed-dashboard))
+       :desc "Elfeed" "n" #'elfeed-dashboard
+       :desc "Elfeed (all)" "N" #'psydev/elfeed-dashboard-all))
 #+end_src
 
 ** Elfeed goodies
@@ -2729,6 +2915,9 @@ Configure basic settings and setup goodies.
     "Setup Elfeed with adaptive header bar and entries."
     (interactive)
     (add-hook 'elfeed-show-mode-hook #'elfeed-goodies/show-mode-setup)
+    (add-hook 'elfeed-show-mode-hook
+              (defun psydev/elfeed-show-mode-fill-column ()
+                (setq visual-fill-column-width 85)))
     (add-hook 'elfeed-new-entry-hook #'elfeed-goodies/html-decode-title)
     (when (boundp 'elfeed-new-entry-parse-hook)
       (add-hook 'elfeed-new-entry-parse-hook #'elfeed-goodies/parse-author))
@@ -2848,7 +3037,7 @@ Patch the header drawing function for ~elfeed-show-mode~.
              (title-faces (elfeed-search--faces (elfeed-entry-tags elfeed-show-entry)))
 
              (tags (mapconcat
-                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
                     (tags elfeed-show-entry) ","))
              ;; (tags (mapconcat #'symbol-name (tags elfeed-show-entry) ","))
              (feed (elfeed-entry-feed elfeed-show-entry))
@@ -2936,7 +3125,7 @@ Add functions to define how icons are selected for each entry.
         ("bitchute" (all-the-icons-faicon "circle-o-notch" :height 0.85 :v-adjust 0)) ; ""
         ("youtube"  (all-the-icons-faicon "youtube-play"   :height 0.9  :v-adjust 0)) ; ""
         ("twitter"  (all-the-icons-faicon "twitter"        :height 1.0  :v-adjust 0)) ; ""
-        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 1.0  :v-adjust 0)) ; ""
+        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 0.9  :v-adjust 0)) ; ""
         ("github"   (all-the-icons-faicon "github"         :height 1.0  :v-adjust 0)) ; ""
         (_ "  ")))))
 #+end_src
@@ -2970,7 +3159,7 @@ Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa
 
              ;; Tags
              (tags (mapconcat
-                    (lambda (t) (propertize t 'face 'elfeed-search-tag-face))
+                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
                     (tags entry) ","))
              ;; (tags-width elfeed-goodies/tag-column-width)                     ; Fixed alignment
              (tags-width (min (length tags) elfeed-goodies/tag-column-width)) ; Dynamic Alignment
@@ -3048,7 +3237,8 @@ Customize general evil options.
 #+begin_src elisp
 (setq evil-want-fine-undo t          ; By default while in insert all changes are one big blob. Be more granular
       evil-move-cursor-back nil      ; Leave cursor in place when exiting insert-mode
-      evil-cross-lines nil           ; Allow horizontal ops to move to the next line (or not)
+      evil-cross-lines t             ; Allow horizontal ops to move to the next line (or not)
+      evil-move-beyond-eol t         ; Allow cusor to move one character past the end of the line
       evil-kill-on-visual-paste nil) ; Do not kill replaced text in visual mode
 #+end_src
 
@@ -3070,6 +3260,17 @@ Add a delete operator that does not add to kill-ring.
 
 Customize options for evil extensions.
 #+begin_src elisp
+(after! evil-snipe
+  (setq evil-snipe-scope 'line
+        evil-snipe-repeat-scope 'visible
+        evil-snipe-spillover-scope 'visible
+        evil-snipe-smart-case t
+        evil-snipe-auto-scroll nil))
+
+(after! evil-embrace
+  ;; In case I ever need help again, set this to t.
+  (setq evil-embrace-show-help-p nil))
+
 (after! evil-multiedit
   (setq evil-multiedit-follow-matches t))
 #+end_src
@@ -3094,6 +3295,7 @@ TODO: Contribute this.
 *** Commands
 
 Add a command to duplicate the current line or region.
+Implementation is greatly inspired by drag-stuff.
 #+begin_src elisp
 (defun duplicate-line-or-region (arg)
   "Duplicates the current line or region ARG times.
@@ -3101,15 +3303,30 @@ If there's no region, the current line will be duplicated. However, if
 there's a region, all lines that region covers will be duplicated."
   (interactive "p")
   (let (beg end (origin (point)))
-    ;; Reuse drag-stuff implementation functions
     (let* ((markp mark-active)
-           (evilp (when markp (drag-stuff--evil-p)))
+           (evilp (when markp (and (bound-and-true-p evil-mode) (evil-visual-state-p))))
            (vtype (when markp (if evilp (evil-visual-type) nil)))
-           (mark-line (when markp (drag-stuff--line-at-mark)))
-           (point-line (when markp (drag-stuff--line-at-point)))
-           (mark-col (when markp (drag-stuff--col-at-mark)))
-           (point-col (when markp (drag-stuff--col-at-point)))
-           (bounds (when markp (drag-stuff-whole-lines-region)))
+           (mark-line (when markp (line-number-at-pos (if evilp evil-visual-mark (mark)))))
+           (point-line (when markp (line-number-at-pos (if evilp evil-visual-point (point)))))
+           (mark-col (when markp (if evilp
+                                     (save-mark-and-excursion (goto-char evil-visual-mark) (current-column))
+                                   (save-mark-and-excursion (exchange-point-and-mark) (current-column)))))
+           (point-col (when markp (if evilp
+                                      (save-mark-and-excursion (goto-char evil-visual-point) (current-column))
+                                    (current-column))))
+           (bounds (when markp
+                     (let (beg end)
+                       (cond (evilp
+                              (setq beg (save-mark-and-excursion (goto-char (region-beginning)) (line-beginning-position)))
+                              (setq end (save-mark-and-excursion (evil-visual-goto-end) (line-end-position))))
+                             (t
+                              (if (> (point) (mark))
+                                  (exchange-point-and-mark))
+                              (setq beg (line-beginning-position))
+                              (if mark-active
+                                  (exchange-point-and-mark))
+                              (setq end (line-end-position))))
+                       (list beg end))))
            (beg (if markp (car bounds) (line-beginning-position)))
            (end (if markp (car (cdr bounds)) (line-end-position)))
            (region (buffer-substring-no-properties beg end))
@@ -3123,7 +3340,6 @@ there's a region, all lines that region covers will be duplicated."
         (setq end (point)))
 
       ;; Restore region
-      (message "%s / %s" markp arg)
       (if markp
           (progn
             (goto-line mark-line)
@@ -3135,6 +3351,56 @@ there's a region, all lines that region covers will be duplicated."
               (evil-visual-make-selection (mark) (point))
               (when (eq vtype 'line) (evil-visual-line (mark) (point)))))
         (goto-char origin)))))
+#+end_src
+
+Rework narrow operator.
+#+begin_src elisp
+(after! evil
+;;   (defun doom/narrow-buffer-indirectly (beg end)
+;;     "Restrict editing in this buffer to the current region, indirectly.
+
+;; This recursively creates indirect clones of the current buffer so that the
+;; narrowing doesn't affect other windows displaying the same buffer. Call
+;; `doom/widen-indirectly-narrowed-buffer' to undo it (incrementally).
+
+;; Inspired from http://demonastery.org/2013/04/emacs-evil-narrow-region/"
+;;     (interactive
+;;      (list (when (region-active-p) (or (bound-and-true-p evil-visual-beginning) (region-beginning)))
+;;            (when (region-active-p) (or (bound-and-true-p evil-visual-end)       (region-end)))))
+;;     (message "%s/%s" beg end)
+;;     (unless (and beg end)
+;;       (setq beg (line-beginning-position)
+;;             end (line-end-position)))
+;;     (deactivate-mark)
+;;     (let ((orig-buffer (current-buffer)))
+;;       (with-current-buffer (switch-to-buffer (clone-indirect-buffer nil nil))
+;;         (narrow-to-region beg end)
+;;         (setq-local doom--narrowed-base-buffer orig-buffer))))
+
+  (defun narrow-to-region-indirect (beg end)
+    "Restrict editing in this buffer to the current region, indirectly."
+    (interactive "r")
+    (deactivate-mark)
+    (let ((orig-buffer (current-buffer))
+          (buf (clone-indirect-buffer nil nil)))
+      (with-current-buffer buf
+        (narrow-to-region beg end))
+      (switch-to-buffer buf)
+      (setq-local doom--narrowed-base-buffer orig-buffer)))
+
+  (evil-define-operator +evil:narrow-buffer (beg end)
+    "Narrow the buffer to region between BEG and END."
+    :move-point nil
+    (interactive "<r>")
+    (narrow-to-region beg end))
+
+  ;; FIXME: When called with region and prefix, the face for the region stays stuck even though region is deactivated.
+  ;; This does not happen when calling 'doom/narrow-buffer-indirectly' directly
+  (evil-define-operator +evil:narrow-buffer-indirect (beg end)
+    "Narrow the buffer to region between BEG and END, indirectly."
+    :move-point nil
+    (interactive "<r>")
+    (narrow-to-region-indirect beg end)))
 #+end_src
 
 *** Hydra
@@ -3191,6 +3457,8 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "goD"            #'evil-quick-diff-cancel
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
  :textobj "B"         nil nil
+ ;; Bind undo in visual mode (undo in region)
+ :v "u"               #'evil-undo
  ;; Customize RET behavior for normal/insert modes
  :i "<return>"        #'+default/newline
  :i "S-<return>"      #'newline-and-indent ;; NOTE: Difference with default-indent-new-line is not clear
@@ -3211,6 +3479,10 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ ;; Rearrange some narrow/indirect buffer commands
+ :nv "zn"             #'+evil:narrow-buffer
+ :nv "zN"             #'+evil:narrow-buffer-indirect
+ :nv "zw"             #'doom/widen-indirectly-narrowed-buffer
  ;; Rearrange some yank/paste commands
  :n "M-p"             #'evil-paste-pop
  :n "C-p"             #'+default/yank-pop
@@ -3262,8 +3534,9 @@ Customize evil-goggles visual hints.
     '(evil-goggles-indent-face :inherit custom-modified)
     '(evil-goggles-change-face :inherit custom-invalid)
     '(evil-goggles-delete-face :inherit custom-invalid))
-  (setq evil-goggles-enable-delete t
-        evil-goggles-enable-change t)
+  (setq evil-goggles-enable-delete nil
+        evil-goggles-enable-change nil
+        evil-goggles-duration 0.15)
 
   ;; Add custom delete command to the list of commands
   (pushnew! evil-goggles--commands
@@ -3691,7 +3964,7 @@ Configure region behavior for org commands.
 Configure the context shown when revealing an org heading.
 #+begin_src elisp
 (setq org-show-context-detail
-      '((agenda . local)
+      '((agenda . ancestors)
         (bookmark-jump . lineage)
         (isearch . lineage)
         (default . ancestors)))
@@ -3777,10 +4050,9 @@ Patch doom's org-insert-item variant to better respect blank settings.
                 (goto-char (line-end-position))
                 (org-end-of-subtree)
                 ;; NOTE: BEGIN: Respect blank settings, at least when inserting headlines below.
-                (insert "\n")
-                (unless (and blank? (org-previous-line-empty-p))
-                  (org-N-empty-lines-before-current (if blank? 1 0)))
-                (insert (make-string level ?*) " ")))
+                (when (and blank? (org-next-line-empty-p))
+                  (forward-line))
+                (insert "\n" (make-string level ?*) " ")))
              ;; NOTE: END
              (`above
               (org-back-to-heading)
@@ -3792,7 +4064,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
               (cond ((eq todo-type 'done)
                      ;; Doesn't make sense to create more "DONE" headings
                      (car (+org-get-todo-keywords-for todo-keyword)))
-                    (todo-keyword)
+                    ;; NOTE: Do not carry over the current todo state.
+                    ;; (todo-keyword)
                     ('todo)))))))
 
       (when (org-invisible-p)
@@ -3820,9 +4093,23 @@ With ARG, repeats or can move forward if negative."
     (org-show-set-visibility 'minimal)))
 #+end_src
 
+Advise org heading insert commands to enter evil insert mode.
+#+begin_src elisp
+(after! org
+  (defadvice! +psydev/evil-insert-mode (&rest _)
+    :after (list #'org-ctrl-c-ret
+                 #'org-insert-heading
+                 #'org-insert-subheading
+                 #'org-insert-todo-heading
+                 #'org-insert-todo-subheading)
+    (when (and (bound-and-true-p evil-local-mode)
+               (not (evil-emacs-state-p)))
+      (evil-insert 1))))
+#+end_src
+
 Add helper function to help with blank line consistency.
 #+begin_src elisp
-(defun +org/fix-blank-lines (&optional prefix)
+(defun +org/fix-blank-lines (&optional arg)
   "Ensure that blank lines exist between headings and between headings and their contents.
 With prefix, operate on whole buffer. Ensures that blank lines
 exist after each headings's drawers."
@@ -3853,9 +4140,7 @@ exist after each headings's drawers."
                                    (org-at-heading-p)
                                    (looking-at-p "\n"))
                          (insert "\n"))))
-                   t (if prefix
-                         nil
-                       'tree)))
+                   t (unless arg 'tree)))
 #+end_src
 
 *** TODO-items & Checkboxes
@@ -3940,6 +4225,30 @@ Kept for reference, but is probably a bad idea.
 ;;                (org-todo "DONE"))
 ;;               ))))
 ;;   (add-hook! 'org-after-todo-statistics-hook #'org-todo-done-when-stats-full))
+#+end_src
+
+Heavily inspired from:
+https://emacs.stackexchange.com/questions/9433/how-to-make-org-prompt-for-a-timestamp-when-changing-state-of-a-todo/9451#9451
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-todo-with-date (&optional arg)
+    "Like `org-todo' but the time of change will be prompted."
+    (interactive "P")
+    (cl-letf* ((org-read-date-prefer-future nil)
+               (my-current-time (org-read-date t t nil "when:" nil nil nil))
+               ((symbol-function 'current-time)
+                #'(lambda () my-current-time))
+               ((symbol-function 'org-today)
+                #'(lambda () (time-to-days my-current-time)))
+               ((symbol-function 'org-current-effective-time)
+                #'(lambda () my-current-time))
+               (super (symbol-function 'format-time-string))
+               ((symbol-function 'format-time-string)
+                #'(lambda (fmt &optional time time-zone)
+                    (funcall super fmt my-current-time time-zone))))
+      (if (eq major-mode 'org-agenda-mode)
+          (org-agenda-todo arg)
+        (org-todo arg)))))
 #+end_src
 
 *** Tags
@@ -4032,13 +4341,112 @@ Configure org-habit.
         org-habit-today-glyph ?!))
 #+end_src
 
+Configure org-clock.
+#+begin_src elisp
+(after! org
+  (setq org-clock-report-include-clocking-task t
+        org-clock-display-default-range 'untilnow
+        org-clock-auto-clock-resolution 'when-no-clock-is-running
+        org-clock-idle-time nil
+        ;; History & Persistence settings
+        org-clock-history-length 20
+        org-clock-persist 'history) ; TODO: Maybe t? Or maybe nil if bothering on startup
+  (org-clock-persistence-insinuate)
+
+  (defun +org-clock-goto-select ()
+    (interactive)
+    (org-clock-goto 'select)))
+#+end_src
+
 *** Refiling & Archiving
+**** Settings
+
+Configure org-refile.
+#+begin_src elisp
+(after! org
+  (setq org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes nil
+        org-refile-targets
+        '((nil :maxlevel . 4)
+          (org-agenda-files :maxlevel . 4))
+        org-refile-target-verify-function #'+psydev/org-refile-target-verify))
+#+end_src
 
 Configure archiving behavior.
 #+begin_src elisp
 (after! org
   (setq org-archive-location "archive/%s_archive::datetree/"
-        org-export-with-archived-trees nil))
+        org-archive-mark-done t
+        org-export-with-archived-trees nil)
+
+  ;; Do not keep archive buffers alive.
+  (add-hook! 'org-archive-hook
+             (defun +psydev/kill-archive-buffers ()
+               (doom/kill-matching-buffers "\\.org_archive$"))))
+#+end_src
+
+**** Refile target filters
+
+Define target filter functions.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-refile-target-verify ()
+    "Remove TODO-items that are not projects from refile targets."
+    (let ((todo (org-get-todo-state)))
+      (if (and todo (not (equal todo "PROJ")))
+          (progn (org-end-of-subtree) nil)
+        t)))
+
+  (defun +psydev/org-refile-target-verify-context ()
+    "Remove TODO-items that are not projects, and headings not matching GTD context from refile targets."
+    (let ((tags (org-get-tags-at))
+          (todo (org-get-todo-state)))
+      (unless (or (and todo (not (equal todo "PROJ")))
+                  (and +psydev/org-view-context
+                       (if (eq +psydev/org-view-context 'none)
+                           (cl-member-if (lambda (tag) (string-match-p "^@.+" tag)) tags)
+                         (not (member +psydev/org-view-context tags)))))
+        t))))
+#+end_src
+
+Prevent refiling at file toplevel in agenda files.
+#+begin_src elisp
+(after! org
+  (defun psydev/org-refile-filter-targets (orig-fun &rest args)
+    (let ((targets (apply orig-fun args))
+          (agenda-files (mapcar #'file-name-nondirectory (org-agenda-files))))
+      (cl-remove-if (lambda (x)
+                      (member (car x) agenda-files))
+                    targets)))
+  (advice-add 'org-refile-get-targets :around #'psydev/org-refile-filter-targets))
+#+end_src
+
+**** Refile commands
+
+Define additional refile commands.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-refile-to-context (&rest _)
+    "Refile current heading to targets in the currently selected scope and context."
+    (interactive "P")
+    (let* ((scope (unless (eq +psydev/org-view-scope 'buffer) +psydev/org-view-scope))
+           (org-refile-targets `((,scope :maxlevel . 4)))
+           (org-refile-target-verify-function #'+psydev/org-refile-target-verify-context)
+           current-prefix-arg)
+      (call-interactively #'org-refile))))
+#+end_src
+
+**** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        :prefix ("r" . "Refile")
+        "R"  #'org-refile-reverse
+        "x"  #'+psydev/org-refile-to-context))
 #+end_src
 
 *** Agenda
@@ -4053,7 +4461,7 @@ Customize agenda settings.
 
   ;; General agenda setup
   (setq org-agenda-files (list org-directory)
-        org-agenda-sticky 't
+        ;; org-agenda-sticky 't ; NOTE: Disabled, agenda is incrementally slower upon refresh
         org-agenda-span 'week
         org-agenda-start-on-weekday 1
         org-agenda-start-day nil)
@@ -4105,7 +4513,18 @@ Configure time grid.
         "┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅┅ now"))
 #+end_src
 
-Customize org scheduled/deadline faces.
+Customize general org agenda faces.
+#+begin_src elisp
+(after! org
+  (custom-set-faces!
+    '(org-agenda-date :foreground unspecified :inherit outline-3)
+    '(org-agenda-date-today :foreground unspecified :inherit outline-1)
+    '(org-agenda-date-weekend :foreground unspecified :inherit org-agenda-date)
+    '(org-agenda-date-weekend-today :inherit org-agenda-date-today)
+    '(org-super-agenda-header :inherit org-agenda-structure)))
+#+end_src
+
+Customize org scheduled/deadline/clocked faces.
 #+begin_src elisp
 (after! org
   (setq org-deadline-faces
@@ -4119,7 +4538,8 @@ Customize org scheduled/deadline faces.
     '(org-scheduled-previously :foreground "#ffffff")
     '(org-upcoming-distant-deadline :foreground unspecified :weight light :inherit org-warning)
     '(org-upcoming-deadline :foreground unspecified :inherit org-warning)
-    '(org-imminent-deadline :weight semi-bold :inherit org-warning)))
+    '(org-imminent-deadline :weight semi-bold :inherit org-warning)
+    '(org-agenda-clocking :background unspecified :foreground "#de935f" :inherit org-block)))
 #+end_src
 
 Do not show blocked tasks as dimmed by default. With my configuration they are usually projects (subtasks not done).
@@ -4132,7 +4552,7 @@ Also customize the face to be brighter, in case locally enabled.
 
 Always highlight the current agenda line.
 #+begin_src elisp
-(add-hook 'org-agenda-mode-hook '(lambda () (hl-line-mode 1)))
+(add-hook! org-agenda-mode (hl-line-mode 1))
 #+end_src
 
 **** Diary
@@ -4217,6 +4637,30 @@ Add interactive functions to cycle todo states from agenda.
     (org-agenda-todo 'right)))
 #+end_src
 
+Improve behavior of indirect-buffer spawning.
+NOTE: This is not ideal but should work for my usage.
+Does not integrate well with dired-view-file, which seems to permanently add 'q' binding on org buffers...
+It could be interesting to use a similar approach than dired-view-file for agenda indirect buffers.
+#+begin_src elisp
+(after! org-agenda
+  (defadvice! +psydev/org-agenda-indirect-buffer (&rest _)
+    :after #'org-agenda-tree-to-indirect-buffer
+    (unless current-prefix-arg
+      (select-window (get-buffer-window org-agenda-last-indirect-buffer))
+      (centaur-tabs-local-mode 1)
+      (use-local-map (copy-keymap (current-local-map)))
+      (local-set-key "q" #'kill-buffer-and-window)))
+
+  (defun +psydev/org-agenda-tree-to-indirect-buffer-new ()
+    (interactive)
+    (let ((orig-buffer (current-buffer))
+          (current-prefix-arg '(4)))
+      (message "%s" orig-buffer)
+      (call-interactively 'org-agenda-tree-to-indirect-buffer)
+      (with-current-buffer org-last-indirect-buffer
+        (setq-local doom--narrowed-base-buffer orig-buffer)))))
+#+end_src
+
 **** Hydra
 
 Define a major-mode-hydra.
@@ -4287,7 +4731,8 @@ Customize bindings.
    ;; Simplify agenda commands in notes prefix.
    (:prefix "n"
     :desc "Org agenda"     "a" #'org-agenda
-    "m" nil)
+    "m" nil
+    "v" nil)
 
    ;; Unbind agenda commands in open prefix.
    (:prefix "o"
@@ -4297,83 +4742,85 @@ Customize bindings.
   ;; Agenda bindings
   (map! :map evil-org-agenda-mode-map
         ;; Avoid spurious bindings kicking in with ESC
-        :g [escape]   #'transient-noop
+        :g [escape]     #'transient-noop
         ;; This is more consistent for me
-        :m [C-return] #'org-agenda-goto
-        :m "C-RET"    #'org-agenda-goto
-        :m [S-return] #'org-agenda-recenter
-        :m "S-RET"    #'org-agenda-recenter
-        :m [M-return] #'org-agenda-tree-to-indirect-buffer
-        :m "M-RET"    #'org-agenda-tree-to-indirect-buffer
+        :m [C-return]   #'org-agenda-goto
+        :m "C-RET"      #'org-agenda-goto
+        :m [S-return]   #'org-agenda-recenter
+        :m "S-RET"      #'org-agenda-recenter
+        :m [M-return]   #'org-agenda-tree-to-indirect-buffer
+        :m "M-RET"      #'org-agenda-tree-to-indirect-buffer
+        :m [M-S-return] #'+psydev/org-agenda-tree-to-indirect-buffer-new
+        :m "M-S-RET"    #'+psydev/org-agenda-tree-to-indirect-buffer-new
 
         ;; Move cursor by items instead of lines by default
-        :m "j" #'org-agenda-next-line
-        :m "k" #'org-agenda-previous-line
-        :m "M-j" #'org-agenda-next-item
-        :m "M-k" #'org-agenda-previous-item
-        :m "C-j" #'outline-next-heading
-        :m "C-k" #'outline-previous-heading
+        :m "j"          #'org-agenda-next-line
+        :m "k"          #'org-agenda-previous-line
+        :m "M-j"        #'org-agenda-next-item
+        :m "M-k"        #'org-agenda-previous-item
+        :m "C-j"        #'outline-next-heading
+        :m "C-k"        #'outline-previous-heading
 
         ;; Add equivalence for org-mode bindings
-        :m "C-M-k"    #'org-agenda-priority-up
-        :m "C-M-j"    #'org-agenda-priority-down
-        :m "C-M-h"    #'+org-agenda-todo-prev
-        :m "C-M-l"    #'+org-agenda-todo-next
-        :m "C-M-S-h"  #'org-agenda-todo-previousset
-        :m "C-M-S-l"  #'org-agenda-todo-nextset
+        :m "C-M-k"      #'org-agenda-priority-up
+        :m "C-M-j"      #'org-agenda-priority-down
+        :m "C-M-h"      #'+org-agenda-todo-prev
+        :m "C-M-l"      #'+org-agenda-todo-next
+        :m "C-M-S-h"    #'org-agenda-todo-previousset
+        :m "C-M-S-l"    #'org-agenda-todo-nextset
 
         ;; Bind filter commands to 'f' prefix
-        :m "ff"       #'org-agenda-filter
-        :m "fh"       #'org-agenda-filter-by-top-headline
-        :m "fc"       #'org-agenda-filter-by-category
-        :m "fe"       #'org-agenda-filter-by-effort
-        :m "fr"       #'org-agenda-filter-by-regexp
-        :m "fq"       #'org-agenda-filter-by-tag
-        :m "fl"       #'org-agenda-limit-interactively
-        :m "F"        #'org-agenda-filter-remove-all
-        :m "s^"       nil
-        :m "sc"       nil
-        :m "se"       nil
-        :m "sr"       nil
-        :m "st"       nil
-        :m "ss"       nil
+        :m "ff"         #'org-agenda-filter
+        :m "fh"         #'org-agenda-filter-by-top-headline
+        :m "fc"         #'org-agenda-filter-by-category
+        :m "fe"         #'org-agenda-filter-by-effort
+        :m "fr"         #'org-agenda-filter-by-regexp
+        :m "fq"         #'org-agenda-filter-by-tag
+        :m "fl"         #'org-agenda-limit-interactively
+        :m "F"          #'org-agenda-filter-remove-all
+        :m "s^"         nil
+        :m "sc"         nil
+        :m "se"         nil
+        :m "sr"         nil
+        :m "st"         nil
+        :m "ss"         nil
 
         ;; Bind "show" commands to 's' prefix
-        :m "sh"       #'org-habit-toggle-display-in-agenda
-        :m "sH"       #'org-agenda-holidays
-        :m "sm"       #'org-agenda-phases-of-moon
-        :m "ss"       #'org-agenda-sunrise-sunset
-        :m "sq"       #'org-agenda-show-tags
-        :m "sd"       #'org-agenda-convert-date
-        :m "gh"       nil
-        :m "gm"       nil
-        :m "gs"       nil
-        :m "gt"       nil
-        :m "gC"       nil
+        :m "sh"         #'org-habit-toggle-display-in-agenda
+        :m "sH"         #'org-agenda-holidays
+        :m "sm"         #'org-agenda-phases-of-moon
+        :m "ss"         #'org-agenda-sunrise-sunset
+        :m "sq"         #'org-agenda-show-tags
+        :m "sd"         #'org-agenda-convert-date
+        :m "gh"         nil
+        :m "gm"         nil
+        :m "gs"         nil
+        :m "gt"         nil
+        :m "gC"         nil
 
         ;; Bind additional commands
-        :m "S"        #'org-save-all-org-buffers
-        :m "M"        #'org-agenda-bulk-toggle-all
-        :m "D"        #'org-agenda-archive-default-with-confirmation
-        :m "T"        #'org-agenda-set-tags
-        :m "p"        #'org-agenda-priority
-        :m "d"        #'org-agenda-date-prompt
-        :m "cd"       #'org-agenda-date-prompt
-        :m ">"        #'org-agenda-remove-restriction-lock
+        :m "S"          #'org-save-all-org-buffers
+        :m "M"          #'org-agenda-bulk-toggle-all
+        :m "D"          #'org-agenda-archive-default-with-confirmation
+        :m "T"          #'org-agenda-set-tags
+        :m "p"          #'org-agenda-priority
+        :m "d"          #'org-agenda-date-prompt
+        :m "cd"         #'org-agenda-date-prompt
+        :m ">"          #'org-agenda-remove-restriction-lock
 
         :map org-agenda-mode-map
         ;; Unbind obsolete and/or misleading bindings
-        :m "C-SPC"    nil
-        :m "o"        #'org-agenda-open-link
+        :m "C-SPC"      nil
+        :m "o"          #'org-agenda-open-link
 
         ;; Bind missing agenda-equivalent of frequent org commands
         :localleader
-        "a"           #'org-attach
-        "p"           #'org-agenda-priority
-        "T"           #'org-timer-set-timer
+        "a"             #'org-attach
+        "p"             #'org-agenda-priority
+        "C"             #'org-timer-set-timer
 
         :prefix "d"
-        "t"           #'org-agenda-date-prompt))
+        "t"             #'org-agenda-date-prompt))
 #+end_src
 
 *** Views
@@ -4667,18 +5114,18 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
-   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
-   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
-   :desc "Org planning"           "p" #'+psydev/org-view-planning
-   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
-   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
-   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
-   :desc "Org view"               "v" #'+hydra/org-view/body))
+   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
+   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
+   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
+   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
+   :desc "Org planning"           "P" #'+psydev/org-view-planning
+   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
+   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org view"               "x" #'+hydra/org-view/body))
 #+end_src
 
-*** TODO Block & Source
+*** Block & Source
 
 Configure code editing behavior.
 #+begin_src elisp
@@ -4773,7 +5220,7 @@ Customize priorities faces.
         '((65 . error)
           (66 . warning)
           (67 . success)
-          (68 . default) ; Keep default outline face
+          (68 . dired-directory)
           (69 . shadow))))
 #+end_src
 
@@ -4781,12 +5228,21 @@ Customize priorities faces.
 
 Advise functions that jump to locations to show context around point in org-mode.
 #+begin_src elisp
-(after! (evil-vars undo-fu goto-chg)
+(after! (evil-vars undo-fu)
   (defadvice! +psydev/org-jump-visibility (&rest _)
     :after (list evil-undo-function evil-redo-function
                  #'goto-last-change)
     (when (derived-mode-p 'org-mode)
       (org-show-set-visibility 'lineage))))
+#+end_src
+
+Advise functions that unexpectedly scroll window to top to recenter.
+#+begin_src elisp
+(after! org
+  (defadvice! +psydev/org-recenter (&rest _)
+    :after (list #'org-toggle-heading
+                 #'org-archive-subtree)
+    (evil-scroll-line-to-center nil)))
 #+end_src
 
 *** Popups
@@ -4795,7 +5251,21 @@ Customize popup rules for org-related buffers.
 #+begin_src elisp
 (after! org
   (set-popup-rules!
+    ;; Ignore org-edit-src-code buffers, display as regular buffers.
     '(("^\\*Org Src" :ignore t))))
+#+end_src
+
+*** Commands
+
+Add a command to always spawn new indirect buffers.
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-tree-to-indirect-buffer-new ()
+    (interactive)
+    (let ((orig-buffer (current-buffer))
+          (current-prefix-arg '(4)))
+      (call-interactively 'org-tree-to-indirect-buffer)
+      (setq-local doom--narrowed-base-buffer orig-buffer))))
 #+end_src
 
 *** Bindings
@@ -4846,6 +5316,10 @@ Customize bindings.
         :g "C-M-S-h"        #'org-shiftcontrolleft
         :g "C-M-S-l"        #'org-shiftcontrolright
 
+        ;; Consistent narrowing commands with other modes.
+        :nv "zn"            #'org-narrow-to-subtree
+        :nv "zN"            #'+psydev/org-tree-to-indirect-buffer-new
+
         ;; Bind custom implementation of prev/next fold commands for org-mode.
         ;; FIXME: +fold/next stopped working in org-mode at some point in 2021...
         :m "zj"             #'+psydev/org-next-heading
@@ -4880,6 +5354,8 @@ Customize bindings.
         :ni [S-return]     #'+org/shift-return
         :ni "S-RET"        #'+org/shift-return
 
+        ;; Bind alternative DWIM command
+        :n "S-SPC"         #'org-ctrl-c-ctrl-c
         ;; M-RET difficult choices
         ;; - normal-mode: org-ctrl-c-ret
         ;;   Always insert headings and not list items: straight to the point. Useful to split headings.
@@ -4903,18 +5379,42 @@ Customize bindings.
         :m "C-<iso-lefttab>" #'org-ctrl-c-tab
 
         (:localleader
+         "p"                 #'org-priority
          "f"                 #'+org/fix-blank-lines
          "F"                 #'org-footnote-action
          "D"                 #'org-insert-drawer
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
          "X"                 #'org-toggle-radio-button
-         "T"                 #'org-timer-set-timer
+         "T"                 #'+psydev/org-todo-with-date
+         "C"                 #'org-timer-set-timer
+         "I"                 #'org-timer-item
          "e"                 #'org-edit-special
          "E"                 #'org-export-dispatch
+         "-"                 #'org-ctrl-c-minus
+         "+"                 nil
          (:prefix ("s" . "Tree/Subtree")
           "A"                #'org-archive-to-archive-sibling
-          "o"                #'org-toggle-ordered-property)))
+          "o"                #'org-toggle-ordered-property
+          "r"                nil)
+         (:prefix ("c" . "Clock")
+          "s"                #'org-clock-display
+          "G"                #'+org-clock-goto-select)
+         (:prefix ("g" . "Goto")
+          "C"                #'+org-clock-goto-select)
+         ))
+
+  ;; TODO: which-key description overrides...
+  (map! :leader
+        :prefix ("n" . "Notes")
+        :desc "Toggle last clock"
+        "t"                #'+org/toggle-last-clock
+        :desc "Goto last clock"
+        "c"                #'org-clock-goto
+        :desc "Goto clock history"
+        "C"                #'+org-clock-goto-select
+        "o"                nil)
+
   ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
   (define-key!
     [remap org-set-tags-command] nil))
@@ -5223,8 +5723,8 @@ Integrate with doom/evil bindings.
 (after! org-sidebar
   ;; Leader bindings
   (map! :leader :prefix "n"
-    :desc "Org task sidebar"  "t" #'org-sidebar-toggle
-    :desc "Org tree sidebar"  "T" #'+psydev/org-sidebar-tree-toggle)
+    :desc "Org task sidebar"  "o" #'org-sidebar-toggle
+    :desc "Org tree sidebar"  "O" #'+psydev/org-sidebar-tree-toggle)
 
   ;; Configure bindings to override default org/evil bindings
   (evil-make-overriding-map org-sidebar-tree-map 'normal)
@@ -5343,6 +5843,19 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
         :m "TAB"           #'outline-cycle
         :m "<tab>"         #'outline-cycle
         :m "<backtab>"     #'outline-cycle-buffer))
+#+end_src
+
+** Perspective
+
+Do not save indirect buffers in session.
+FIXME: Saving the 'vars' argument in [[file:~/.config/emacs/modules/ui/workspaces/config.el::defvar +workspaces--indirect-buffers-to-restore nil][doom's workspace configuration]] breaks the session file.
+It is then impossible to load the session file (Invalid read syntax: #).
+Also it seems that without saving 'vars', indirect buffers are restored as clones of the base buffer, so not useful at all.
+See also https://github.com/Bad-ptr/persp-mode.el/issues/93
+#+begin_src elisp
+(add-hook! 'persp-filter-save-buffers-functions
+  (defun +workspaces-indirect-buffer-p (buf)
+    (buffer-base-buffer buf)))
 #+end_src
 
 ** Projectile
@@ -5550,6 +6063,15 @@ Customize bindings.
   (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
 
+** Undo fu
+
+Configure undo-fu to allow for undo in region.
+#+begin_src emacs-lisp
+(after! undo-fu
+  (setq undo-fu-allow-undo-in-region t
+        undo-fu-ignore-keyboard-quit t))
+#+end_src
+
 ** Undo tree
 
 Customize undo-tree visualizer.
@@ -5561,6 +6083,19 @@ See https://github.com/hlissner/doom-emacs/issues/1407
 ;;   (setq undo-tree-visualizer-diff nil)
 ;;   :bind (:map evil-normal-state-map
 ;;          ("U" . undo-tree-visualize)))
+#+end_src
+
+** Visual fill column
+
+#+begin_src elisp
+(use-package! visual-fill-column
+  :config
+  (setq-default visual-fill-column-center-text t)
+  (setq visual-fill-column-adjust-for-text-scale t
+        visual-fill-column-fringes-outside-margins t
+        visual-fill-column-enable-sensible-window-split nil)
+  (add-hook! (helpful-mode elfeed-show-mode)
+             #'visual-fill-column-mode))
 #+end_src
 
 ** Vterm
@@ -5826,6 +6361,13 @@ Disable for now. I find it less clear than the default letters, and it also crea
 #+begin_src elisp :tangle yes
 (use-package! treemacs-all-the-icons
   :after treemacs)
+#+end_src
+
+** Visual fill column
+
+[[https://codeberg.org/joostkremers/visual-fill-column][This package]] allows for wrapping visual-line-mode buffers at fill-column.
+#+begin_src elisp
+(package! visual-fill-column)
 #+end_src
 
 ** Window layouts
