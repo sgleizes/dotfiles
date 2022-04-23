@@ -4050,10 +4050,9 @@ Patch doom's org-insert-item variant to better respect blank settings.
                 (goto-char (line-end-position))
                 (org-end-of-subtree)
                 ;; NOTE: BEGIN: Respect blank settings, at least when inserting headlines below.
-                (insert "\n")
-                (unless (and blank? (org-previous-line-empty-p))
-                  (org-N-empty-lines-before-current (if blank? 1 0)))
-                (insert (make-string level ?*) " ")))
+                (when (and blank? (org-next-line-empty-p))
+                  (forward-line))
+                (insert "\n" (make-string level ?*) " ")))
              ;; NOTE: END
              (`above
               (org-back-to-heading)
@@ -4065,7 +4064,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
               (cond ((eq todo-type 'done)
                      ;; Doesn't make sense to create more "DONE" headings
                      (car (+org-get-todo-keywords-for todo-keyword)))
-                    (todo-keyword)
+                    ;; NOTE: Do not carry over the current todo state.
+                    ;; (todo-keyword)
                     ('todo)))))))
 
       (when (org-invisible-p)
@@ -4093,9 +4093,23 @@ With ARG, repeats or can move forward if negative."
     (org-show-set-visibility 'minimal)))
 #+end_src
 
+Advise org heading insert commands to enter evil insert mode.
+#+begin_src elisp
+(after! org
+  (defadvice! +psydev/evil-insert-mode (&rest _)
+    :after (list #'org-ctrl-c-ret
+                 #'org-insert-heading
+                 #'org-insert-subheading
+                 #'org-insert-todo-heading
+                 #'org-insert-todo-subheading)
+    (when (and (bound-and-true-p evil-local-mode)
+               (not (evil-emacs-state-p)))
+      (evil-insert 1))))
+#+end_src
+
 Add helper function to help with blank line consistency.
 #+begin_src elisp
-(defun +org/fix-blank-lines (&optional prefix)
+(defun +org/fix-blank-lines (&optional arg)
   "Ensure that blank lines exist between headings and between headings and their contents.
 With prefix, operate on whole buffer. Ensures that blank lines
 exist after each headings's drawers."
@@ -4126,9 +4140,7 @@ exist after each headings's drawers."
                                    (org-at-heading-p)
                                    (looking-at-p "\n"))
                          (insert "\n"))))
-                   t (if prefix
-                         nil
-                       'tree)))
+                   t (unless arg 'tree)))
 #+end_src
 
 *** TODO-items & Checkboxes
@@ -4213,6 +4225,30 @@ Kept for reference, but is probably a bad idea.
 ;;                (org-todo "DONE"))
 ;;               ))))
 ;;   (add-hook! 'org-after-todo-statistics-hook #'org-todo-done-when-stats-full))
+#+end_src
+
+Heavily inspired from:
+https://emacs.stackexchange.com/questions/9433/how-to-make-org-prompt-for-a-timestamp-when-changing-state-of-a-todo/9451#9451
+#+begin_src elisp
+(after! org
+  (defun +psydev/org-todo-with-date (&optional arg)
+    "Like `org-todo' but the time of change will be prompted."
+    (interactive "P")
+    (cl-letf* ((org-read-date-prefer-future nil)
+               (my-current-time (org-read-date t t nil "when:" nil nil nil))
+               ((symbol-function 'current-time)
+                #'(lambda () my-current-time))
+               ((symbol-function 'org-today)
+                #'(lambda () (time-to-days my-current-time)))
+               ((symbol-function 'org-current-effective-time)
+                #'(lambda () my-current-time))
+               (super (symbol-function 'format-time-string))
+               ((symbol-function 'format-time-string)
+                #'(lambda (fmt &optional time time-zone)
+                    (funcall super fmt my-current-time time-zone))))
+      (if (eq major-mode 'org-agenda-mode)
+          (org-agenda-todo arg)
+        (org-todo arg)))))
 #+end_src
 
 *** Tags
@@ -5093,12 +5129,21 @@ Customize priorities faces.
 
 Advise functions that jump to locations to show context around point in org-mode.
 #+begin_src elisp
-(after! (evil-vars undo-fu goto-chg)
+(after! (evil-vars undo-fu)
   (defadvice! +psydev/org-jump-visibility (&rest _)
     :after (list evil-undo-function evil-redo-function
                  #'goto-last-change)
     (when (derived-mode-p 'org-mode)
       (org-show-set-visibility 'lineage))))
+#+end_src
+
+Advise functions that unexpectedly scroll window to top to recenter.
+#+begin_src elisp
+(after! org
+  (defadvice! +psydev/org-recenter (&rest _)
+    :after (list #'org-toggle-heading
+                 #'org-archive-subtree)
+    (evil-scroll-line-to-center nil)))
 #+end_src
 
 *** Popups
@@ -5107,6 +5152,7 @@ Customize popup rules for org-related buffers.
 #+begin_src elisp
 (after! org
   (set-popup-rules!
+    ;; Ignore org-edit-src-code buffers, display as regular buffers.
     '(("^\\*Org Src" :ignore t))))
 #+end_src
 
@@ -5209,6 +5255,8 @@ Customize bindings.
         :ni [S-return]     #'+org/shift-return
         :ni "S-RET"        #'+org/shift-return
 
+        ;; Bind alternative DWIM command
+        :n "S-SPC"         #'org-ctrl-c-ctrl-c
         ;; M-RET difficult choices
         ;; - normal-mode: org-ctrl-c-ret
         ;;   Always insert headings and not list items: straight to the point. Useful to split headings.
@@ -5232,15 +5280,20 @@ Customize bindings.
         :m "C-<iso-lefttab>" #'org-ctrl-c-tab
 
         (:localleader
+         "p"                 #'org-priority
          "f"                 #'+org/fix-blank-lines
          "F"                 #'org-footnote-action
          "D"                 #'org-insert-drawer
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
          "X"                 #'org-toggle-radio-button
-         "T"                 #'org-timer-set-timer
+         "T"                 #'+psydev/org-todo-with-date
+         "C"                 #'org-timer-set-timer
+         "I"                 #'org-timer-item
          "e"                 #'org-edit-special
          "E"                 #'org-export-dispatch
+         "-"                 #'org-ctrl-c-minus
+         "+"                 nil
          (:prefix ("s" . "Tree/Subtree")
           "A"                #'org-archive-to-archive-sibling
           "o"                #'org-toggle-ordered-property)))
