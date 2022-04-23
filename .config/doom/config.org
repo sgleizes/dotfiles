@@ -3964,7 +3964,7 @@ Configure region behavior for org commands.
 Configure the context shown when revealing an org heading.
 #+begin_src elisp
 (setq org-show-context-detail
-      '((agenda . local)
+      '((agenda . ancestors)
         (bookmark-jump . lineage)
         (isearch . lineage)
         (default . ancestors)))
@@ -4326,7 +4326,7 @@ Customize agenda settings.
 
   ;; General agenda setup
   (setq org-agenda-files (list org-directory)
-        org-agenda-sticky 't
+        ;; org-agenda-sticky 't ; NOTE: Disabled, agenda is incrementally slower upon refresh
         org-agenda-span 'week
         org-agenda-start-on-weekday 1
         org-agenda-start-day nil)
@@ -4596,7 +4596,8 @@ Customize bindings.
    ;; Simplify agenda commands in notes prefix.
    (:prefix "n"
     :desc "Org agenda"     "a" #'org-agenda
-    "m" nil)
+    "m" nil
+    "v" nil)
 
    ;; Unbind agenda commands in open prefix.
    (:prefix "o"
@@ -4978,18 +4979,18 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
-   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
-   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
-   :desc "Org planning"           "p" #'+psydev/org-view-planning
-   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
-   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
-   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
-   :desc "Org view"               "v" #'+hydra/org-view/body))
+   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
+   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
+   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
+   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
+   :desc "Org planning"           "P" #'+psydev/org-view-planning
+   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
+   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org view"               "x" #'+hydra/org-view/body))
 #+end_src
 
-*** TODO Block & Source
+*** Block & Source
 
 Configure code editing behavior.
 #+begin_src elisp
@@ -5551,8 +5552,8 @@ Integrate with doom/evil bindings.
 (after! org-sidebar
   ;; Leader bindings
   (map! :leader :prefix "n"
-    :desc "Org task sidebar"  "t" #'org-sidebar-toggle
-    :desc "Org tree sidebar"  "T" #'+psydev/org-sidebar-tree-toggle)
+    :desc "Org task sidebar"  "o" #'org-sidebar-toggle
+    :desc "Org tree sidebar"  "O" #'+psydev/org-sidebar-tree-toggle)
 
   ;; Configure bindings to override default org/evil bindings
   (evil-make-overriding-map org-sidebar-tree-map 'normal)
