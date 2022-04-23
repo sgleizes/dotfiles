@@ -3371,6 +3371,8 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "goD"            #'evil-quick-diff-cancel
  :textobj "b"         #'evil-textobj-anyblock-inner-block #'evil-textobj-anyblock-a-block
  :textobj "B"         nil nil
+ ;; Bind undo in visual mode (undo in region)
+ :v "u"               #'evil-undo
  ;; Customize RET behavior for normal/insert modes
  :i "<return>"        #'+default/newline
  :i "S-<return>"      #'newline-and-indent ;; NOTE: Difference with default-indent-new-line is not clear
@@ -5800,6 +5802,15 @@ Customize bindings.
     (kbd "x")          #'treemacs-delete
     (kbd "<S-return>") #'treemacs-visit-node-nofocus)
   (map! :map treemacs-mode-map "d" nil "m" nil))
+#+end_src
+
+** Undo fu
+
+Configure undo-fu to allow for undo in region.
+#+begin_src emacs-lisp
+(after! undo-fu
+  (setq undo-fu-allow-undo-in-region t
+        undo-fu-ignore-keyboard-quit t))
 #+end_src
 
 ** Undo tree
