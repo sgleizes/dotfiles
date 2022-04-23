@@ -4341,6 +4341,23 @@ Configure org-habit.
         org-habit-today-glyph ?!))
 #+end_src
 
+Configure org-clock.
+#+begin_src elisp
+(after! org
+  (setq org-clock-report-include-clocking-task t
+        org-clock-display-default-range 'untilnow
+        org-clock-auto-clock-resolution 'when-no-clock-is-running
+        org-clock-idle-time nil
+        ;; History & Persistence settings
+        org-clock-history-length 20
+        org-clock-persist 'history) ; TODO: Maybe t? Or maybe nil if bothering on startup
+  (org-clock-persistence-insinuate)
+
+  (defun +org-clock-goto-select ()
+    (interactive)
+    (org-clock-goto 'select)))
+#+end_src
+
 *** Refiling & Archiving
 
 Configure archiving behavior.
@@ -4718,7 +4735,7 @@ Customize bindings.
         :localleader
         "a"             #'org-attach
         "p"             #'org-agenda-priority
-        "T"             #'org-timer-set-timer
+        "C"             #'org-timer-set-timer
 
         :prefix "d"
         "t"             #'org-agenda-date-prompt))
@@ -5296,7 +5313,26 @@ Customize bindings.
          "+"                 nil
          (:prefix ("s" . "Tree/Subtree")
           "A"                #'org-archive-to-archive-sibling
-          "o"                #'org-toggle-ordered-property)))
+          "o"                #'org-toggle-ordered-property
+          "r"                nil)
+         (:prefix ("c" . "Clock")
+          "s"                #'org-clock-display
+          "G"                #'+org-clock-goto-select)
+         (:prefix ("g" . "Goto")
+          "C"                #'+org-clock-goto-select)
+         ))
+
+  ;; TODO: which-key description overrides...
+  (map! :leader
+        :prefix ("n" . "Notes")
+        :desc "Toggle last clock"
+        "t"                #'+org/toggle-last-clock
+        :desc "Goto last clock"
+        "c"                #'org-clock-goto
+        :desc "Goto clock history"
+        "C"                #'+org-clock-goto-select
+        "o"                nil)
+
   ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
   (define-key!
     [remap org-set-tags-command] nil))
