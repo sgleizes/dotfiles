@@ -48,7 +48,7 @@ immutability=1
 plugin=org.kde.plasma.chiliclock
 
 [Containments][2][Applets][30][Configuration]
-PreloadWeight=92
+PreloadWeight=100
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -265,7 +265,7 @@ immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][6][Configuration]
-PreloadWeight=97
+PreloadWeight=100
 SystrayContainmentId=7
 
 [Containments][2][Applets][60]
@@ -298,7 +298,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=23
+PreloadWeight=33
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -315,7 +315,7 @@ immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=81
+PreloadWeight=100
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -339,7 +339,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=0
+PreloadWeight=5
 
 [Containments][7][Applets][16]
 immutability=1
@@ -360,7 +360,7 @@ immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=97
+PreloadWeight=100
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
