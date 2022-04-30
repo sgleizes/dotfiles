@@ -2635,6 +2635,24 @@ Configure elfeed-org.
   (elfeed-org))
 #+end_src
 
+Patch elfeed-org import function to support file-level tags.
+#+begin_src elisp
+(after! elfeed-org
+  (defun rmh-elfeed-org-import-trees (tree-id)
+    "Get trees with \":ID:\" property or tag of value TREE-ID.
+Return trees with TREE-ID as the value of the id property or
+with a tag of the same value.  Setting an \":ID:\" property is not
+recommended but I support it for backward compatibility of
+current users."
+    (org-element-map
+        (org-element-parse-buffer)
+        'headline
+      (lambda (h)
+        (when (or (member tree-id org-file-tags)
+                  (member tree-id (org-element-property :tags h))
+                  (equal tree-id (org-element-property :ID h))) h)))))
+#+end_src
+
 Prevent elfeed-org from opening source buffers unexpectedly.
 #+begin_src elisp
 (after! elfeed-org
