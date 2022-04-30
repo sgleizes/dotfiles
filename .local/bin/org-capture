@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+# Open an org-capture popup frame.
+#
+# Usage: org-capture [-k KEY] [MESSAGE]
+# Examples:
+#   org-capture -k n "To the mind that is still, the whole universe surrenders."
+
+set -e
+
+# The command to use to contact the emacs server.
+EMACSCLIENT="emacsclient --socket-name graphical"
+
+# org-capture key mapped to argument flags
+while getopts "hk:" opt; do
+  key="\"$OPTARG\""
+  break
+done
+shift $((OPTIND - 1))
+
+# use remaining args, else read from stdin if passed a single dash
+str="$*"
+case "$str" in
+  -) str=$(cat) ;;
+esac
+
+# Non-daemon servers flicker a lot if frames are created from terminal, so we do
+# it internally instead.
+$EMACSCLIENT -e "(+org-capture/open-frame \"$str\" ${key:-nil})" >/dev/null
