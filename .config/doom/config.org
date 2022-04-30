@@ -3422,6 +3422,21 @@ Rework narrow operator.
     (narrow-to-region-indirect beg end)))
 #+end_src
 
+Smarter behavior for yank-pop.
+Inspired from https://karthinks.com/software/a-better-yank-pop-binding/
+#+begin_src elisp
+(defun psydev/kill-ring-or-yank-pop (&optional arg)
+  "Call `+default/yank-pop'. If called after a yank, call `yank-pop' instead."
+  (interactive "*p")
+  (cond ((eq last-command 'yank)
+         (yank-pop arg))
+        ((memq last-command '(evil-paste-after
+                              evil-paste-before
+                              evil-visual-paste))
+         (evil-paste-pop arg))
+        (t (+default/yank-pop))))
+#+end_src
+
 *** Hydra
 
 Replace evil-mc bindings by a convenient hydra.
@@ -3503,7 +3518,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "zN"             #'+evil:narrow-buffer-indirect
  :nv "zw"             #'doom/widen-indirectly-narrowed-buffer
  ;; Rearrange some yank/paste commands
- :n "M-p"             #'evil-paste-pop
+ :n "M-p"             #'psydev/kill-ring-or-yank-pop
  :n "C-p"             #'+default/yank-pop
  :n "M-y"             #'duplicate-line-or-region
  (:map evil-mc-key-map
@@ -3760,6 +3775,14 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+end_src
 
 ** Ivy
+
+Configure ivy / counsel.
+#+begin_src elisp
+(after! ivy
+  (setq counsel-yank-pop-preselect-last t
+        counsel-yank-pop-truncate-radius 2
+        counsel-yank-pop-separator "\n---\n"))
+#+end_src
 
 Disable Ivy buffer previews. It seems that previewing buffers from other workspaces adds them to the
 current workspace, which is totally unwanted behavior.
