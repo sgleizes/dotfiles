@@ -708,6 +708,7 @@ if in terminal."
 Automatically maximize and focus new graphical frames.
 #+begin_src elisp
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
 (defun raise-frame-and-give-focus (&optional frame)
   (when (display-graphic-p frame)
     (raise-frame frame)
@@ -2634,6 +2635,24 @@ Configure elfeed-org.
   (elfeed-org))
 #+end_src
 
+Patch elfeed-org import function to support file-level tags.
+#+begin_src elisp
+(after! elfeed-org
+  (defun rmh-elfeed-org-import-trees (tree-id)
+    "Get trees with \":ID:\" property or tag of value TREE-ID.
+Return trees with TREE-ID as the value of the id property or
+with a tag of the same value.  Setting an \":ID:\" property is not
+recommended but I support it for backward compatibility of
+current users."
+    (org-element-map
+        (org-element-parse-buffer)
+        'headline
+      (lambda (h)
+        (when (or (member tree-id org-file-tags)
+                  (member tree-id (org-element-property :tags h))
+                  (equal tree-id (org-element-property :ID h))) h)))))
+#+end_src
+
 Prevent elfeed-org from opening source buffers unexpectedly.
 #+begin_src elisp
 (after! elfeed-org
@@ -3403,6 +3422,21 @@ Rework narrow operator.
     (narrow-to-region-indirect beg end)))
 #+end_src
 
+Smarter behavior for yank-pop.
+Inspired from https://karthinks.com/software/a-better-yank-pop-binding/
+#+begin_src elisp
+(defun psydev/kill-ring-or-yank-pop (&optional arg)
+  "Call `+default/yank-pop'. If called after a yank, call `yank-pop' instead."
+  (interactive "*p")
+  (cond ((eq last-command 'yank)
+         (yank-pop arg))
+        ((memq last-command '(evil-paste-after
+                              evil-paste-before
+                              evil-visual-paste))
+         (evil-paste-pop arg))
+        (t (+default/yank-pop))))
+#+end_src
+
 *** Hydra
 
 Replace evil-mc bindings by a convenient hydra.
@@ -3484,7 +3518,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "zN"             #'+evil:narrow-buffer-indirect
  :nv "zw"             #'doom/widen-indirectly-narrowed-buffer
  ;; Rearrange some yank/paste commands
- :n "M-p"             #'evil-paste-pop
+ :n "M-p"             #'psydev/kill-ring-or-yank-pop
  :n "C-p"             #'+default/yank-pop
  :n "M-y"             #'duplicate-line-or-region
  (:map evil-mc-key-map
@@ -3741,6 +3775,14 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+end_src
 
 ** Ivy
+
+Configure ivy / counsel.
+#+begin_src elisp
+(after! ivy
+  (setq counsel-yank-pop-preselect-last t
+        counsel-yank-pop-truncate-radius 2
+        counsel-yank-pop-separator "\n---\n"))
+#+end_src
 
 Disable Ivy buffer previews. It seems that previewing buffers from other workspaces adds them to the
 current workspace, which is totally unwanted behavior.
@@ -4446,7 +4488,286 @@ Customize bindings.
         :localleader
         :prefix ("r" . "Refile")
         "R"  #'org-refile-reverse
-        "x"  #'+psydev/org-refile-to-context))
+        "n"  #'+psydev/org-refile-to-context))
+#+end_src
+
+*** Capture
+**** Settings
+
+Configure org-capture settings.
+#+begin_src elisp
+(after! org-capture
+  (setq org-default-notes-file (concat org-directory "life.org")
+        org-capture-bookmark t
+        org-capture-use-agenda-date t)
+
+  (defvar +org-capture-feed-file (concat org-directory "elfeed/feed.org")
+    "Org capture target for RSS feed entries.")
+
+  ;; Override default frame parameters for the external capture frame.
+  (add-to-list '+org-capture-frame-parameters '(fullscreen . nil))
+  (add-to-list '+org-capture-frame-parameters '(width . 0.42))
+  (add-to-list '+org-capture-frame-parameters '(height . 0.27))
+
+  ;; Hide header line in capture buffer.
+  ;; FIXME: This does not work for org-mks select interface.
+  (defadvice! psydev/org-capture-frame-disable-tabs (&rest _)
+    :after #'org-capture
+    (when (+org-capture-frame-p)
+      (centaur-tabs-local-mode 1)))
+#+end_src
+
+**** Template commands
+
+#+begin_src elisp
+(after! org-capture
+  (defun +org-capture-cliplink-url ()
+    "Return org link with clipped title if X clipboard contains an HTTP(S) URL."
+    (let ((content (org-get-x-clipboard 'CLIPBOARD)))
+      (when (string-match "^https?://" content)
+        (org-cliplink-capture))))
+
+  (defun +org-capture-annotation ()
+    "Return clipped link if capturing from org-mode, annotation otherwise."
+    (with-current-buffer (org-capture-get :original-buffer)
+      (if (member major-mode '(org-mode))
+          (+org-capture-cliplink-url)
+        (org-capture-get :annotation)))))
+#+end_src
+
+**** Templates
+
+Configure doct.
+#+begin_src elisp
+(use-package! doct
+  :commands (doct)
+  :config
+  (setq doct-warnings t
+        doct-default-entry-type 'entry))
+#+end_src
+
+Define the default capture templates.
+#+begin_src elisp
+(after! org-capture
+  (setq org-capture-templates
+        (doct '((:group "Top"
+                 :file org-default-notes-file :olp ("Inbox")
+                 :empty-lines 1
+                 :children
+                 (("Note" :keys "n"
+                   :template ("* %?"
+                              "\n%(+org-capture-annotation)"
+                              "\n%i"))
+                  ;; Event/Appointment for agenda
+                  ("Event" :keys "e"
+                   :olp ("Calendrier" "Activités")
+                   :template ("* %? %(org-set-tags \"event\")"
+                              "\n%^{Event}t"
+                              "\n%(+org-capture-annotation)"
+                              "\n%i"))
+                  ("Appointment" :keys "a"
+                   :olp ("Calendrier" "Activités")
+                   :template ("* %? %(org-set-tags \"appointment\")"
+                              "\n%^{Appointment}t"
+                              "\n%(+org-capture-annotation)"
+                              "\n%i"))
+                  ;; Journal entry
+                  ("Journal" :keys "j"
+                   :datetree t :olp ("Développement" "Journal")
+                   :template ("* %?"
+                              "\n%i"))
+                  ;; RSS feed source for elfeed
+                  ("Feed" :keys "f"
+                   :file +org-capture-feed-file :olp ("Inbox")
+                   :template "* %?%(+org-capture-cliplink-url)"
+                   :empty-lines 0)
+
+                  ;; Common task templates
+                  ("Task" :keys "t"
+                   :template ("* TODO %? %(org-set-tags \"%{tags}\")"
+                              "\n%(+org-capture-annotation)"
+                              "\n%i")
+                   :children
+                   (("Regular" :keys "t" :tags nil)
+                    ("Need" :keys "n" :tags "need")
+                    (:group "Activity"
+                     :template "* TODO %?%(+org-capture-annotation) %(org-set-tags \"%{activity-tag}\")"
+                     :children
+                     (("Read"   :keys "r" :olp ("Divertissement" "Lecture") :activity-tag "read")
+                      ("Listen" :keys "l" :olp ("Divertissement" "Musique") :activity-tag "listen")
+                      ("Watch"  :keys "w" :olp ("Divertissement" "Cinéma")  :activity-tag "watch")))
+                    )))
+                 ))))
+
+  ;; Unset counsel-projectile templates which would duplicate the advice on 'counsel-org-capture.'
+  (setq counsel-projectile-org-capture-templates nil))
+#+end_src
+
+Define generic capture templates used in other contexts.
+#+begin_src elisp
+(after! org-capture
+  (defvar +org-capture-generic-templates
+    '((:group "Generic"
+       :empty-lines 1
+       :children
+       (("Note" :keys "n"
+         :template ("* %?"
+                    "\n%(+org-capture-annotation)"
+                    "\n%i"))
+        ;; Event/Appointment for agenda
+        ;; ("Event" :keys "e"
+        ;;  :template ("* %? %(org-set-tags \"event\")"
+        ;;             "\n%^{Event}t"
+        ;;             "\n%(+org-capture-annotation)"
+        ;;             "\n%i"))
+        ;; ("Appointment" :keys "a"
+        ;;  :template ("* %? %(org-set-tags \"appointment\")"
+        ;;             "\n%^{Appointment}t"
+        ;;             "\n%(+org-capture-annotation)"
+        ;;             "\n%i"))
+
+        ;; Common task templates
+        ("Task" :keys "t"
+         :template ("* TODO %? %(org-set-tags \"%{tags}\")"
+                    "\n%(+org-capture-annotation)"
+                    "\n%i")
+         :children
+         (("Regular" :keys "t" :tags nil)
+          (:group "Activity"
+           :template "* TODO %?%(+org-capture-annotation) %(org-set-tags \"%{activity-tag}\")"
+           :children
+           (("Read"   :keys "r" :activity-tag "read")
+            ("Listen" :keys "l" :activity-tag "listen")
+            ("Watch"  :keys "w" :activity-tag "watch")))
+          )))))))
+#+end_src
+
+**** Commands
+
+Advise existing capture commands and add project capture commands.
+#+begin_src elisp
+(after! org-capture
+  (defun psydev/org-capture-target (&optional project-root)
+    "Get the org capture target file based on current or selected context."
+    (let* ((project-root (or project-root (projectile-project-root))))
+      (cond
+       ;; Use the current buffer only if in org-mode
+       ((and (eq +psydev/org-view-scope 'buffer)
+             (eq major-mode 'org-mode))
+        (buffer-file-name))
+       ;; Use the current project notes file if available
+       ((and (eq +psydev/org-view-scope 'buffer)
+             project-root)
+        (+psydev/projectile-get-project-notes-file project-root))
+       ;; Use the selected org file if set
+       ((and (stringp +psydev/org-view-scope)
+             (file-name-absolute-p +psydev/org-view-scope))
+        +psydev/org-view-scope)
+       ;; Fallback to default
+       (t org-default-notes-file))))
+
+  (defvar psydev/org-capture--project-only nil)
+
+  (defadvice! psydev/org-context-capture-ad (fn &rest args)
+    "Add additional capture templates based on current or selected context."
+    :around (list #'org-capture #'counsel-org-capture)
+    (let* ((project-root (projectile-project-root))
+           (target-file (psydev/org-capture-target project-root))
+           (parent-name (format "%s [%s]"
+                                (if project-root "Project" "Context")
+                                (file-name-base target-file)))
+           (org-capture-templates
+            (append org-capture-templates
+                    (unless (or psydev/org-capture--project-only
+                                (equal target-file org-default-notes-file))
+                      (doct `((,parent-name :keys "c"
+                                            :file ,target-file :olp ("Inbox")
+                                            :children
+                                            ,+org-capture-generic-templates)))))))
+      (apply fn args)))
+
+  (defun psydev/org-project-capture-ad (fn &rest args)
+    "Replace default by project capture templates and invoke the given capture command."
+    (let* ((project-root (projectile-acquire-root))
+           (project-notes-file (+psydev/projectile-get-project-notes-file project-root))
+           (org-capture-templates
+            (doct `((:group "Project"
+                     :file ,project-notes-file :olp ("Inbox")
+                     :children
+                     ,+org-capture-generic-templates))))
+           (psydev/org-capture--project-only t))
+      (apply fn args)))
+
+  (defun psydev/org-project-capture (&optional goto keys)
+    "Capture something into a project."
+    (interactive "P")
+    (psydev/org-project-capture-ad #'org-capture goto keys))
+  (defun psydev/counsel-org-project-capture ()
+    "Capture something into a project."
+    (interactive)
+    (psydev/org-project-capture-ad #'counsel-org-capture)))
+#+end_src
+
+**** External command
+
+Override doom's org-capture script with my own variant.
+#+begin_src sh :tangle ~/.local/bin/org-capture :tangle-mode (identity #o755)
+#!/usr/bin/env sh
+# Open an org-capture popup frame.
+#
+# Usage: org-capture [-k KEY] [MESSAGE]
+# Examples:
+#   org-capture -k n "To the mind that is still, the whole universe surrenders."
+
+set -e
+
+# The command to use to contact the emacs server.
+EMACSCLIENT="emacsclient --socket-name graphical"
+
+# org-capture key mapped to argument flags
+while getopts "hk:" opt; do
+  key="\"$OPTARG\""
+  break
+done
+shift $((OPTIND - 1))
+
+# use remaining args, else read from stdin if passed a single dash
+str="$*"
+case "$str" in
+  -) str=$(cat) ;;
+esac
+
+# Non-daemon servers flicker a lot if frames are created from terminal, so we do
+# it internally instead.
+$EMACSCLIENT -e "(+org-capture/open-frame \"$str\" ${key:-nil})" >/dev/null
+#+end_src
+
+**** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org
+  (map! (:leader
+         "X" nil
+
+         (:prefix "n"
+         :desc "Org capture"
+         "x" #'org-capture
+         :desc "Counsel capture"
+         "X" #'counsel-org-capture)
+
+         (:prefix "p"
+          :desc "Org project capture"
+          "x" #'psydev/org-project-capture
+          :desc "Counsel project capture"
+          "X" #'psydev/counsel-org-project-capture))
+
+        ;; Bind all evil variants explicitly to force hint to display these
+        :map org-capture-mode-map
+        :n "ZQ" #'org-capture-kill
+        :n "ZA" #'org-capture-refile
+        :n "ZW" #'org-capture-refile
+        :n "ZZ" #'org-capture-finalize))
 #+end_src
 
 *** Agenda
@@ -4922,9 +5243,7 @@ The special symbol `none' means to not match headlines with any context tag.")
      :title "Backlog"))
 
   (cl-defun +psydev/org-view-make (&key buffers-files query narrow super-groups sort title context tags)
-    (let ((buffers-files (cond ((equal buffers-files 'buffer) (current-buffer))
-                               (buffers-files)
-                               (t #'org-agenda-files)))
+    (let ((buffers-files (+psydev/org-view-target buffers-files))
           (query (append query (+psydev/org-view-make-query context tags)))
           (sort (or sort '(priority scheduled))))
       (org-ql-search buffers-files query
@@ -4932,6 +5251,23 @@ The special symbol `none' means to not match headlines with any context tag.")
         :super-groups super-groups
         :sort sort
         :title (+psydev/org-view--make-title title buffers-files context tags))))
+
+  (defun +psydev/org-view-target (scope)
+    (cond
+     ;; Use the current buffer only if in org-mode
+     ((and (equal scope 'buffer)
+           (eq major-mode 'org-mode))
+      (current-buffer))
+     ;; Use the current project notes file if available
+     ((and (equal scope 'buffer)
+           (projectile-project-p))
+      (+psydev/projectile-get-project-notes-file))
+     ;; Use the selected org file if set
+     ((and (stringp scope)
+           (file-name-absolute-p scope))
+      scope)
+     ;; Fallback to default
+     (t #'org-agenda-files)))
 
   (defun +psydev/org-view-make-query (&optional context tags)
     (append
@@ -5122,7 +5458,7 @@ Customize bindings.
    :desc "Org planning"           "P" #'+psydev/org-view-planning
    :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
    :desc "Org backlog"            "B" #'+psydev/org-view-backlog
-   :desc "Org view"               "x" #'+hydra/org-view/body))
+   :desc "Org view"               "n" #'+hydra/org-view/body))
 #+end_src
 
 *** Block & Source
@@ -5199,6 +5535,7 @@ Customize org-superstar.
         '((42 . ?•)
           (43 . ?➤)
           (45 . ?–)))
+
   ;; Disable list syntax checking for files with lots of list items.
   (defun org-superstar-auto-lightweight-mode ()
     "Start org-superstar differently depending on the number of lists items."
@@ -5917,6 +6254,16 @@ Add project name and type in the modeline.
   (nconc mode-line-misc-info '((projectile-mode ("" projectile-mode-line-info " ")))))
 #+end_src
 
+Add helper function to retrieve the notes file for a project.
+#+begin_src elisp
+(after! projectile
+  (defun +psydev/projectile-get-project-notes-file (&optional project-root)
+    (let* ((project-root (or project-root (projectile-project-root)))
+           (project-name (projectile-project-name project-root)))
+      (when project-root
+        (format "%s%s.org" (file-name-as-directory project-root) project-name)))))
+#+end_src
+
 Customize bindings.
 #+begin_src elisp
 (after! (projectile which-key)
@@ -6188,6 +6535,13 @@ This file shouldn't be byte compiled.
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
 #+begin_src elisp
 (package! command-log-mode)
+#+end_src
+
+** Doct
+
+[[https://github.com/progfolio/doct][This package]] provides an alternative, declarative syntax for describing Org capture templates.
+#+begin_src elisp
+(package! doct)
 #+end_src
 
 ** Elfeed dashboard
