@@ -4229,14 +4229,16 @@ Customize bindings.
   (magit-delta-mode))
 #+end_src
 
-** Man
+** Man/Woman
 
-Add shortcut to man command.
+Configure man/woman and add global bindings.
 #+begin_src elisp
-(use-package! man
-  :config
+(after! (man woman)
+  (setq woman-fill-column fill-column)
   (map! :leader :prefix "h"
-        "H" #'man))
+        "h" #'woman
+        "H" #'man
+        "W" nil))
 #+end_src
 
 ** Org
@@ -6612,13 +6614,21 @@ Disabled for now, scrolling does not work nicely in org-mode (or when there is f
 
 ** TLDR
 
-Disable font-lock mode in tldr-mode buffers.
+Improve tldr integration.
 #+begin_src elisp
 (use-package! tldr
   :config
-  (add-hook! tldr-mode '(lambda () (font-lock-mode 0)))
+  ;; Use the same popup settings than for man/woman (w smaller size)
+  (defadvice! +popup--use-popup-window-for-tldr (fn &rest args)
+    :around #'tldr
+    (letf! ((#'switch-to-buffer-other-window #'pop-to-buffer))
+      (apply fn args)))
+  (set-popup-rule! "^\\*tldr"
+    :vslot -6 :size 0.35 :select t :quit t :ttl 0)
+
+  ;; Add global binding
   (map! :leader :prefix "h"
-        "h" #'tldr))
+        "l" #'tldr))
 #+end_src
 
 ** Treemacs
@@ -6692,7 +6702,7 @@ See https://github.com/hlissner/doom-emacs/issues/1407
   (setq visual-fill-column-adjust-for-text-scale t
         visual-fill-column-fringes-outside-margins t
         visual-fill-column-enable-sensible-window-split nil)
-  (add-hook! (helpful-mode elfeed-show-mode)
+  (add-hook! (helpful-mode elfeed-show-mode Man-mode woman-mode)
              #'visual-fill-column-mode))
 #+end_src
 
