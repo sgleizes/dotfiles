@@ -682,11 +682,11 @@ Focus the new window on vertical/horizontal splits.
       evil-split-window-below t)
 #+end_src
 
-Prompt for the workspace buffer to show on new window.
+Prompt for the workspace buffer to show on new window. Or not.
 #+begin_src elisp
-(defadvice! prompt-for-buffer (&rest _)
-  :after '(evil-window-split evil-window-vsplit)
-  (+ivy/switch-workspace-buffer))
+;; (defadvice! prompt-for-buffer (&rest _)
+;;   :after '(evil-window-split evil-window-vsplit)
+;;   (+ivy/switch-workspace-buffer))
 #+end_src
 
 *** Popups
