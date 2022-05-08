@@ -32,6 +32,10 @@
   # Start a new ediff session.
   cmd = ediff \"$LOCAL\" \"$REMOTE\"
 
+[init]
+  # Default branch name.
+  defaultBranch = master
+
 [merge]
   # Disable fast-forward merges as default merge strategy.
   # Force explicit call of `git merge --ff`.

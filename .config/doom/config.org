@@ -1937,7 +1937,14 @@ Customize default bindings.
 #+end_src
 
 ** Ediff
-*** Integration
+*** Settings
+
+Configure general settings.
+#+begin_src elisp
+(after! ediff
+  (setq ediff-autostore-merges 'group-jobs-only
+        ediff-make-buffers-readonly-at-startup nil))
+#+end_src
 
 Automatically kill unmodified buffers at the end of an ~ediff~ session.
 In merge jobs, buffer C is never deleted. However, the side effect of using this
@@ -1950,6 +1957,31 @@ as well.
   (add-hook! 'ediff-cleanup-hook
     (defun ediff-kill-variants ()
       (ediff-janitor nil ediff-keep-variants))))
+#+end_src
+
+*** Integration
+
+Disable evil-snipe that overrides some bindings.
+#+begin_src elisp
+(after! ediff
+  (add-hook! ediff-mode #'turn-off-evil-snipe-override-mode))
+#+end_src
+
+Disable tabs in ediff buffers.
+#+begin_src elisp
+(after! ediff
+  (add-hook! 'ediff-prepare-buffer-hook
+    (defun +psydev/ediff-no-tabs ()
+      (centaur-tabs-local-mode 1))))
+#+end_src
+
+Focus the registry frame when opening the registry.
+#+begin_src elisp
+(after! ediff
+  (add-hook! 'ediff-show-registry-hook
+    (defun +psydev/focus-ediff-registry ()
+      (x-focus-frame (window-frame
+		      (ediff-get-visible-buffer-window ediff-registry-buffer))))))
 #+end_src
 
 Automatically delete dedicated frames when quitting ~ediff~.
@@ -1975,17 +2007,52 @@ Automatically delete dedicated frames when quitting ~ediff~.
           (delete-frame))))))
 #+end_src
 
+Make ediff reveal/hide org-mode elements.
+From https://emacs.stackexchange.com/a/21460.
+#+begin_src elisp
+(after! ediff
+  ;; Check for org mode and existence of buffer
+  (defun f-ediff-org-showhide (buf command &rest cmdargs)
+    "If buffer exists and is orgmode then execute command"
+    (when buf
+      (when (eq (buffer-local-value 'major-mode (get-buffer buf)) 'org-mode)
+        (save-excursion (set-buffer buf) (apply command cmdargs)))))
+
+  (defun f-ediff-org-unfold-tree-element ()
+    "Unfold tree at diff location"
+    (f-ediff-org-showhide ediff-buffer-A 'org-reveal)
+    (f-ediff-org-showhide ediff-buffer-B 'org-reveal)
+    (f-ediff-org-showhide ediff-buffer-C 'org-reveal))
+
+  (defun f-ediff-org-fold-tree ()
+    "Fold tree back to top level"
+    (f-ediff-org-showhide ediff-buffer-A 'hide-sublevels 1)
+    (f-ediff-org-showhide ediff-buffer-B 'hide-sublevels 1)
+    (f-ediff-org-showhide ediff-buffer-C 'hide-sublevels 1))
+
+  (add-hook 'ediff-select-hook 'f-ediff-org-unfold-tree-element)
+  (add-hook 'ediff-unselect-hook 'f-ediff-org-fold-tree))
+#+end_src
+
 *** Appearance
 
 Customize default doom-theme faces for ~ediff~.
 #+begin_src elisp
 (custom-set-faces!
+  `(ediff-even-diff-A           :inherit hl-line)
+  ;; `(ediff-current-diff-A        :background ,(doom-color 'base3))
+  `(ediff-current-diff-A        :inherit region :background "#313233")
+  ;; Faces for ancestor buffer
   '(ediff-even-diff-Ancestor    :inherit ediff-even-diff-A)
-  '(ediff-odd-diff-Ancestor     :inherit ediff-even-diff-A)
+  '(ediff-odd-diff-Ancestor     :inherit ediff-odd-diff-A)
   '(ediff-current-diff-Ancestor :inherit ediff-current-diff-A)
-  `(ediff-current-diff-A        :background ,(doom-color 'base3))
-  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
-  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
+  ;; Faces for fine differences in current diff region
+  ;; FIXME: For some reason, magit faces do not render properly anymore
+  ;; NOTE: Green face was made slightly greener to standout more
+  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background "#493636" :foreground "#cc6666" :weight bold)
+  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight :background "#3b422f" :foreground "#b5bd68" :weight bold)
+  ;; '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
+  ;; '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
   '(ediff-fine-diff-C           :inherit magit-diff-base-highlight)
   `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
 #+end_src
