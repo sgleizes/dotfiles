@@ -81,10 +81,10 @@ TreeView Font=Noto Sans,10,-1,5,50,0,0,0,0,0
 Update Type=0
 
 [AlbumFolderView Sidebar]
-CurrentIndex=4
-Expansion=0,61,63,64,65,67,68,69,70,327,91,92,93,115,165,279,319,286,321,329,322,325,326,331,332,333,334,335,289,290,336,337,338,339,340,341,85,-3,1,2,3,4,5,6,51,308,309,52,346,53,310,347,348,351,350,352,379,356,357,381,375,376,311,312,313,314,353,354,358,359,373,374,377,378,31,32,33,54,55,56
+CurrentIndex=350
+Expansion=0,61,63,64,65,67,68,69,70,327,91,92,93,115,165,279,319,286,321,329,322,325,326,331,332,333,334,335,289,290,336,337,338,339,340,341,85,-3,1,3,4,5,6,51,308,309,52,346,53,310,347,348,351,349,350,352,355,379,356,380,357,375,376,385,381,382,311,312,313,314,353,354,358,359,373,374,377,378,31,32,33,54,55,56,-2
 RestoreChecked=false
-Selection=4
+Selection=350
 SortColumn=0
 SortOrder=0
 
@@ -990,7 +990,7 @@ tagPaths=1
 
 [Database Settings]
 Database Connectoptions=UNIX_SOCKET=/home/psydev/.local/share/digikam/db_misc/mysql.socket
-Database Encrypted Password=AwKbm5s=
+Database Encrypted Password=AwLT09M=
 Database Hostname=
 Database Name=digikam
 Database Name Face=digikam
@@ -1310,7 +1310,11 @@ FullScreen Hide SideBars=false
 FullScreen Hide StatusBar=false
 FullScreen Hide ThumbBar=true
 FullScreen Hide ToolBars=false
+HDMI-1 Height 2560x1440=1440
+HDMI-1 Width 2560x1440=2560
 HDMI-1 Window-Maximized 2560x1440=true
+HDMI-1 XPosition 2560x1440=0
+HDMI-1 YPosition 2560x1440=0
 Icon Theme=breeze-dark
 Scan At Start=true
 Scroll Current Item To Center=false
@@ -1701,6 +1705,9 @@ XMP Level=0
 [LightTable Settings][Right Sidebar][Version Properties Tab]
 Version Properties Tab=versions
 Version Properties View Mode=2
+
+[Media Player Settings]
+Volume=100
 
 [Metadata Settings]
 Clear Metadata If Rescan=false

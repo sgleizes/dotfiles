@@ -1,5 +1,6 @@
-<!DOCTYPE kpartgui>
-<kpartgui name="session" version="29">
+<?xml version='1.0'?>
+<!DOCTYPE gui SYSTEM 'kpartgui.dtd'>
+<gui version="30" name="session">
  <MenuBar>
   <Menu name="file">
    <Action group="session-operations" name="file_save_as"/>
@@ -30,6 +31,7 @@
    <Action group="session-view-operations" name="monitor-process-finish"/>
    <Separator group="session-view-operations"/>
    <Action group="session-view-operations" name="view-readonly"/>
+   <Action group="session-view-operations" name="allow-mouse-tracking"/>
    <Separator group="session-view-operations"/>
    <Action group="session-view-operations" name="enlarge-font"/>
    <Action group="session-view-operations" name="reset-font-size"/>
@@ -55,12 +57,22 @@
   <Action name="adjust-history"/>
   <Separator/>
   <Action name="view-readonly"/>
+  <Action name="allow-mouse-tracking"/>
+  <Separator/>
   <Action name="switch-profile"/>
   <Action name="edit-current-profile"/>
  </Menu>
+ <ToolBar name="sessionToolbar">
+  <text>Session Toolbar</text>
+  <index>1</index>
+  <Spacer/>
+  <Action name="edit_copy"/>
+  <Action name="edit_paste"/>
+  <Action name="edit_find"/>
+ </ToolBar>
  <ActionProperties>
   <Action shortcut="Ctrl++; " name="enlarge-font"/>
   <Action shortcut="" name="rename-session"/>
   <Action shortcut="Ctrl+Alt+0; Ctrl+=" name="reset-font-size"/>
  </ActionProperties>
-</kpartgui>
+</gui>

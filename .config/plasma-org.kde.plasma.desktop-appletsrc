@@ -68,7 +68,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=4
+PreloadWeight=9
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -308,7 +308,7 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=0
+PreloadWeight=5
 
 [Containments][7][Applets][12]
 immutability=1
@@ -353,7 +353,7 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=65
+PreloadWeight=100
 
 [Containments][7][Applets][18]
 immutability=1
@@ -492,7 +492,7 @@ Provider=unsplash
 
 [Containments][88]
 ItemGeometries-1920x1080=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
-ItemGeometries-2560x1440=Applet-77:0,432,464,608,0;Applet-79:1456,448,464,592,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;
+ItemGeometries-2560x1440=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
 ItemGeometriesHorizontal=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
@@ -669,6 +669,7 @@ Provider=unsplash
 
 [Containments][91]
 ItemGeometries-1920x1080=
+ItemGeometries-2560x1440=
 ItemGeometriesHorizontal=
 activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 formfactor=0
