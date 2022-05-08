@@ -1862,7 +1862,8 @@ Define a major-mode-hydra.
       ("M-u" dired-unmark-all-marks "unmark all")
       ("t" dired-toggle-marks "toggle"))
      "Basic"
-     (("+" dired-create-directory "mkdir")
+     (("+" dired-create-directory "make dir")
+      ("f" dired-create-file "make file")
       ("Y" dired-copy-filename-as-kill "yank")
       ("O" dired-do-chown "chown")
       ("M-g" dired-do-chggrp "chgrp")
