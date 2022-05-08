@@ -6061,6 +6061,14 @@ Configuration and integration with doom.
           (window-parameters (no-other-window . t)))))
 #+end_src
 
+Compile agenda prefix format when displaying an org-ql-view.
+#+begin_src elisp
+(after! org-ql
+  (defadvice! psydev/org-ql-view-prefix-format (&rest _)
+    :before #'org-ql-search
+    (org-compile-prefix-format 'todo)))
+#+end_src
+
 Customize bindings and integrate with doom/evil.
 #+begin_src elisp
 (after! org-ql-view
