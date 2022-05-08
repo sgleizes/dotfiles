@@ -116,66 +116,6 @@ StartupNotify=true
 StartupWMClass=Emacs
 #+end_src
 
-** Ediff launcher
-
-Add another launcher script to start an ~ediff~ session in a new graphical frame.
-
-Note that it depends on a ~+workspace/rename-frame~ function that automatically
-generates a unique name for the new perspective (workspace).
-#+begin_src sh :tangle ~/.local/bin/ediff :tangle-mode (identity #o755)
-#!/usr/bin/env bash
-# Start an ediff session in a new emacs frame. Inspired by:
-# https://gist.github.com/ptrv/0b460291e14a4a3c6372
-#
-# This script can be used as a `git mergetool` and `git difftool`.
-# It automatically detects whether to run a diff/merge session
-# and also supports directories.
-
-# Abort if arguments are not provided.
-if [ ! ${#} -ge 2 ]; then
-  echo >&2 "Usage: ediff <local> <remote> [merged] [base]"
-  exit 1
-fi
-
-# Process arguments.
-LOCAL="$1"
-REMOTE="$2"
-[[ $3 ]] && MERGED="$3" || MERGED="$REMOTE"
-[[ -d $LOCAL && -d $REMOTE ]] && MODE='directories' || MODE='files'
-
-# Determine the emacs command to evaluate.
-if [[ $4 && -r $4 ]]; then
-  BASE="$4"
-  EVAL="ediff-merge-$MODE-with-ancestor \"$LOCAL\" \"$REMOTE\" \"$BASE\" nil \"$MERGED\""
-elif [[ $REMOTE != "$MERGED" ]]; then
-  EVAL="ediff-merge-$MODE \"$LOCAL\" \"$REMOTE\" nil \"$MERGED\""
-else
-  EVAL="ediff-$MODE \"$LOCAL\" \"$REMOTE\" nil"
-fi
-
-# Use a graphical frame except in the console.
-if [[ $TERM == 'linux' ]]; then
-  EMACSCLIENT_OPTS="--socket-name terminal --tty"
-else
-  EMACSCLIENT_OPTS="--socket-name graphical --create-frame"
-fi
-
-# Run emacsclient.
-emacsclient $EMACSCLIENT_OPTS --eval "
-  (progn
-    (+workspace/rename-frame \"ediff\")
-    ($EVAL))"
-
-# Check modified file for unresolved conflicts.
-if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
-  MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
-  cp "$MERGED" "$MERGEDSAVE"
-  echo >&2 "Oops! Conflict markers detected in $MERGED"
-  echo >&2 "Saved your changes to $MERGEDSAVE"
-  exit 1
-fi
-#+end_src
-
 * General configuration
 
 Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
@@ -1751,6 +1691,7 @@ Customize default bindings.
 #+end_src
 
 ** Ediff
+*** Integration
 
 Automatically kill unmodified buffers at the end of an ~ediff~ session.
 In merge jobs, buffer C is never deleted. However, the side effect of using this
@@ -1788,6 +1729,83 @@ Automatically delete dedicated frames when quitting ~ediff~.
           (delete-frame))))))
 #+end_src
 
+*** Appearance
+
+Customize default doom-theme faces for ~ediff~.
+#+begin_src elisp
+(custom-set-faces!
+  '(ediff-even-diff-Ancestor    :inherit ediff-even-diff-A)
+  '(ediff-odd-diff-Ancestor     :inherit ediff-even-diff-A)
+  '(ediff-current-diff-Ancestor :inherit ediff-current-diff-A)
+  `(ediff-current-diff-A        :background ,(doom-color 'base3))
+  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
+  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
+  '(ediff-fine-diff-C           :inherit magit-diff-base-highlight)
+  `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
+#+end_src
+
+*** External command
+
+Add a script to start an ~ediff~ session in a new graphical frame.
+
+Note that it depends on a ~+workspace/rename-frame~ function that automatically
+generates a unique name for the new perspective (workspace).
+#+begin_src sh :tangle ~/.local/bin/ediff :tangle-mode (identity #o755)
+#!/usr/bin/env bash
+# Start an ediff session in a new emacs frame. Inspired by:
+# https://gist.github.com/ptrv/0b460291e14a4a3c6372
+#
+# This script can be used as a `git mergetool` and `git difftool`.
+# It automatically detects whether to run a diff/merge session
+# and also supports directories.
+
+# Abort if arguments are not provided.
+if [ ! ${#} -ge 2 ]; then
+  echo >&2 "Usage: ediff <local> <remote> [merged] [base]"
+  exit 1
+fi
+
+# Process arguments.
+LOCAL="$1"
+REMOTE="$2"
+[[ $3 ]] && MERGED="$3" || MERGED="$REMOTE"
+[[ -d $LOCAL && -d $REMOTE ]] && MODE='directories' || MODE='files'
+
+# Determine the emacs command to evaluate.
+if [[ $4 && -r $4 ]]; then
+  BASE="$4"
+  EVAL="ediff-merge-$MODE-with-ancestor \"$LOCAL\" \"$REMOTE\" \"$BASE\" nil \"$MERGED\""
+elif [[ $REMOTE != "$MERGED" ]]; then
+  EVAL="ediff-merge-$MODE \"$LOCAL\" \"$REMOTE\" nil \"$MERGED\""
+else
+  EVAL="ediff-$MODE \"$LOCAL\" \"$REMOTE\" nil"
+fi
+
+# Use a graphical frame except in the console.
+if [[ $TERM == 'linux' ]]; then
+  EMACSCLIENT_OPTS="--socket-name terminal --tty"
+else
+  EMACSCLIENT_OPTS="--socket-name graphical --create-frame"
+fi
+
+# Run emacsclient.
+emacsclient $EMACSCLIENT_OPTS --eval "
+  (progn
+    (+workspace/rename-frame \"ediff\")
+    ($EVAL))"
+
+# Check modified file for unresolved conflicts.
+if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
+  MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
+  cp "$MERGED" "$MERGEDSAVE"
+  echo >&2 "Oops! Conflict markers detected in $MERGED"
+  echo >&2 "Saved your changes to $MERGEDSAVE"
+  exit 1
+fi
+#+end_src
+
+*** Bindings
+
 Add evil bindings for ~ediff-meta-mode~:
 #+begin_src elisp
 (defvar evil-collection-ediff-registry-bindings
@@ -1813,19 +1831,6 @@ Add evil bindings for ~ediff-meta-mode~:
   (evil-set-initial-state 'ediff-meta-mode 'normal)
   (add-hook 'ediff-meta-buffer-keymap-setup-hook 'evil-collection-ediff-meta-buffer-startup-hook))
 (evil-collection-ediff-meta-buffer-setup)
-#+end_src
-
-Customize default doom-theme faces for ~ediff~.
-#+begin_src elisp
-(custom-set-faces!
-  '(ediff-even-diff-Ancestor    :inherit ediff-even-diff-A)
-  '(ediff-odd-diff-Ancestor     :inherit ediff-even-diff-A)
-  '(ediff-current-diff-Ancestor :inherit ediff-current-diff-A)
-  `(ediff-current-diff-A        :background ,(doom-color 'base3))
-  '(ediff-fine-diff-A           :inherit magit-diff-our-highlight :background unspecified :weight unspecified)
-  '(ediff-fine-diff-B           :inherit magit-diff-their-highlight)
-  '(ediff-fine-diff-C           :inherit magit-diff-base-highlight)
-  `(ediff-fine-diff-Ancestor    :foreground ,(doom-color 'blue) :background ,(doom-blend 'blue 'bg 0.2) :weight bold :extend t))
 #+end_src
 
 ** Elfeed
