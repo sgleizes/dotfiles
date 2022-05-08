@@ -239,5 +239,31 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [General]
-count=19
-rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+count=21
+rules=1,2,3,4,cfa5b3ce-7859-43cb-8d07-69db401e3ead,f2a0df06-2cc3-4771-aa7f-4b7d8933e877,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
+
+[cfa5b3ce-7859-43cb-8d07-69db401e3ead]
+Description=Firefox - Logiciel Libre
+activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+activityrule=2
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=2
+title=^\\[Logiciel Libre\\]
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[f2a0df06-2cc3-4771-aa7f-4b7d8933e877]
+Description=Firefox - Dev
+activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+activityrule=2
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktopsrule=2
+title=^\\[Dev\\]
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
