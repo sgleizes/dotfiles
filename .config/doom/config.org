@@ -924,6 +924,251 @@ they are disabled by default.
 ;; (setq display-line-numbers-type 'relative)
 #+end_src
 
+* Additional packages
+:PROPERTIES:
+:header-args:elisp: :tangle "packages.el" :comments no
+:END:
+
+See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management][package management instructions]] from the doom documentation.
+
+This file shouldn't be byte compiled.
+#+begin_src elisp
+;;; packages.el -*- no-byte-compile: t; -*-
+#+end_src
+
+** Beacon
+
+[[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
+#+begin_src elisp
+(package! beacon)
+#+end_src
+
+** Centaur tabs
+
+#+begin_src elisp
+(package! centaur-tabs :pin "cde3469d77")
+#+end_src
+
+** Command logging
+
+[[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
+#+begin_src elisp
+(package! command-log-mode)
+#+end_src
+
+** Doct
+
+[[https://github.com/progfolio/doct][This package]] provides an alternative, declarative syntax for describing Org capture templates.
+#+begin_src elisp
+(package! doct)
+#+end_src
+
+** Elfeed dashboard
+
+[[https://github.com/Manoj321/elfeed-dashboard][This package]] is a frontend for elfeed, similar to mu4e landing page.
+#+begin_src elisp
+(package! elfeed-dashboard
+  :recipe (:host github :repo "Manoj321/elfeed-dashboard"))
+#+end_src
+
+** Elfeed goodies
+
+[[https://github.com/algernon/elfeed-goodies][This package]] enhances the elfeed experience.
+#+begin_src elisp
+(package! ov) ; Required in elfeed for date-separators and entry previews
+(package! elfeed-goodies)
+#+end_src
+
+** Evil visual mark
+
+[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
+FIXME: Does not support ~evil-delete-marks~.
+#+begin_src elisp
+(package! evil-visual-mark-mode)
+#+end_src
+
+** Evil terminal cursor
+
+[[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
+#+begin_src elisp
+(package! evil-terminal-cursor-changer
+  ;; HACK Original package is abandoned. This fork greatly simplifies
+  ;; and optimizes the implementation by relying on evil-set-cursor.
+  :recipe (:host github :repo "amosbird/evil-terminal-cursor-changer"))
+#+end_src
+
+** Fasd
+
+[[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
+#+begin_src elisp
+(package! fasd)
+#+end_src
+
+** Fast scroll
+
+[[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
+modeline during intense scrolling operations.
+#+begin_src elisp
+(package! fast-scroll)
+#+end_src
+
+** Hydra major mode
+
+[[https://github.com/jerrypnz/major-mode-hydra.el][This package]] allows to create major-mode specific hydras which are bound to the same key.
+It also provides pretty-hydra which allows to create hydras with automatically formatted columns.
+#+begin_src elisp
+(package! major-mode-hydra)
+#+end_src
+
+** Hydra posframe
+
+[[https://github.com/Ladicle/hydra-posframe][This package]] is a hydra extension which shows hydra hints on posframe.
+#+begin_src elisp
+(package! hydra-posframe
+  :recipe (:host github :repo "Ladicle/hydra-posframe"))
+#+end_src
+
+** Info colors
+
+[[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
+#+begin_src elisp
+(package! info-colors :pin "47ee73cc19")
+#+end_src
+
+** TODO Kaolin themes
+
+#+begin_src elisp
+(package! kaolin-themes)
+#+end_src
+
+#+begin_src elisp :tangle yes
+;; (use-package kaolin-themes
+;;   :config
+;;   (load-theme 'kaolin-valley-dark t)
+;;   (kaolin-treemacs-theme))
+#+end_src
+
+** TODO Large files
+
+The [[https://github.com/m00natic/vlfi][/very large files/ mode]] loads large files in chunks, allowing one to open
+ridiculously large files.
+#+begin_src elisp
+;; (package! vlf
+;;   :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
+;;   :pin "cc02f25337" :disable t)
+#+end_src
+
+To make VLF available without delaying startup, just load it in quiet moments.
+#+begin_src elisp :tangle yes
+;; (use-package! vlf-setup
+;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+#+end_src
+
+** Magit delta
+
+[[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
+package to hook this into the magit diff view. This requires the ~delta~ binary.
+FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
+#+begin_src elisp
+(package! magit-delta)
+#+end_src
+
+** Org fancy priorities
+
+Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
+#+begin_src elisp
+(package! org-fancy-priorities :disable t)
+#+end_src
+
+#+begin_src elisp :tangle yes
+;; (after! org-fancy-priorities
+;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+#+end_src
+
+** Org QL
+
+[[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
+#+begin_src elisp
+(package! org-ql
+  :recipe (:host github :repo "sgleizes/org-ql"))
+#+end_src
+
+** Org super agenda
+
+[[https://github.com/alphapapa/org-super-agenda][This package]] groups agenda items into sections, rather than having them all in one big list.
+#+begin_src elisp
+(package! org-super-agenda)
+#+end_src
+
+** Org sidebar
+
+[[https://github.com/alphapapa/org-sidebar][This package]] provides a helpful sidebar for Org mode.
+#+begin_src elisp
+(package! org-sidebar)
+#+end_src
+
+** Rainbow identifiers
+
+[[https://github.com/Fanael/rainbow-identifiers][This package]] provides highlighting of identifiers based on their names.
+#+begin_src elisp
+(package! rainbow-identifiers)
+#+end_src
+
+** Scroll on jump
+
+[[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
+#+begin_src elisp
+(package! scroll-on-jump :recipe
+  (:host gitlab
+   :repo "ideasman42/emacs-scroll-on-jump"))
+#+end_src
+
+** Systemd
+
+[[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
+#+begin_src elisp
+(package! systemd :pin "51c148e09a")
+#+end_src
+
+** TLDR
+
+[[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
+#+begin_src elisp
+(package! tldr)
+#+end_src
+
+** Treemacs icons
+
+[[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
+#+begin_src elisp
+(package! treemacs-all-the-icons)
+#+end_src
+
+#+begin_src elisp :tangle yes
+(use-package! treemacs-all-the-icons
+  :after treemacs)
+#+end_src
+
+** Visual fill column
+
+[[https://codeberg.org/joostkremers/visual-fill-column][This package]] allows for wrapping visual-line-mode buffers at fill-column.
+#+begin_src elisp
+(package! visual-fill-column)
+#+end_src
+
+** Window layouts
+
+[[https://github.com/daichirata/emacs-rotate][This package]] allows rotating between window layouts.
+#+begin_src elisp
+(package! rotate :pin "091b5ac4fc")
+#+end_src
+
+** Xclip
+
+[[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
+#+begin_src elisp
+(package! xclip :pin "ef2ad92f31")
+#+end_src
 * Package configuration
 
 See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#configuring-doom][configuration instructions]] from the doom documentation.
@@ -6510,235 +6755,3 @@ Rebind auto-yasnippet commands.
     :desc "Create auto-snippet" "Y" #'aya-create)))
 #+end_src
 
-* Additional packages
-:PROPERTIES:
-:header-args:elisp: :tangle "packages.el" :comments no
-:END:
-
-See the [[https://github.com/hlissner/doom-emacs/blob/develop/docs/getting_started.org#package-management][package management instructions]] from the doom documentation.
-
-This file shouldn't be byte compiled.
-#+begin_src elisp
-;;; packages.el -*- no-byte-compile: t; -*-
-#+end_src
-
-** Beacon
-
-[[https://github.com/Malabarba/beacon][This package]] provides a light that follows the cursor so that I don't lose it.
-#+begin_src elisp
-(package! beacon)
-#+end_src
-
-** Centaur tabs
-
-#+begin_src elisp
-(package! centaur-tabs :pin "cde3469d77")
-#+end_src
-
-** Command logging
-
-[[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
-#+begin_src elisp
-(package! command-log-mode)
-#+end_src
-
-** Doct
-
-[[https://github.com/progfolio/doct][This package]] provides an alternative, declarative syntax for describing Org capture templates.
-#+begin_src elisp
-(package! doct)
-#+end_src
-
-** Elfeed dashboard
-
-[[https://github.com/Manoj321/elfeed-dashboard][This package]] is a frontend for elfeed, similar to mu4e landing page.
-#+begin_src elisp
-(package! elfeed-dashboard
-  :recipe (:host github :repo "Manoj321/elfeed-dashboard"))
-#+end_src
-
-** Elfeed goodies
-
-[[https://github.com/algernon/elfeed-goodies][This package]] enhances the elfeed experience.
-#+begin_src elisp
-(package! ov) ; Required in elfeed for date-separators and entry previews
-(package! elfeed-goodies)
-#+end_src
-
-** Evil visual mark
-
-[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
-FIXME: Does not support ~evil-delete-marks~.
-#+begin_src elisp
-(package! evil-visual-mark-mode)
-#+end_src
-
-** Evil terminal cursor
-
-[[https://github.com/amosbird/evil-terminal-cursor-changer][This package]] changes the cursor shape based on the current evil mode in terminal.
-#+begin_src elisp
-(package! evil-terminal-cursor-changer
-  ;; HACK Original package is abandoned. This fork greatly simplifies
-  ;; and optimizes the implementation by relying on evil-set-cursor.
-  :recipe (:host github :repo "amosbird/evil-terminal-cursor-changer"))
-#+end_src
-
-** Fasd
-
-[[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
-#+begin_src elisp
-(package! fasd)
-#+end_src
-
-** Fast scroll
-
-[[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
-modeline during intense scrolling operations.
-#+begin_src elisp
-(package! fast-scroll)
-#+end_src
-
-** Hydra major mode
-
-[[https://github.com/jerrypnz/major-mode-hydra.el][This package]] allows to create major-mode specific hydras which are bound to the same key.
-It also provides pretty-hydra which allows to create hydras with automatically formatted columns.
-#+begin_src elisp
-(package! major-mode-hydra)
-#+end_src
-
-** Hydra posframe
-
-[[https://github.com/Ladicle/hydra-posframe][This package]] is a hydra extension which shows hydra hints on posframe.
-#+begin_src elisp
-(package! hydra-posframe
-  :recipe (:host github :repo "Ladicle/hydra-posframe"))
-#+end_src
-
-** Info colors
-
-[[https://github.com/ubolonton/info-colors][This package]] makes info pages nicer to look at with variable pitch fontification + coloring.
-#+begin_src elisp
-(package! info-colors :pin "47ee73cc19")
-#+end_src
-
-** TODO Large files
-
-The [[https://github.com/m00natic/vlfi][/very large files/ mode]] loads large files in chunks, allowing one to open
-ridiculously large files.
-#+begin_src elisp
-;; (package! vlf
-;;   :recipe (:host github :repo "m00natic/vlfi" :files ("*.el"))
-;;   :pin "cc02f25337" :disable t)
-#+end_src
-
-To make VLF available without delaying startup, just load it in quiet moments.
-#+begin_src elisp :tangle yes
-;; (use-package! vlf-setup
-;;   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
-#+end_src
-
-** Magit delta
-
-[[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
-package to hook this into the magit diff view. This requires the ~delta~ binary.
-FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
-#+begin_src elisp
-(package! magit-delta)
-#+end_src
-
-** Org fancy priorities
-
-Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
-#+begin_src elisp
-(package! org-fancy-priorities :disable t)
-#+end_src
-
-#+begin_src elisp :tangle yes
-;; (after! org-fancy-priorities
-;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
-#+end_src
-
-** Org QL
-
-[[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
-#+begin_src elisp
-(package! org-ql
-  :recipe (:host github :repo "sgleizes/org-ql"))
-#+end_src
-
-** Org super agenda
-
-[[https://github.com/alphapapa/org-super-agenda][This package]] groups agenda items into sections, rather than having them all in one big list.
-#+begin_src elisp
-(package! org-super-agenda)
-#+end_src
-
-** Org sidebar
-
-[[https://github.com/alphapapa/org-sidebar][This package]] provides a helpful sidebar for Org mode.
-#+begin_src elisp
-(package! org-sidebar)
-#+end_src
-
-** Rainbow identifiers
-
-[[https://github.com/Fanael/rainbow-identifiers][This package]] provides highlighting of identifiers based on their names.
-#+begin_src elisp
-(package! rainbow-identifiers)
-#+end_src
-
-** Scroll on jump
-
-[[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
-#+begin_src elisp
-(package! scroll-on-jump :recipe
-  (:host gitlab
-   :repo "ideasman42/emacs-scroll-on-jump"))
-#+end_src
-
-** Systemd
-
-[[https://github.com/holomorph/systemd-mode][This package]] provides a major mode for editing systemd unit files.
-#+begin_src elisp
-(package! systemd :pin "51c148e09a")
-#+end_src
-
-** TLDR
-
-[[https://github.com/kuanyui/tldr.el][This package]] provides a [[https://github.com/tldr-pages/tldr][tldr-pages]] client.
-#+begin_src elisp
-(package! tldr)
-#+end_src
-
-** Treemacs icons
-
-[[https://github.com/Alexander-Miller/treemacs/tree/c8f70f119f0deb1100b0d91a0e3c488ffd9cd63b#treemacs-all-the-icons][This package]] provides a treemacs theme using all-the-icons.
-#+begin_src elisp
-(package! treemacs-all-the-icons)
-#+end_src
-
-#+begin_src elisp :tangle yes
-(use-package! treemacs-all-the-icons
-  :after treemacs)
-#+end_src
-
-** Visual fill column
-
-[[https://codeberg.org/joostkremers/visual-fill-column][This package]] allows for wrapping visual-line-mode buffers at fill-column.
-#+begin_src elisp
-(package! visual-fill-column)
-#+end_src
-
-** Window layouts
-
-[[https://github.com/daichirata/emacs-rotate][This package]] allows rotating between window layouts.
-#+begin_src elisp
-(package! rotate :pin "091b5ac4fc")
-#+end_src
-
-** Xclip
-
-[[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
-#+begin_src elisp
-(package! xclip :pin "ef2ad92f31")
-#+end_src
