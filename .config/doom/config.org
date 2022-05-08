@@ -4747,16 +4747,16 @@ Customize bindings.
 Configure org-capture settings.
 #+begin_src elisp
 (after! org-capture
-  (setq org-default-notes-file (concat org-directory "life.org")
+  (setq org-default-notes-file (expand-file-name "life.org" org-directory)
         org-capture-bookmark t
         org-capture-use-agenda-date t)
 
-  (defvar +org-capture-feed-file (concat org-directory "elfeed/feed.org")
+  (defvar +org-capture-feed-file (expand-file-name "elfeed/feed.org" org-directory)
     "Org capture target for RSS feed entries.")
 
   ;; Override default frame parameters for the external capture frame.
   (add-to-list '+org-capture-frame-parameters '(fullscreen . nil))
-  (add-to-list '+org-capture-frame-parameters '(width . 0.42))
+  (add-to-list '+org-capture-frame-parameters '(width . 180)) ; To match org-tags-column
   (add-to-list '+org-capture-frame-parameters '(height . 0.27))
 
   ;; Hide header line in capture buffer.
@@ -4764,7 +4764,7 @@ Configure org-capture settings.
   (defadvice! psydev/org-capture-frame-disable-tabs (&rest _)
     :after #'org-capture
     (when (+org-capture-frame-p)
-      (centaur-tabs-local-mode 1)))
+      (centaur-tabs-local-mode 1))))
 #+end_src
 
 **** Template commands
@@ -5132,7 +5132,7 @@ Configure diary/agenda integration.
 #+begin_src elisp
 (after! org
   (setq org-agenda-include-diary nil
-        org-agenda-diary-file (concat org-directory "life.org")))
+        org-agenda-diary-file (expand-file-name "life.org" org-directory)))
 #+end_src
 
 **** Filtering
