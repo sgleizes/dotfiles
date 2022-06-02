@@ -68,7 +68,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=9
+PreloadWeight=6
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -298,7 +298,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=33
+PreloadWeight=75
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -308,7 +308,7 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=5
+PreloadWeight=27
 
 [Containments][7][Applets][12]
 immutability=1
@@ -339,14 +339,14 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=5
+PreloadWeight=20
 
 [Containments][7][Applets][16]
 immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][7][Applets][16][Configuration]
-PreloadWeight=0
+PreloadWeight=10
 
 [Containments][7][Applets][17]
 immutability=1
@@ -370,7 +370,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][19][Configuration]
-PreloadWeight=19
+PreloadWeight=11
 
 [Containments][7][Applets][69]
 immutability=1
@@ -407,7 +407,7 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=19
+PreloadWeight=41
 selectedConfig=0
 
 [Containments][7][Applets][73]

@@ -23,6 +23,7 @@ text/plain=emacs.desktop;org.kde.kate.desktop;libreoffice-writer.desktop;okularA
 video/mp4=vlc.desktop;
 video/webm=vlc.desktop;
 video/x-matroska=vlc.desktop;
+video/x-msvideo=vlc.desktop;
 x-scheme-handler/tg=userapp-Telegram Desktop-5Z62V0.desktop;
 
 [Default Applications]
@@ -57,6 +58,7 @@ text/plain=emacs.desktop;
 video/mp4=vlc.desktop;
 video/webm=vlc.desktop;
 video/x-matroska=vlc.desktop;
+video/x-msvideo=vlc.desktop;
 x-scheme-handler/chrome=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/ftp=userapp-Firefox-D3SRI0.desktop
 x-scheme-handler/http=userapp-Firefox-D3SRI0.desktop

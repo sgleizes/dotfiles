@@ -23,6 +23,9 @@
 [filter "plasma-gtk-gen"]
   clean = "sed 's/# created by KDE Plasma.*/# created by KDE Plasma/'"
 
+[filter "plasma-notify-state"]
+  clean = "sed -E '/\\s*\\[(Applications|DoNotDisturb)\\]/,/^\\s*$/d'"
+
 [filter "filelight-interface-state"]
   clean = "sed -n '/\\[filelight_part\\]/,/^\\s*$/p'"
 

@@ -10,6 +10,7 @@ kactivitymanagerd*     filter=kde-activities
 *desktop-appletsrc     filter=plasma-applets-state
 *.layout.latte         filter=plasma-applets-state
 gtkrc*                 filter=plasma-gtk-gen
+plasmanotifyrc         filter=plasma-notify-state
 
 # Filters for application-specific configuration files.
 filelightrc                filter=filelight-interface-state
