@@ -4037,6 +4037,29 @@ Override format-on-save default enabled modes to add emacs-lisp-mode.
             elfeed-show-mode))
 #+end_src
 
+*** Go
+
+Disable LSP formatting as it does not currently work well:
+- Sometimes deletes text or words at random
+- Does not support region formatting
+- Overrides format-all configuration
+NOTE: Seems to work better now that LSP is properly configured. This is kept in case things go south again.
+#+begin_src elisp
+;; (after! go-mode
+;;   (setq-hook! 'go-mode-hook
+;;     +format-with-lsp nil))
+#+end_src
+
+Configure ~gofmt~ command to use ~gofumpt~.
+#+begin_src elisp
+(after! go-mode
+  (setq gofmt-command "gofumpt"))
+  ;; (setq gofmt-command "gofmt")
+  ;;       gofmt-args '("-s")))
+#+end_src
+
+*** Shell
+
 Disable ~shfmt~ formatting for zsh buffers (not supported).
 #+begin_src elisp
 (add-hook! 'sh-set-shell-hook
@@ -4049,19 +4072,93 @@ Disable ~shfmt~ formatting for zsh buffers (not supported).
 Redefine the ~shfmt~ formatter with consistent indent settings.
 Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
-(set-formatter! 'shfmt
-  '("shfmt"
-    "-s"   ; simplify the code
-    "-bn"  ; binary ops like && and | may start a line
-    ("-i" "%d" tab-width)
-    ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
-                              (boundp 'sh-shell)
-                              (symbol-value 'sh-shell))
-                  (zsh "bash")
-                  (bash "bash")
-                  (mksh "mksh")
-                  (t "posix"))))
-  :modes 'sh-mode)
+(after! format-all
+  (set-formatter! 'shfmt
+    '("shfmt"
+      "-s"   ; simplify the code
+      "-bn"  ; binary ops like && and | may start a line
+      ("-i" "%d" tab-width)
+      ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
+                                (boundp 'sh-shell)
+                                (symbol-value 'sh-shell))
+                    (zsh "bash")
+                    (bash "bash")
+                    (mksh "mksh")
+                    (t "posix"))))
+    :modes 'sh-mode))
+#+end_src
+
+** Go
+*** Bindings
+
+Customize go-mode specific bindings.
+#+begin_src elisp
+(after! go-mode
+  (map! :map go-mode-map
+        :localleader
+        ;; Remove import modification bindings, use goimports/lsp-organize-imports instead
+        "r" nil
+        ;; Move playground upload to a mnemonic binding
+        "e" nil
+        "u" #'+go/play-buffer-or-region
+        ;; Move tag bindings to a dedicated prefix
+        "a" nil
+        "d" nil
+        (:prefix ("T" . "tag")
+         "a" #'go-tag-add
+         "d" #'go-tag-remove)
+        ;; Move goto bindings to a dedicated prefix
+        "i" nil
+        (:prefix ("g" . "goto")
+         "i" #'go-goto-imports
+         "a" #'go-goto-arguments
+         "f" #'go-goto-function
+         "F" #'go-goto-function-name
+         "r" #'go-goto-return-values
+         "d" #'go-goto-docstring
+         "m" #'go-goto-method-receiver)
+        ;; Reorganize guru commands
+        (:prefix ("h" . "help")
+         "." nil                     ; godoc-at-point is inferior to +lookup/documentation
+         "w" nil                     ; go-guru-what command is no longer interactive
+         "C" nil
+         "P" nil
+         "v" nil
+         "d" #'go-guru-describe      ; Describe this
+         "f" #'go-guru-freevars      ; List free variables
+         "i" #'go-guru-implements    ; Implements relations for package types
+         "c" #'go-guru-peers         ; List peers for channel
+         "r" #'go-guru-referrers     ; List references to object
+         "j" #'go-guru-definition    ; Jump to definition
+         "p" #'go-guru-pointsto      ; What does this point to
+         "s" #'go-guru-callstack     ; Show arbitrary path from program root to this function
+         "e" #'go-guru-whicherrs     ; Which errors
+         "<" #'go-guru-callers       ; Show callers of this function
+         ">" #'go-guru-callees)      ; Show callees of this function
+        ;; Bind gofumpt command
+        :desc "gofumpt"
+        "f" #'gofmt
+        ;; Reorganize test commands
+        (:prefix ("t" . "test")
+         "G" nil
+         "e" nil
+         (:prefix ("g" . "gen")
+          "g" #'go-gen-test-dwim
+          "a" #'go-gen-test-all
+          "e" #'go-gen-test-exported))
+        ;; Reorganize quick go commands
+        :desc "go run ." "r" (cmd! (compile "go run ."))
+        :desc "go build" "b" (cmd! (compile "go build"))
+        :desc "go clean" "c" (cmd! (compile "go clean"))))
+#+end_src
+
+** Go Gen Test
+
+Configure ~go-gen-test~ integration.
+#+begin_src elisp
+(after! go-gen-test
+  (setq go-gen-test-open-function 'find-file
+        go-gen-test-default-functions "-exported"))
 #+end_src
 
 ** Hydra major mode
