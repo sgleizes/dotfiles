@@ -4477,12 +4477,11 @@ Customize bindings.
 
 Configure man/woman and add global bindings.
 #+begin_src elisp
-(after! (man woman)
-  (setq woman-fill-column fill-column)
-  (map! :leader :prefix "h"
-        "h" #'woman
-        "H" #'man
-        "W" nil))
+(setq woman-fill-column fill-column)
+(map! :leader :prefix "h"
+      "h" #'woman
+      "H" #'man
+      "W" nil)
 #+end_src
 
 ** Org
