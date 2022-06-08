@@ -60,7 +60,7 @@ source ${0:h}/tpm.zsh
 # Attempt to detect whether the terminal is started from within another application.
 # In xterm (or terminals mimicking it), WINDOWID is set to 0 if the terminal is not
 # running in a X window (e.g. in a KDE application).
-if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 ]] && { \
+if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID && $WINDOWID != 0 ]] && { \
   [[   $SSH_TTY && $TMUX_AUTOSTART == (always|remote) ]] ||
   [[ ! $SSH_TTY && $TMUX_AUTOSTART == (always|local) ]]
 }; then

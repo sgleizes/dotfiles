@@ -8,4 +8,4 @@ if (( ! $+commands[trash] )); then
 fi
 
 # Remove files that have been trashed more than 30 days ago.
-trash-empty 30
+trash-empty -f 30

@@ -340,7 +340,7 @@ bindkey "$keys[Alt]-" neg-argument
 #
 
 # Move to beginning/end of line.
-for key in "$keys[Control]S" "$keys[Home]"; do
+for key in "$keys[Control]A" "$keys[Home]"; do
   bindkey "$key" beginning-of-line
 done
 for key in "$keys[Control]E" "$keys[End]"; do

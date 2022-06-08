@@ -1007,6 +1007,11 @@ Customize window management bindings.
  :map evil-window-map
  :desc "Window management"
  "SPC"                #'+hydra/window-management/body
+ ;; Splitting
+ "s"                  nil
+ "v"                  nil
+ "'"                  #'evil-window-vsplit
+ "\""                 #'evil-window-split
  ;; Navigation
  "a"                  #'ace-window
  "]"                  #'evil-window-next
@@ -1609,8 +1614,10 @@ Provide additional bindings for centaur-tabs functions.
    :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
 
    ;; Bind most frequent cycling command to a convenient binding.
-   :g "M-["                 #'+tabs:previous-or-goto
-   :g "M-]"                 #'+tabs:next-or-goto
+   :g "M-[" #'+tabs:previous-or-goto
+   :g "M-]" #'+tabs:next-or-goto
+   :g "M-{" #'centaur-tabs-move-current-tab-to-left
+   :g "M-}" #'centaur-tabs-move-current-tab-to-right
 
    :leader :prefix "b"
    ;; Buffer group navigation
@@ -3996,6 +4003,28 @@ Provide language cycling.
       :desc "Cycle ispell languages" "L" #'+spell/cycle-languages)
 #+end_src
 
+** Flycheck
+
+Customize flycheck bindings.
+#+begin_src elisp
+(after! flycheck
+  (map! (:leader
+         :prefix "c"
+         (:prefix ("v" . "Flycheck")
+          "v" #'flycheck-verify-setup
+          "d" #'flycheck-describe-checker
+          "c" #'flycheck-clear
+          "h" #'flycheck-display-error-at-point
+          "e" #'flycheck-explain-error-at-point
+          "s" #'flycheck-select-checker
+          "y" #'flycheck-copy-errors-as-kill))
+
+        (:map flycheck-error-list-mode-map
+         :n "r" #'flycheck-error-list-check-source
+         :n "f" #'flycheck-error-list-set-filter
+         :n "F" #'flycheck-error-list-reset-filter)))
+#+end_src
+
 ** Format
 
 Override format-on-save default enabled modes to add emacs-lisp-mode.
@@ -4007,6 +4036,29 @@ Override format-on-save default enabled modes to add emacs-lisp-mode.
             elfeed-search-mode
             elfeed-show-mode))
 #+end_src
+
+*** Go
+
+Disable LSP formatting as it does not currently work well:
+- Sometimes deletes text or words at random
+- Does not support region formatting
+- Overrides format-all configuration
+NOTE: Seems to work better now that LSP is properly configured. This is kept in case things go south again.
+#+begin_src elisp
+;; (after! go-mode
+;;   (setq-hook! 'go-mode-hook
+;;     +format-with-lsp nil))
+#+end_src
+
+Configure ~gofmt~ command to use ~gofumpt~.
+#+begin_src elisp
+(after! go-mode
+  (setq gofmt-command "gofumpt"))
+  ;; (setq gofmt-command "gofmt")
+  ;;       gofmt-args '("-s")))
+#+end_src
+
+*** Shell
 
 Disable ~shfmt~ formatting for zsh buffers (not supported).
 #+begin_src elisp
@@ -4020,19 +4072,93 @@ Disable ~shfmt~ formatting for zsh buffers (not supported).
 Redefine the ~shfmt~ formatter with consistent indent settings.
 Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
-(set-formatter! 'shfmt
-  '("shfmt"
-    "-s"   ; simplify the code
-    "-bn"  ; binary ops like && and | may start a line
-    ("-i" "%d" tab-width)
-    ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
-                              (boundp 'sh-shell)
-                              (symbol-value 'sh-shell))
-                  (zsh "bash")
-                  (bash "bash")
-                  (mksh "mksh")
-                  (t "posix"))))
-  :modes 'sh-mode)
+(after! format-all
+  (set-formatter! 'shfmt
+    '("shfmt"
+      "-s"   ; simplify the code
+      "-bn"  ; binary ops like && and | may start a line
+      ("-i" "%d" tab-width)
+      ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
+                                (boundp 'sh-shell)
+                                (symbol-value 'sh-shell))
+                    (zsh "bash")
+                    (bash "bash")
+                    (mksh "mksh")
+                    (t "posix"))))
+    :modes 'sh-mode))
+#+end_src
+
+** Go
+*** Bindings
+
+Customize go-mode specific bindings.
+#+begin_src elisp
+(after! go-mode
+  (map! :map go-mode-map
+        :localleader
+        ;; Remove import modification bindings, use goimports/lsp-organize-imports instead
+        "r" nil
+        ;; Move playground upload to a mnemonic binding
+        "e" nil
+        "u" #'+go/play-buffer-or-region
+        ;; Move tag bindings to a dedicated prefix
+        "a" nil
+        "d" nil
+        (:prefix ("T" . "tag")
+         "a" #'go-tag-add
+         "d" #'go-tag-remove)
+        ;; Move goto bindings to a dedicated prefix
+        "i" nil
+        (:prefix ("g" . "goto")
+         "i" #'go-goto-imports
+         "a" #'go-goto-arguments
+         "f" #'go-goto-function
+         "F" #'go-goto-function-name
+         "r" #'go-goto-return-values
+         "d" #'go-goto-docstring
+         "m" #'go-goto-method-receiver)
+        ;; Reorganize guru commands
+        (:prefix ("h" . "help")
+         "." nil                     ; godoc-at-point is inferior to +lookup/documentation
+         "w" nil                     ; go-guru-what command is no longer interactive
+         "C" nil
+         "P" nil
+         "v" nil
+         "d" #'go-guru-describe      ; Describe this
+         "f" #'go-guru-freevars      ; List free variables
+         "i" #'go-guru-implements    ; Implements relations for package types
+         "c" #'go-guru-peers         ; List peers for channel
+         "r" #'go-guru-referrers     ; List references to object
+         "j" #'go-guru-definition    ; Jump to definition
+         "p" #'go-guru-pointsto      ; What does this point to
+         "s" #'go-guru-callstack     ; Show arbitrary path from program root to this function
+         "e" #'go-guru-whicherrs     ; Which errors
+         "<" #'go-guru-callers       ; Show callers of this function
+         ">" #'go-guru-callees)      ; Show callees of this function
+        ;; Bind gofumpt command
+        :desc "gofumpt"
+        "f" #'gofmt
+        ;; Reorganize test commands
+        (:prefix ("t" . "test")
+         "G" nil
+         "e" nil
+         (:prefix ("g" . "gen")
+          "g" #'go-gen-test-dwim
+          "a" #'go-gen-test-all
+          "e" #'go-gen-test-exported))
+        ;; Reorganize quick go commands
+        :desc "go run ." "r" (cmd! (compile "go run ."))
+        :desc "go build" "b" (cmd! (compile "go build"))
+        :desc "go clean" "c" (cmd! (compile "go clean"))))
+#+end_src
+
+** Go Gen Test
+
+Configure ~go-gen-test~ integration.
+#+begin_src elisp
+(after! go-gen-test
+  (setq go-gen-test-open-function 'find-file
+        go-gen-test-default-functions "-exported"))
 #+end_src
 
 ** Hydra major mode
@@ -4244,26 +4370,77 @@ Remove annoying programming ligatures.
 ;;  +ligatures-fira-font-alist)
 #+end_src
 
-** Lsp
+** LSP
+*** Settings
 
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
 (after! lsp-mode
-  (setq-default lsp-restart 'auto-restart))
+  (setq-default lsp-restart 'auto-restart)
+  (lsp-enable-which-key-integration t)
+
+  (setq lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-show-code-actions t ;; TODO
+        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-doc-show-with-mouse t
+        lsp-ui-doc-alignment 'window
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-delay 0.5
+        lsp-ui-doc-max-width 80))
 #+end_src
 
-*** Sh
+*** Go
+
+Configure gopls settings.
+#+begin_src elisp
+(after! lsp-mode
+  (setq lsp-go-symbol-matcher "Fuzzy"
+        lsp-go-goimports-local "github.com/sgleizes"
+        lsp-go-use-gofumpt t
+        lsp-go-analyses
+        '((nilness . t))))
+#+end_src
+
+Automatically organize imports on save (like goimports but using gopls, much more efficient).
+If ~+format-with-lsp~ is disabled and goimports is used, this is not needed.
+#+begin_src elisp
+(after! lsp-mode
+  (add-hook 'go-mode-hook
+            (defun +psydev/lsp-go-organize-imports-on-save ()
+              (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+#+end_src
+
+Enable LSP in go.mod files.
+#+begin_src elisp
+(after! lsp-mode
+  (add-hook 'go-dot-mod-mode-hook #'lsp-deferred))
+#+end_src
+
+Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
+#+begin_src elisp
+(after! flycheck
+  (set-next-checker! 'go-mode 'lsp 'golangci-lint))
+#+end_src
+
+*** Shell
 
 Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
 #+begin_src elisp
-(defun lsp-flycheck-enable-shellcheck ()
-  "Enable Shellcheck for shell buffers under LSP."
-  (when (derived-mode-p 'sh-mode)
-    (flycheck-add-next-checker 'lsp 'sh-shellcheck)))
+(after! flycheck
+  (set-next-checker! 'sh-mode 'lsp 'sh-shellcheck))
+#+end_src
 
-(add-hook 'lsp-after-open-hook #'lsp-flycheck-enable-shellcheck)
+*** Bindings
+
+#+begin_src elisp
+(after! lsp-mode
+  (map! :leader
+        :prefix "c"
+        :desc "LSP Codelens"
+        "L" #'lsp-avy-lens))
 #+end_src
 
 ** Magit
@@ -4300,12 +4477,11 @@ Customize bindings.
 
 Configure man/woman and add global bindings.
 #+begin_src elisp
-(after! (man woman)
-  (setq woman-fill-column fill-column)
-  (map! :leader :prefix "h"
-        "h" #'woman
-        "H" #'man
-        "W" nil))
+(setq woman-fill-column fill-column)
+(map! :leader :prefix "h"
+      "h" #'woman
+      "H" #'man
+      "W" nil)
 #+end_src
 
 ** Org
@@ -5998,6 +6174,8 @@ Customize bindings.
         :i "S-RET" nil
 
         :map org-mode-map
+        :g "M-{"           nil
+        :g "M-}"           nil
         :m [tab]           #'org-cycle
         :m "TAB"           #'org-cycle
         :m [S-tab]         #'org-shifttab
@@ -6838,6 +7016,13 @@ Rebind auto-yasnippet commands.
    :nvi [C-tab] nil
    (:leader :prefix "c"
     :desc "Expand auto-snippet" "y" #'aya-expand
-    :desc "Create auto-snippet" "Y" #'aya-create)))
+    :desc "Create auto-snippet" "Y" #'aya-create)
+
+   ;; Use yas-next-field instead of yas-next-field-or-maybe-expand
+   ;; The latter is too confusing, most of the time I don't need to expand snippets inside snippet fields.
+   (:map yas-keymap
+    "TAB"   #'yas-next-field
+    "<tab>" #'yas-next-field)
+))
 #+end_src
 

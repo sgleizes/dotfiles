@@ -13,6 +13,7 @@ alias reload='POWERLEVEL9K_INSTANT_PROMPT=off exec zsh'
 #
 
 setopt no_clobber           # do not allow '>' to truncate existing files, use '>!'
+setopt clobber_empty        # but allow empty files to be overwritten with '>'
 setopt append_create        # allow '>>' to create files
 setopt correct              # try to correct command spelling
 setopt interactive_comments # allow comments in interactive shells

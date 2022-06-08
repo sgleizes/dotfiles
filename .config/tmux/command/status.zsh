@@ -42,7 +42,7 @@ function ssh_or_mosh_args {
   [[ ! "$args" ]] && args=$(printf '%s' "$1" | grep 'mosh-client' \
     | sed -E -e 's/.*mosh-client -# (.*)\|.*$/\1/' -e 's/-[^ ]*//g' -e 's/\d:\d//g')
 
- printf '%s' "$args"
+  printf '%s' "$args"
 }
 
 # Display the local or remote username of the current tmux pane.
@@ -76,18 +76,16 @@ function status_hostname {
     [[ ! "$hostname" ]] && hostname=$( \
       ssh -T -o ControlPath=none -o ProxyCommand="sh -c 'echo %%hostname%% %h >&2'" ${=ssh_or_mosh_args} 2>&1 \
         | awk '/^%hostname% / { print $2; exit }')
-    hostname=$(echo "$hostname" | awk '\
+    echo "$hostname" | awk '\
     { \
       if ($1~/^[0-9.:]+$/) \
         print $1; \
       else \
         split($1, a, ".") ; print a[1] \
-    }')
+    }'
   } else {
-    hostname=$(command hostname -s)
+    command hostnamectl hostname
   }
-
-  printf '%s' "$hostname"
 }
 
 # Display the local or remote uptime of the current tmux pane.

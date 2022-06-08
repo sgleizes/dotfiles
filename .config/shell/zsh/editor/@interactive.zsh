@@ -8,6 +8,7 @@
 # Convenience aliases.
 alias edit='${(z)VISUAL:-${(z)EDITOR}}'
 alias e='edit'
+alias ex='emacs-xclient'
 
 if (( $+commands[emacs] )); then
   unalias edit
