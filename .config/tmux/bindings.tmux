@@ -13,8 +13,10 @@ bind -T root 'C-q' detach-client
 bind -T root 'C-l' send-keys 'C-l' \; run 'sleep 0.1' \; clear-history
 
 # Root bindings to cycle windows easily.
-bind -T root 'M-]'  next-window
-bind -T root 'M-['  previous-window
+bind -T root    'M-]'  next-window
+bind -T root    'M-['  previous-window
+bind -T root -r 'M-{' swap-window -d -t -1
+bind -T root -r 'M-}' swap-window -d -t +1
 
 # Root bindings to enter copy-mode automatically.
 bind -T root 'S-PPage' copy-mode -eu
@@ -110,19 +112,23 @@ unbind -a -T prefix
 
 # Set the prefix key to C-a.
 unbind 'C-b'
-set -g prefix 'C-a'
-bind 'C-a' send-prefix
+set -g prefix 'C-s'
+bind 'C-s' send-prefix
 
 # Client operations.
-bind -N 'Detach the current client'  'C-x' detach-client
-bind -N 'Suspend the current client' 'M-x' suspend-client
+bind -N 'Detach the current client'        'C-d' detach-client
+bind -N 'Suspend the current client'       'C-z' suspend-client
+bind -N 'Move the current client up'    -r 'K'   refresh-client -U 5
+bind -N 'Move the current client down'  -r 'J'   refresh-client -D 5
+bind -N 'Move the current client left'  -r 'H'   refresh-client -L 5
+bind -N 'Move the current client right' -r 'L'   refresh-client -R 5
 
 # Client selection.
 bind -N 'Select a client interactively' 'c' choose-client -Z
 
 # Session operations.
-bind -N 'Create a new session'       'N' command-prompt "new-session -s '%%'"
-bind -N 'Rename the current session' 'S' command-prompt -I "#S" "rename-session -- '%%'"
+bind -N 'Create a new session'       'N' command-prompt { new-session -s "%%" }
+bind -N 'Rename the current session' 'S' command-prompt -I "#S" { rename-session "%%" }
 
 # Session selection.
 bind -N 'Select a session interactively' 's'    choose-tree -Zs
@@ -131,14 +137,17 @@ bind -N 'Select the previous session' -r 'BTab' switch-client -p
 
 # Window operations.
 bind -N 'Create a new window'        'n'   new-window -c "#{pane_current_path}"
-bind -N 'Rename the current window'  'W'   command-prompt -I "#W" "rename-window -- '%%'"
-bind -N 'Kill the current window'    'K'   confirm-before -p "kill-window #W? (y/n)" kill-window
-bind -N 'Respawn the current window' 'M-r' confirm-before -p "respawn-window #W? (y/n)" "respawn-window -k"
-bind -N 'Move the current window the the left'  -r '<' swap-window -d -t -1
-bind -N 'Move the current window the the right' -r '>' swap-window -d -t +1
+bind -N 'Rename the current window'  'W'   command-prompt -I "#W" { rename-window "%%" }
+bind -N 'Kill the current window'    'D'   confirm-before -p "kill-window #W? (y/n)" kill-window
+bind -N 'Respawn the current window' 'M-r' confirm-before -p "respawn-window #W? (y/n)" { respawn-window -k }
 
 # Window selection.
 bind -N 'Select a window interactively'               'w'       choose-tree -Zw
+bind -N 'Select the last window'                   -r '`'       last-window
+bind -N 'Select the next window'                   -r 'C-l'     next-window
+bind -N 'Select the previous window'               -r 'C-h'     previous-window
+bind -N 'Select the next window'                   -r 'C-j'     next-window -a
+bind -N 'Select the previous window'               -r 'C-k'     previous-window -a
 bind -N 'Select the next window'                   -r 'NPage'   next-window
 bind -N 'Select the previous window'               -r 'PPage'   previous-window
 bind -N 'Select the next window with an alert'     -r 'M-NPage' next-window -a
@@ -155,8 +164,8 @@ bind -N 'Select window 9'  '9' select-window -t :=9
 bind -N 'Select window 10' '0' select-window -t :=10
 
 # Window splitting.
-bind -N 'Split the current window horizontally' '-' split-window -h -c "#{pane_current_path}"
-bind -N 'Split the current window vertically'   '_' split-window -v -c "#{pane_current_path}"
+bind -N 'Split the current window horizontally' "'" split-window -h -c "#{pane_current_path}"
+bind -N 'Split the current window vertically'   '"' split-window -v -c "#{pane_current_path}"
 
 # Window layouts.
 bind -N 'Select the next window layout'     -r '\' next-layout
@@ -166,26 +175,31 @@ bind -N 'Select the even-vertical layout'    'M-2' select-layout even-vertical
 bind -N 'Select the main-horizontal layout'  'M-3' select-layout main-horizontal
 bind -N 'Select the main-vertical layout'    'M-4' select-layout main-vertical
 bind -N 'Select the tiled layout'            'M-5' select-layout tiled
-bind -N 'Spread the panes out evenly'        'C-e' select-layout -E
+bind -N 'Spread the panes out evenly'        '=' select-layout -E
 
 # Pane operations.
 bind -N 'Mark the current pane' 'm' select-pane -m
 bind -N 'Clear the marked pane' 'M' select-pane -M
 bind -N 'Break the current pane into a new window'   'C-b' break-pane
-bind -N 'Join the marked pane with the current pane' 'C-j' join-pane
+bind -N 'Join the marked pane with the current pane' 'C-y' join-pane
 bind -N 'Swap the current pane with the pane above'       -r 'o' swap-pane -U
 bind -N 'Swap the current pane with the pane below'       -r 'O' swap-pane -D
 bind -N 'Rotate the panes upward in the current window'   -r 'C-o' rotate-window -U
 bind -N 'Rotate the panes downward in the current window' -r 'M-o' rotate-window -D
-bind -N 'Kill the current pane'    'k'   confirm-before -p "kill-pane #P? (y/n)" "kill-pane"
-bind -N 'Respawn the current pane' 'C-r' confirm-before -p "respawn-pane #P? (y/n)" "respawn-pane -k"
+bind -N 'Kill the current pane'    'd'   confirm-before -p "kill-pane #P? (y/n)" kill-pane
+bind -N 'Respawn the current pane' 'C-r' confirm-before -p "respawn-pane #P? (y/n)" { respawn-pane -k }
 
 # Pane selection.
 bind -N 'List and select a pane by index' 'p'   display-panes
+bind -N 'Select the last pane'         -r '~'   last-pane
 bind -N 'Select the next pane'         -r ']'   select-pane -t :.+
 bind -N 'Select the previous pane'     -r '['   select-pane -t :.-
 bind -N 'Select the next pane'         -r 'C-p' select-pane -t :.+
 bind -N 'Select the previous pane'     -r 'M-p' select-pane -t :.-
+bind -N 'Select the pane above the active pane'           'k'     select-pane -U
+bind -N 'Select the pane below the active pane'           'j'     select-pane -D
+bind -N 'Select the pane to the left of the active pane'  'h'     select-pane -L
+bind -N 'Select the pane to the right of the active pane' 'l'     select-pane -R
 bind -N 'Select the pane above the active pane'           'Up'    select-pane -U
 bind -N 'Select the pane below the active pane'           'Down'  select-pane -D
 bind -N 'Select the pane to the left of the active pane'  'Left'  select-pane -L
@@ -197,10 +211,10 @@ bind -N 'Resize the current pane up'         -r 'C-Up'    resize-pane -U
 bind -N 'Resize the current pane down'       -r 'C-Down'  resize-pane -D
 bind -N 'Resize the current pane left'       -r 'C-Left'  resize-pane -L
 bind -N 'Resize the current pane right'      -r 'C-Right' resize-pane -R
-bind -N 'Resize the current pane up by 5'    -r 'M-Up'    resize-pane -U 5
-bind -N 'Resize the current pane down by 5'  -r 'M-Down'  resize-pane -D 5
-bind -N 'Resize the current pane left by 5'  -r 'M-Left'  resize-pane -L 5
-bind -N 'Resize the current pane right by 5' -r 'M-Right' resize-pane -R 5
+bind -N 'Resize the current pane up by 5'    -r '+'       resize-pane -U 5
+bind -N 'Resize the current pane down by 5'  -r '-'       resize-pane -D 5
+bind -N 'Resize the current pane left by 5'  -r '<'       resize-pane -L 5
+bind -N 'Resize the current pane right by 5' -r '>'       resize-pane -R 5
 
 # Buffer selection.
 bind -N 'Paste the most recent buffer'  'v' paste-buffer -p
@@ -213,7 +227,7 @@ bind -N 'Search backward for a regular expression' '/' copy-mode \; send '?'
 
 # Keymap information.
 bind -N 'List key bindings'      '?' display-popup -w80 -h90% -E "tmux list-keys -N | $PAGER"
-bind -N 'Describe a key binding' '.' command-prompt -k -p "(key)" "list-keys -1N \"%%%\""
+bind -N 'Describe a key binding' '.' command-prompt -k -p "(key)" { list-keys -1N "%%" }
 
 # Customize mode.
 bind -N 'Customize options and bindings' ',' customize-mode -Z
@@ -223,13 +237,13 @@ bind -N 'Prompt for a command'      ':' command-prompt
 bind -N 'Show status line messages' ';' show-messages
 
 # Activity monitoring.
-bind -N 'Toggle activity monitoring for the current window' '+' {
+bind -N 'Toggle activity monitoring for the current window' '@' {
   set monitor-activity
   display 'monitor-activity #{?monitor-activity,on,off}'
 }
 
 # Silence monitoring.
-bind -N 'Toggle silence monitoring for the current window' '=' {
+bind -N 'Toggle silence monitoring for the current window' '!' {
   if -F '#{monitor-silence}' {
     set monitor-silence 0
     display 'monitor-silence off'
@@ -242,7 +256,7 @@ bind -N 'Toggle silence monitoring for the current window' '=' {
 }
 
 # Pane synchronization.
-bind -N 'Toggle pane synchronization in the current window' 'y' {
+bind -N 'Toggle pane synchronization in the current window' '#' {
   set synchronize-panes
   display 'synchronize-panes #{?synchronize-panes,on,off}'
 }
@@ -275,7 +289,7 @@ bind -N 'Run path-picker on the current pane history' 'F' {
 }
 
 # Enter copy mode.
-bind -N 'Enter copy mode' 'Enter' copy-mode
+bind -N 'Enter copy mode'    'Enter' copy-mode
 
 #
 # Copy mode
@@ -285,73 +299,78 @@ bind -N 'Enter copy mode' 'Enter' copy-mode
 unbind -a -T copy-mode
 run -b 'tmux unbind -a -T copy-mode-vi 2>/dev/null || true' # ignore error if missing
 
-# Copy the current selection to a new buffer or start one if none is active.
-bind -T copy-mode 'Space' {
-  if -F '#{||:#{selection_active},#{search_present}}' {
-    send -X copy-pipe
-  } {
-    send -X begin-selection
-  }
-}
-
-# Copy the current selection to a new buffer and exit copy mode, or start one if none is active.
-bind -T copy-mode 'C-Space' {
-  if -F '#{||:#{selection_active},#{search_present}}' {
-    send -X copy-pipe-and-cancel
-  } {
-    send -X begin-selection
-  }
-}
-
-# Clear the current selection or exit copy mode if none is active.
-bind -T copy-mode 'Escape' {
-  if -F '#{selection_active}' {
-    send -X clear-selection
-  } {
-    send -X cancel
-  }
-}
-
 # Exit copy mode.
-bind -T copy-mode 'Enter'             send -X cancel
 bind -T copy-mode 'q'                 send -X cancel
 bind -T copy-mode 'C-c'               send -X cancel
 
 # Move to beginning/end of line.
-bind -T copy-mode 'C-s'               send -X start-of-line
+bind -T copy-mode 'C-a'               send -X start-of-line
 bind -T copy-mode 'C-e'               send -X end-of-line
 bind -T copy-mode 'Home'              send -X start-of-line
 bind -T copy-mode 'End'               send -X end-of-line
-bind -T copy-mode 'M-s'               send -X back-to-indentation
+bind -T copy-mode 'M-m'               send -X back-to-indentation
+
+bind -T copy-mode '0'                 send -X start-of-line
+bind -T copy-mode '$'                 send -X end-of-line
+bind -T copy-mode '^'                 send -X back-to-indentation
+bind -T copy-mode '_'                 send -X back-to-indentation
 
 # Move the cursor around one character.
+bind -T copy-mode 'k'                 send -X cursor-up
+bind -T copy-mode 'j'                 send -X cursor-down
+bind -T copy-mode 'h'                 send -X cursor-left
+bind -T copy-mode 'l'                 send -X cursor-right
 bind -T copy-mode 'Up'                send -X cursor-up
 bind -T copy-mode 'Down'              send -X cursor-down
 bind -T copy-mode 'Left'              send -X cursor-left
 bind -T copy-mode 'Right'             send -X cursor-right
 
 # Move forward/backward one word.
+bind -T copy-mode 'b'                 send -X previous-word
+bind -T copy-mode 'w'                 send -X next-word
+bind -T copy-mode 'e'                 send -X next-word-end
+bind -T copy-mode 'C-h'               send -X previous-word
+bind -T copy-mode 'C-l'               send -X next-word-end
 bind -T copy-mode 'M-Left'            send -X previous-word
 bind -T copy-mode 'M-Right'           send -X next-word-end
+
+# Move forward/backward one space-delimited word.
+bind -T copy-mode 'B'                 send -X previous-space
+bind -T copy-mode 'W'                 send -X next-space
+bind -T copy-mode 'E'                 send -X next-space-end
+bind -T copy-mode 'C-H'               send -X previous-space
+bind -T copy-mode 'C-L'               send -X next-space-end
 bind -T copy-mode 'C-Left'            send -X previous-space
 bind -T copy-mode 'C-Right'           send -X next-space-end
 
 # Move forward/backward one block.
+bind -T copy-mode '{'                 send -X previous-paragraph
+bind -T copy-mode '}'                 send -X next-paragraph
+bind -T copy-mode 'C-k'               send -X previous-paragraph
+bind -T copy-mode 'C-j'               send -X next-paragraph
 bind -T copy-mode 'M-Up'              send -X previous-paragraph
 bind -T copy-mode 'M-Down'            send -X next-paragraph
 
 # Move to the top/middle/bottom line of the current screen.
-bind -T copy-mode 'M-h'               send -X top-line
-bind -T copy-mode 'h'                 send -X middle-line
-bind -T copy-mode 'M-H'               send -X bottom-line
+bind -T copy-mode 'H'                 send -X top-line
+bind -T copy-mode 'M'                 send -X middle-line
+bind -T copy-mode 'L'                 send -X bottom-line
 
 # Scroll up/down the history buffer.
+bind -T copy-mode 'C-y'               send -X scroll-up
+bind -T copy-mode 'C-e'               send -X scroll-down
 bind -T copy-mode 'C-Up'              send -X scroll-up
 bind -T copy-mode 'C-Down'            send -X scroll-down
 bind -T copy-mode 'S-Up'              send -X scroll-up
 bind -T copy-mode 'S-Down'            send -X scroll-down
+
+bind -T copy-mode 'C-u'               send -X halfpage-up
+bind -T copy-mode 'C-d'               send -X halfpage-down
 bind -T copy-mode 'M-S-Up'            send -X halfpage-up
 bind -T copy-mode 'M-S-Down'          send -X halfpage-down
+
+bind -T copy-mode 'C-b'               send -X page-up
+bind -T copy-mode 'C-f'               send -X page-down
 bind -T copy-mode 'NPage'             send -X page-down
 bind -T copy-mode 'PPage'             send -X page-up
 bind -T copy-mode 'S-NPage'           send -X page-down
@@ -363,25 +382,72 @@ bind -T copy-mode 'G'                 send -X history-bottom
 
 # Mark a line, swap the mark and the cursor position.
 bind -T copy-mode 'x'                 send-keys -X set-mark
-bind -T copy-mode 'X'                 send-keys -X jump-to-mark
+bind -T copy-mode 'M-x'               send-keys -X jump-to-mark
 
 # Go to a specific line in the history buffer.
-bind -T copy-mode 'C-g'               command-prompt -p "(goto line)" "send -X goto-line \"%%%\""
+bind -T copy-mode 'M-g'               command-prompt -p "(goto line)" { send -X goto-line "%%" }
 
 # Search backward/forward for a regular expression.
 # NOTE: For now the incremental search does not support regular expressions.
-bind -T copy-mode '?'                 command-prompt -I "#{pane_search_string}" -p "(search up)" "send -X search-backward \"%%%\""
-bind -T copy-mode '/'                 command-prompt -I "#{pane_search_string}" -p "(search down)" "send -X search-forward \"%%%\""
+bind -T copy-mode '?'                 command-prompt -I "#{pane_search_string}" -T search -p "(search up)" { send -X search-backward "%%" }
+bind -T copy-mode '/'                 command-prompt -I "#{pane_search_string}" -T search -p "(search down)" { send -X search-forward "%%" }
+bind -T copy-mode '#'                 send-keys -FX search-backward "#{copy_cursor_word}"
+bind -T copy-mode '*'                 send-keys -FX search-forward "#{copy_cursor_word}"
 bind -T copy-mode 'n'                 send -X search-again
 bind -T copy-mode 'N'                 send -X search-reverse
 
-# Copy the current line to a new buffer.
-# NOTE: This will not copy to the system clipboard, as copy-command is not used for these.
-bind -T copy-mode 'C-k'               send -X copy-end-of-line
-bind -T copy-mode 'M-C-k'             send -X copy-line
+# Jump backward/forward like evil-snipe.
+bind -T copy-mode 'f'                 command-prompt -1 -p "(jump forward)" { send-keys -X jump-forward "%%" }
+bind -T copy-mode 't'                 command-prompt -1 -p "(jump to forward)" { send-keys -X jump-to-forward "%%" }
+bind -T copy-mode 'F'                 command-prompt -1 -p "(jump backward)" { send-keys -X jump-backward "%%" }
+bind -T copy-mode 'T'                 command-prompt -1 -p "(jump to backward)" { send-keys -X jump-to-backward "%%" }
+bind -T copy-mode ';'                 send -X jump-again
+bind -T copy-mode ','                 send -X jump-reverse
 
-# Toggle rectangle selection mode.
-bind -T copy-mode 'r'                 send -X rectangle-toggle
+# Copy the current selection/line to a new buffer.
+bind -T copy-mode 'Enter'             send -X copy-pipe-and-cancel
+bind -T copy-mode 'y'                 send -X copy-pipe
+bind -T copy-mode 'Y'                 send -X copy-pipe-end-of-line \; display 'Copied: end-of-line'
+bind -T copy-mode 'M-y'               send -X copy-pipe-line \; display 'Copied: line'
+
+# Append the current selection/line to the last buffer.
+bind -T copy-mode 'A'                 send -X append-selection
+
+# Toggle selection mode.
+bind -T copy-mode 'v' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
+    send -X clear-selection
+  } {
+    send -X begin-selection
+  }
+}
+bind -T copy-mode 'V'                 send -X select-line
+bind -T copy-mode 'C-v'               send -X rectangle-toggle
+bind -T copy-mode 'C-g'               send -X clear-selection
+bind -T copy-mode 'o'                 send -X other-end
+
+# Copy the current selection to a new buffer or start one if none is active.
+bind -T copy-mode 'Space' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
+    send -X copy-pipe
+  } {
+    send -X begin-selection
+  }
+}
+
+# Clear the current selection or exit copy mode if none is active.
+bind -T copy-mode 'Escape' {
+  if -F '#{||:#{selection_active},#{search_present}}' {
+    send -X clear-selection
+  } {
+    send -X cancel
+  }
+}
+
+# Miscellaneous commands.
+bind -T copy-mode '%'                 send -X next-matching-bracket
+bind -T copy-mode 'r'                 send -X refresh-from-pane
+bind -T copy-mode 'P'                 send -X toggle-position
 
 # Specify a repeat count for the next command.
 bind -T copy-mode 'M-1'               send -N 1

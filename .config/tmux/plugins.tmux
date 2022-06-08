@@ -41,9 +41,9 @@ set -g @fingers-selected-highlight-format-nocompact '#[fg=green,nobold]%s'
 #
 
 # Key bindings for tmux-logging.
-set -g @logging_key 'l'
-set -g @screen-capture-key 'M-l'
-set -g @save-complete-history-key 'M-L'
+set -g @logging_key 'i'
+set -g @screen-capture-key 'M-i'
+set -g @save-complete-history-key 'M-I'
 
 # Path for tmux-logging saved files.
 set -g @logging-path '#{pane_current_path}'
