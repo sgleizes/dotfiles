@@ -1007,6 +1007,11 @@ Customize window management bindings.
  :map evil-window-map
  :desc "Window management"
  "SPC"                #'+hydra/window-management/body
+ ;; Splitting
+ "s"                  nil
+ "v"                  nil
+ "'"                  #'evil-window-vsplit
+ "\""                 #'evil-window-split
  ;; Navigation
  "a"                  #'ace-window
  "]"                  #'evil-window-next
@@ -1609,8 +1614,10 @@ Provide additional bindings for centaur-tabs functions.
    :g "C-S-<next>"  #'centaur-tabs-move-current-tab-to-right
 
    ;; Bind most frequent cycling command to a convenient binding.
-   :g "M-["                 #'+tabs:previous-or-goto
-   :g "M-]"                 #'+tabs:next-or-goto
+   :g "M-[" #'+tabs:previous-or-goto
+   :g "M-]" #'+tabs:next-or-goto
+   :g "M-{" #'centaur-tabs-move-current-tab-to-left
+   :g "M-}" #'centaur-tabs-move-current-tab-to-right
 
    :leader :prefix "b"
    ;; Buffer group navigation
@@ -5998,6 +6005,8 @@ Customize bindings.
         :i "S-RET" nil
 
         :map org-mode-map
+        :g "M-{"           nil
+        :g "M-}"           nil
         :m [tab]           #'org-cycle
         :m "TAB"           #'org-cycle
         :m [S-tab]         #'org-shifttab
