@@ -39,13 +39,13 @@ set -g @themepack-status-left-area-right-format '#{=/-42/...:pane_current_comman
 set -g @powerline-status-left-area-left-bg "#{?client_prefix,#{@powerline-color-alt-1},#{@powerline-color-main-1}}"
 
 # Set the status-right contents.
-set -g @themepack-status-right-area-left-format "#(tmux status-uptime)"
-set -g @themepack-status-right-area-middle-format "#(tmux status-username)"
-set -g @themepack-status-right-area-right-format "#(tmux status-hostname)"
+set -g @themepack-status-right-area-left-format '#($TMUX_COMMAND_DIR/status.zsh uptime)'
+set -g @themepack-status-right-area-middle-format '#($TMUX_COMMAND_DIR/status.zsh username)'
+set -g @themepack-status-right-area-right-format '#($TMUX_COMMAND_DIR/status.zsh hostname)'
 # Set a bright color if the hostname is remote.
-set -g @powerline-status-right-area-right-bg "#{?#{!=:#(tmux status-hostname),#(hostname)},#{@powerline-color-alt-1},#{@powerline-color-main-1}}"
+set -g @powerline-status-right-area-right-bg "#{?#{!=:#($TMUX_COMMAND_DIR/status.zsh hostname),#(hostnamectl hostname)},#{@powerline-color-alt-1},#{@powerline-color-main-1}}"
 # Set a red bg color if the current username is 'root'.
-set -g @powerline-status-right-area-middle-bg "#{?#{==:#(tmux status-username),root},#{@powerline-color-alt-2},#{@powerline-color-grey-4}}"
+set -g @powerline-status-right-area-middle-bg "#{?#{==:#($TMUX_COMMAND_DIR/status.zsh username),root},#{@powerline-color-alt-2},#{@powerline-color-grey-4}}"
 
 # Set the max length of left and right status sections.
 set -g @theme-status-left-length 100
@@ -73,3 +73,9 @@ set -gF @powerline-color-activity-1 "#{@powerline-color-alt-1}"
 set -gF copy-mode-match-style "bg=#{@powerline-color-grey-6},fg=black"
 set -gF copy-mode-current-match-style "bg=#{@powerline-color-main-1},fg=black"
 set -gF copy-mode-mark-style "bg=#{@powerline-color-alt-2},fg=black"
+
+# Set options from tmux 3.3 not yet integrated into themepack.
+# set -g  fill-character '.'
+set -g  pane-border-indicators colour
+set -gF popup-border-style "bg=default,fg=#{@powerline-color-main-1}"
+set -g  popup-border-lines double

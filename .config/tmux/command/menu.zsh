@@ -12,14 +12,14 @@ function tmux_session_menu {
   [[ $MOUSE ]] && target=(-t= -xM -yW)
 
   echo display-menu $target[@] '-T "#[align=centre]#{session_name}" \
-    "Next"     n "switch-client -n" \
-    "Previous" p "switch-client -p" \
+    "Next"     n { switch-client -n } \
+    "Previous" p { switch-client -p } \
     "" \
-    "Renumber" N "move-window -r" \
-    "Rename"   n "command-prompt -I \"#S\" \"rename-session -- ''%%''\"" \
+    "Renumber" N { move-window -r } \
+    "Rename"   n { command-prompt -I "#S" { rename-session "%%" } } \
     "" \
-    "New Session" s new-session \
-    "New Window"  w new-window \
+    "New Session" s { new-session } \
+    "New Window"  w { new-window } \
   '
 }
 
@@ -29,17 +29,17 @@ function tmux_window_menu {
   [[ $MOUSE ]] && target+=(-t=)
 
   echo display-menu $target[@] '-T "#[align=centre]#{window_index}:#{window_name}" \
-    "#{?#{>:#{session_windows},1},,-}Swap Left" l "swap-window -t:-1" \
-    "#{?#{>:#{session_windows},1},,-}Swap Right" r "swap-window -t:+1" \
-    "#{?pane_marked_set,,-}Swap Marked" s "swap-window" \
+    "#{?#{>:#{session_windows},1},,-}Swap Left" l { swap-window -t:-1 } \
+    "#{?#{>:#{session_windows},1},,-}Swap Right" r { swap-window -t:+1 } \
+    "#{?pane_marked_set,,-}Swap Marked" s { swap-window } \
     "" \
-    "Kill"                        K "kill-window" \
-    "Respawn"                     R "respawn-window -k" \
-    "#{?pane_marked,Unmark,Mark}" m "select-pane -m" \
-    "Rename"                      n "command-prompt -I \"#W\" \"rename-window -- ''%%''\""  \
+    "Kill"                        K { kill-window } \
+    "Respawn"                     R { respawn-window -k } \
+    "#{?pane_marked,Unmark,Mark}" m { select-pane -m } \
+    "Rename"                      n { command-prompt -F -I "#W" { rename-window -t "#{window_id}" "%%" } }  \
     "" \
-    "New After"  w "new-window -a" \
-    "New At End" W "new-window" \
+    "New After"  w { new-window -a } \
+    "New At End" W { new-window } \
   '
 }
 
@@ -48,28 +48,28 @@ function tmux_pane_menu {
   local target=(-xP -yP)
   [[ $MOUSE ]] && target=(-t= -xM -yM)
 
-  [[ $MOUSE ]] && local mouse_entries=' \
-    "#{?mouse_word,Search For #[underscore]#{=/9/...:mouse_word},}" C-r "if -F \"#{?#{m/r:(copy|view)-mode,#{pane_mode}},0,1}\" \"copy-mode -t=\"; send -Xt= search-backward \"#{q:mouse_word}\"" \
-    "#{?mouse_word,Type #[underscore]#{=/9/...:mouse_word},}"       C-y "copy-mode -q; send-keys -l -- \"#{q:mouse_word}\"" \
-    "#{?mouse_word,Copy #[underscore]#{=/9/...:mouse_word},}"       c   "copy-mode -q; set-buffer -- \"#{q:mouse_word}\"" \
-    "#{?mouse_line,Copy Line,}"                                     l   "copy-mode -q; set-buffer -- \"#{q:mouse_line}\"" \
+  local mouse_entries=' \
+    "#{?mouse_word,Search For #[underscore]#{=/9/...:mouse_word},}" C-r { if -F "#{?#{m/r:(copy|view)-mode,#{pane_mode}},0,1}" "copy-mode -t="; send -Xt= search-backward "#{q:mouse_word}" } \
+    "#{?mouse_word,Type #[underscore]#{=/9/...:mouse_word},}"       C-y { copy-mode -q; send-keys -l "#{q:mouse_word}" } \
+    "#{?mouse_word,Copy #[underscore]#{=/9/...:mouse_word},}"       c   { copy-mode -q; set-buffer "#{q:mouse_word}" } \
+    "#{?mouse_line,Copy Line,}"                                     l   { copy-mode -q; set-buffer "#{q:mouse_line}" } \
   '
 
   echo display-menu $target[@] '-T "#[align=centre]#{pane_index}:#{pane_id}"' ${MOUSE:+$mouse_entries[@]} ' \
-    "#{?#{m/r:(copy|view)-mode,#{pane_mode}},Go To Top,}"    < "send -X history-top" \
-    "#{?#{m/r:(copy|view)-mode,#{pane_mode}},Go To Bottom,}" > "send -X history-bottom" \
+    "#{?#{m/r:(copy|view)-mode,#{pane_mode}},Go To Top,}"    < { send -X history-top } \
+    "#{?#{m/r:(copy|view)-mode,#{pane_mode}},Go To Bottom,}" > { send -X history-bottom } \
     "" \
-    "Horizontal Split" h "split-window -h" \
-    "Vertical Split"   v "split-window -v" \
+    "Horizontal Split" h { split-window -h } \
+    "Vertical Split"   v { split-window -v } \
     "" \
-    "#{?#{>:#{window_panes},1},,-}Swap Up"   u "swap-pane -U" \
-    "#{?#{>:#{window_panes},1},,-}Swap Down" d "swap-pane -D" \
-    "#{?pane_marked_set,,-}Swap Marked"      s "swap-pane" \
+    "#{?#{>:#{window_panes},1},,-}Swap Up"   u { swap-pane -U } \
+    "#{?#{>:#{window_panes},1},,-}Swap Down" d { swap-pane -D } \
+    "#{?pane_marked_set,,-}Swap Marked"      s { swap-pane } \
     "" \
-    "Kill"    K "kill-pane" \
-    "Respawn" R "respawn-pane -k" \
-    "#{?pane_marked,Unmark,Mark}" m "select-pane -m" \
-    "#{?#{>:#{window_panes},1},,-}#{?window_zoomed_flag,Unzoom,Zoom}" z "resize-pane -Z" \
+    "Kill"    K { kill-pane } \
+    "Respawn" R { respawn-pane -k } \
+    "#{?pane_marked,Unmark,Mark}" m { select-pane -m } \
+    "#{?#{>:#{window_panes},1},,-}#{?window_zoomed_flag,Unzoom,Zoom}" z { resize-pane -Z } \
   '
 }
 

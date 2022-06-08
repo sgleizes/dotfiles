@@ -7,14 +7,14 @@
 # List of plugins to load.
 # NOTE tmux-continuum should be loaded last, so that the environment is restored
 # once all plugins have been loaded.
-set -g @tpm_plugins {
-  tmux-plugins/tpm \
-  jimeh/tmux-themepack \
-  Morantron/tmux-fingers \
-  tmux-plugins/tmux-logging \
+set -g @tpm_plugins '         \
+  tmux-plugins/tpm            \
+  jimeh/tmux-themepack        \
+  Morantron/tmux-fingers      \
+  tmux-plugins/tmux-logging   \
   tmux-plugins/tmux-resurrect \
-  tmux-plugins/tmux-continuum
-}
+  tmux-plugins/tmux-continuum \
+'
 
 #
 # tmux-fingers
