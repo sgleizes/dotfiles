@@ -4003,6 +4003,28 @@ Provide language cycling.
       :desc "Cycle ispell languages" "L" #'+spell/cycle-languages)
 #+end_src
 
+** Flycheck
+
+Customize flycheck bindings.
+#+begin_src elisp
+(after! flycheck
+  (map! (:leader
+         :prefix "c"
+         (:prefix ("v" . "Flycheck")
+          "v" #'flycheck-verify-setup
+          "d" #'flycheck-describe-checker
+          "c" #'flycheck-clear
+          "h" #'flycheck-display-error-at-point
+          "e" #'flycheck-explain-error-at-point
+          "s" #'flycheck-select-checker
+          "y" #'flycheck-copy-errors-as-kill))
+
+        (:map flycheck-error-list-mode-map
+         :n "r" #'flycheck-error-list-check-source
+         :n "f" #'flycheck-error-list-set-filter
+         :n "F" #'flycheck-error-list-reset-filter)))
+#+end_src
+
 ** Format
 
 Override format-on-save default enabled modes to add emacs-lisp-mode.
