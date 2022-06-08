@@ -7017,6 +7017,13 @@ Rebind auto-yasnippet commands.
    :nvi [C-tab] nil
    (:leader :prefix "c"
     :desc "Expand auto-snippet" "y" #'aya-expand
-    :desc "Create auto-snippet" "Y" #'aya-create)))
+    :desc "Create auto-snippet" "Y" #'aya-create)
+
+   ;; Use yas-next-field instead of yas-next-field-or-maybe-expand
+   ;; The latter is too confusing, most of the time I don't need to expand snippets inside snippet fields.
+   (:map yas-keymap
+    "TAB"   #'yas-next-field
+    "<tab>" #'yas-next-field)
+))
 #+end_src
 
