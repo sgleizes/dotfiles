@@ -1,5 +1,5 @@
 [Misc]
-version=11
+version=12
 
 [Show]
 channels=false
@@ -11,6 +11,7 @@ depends=false
 embeddedRating=false
 fileName=false
 fileSize=false
+height=false
 kfileitem#group=false
 kfileitem#owner=false
 kfileitem#permissions=false
@@ -28,3 +29,4 @@ replayGainAlbumPeak=false
 replayGainTrackGain=false
 replayGainTrackPeak=false
 url=false
+width=false
