@@ -93,7 +93,7 @@ index 7a6ef0a..3187e6f 100644
  
  end_message() {
 diff --git i/scripts/update_plugin.sh w/scripts/update_plugin.sh
-index 7d856ee..585c47c 100755
+index 68bf605..8a0a8df 100755
 --- i/scripts/update_plugin.sh
 +++ w/scripts/update_plugin.sh
 @@ -33,8 +33,7 @@ update() {
@@ -105,7 +105,7 @@ index 7d856ee..585c47c 100755
 +	echo_ok "Updating all plugins..."
  	local plugins="$(tpm_plugins_list_helper)"
  	for plugin in $plugins; do
- 		local plugin_name="$(plugin_name_helper "$plugin")"
+ 		IFS='#' read -ra plugin <<< "$plugin"
 diff --git i/scripts/update_plugin_prompt_handler.sh w/scripts/update_plugin_prompt_handler.sh
 index 5e1f7d9..81ea981 100755
 --- i/scripts/update_plugin_prompt_handler.sh

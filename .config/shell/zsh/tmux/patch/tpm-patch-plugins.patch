@@ -1,9 +1,9 @@
-diff --git i/scripts/install_plugins.sh w/scripts/install_plugins.sh
-index 7958ab5..25ae72d 100755
---- i/scripts/install_plugins.sh
-+++ w/scripts/install_plugins.sh
-@@ -27,6 +27,19 @@ clone_plugin() {
- 		clone "https://git::@github.com/$plugin"
+diff --git c/scripts/install_plugins.sh i/scripts/install_plugins.sh
+index e2450ac..18cd066 100755
+--- c/scripts/install_plugins.sh
++++ i/scripts/install_plugins.sh
+@@ -34,6 +34,19 @@ clone_plugin() {
+ 		clone "https://git::@github.com/$plugin" "$branch"
  }
  
 +# patch the damn plugins
@@ -22,13 +22,13 @@ index 7958ab5..25ae72d 100755
  # clone plugin and produce output
  install_plugin() {
  	local plugin="$1"
-@@ -36,9 +49,12 @@ install_plugin() {
+@@ -44,9 +57,12 @@ install_plugin() {
  		echo_ok "Already installed \"$plugin_name\""
  	else
  		echo_ok "Installing \"$plugin_name\""
--		clone_plugin "$plugin" &&
+-		clone_plugin "$plugin" "$branch" &&
 -			echo_ok "  \"$plugin_name\" download success" ||
-+		if clone_plugin "$plugin"; then
++		if clone_plugin "$plugin" "$branch"; then
 +			echo_ok "  \"$plugin_name\" download success"
 +			patch_plugin "$plugin_name"
 +		else
