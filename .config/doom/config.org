@@ -4273,26 +4273,77 @@ Remove annoying programming ligatures.
 ;;  +ligatures-fira-font-alist)
 #+end_src
 
-** Lsp
+** LSP
+*** Settings
 
 Ignore prompts to restart server to avoid hangs on server-restart.
 #+begin_src elisp
 (after! lsp-mode
-  (setq-default lsp-restart 'auto-restart))
+  (setq-default lsp-restart 'auto-restart)
+  (lsp-enable-which-key-integration t)
+
+  (setq lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-show-hover nil
+        lsp-ui-sideline-show-code-actions t ;; TODO
+        lsp-ui-doc-show-with-cursor nil
+        lsp-ui-doc-show-with-mouse t
+        lsp-ui-doc-alignment 'window
+        lsp-ui-doc-position 'top
+        lsp-ui-doc-delay 0.5
+        lsp-ui-doc-max-width 80))
 #+end_src
 
-*** Sh
+*** Go
+
+Configure gopls settings.
+#+begin_src elisp
+(after! lsp-mode
+  (setq lsp-go-symbol-matcher "Fuzzy"
+        lsp-go-goimports-local "github.com/sgleizes"
+        lsp-go-use-gofumpt t
+        lsp-go-analyses
+        '((nilness . t))))
+#+end_src
+
+Automatically organize imports on save (like goimports but using gopls, much more efficient).
+If ~+format-with-lsp~ is disabled and goimports is used, this is not needed.
+#+begin_src elisp
+(after! lsp-mode
+  (add-hook 'go-mode-hook
+            (defun +psydev/lsp-go-organize-imports-on-save ()
+              (add-hook 'before-save-hook #'lsp-organize-imports t t))))
+#+end_src
+
+Enable LSP in go.mod files.
+#+begin_src elisp
+(after! lsp-mode
+  (add-hook 'go-dot-mod-mode-hook #'lsp-deferred))
+#+end_src
+
+Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
+#+begin_src elisp
+(after! flycheck
+  (set-next-checker! 'go-mode 'lsp 'golangci-lint))
+#+end_src
+
+*** Shell
 
 Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
 #+begin_src elisp
-(defun lsp-flycheck-enable-shellcheck ()
-  "Enable Shellcheck for shell buffers under LSP."
-  (when (derived-mode-p 'sh-mode)
-    (flycheck-add-next-checker 'lsp 'sh-shellcheck)))
+(after! flycheck
+  (set-next-checker! 'sh-mode 'lsp 'sh-shellcheck))
+#+end_src
 
-(add-hook 'lsp-after-open-hook #'lsp-flycheck-enable-shellcheck)
+*** Bindings
+
+#+begin_src elisp
+(after! lsp-mode
+  (map! :leader
+        :prefix "c"
+        :desc "LSP Codelens"
+        "L" #'lsp-avy-lens))
 #+end_src
 
 ** Magit
