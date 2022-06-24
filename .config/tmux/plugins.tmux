@@ -60,7 +60,7 @@ set -g @save-complete-history-filename 'tmux-history.#{session_name}:#{window_in
 #
 
 # Save directory for tmux-resurrect.
-set -g @resurrect-dir "$XDG_DATA_HOME/tmux-resurrect"
+set -g @resurrect-dir "$XDG_STATE_HOME/tmux/resurrect"
 
 # Capture and restore pane contents.
 set -g @resurrect-capture-pane-contents on

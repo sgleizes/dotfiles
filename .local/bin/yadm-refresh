@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+#
+# Refresh the status of configuration files to reapply filters.
+# This is needed because git marks files as modified even if the changes are filtered out.
+# Usage: yadm-refresh
+#
+
+yadm add ':/:'.config && yadm reset HEAD

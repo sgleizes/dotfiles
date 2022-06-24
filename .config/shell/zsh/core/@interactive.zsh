@@ -129,14 +129,19 @@ autoload_dir ${0:h}/function
 # Misc aliases
 #
 
-if (( $+commands[nordvpn] )); then
-  alias vpn='nordvpn'
+# NOTE: Kept for reference, no CLI VPN for now.
+if (( $+commands[false] )); then
+  alias vpn='false'
   alias v='vpn'
 fi
 
 if (( $+commands[espeak-ng] )); then
   alias speak-en='speak-ng -v gmw/en-US'
   alias speak-fr='speak-ng -v roa/fr'
+fi
+
+if [[ -d $XDG_PROJECTS_DIR/env/util/xdg-ninja ]]; then
+  alias xdg-ninja='$XDG_PROJECTS_DIR/env/util/xdg-ninja/xdg-ninja.sh'
 fi
 
 #
