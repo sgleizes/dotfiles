@@ -61,7 +61,7 @@ function status_username {
     username=$(printf '%s' "$tty_info" | cut -d' ' -f2)
   }
 
-  printf '%s' "$username"
+  printf '%s\n' "$username"
 }
 
 # Display the local or remote hostname of the current tmux pane.

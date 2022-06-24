@@ -47,6 +47,9 @@ set -g @powerline-status-right-area-right-bg "#{?#{!=:#($TMUX_COMMAND_DIR/status
 # Set a red bg color if the current username is 'root'.
 set -g @powerline-status-right-area-middle-bg "#{?#{==:#($TMUX_COMMAND_DIR/status.zsh username),root},#{@powerline-color-alt-2},#{@powerline-color-grey-4}}"
 
+# Set the status line refresh interval.
+set -g @theme-status-interval 10
+
 # Set the max length of left and right status sections.
 set -g @theme-status-left-length 100
 set -g @theme-status-right-length 100
