@@ -23,6 +23,7 @@ YADM_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/yadm"
 PACKAGE_LIST=(
   atool
   bat
+  btop
   emacs
   expac
   exa
@@ -60,7 +61,6 @@ PACKAGE_LIST=(
 AUR_PACKAGE_LIST=(
   advcp
   archivemount
-  bpytop
   direnv
   fpp-git
   git-delta
@@ -68,7 +68,6 @@ AUR_PACKAGE_LIST=(
   hex-git
   kmon
   lazygit
-  nordvpn-bin
   pistol-git
   ponysay-git
   tmux-git

@@ -55,7 +55,7 @@ For some programs, a configuration file is provided in [.config](.config).
 - [atool](https://www.nongnu.org/atool/) - A script for managing file archives of various types.
 - [advcpmv](https://github.com/jarun/advcpmv) - A patch for GNU Core Utilities cp, mv to add progress bars.
 - [bat](https://github.com/sharkdp/bat) - A `cat` clone with wings.
-- [bpytop](https://github.com/aristocratos/bpytop) - Linux/OSX/FreeBSD resource monitor.
+- [btop](https://github.com/aristocratos/btop) - A resource monitor.
 - [delta](https://github.com/dandavison/delta) - A syntax-highlighter for `git` and `diff` output.
 - [direnv](https://github.com/direnv/direnv) - Update the environment based on the current directory.
 - [docker](https://github.com/docker/cli) / [docker-compose](https://github.com/docker/compose) - Container management.
@@ -77,7 +77,6 @@ For some programs, a configuration file is provided in [.config](.config).
 - [kmon](https://github.com/orhun/kmon) - Linux kernel manager and activity monitor.
 - [lazygit](https://github.com/jesseduffield/lazygit) - Simple terminal UI for `git` commands.
 - [nnn](https://github.com/jarun/nnn/) - n³ The unorthodox terminal file manager.
-- [nordvpn](https://nordvpn.com/) - Private and secure internet access.
 - [pistol](https://github.com/doronbehar/pistol) - General purpose file previewer.
 - [rclone](https://github.com/rclone/rclone) - Rsync for cloud storage.
 - [restic](https://github.com/restic/restic) - Fast, secure, efficient backup program.

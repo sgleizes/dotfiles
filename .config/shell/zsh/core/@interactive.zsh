@@ -129,8 +129,9 @@ autoload_dir ${0:h}/function
 # Misc aliases
 #
 
-if (( $+commands[nordvpn] )); then
-  alias vpn='nordvpn'
+# NOTE: Kept for reference, no CLI VPN for now.
+if (( $+commands[false] )); then
+  alias vpn='false'
   alias v='vpn'
 fi
 
