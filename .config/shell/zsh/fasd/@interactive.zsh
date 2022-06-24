@@ -13,7 +13,7 @@ if (( ! $+commands[fasd] )); then
 fi
 
 # Configuration options.
-export _FASD_DATA="$XDG_DATA_HOME/recently-used.fasd"
+export _FASD_DATA="$XDG_STATE_HOME/recently-used.fasd"
 _FASD_IGNORE="fasd echo ls l ll la"
 
 # Use fasd as a function instead of an executable.

@@ -18,11 +18,15 @@ umask a=rx,u+w
 export XDG_BIN_HOME="$HOME/.local/bin"
 export XDG_LIB_HOME="$HOME/.local/lib"
 export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 
+# Export needed XDG user directories.
+export XDG_PROJECTS_DIR="$(xdg-user-dir PROJECTS)"
+
 # XDG paths for zsh.
-export ZDATADIR=${ZDATADIR:-$XDG_DATA_HOME/zsh}
+export ZDATADIR=${ZDATADIR:-$XDG_STATE_HOME/zsh}
 export ZCACHEDIR=${ZCACHEDIR:-$XDG_CACHE_HOME/zsh}
 command mkdir -p $ZDATADIR $ZCACHEDIR
 
@@ -44,12 +48,17 @@ export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
 export WGETRC="$XDG_CONFIG_HOME/wget/config"
 
 # XDG_DATA_HOME environment overrides.
-export NODE_REPL_HISTORY="$XDG_DATA_HOME/node/repl_history"
+# export GNUPGHOME="$XDG_DATA_HOME/gnupg" # NOTE: Does not really work for all programs
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export SSB_HOME="$XDG_DATA_HOME/zoom"
+export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
+
+# XDG_STATE_HOME environment overrides.
+export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
 
 # XDG_CACHE_HOME environment overrides.
 export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
 
 # XDG path to the X server auth cookie. This must match the display manager setting.
 # It should be located in XDG_RUNTIME_DIR but sddm does not allow that.

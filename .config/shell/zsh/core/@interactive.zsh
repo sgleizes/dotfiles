@@ -140,6 +140,10 @@ if (( $+commands[espeak-ng] )); then
   alias speak-fr='speak-ng -v roa/fr'
 fi
 
+if [[ -d $XDG_PROJECTS_DIR/env/util/xdg-ninja ]]; then
+  alias xdg-ninja='$XDG_PROJECTS_DIR/env/util/xdg-ninja/xdg-ninja.sh'
+fi
+
 #
 # External core plugins
 #

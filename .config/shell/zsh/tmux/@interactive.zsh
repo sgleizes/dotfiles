@@ -39,7 +39,7 @@ fi
   || export TMUX_TERM='tmux'
 
 # Path to the tmux command history.
-export TMUX_HISTORY="$XDG_DATA_HOME/tmux/history"
+export TMUX_HISTORY="$XDG_STATE_HOME/tmux/history"
 
 # Copy command for clipboard integration.
 export TMUX_CLIPBOARD='xclip -selection clipboard'

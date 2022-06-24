@@ -12,7 +12,7 @@ alias p='${(z)PAGER}'
 alias more='less' # less is more or less more
 
 # Set default less options.
-export LESSHISTFILE="$XDG_DATA_HOME/less/history"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 export LESSHISTSIZE=50
 export LESS='-QRSMi -#.25 --no-histdups'
 export SYSTEMD_LESS="$LESS"
