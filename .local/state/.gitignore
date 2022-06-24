@@ -1,0 +1,12 @@
+#
+# Patterns of interesting paths in XDG_STATE_HOME.
+#
+
+# Ignore everything by default and add specific files to track.
+/*
+!/.git*
+
+# Keymap configurations for zsh.
+!/zsh/
+/zsh/**
+!/zsh/zkbd/
