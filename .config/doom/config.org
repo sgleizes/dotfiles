@@ -4444,6 +4444,7 @@ https://github.com/bash-lsp/bash-language-server/issues/104
 #+end_src
 
 ** Magit
+*** Settings
 
 Enable gravatars when viewing commits. The service used by default is [[https://www.libravatar.org/][Libravatar]].
 #+begin_src elisp
@@ -4453,10 +4454,67 @@ Enable gravatars when viewing commits. The service used by default is [[https://
   (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")))
 #+end_src
 
+*** Commands
+
+Add a magit command for ~push --all~.
+#+begin_src elisp
+(after! magit
+  (defun psydev/magit-push-all ()
+    "Push all branches."
+    (interactive)
+    (magit-run-git-async "push" "-v"
+                         (magit-read-remote "Remote")
+                         "--all"))
+
+  (transient-append-suffix 'magit-push '(2 0 -1)
+    '("a" "all branches" psydev/magit-push-all)))
+#+end_src
+
+*** Yadm
+
+Configure ~yadm~ integration.
+#+begin_src elisp
+(after! tramp
+  (add-to-list 'tramp-methods
+               '("yadm"
+                 (tramp-login-program "yadm")
+                 (tramp-login-args (("enter")))
+                 (tramp-login-env (("SHELL") ("/bin/sh")))
+                 (tramp-remote-shell "/bin/sh")
+                 (tramp-remote-shell-args ("-c")))))
+
+(defun yadm ()
+  (interactive)
+  ;; HACK: Remove flyspell hook locally as it seems to recurse infinitely here.
+  (remove-hook 'hack-local-variables-hook #'flyspell-hack-local-variables-hook t)
+  (magit-status "/yadm::"))
+#+end_src
+
+Add interactive commands for yadm helper functions.
+#+begin_src elisp
+(defun yadm-refresh ()
+  "Refresh the status of dotfiles having git filters."
+  (interactive)
+    (shell-command "yadm-refresh"))
+
+(defun yadm-sync ()
+  "Synchronize dotfiles master worktree with local changes in HOME."
+  (interactive)
+    (shell-command "yadm-sync"))
+
+(defun yadm-merge ()
+  "Merge dotfiles changes committed on the master worktree."
+  (interactive)
+    (shell-command "yadm-merge"))
+#+end_src
+
+*** Bindings
+
 Customize bindings.
 #+begin_src elisp
 (map! :leader :prefix "g"
-      "m" nil) ; unbind smerge hydra - use ediff instad.
+      "m" nil ; unbind smerge hydra - use ediff instad.
+      "h" #'yadm)
 #+end_src
 
 ** Magit delta
