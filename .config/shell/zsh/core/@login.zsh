@@ -34,6 +34,8 @@ command mkdir -p $ZDATADIR $ZCACHEDIR
 export CARGO_HOME="$XDG_LIB_HOME/cargo"
 export GOPATH="$XDG_LIB_HOME/go"
 export NPM_CONFIG_PREFIX="$XDG_LIB_HOME/npm"
+export PIPX_HOME="$XDG_LIB_HOME/pipx"
+export PIPX_BIN_DIR="$PIPX_HOME/bin"
 
 # XDG_CONFIG_HOME environment overrides.
 export ANDROID_PREFS_ROOT="$XDG_CONFIG_HOME/android"
@@ -116,5 +118,10 @@ fi
 
 if (( $+commands[npm] )); then
   # Add installed node binaries to PATH.
-  path+=($XDG_LIB_HOME/npm/bin)
+  path+=($NPM_CONFIG_PREFIX/bin)
+fi
+
+if (( $+commands[pipx] )); then
+  # Add installed python applications to PATH.
+  path+=($PIPX_BIN_DIR)
 fi
