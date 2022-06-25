@@ -24,6 +24,31 @@ run associated application=true
 [ActionPlugins][1]
 RightButton;NoModifier=org.kde.contextmenu
 
+[Containments][100]
+activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
+formfactor=0
+immutability=1
+lastScreen=0
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.haenau
+
+[Containments][100][Configuration]
+PreloadWeight=34
+
+[Containments][100][Wallpaper][com.github.zren.inactiveblur][General]
+BlurRadius=20
+FillMode=2
+Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+
+[Containments][100][Wallpaper][org.kde.image][General]
+Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][100][Wallpaper][org.kde.potd][General]
+FillMode=2
+Provider=natgeo
+
 [Containments][2]
 activityId=
 formfactor=2
@@ -68,7 +93,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=6
+PreloadWeight=5
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -216,7 +241,7 @@ immutability=1
 plugin=com.github.davide-sd.ipaddress
 
 [Containments][2][Applets][53][Configuration]
-PreloadWeight=0
+PreloadWeight=5
 
 [Containments][2][Applets][53][Configuration][Appearance]
 labelColor=#ffffff
@@ -258,7 +283,7 @@ PreloadWeight=0
 
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=626
+length=946
 
 [Containments][2][Applets][6]
 immutability=1
@@ -298,7 +323,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=75
+PreloadWeight=84
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -308,14 +333,14 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=27
+PreloadWeight=41
 
 [Containments][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=100
+PreloadWeight=94
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -339,21 +364,21 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=20
+PreloadWeight=24
 
 [Containments][7][Applets][16]
 immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][7][Applets][16][Configuration]
-PreloadWeight=10
+PreloadWeight=0
 
 [Containments][7][Applets][17]
 immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=100
+PreloadWeight=84
 
 [Containments][7][Applets][18]
 immutability=1
@@ -370,7 +395,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][19][Configuration]
-PreloadWeight=11
+PreloadWeight=0
 
 [Containments][7][Applets][69]
 immutability=1
@@ -407,7 +432,7 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=41
+PreloadWeight=45
 selectedConfig=0
 
 [Containments][7][Applets][73]
@@ -438,7 +463,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][73][Configuration]
 PreloadWeight=0
@@ -448,7 +473,8 @@ arrangement=1
 url=file:///home/psydev/Projects/job
 
 [Containments][73][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+Image=file:///home/psydev/Pictures/Wallpapers/Light-Field-Rendering-JPG-2319x1024.jpg
+SlidePaths=/usr/share/wallpapers
 
 [Containments][73][Wallpaper][org.kde.potd][General]
 Category=1066276
@@ -468,7 +494,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][84][Configuration]
 PreloadWeight=0
@@ -482,7 +508,7 @@ iconSize=2
 url=file:///home/psydev/Games
 
 [Containments][84][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Autumn/contents/images/2560x1600.jpg
+Image=file:///home/psydev/Pictures/Wallpapers/Union.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][84][Wallpaper][org.kde.potd][General]
@@ -500,7 +526,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][88][Applets][77]
 immutability=1
@@ -611,7 +637,8 @@ iconSize=2
 sortMode=-1
 
 [Containments][88][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+SlidePaths=/usr/share/wallpapers
 
 [Containments][88][Wallpaper][org.kde.potd][General]
 FillMode=2
@@ -626,7 +653,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][89][Configuration]
 PreloadWeight=0
@@ -636,7 +663,8 @@ arrangement=1
 url=file:///home/psydev/Documents/Habitat/Saint-Pierreville
 
 [Containments][89][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
+Image=file:///home/psydev/Pictures/Wallpapers/Manifestor.jpg
+SlidePaths=/usr/share/wallpapers
 
 [Containments][89][Wallpaper][org.kde.potd][General]
 Category=1339090
@@ -650,7 +678,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][90][Configuration]
 PreloadWeight=0
@@ -660,7 +688,8 @@ arrangement=1
 url=file:///home/psydev/Projects/perma
 
 [Containments][90][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.png
+Image=/home/psydev/Pictures/Wallpapers/Rise.jpg
+SlidePaths=/usr/share/wallpapers
 
 [Containments][90][Wallpaper][org.kde.potd][General]
 Category=1065376
@@ -677,7 +706,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
+wallpaperplugin=org.kde.image
 
 [Containments][91][Configuration]
 PreloadWeight=0
@@ -687,7 +716,8 @@ arrangement=1
 url=file:///home/psydev/Projects/env
 
 [Containments][91][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
+Image=file:///home/psydev/Pictures/Wallpapers/Love_is_a_Riot-1774x1024.jpg
+SlidePaths=/usr/share/wallpapers
 
 [Containments][91][Wallpaper][org.kde.potd][General]
 Category=1065374

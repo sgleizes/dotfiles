@@ -3,6 +3,7 @@ org.kde.ActivityManager.ResourceScoringEnabled=true
 org.kde.ActivityManager.VirtualDesktopSwitchEnabled=true
 
 [activities]
+5a73c567-eb7a-4a34-854a-11f9ecd9c22b=Scratch
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Self
 880691c7-fa6e-4255-a852-acde63acc631=Home
 a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=System
@@ -10,7 +11,11 @@ ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Gaming
 b6d870af-2af7-49fe-bce4-606e462b99c6=Work
 e1fb771e-29d1-4641-a442-b99b55616702=Permaculture
 
+[activities-descriptions]
+5a73c567-eb7a-4a34-854a-11f9ecd9c22b=
+
 [activities-icons]
+5a73c567-eb7a-4a34-854a-11f9ecd9c22b=snap-nodes-center
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=animal
 880691c7-fa6e-4255-a852-acde63acc631=user-home-symbolic
 a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=kstars_solarsystem
