@@ -39,6 +39,29 @@ TouchBorderActivate=7
 TouchBorderActivateAll=9
 TouchBorderActivateClass=9
 
+[Effect-desktopgrid]
+BorderActivate=1
+TouchBorderActivate=9
+
+[Effect-diminactive]
+Strength=15
+TabBox=false
+TabBoxAlternative=false
+
+[Effect-overview]
+IgnoreMinimized=true
+
+[Effect-presentwindows]
+BorderActivate=5
+BorderActivateAll=3
+BorderActivateClass=9
+TouchBorderActivate=7
+TouchBorderActivateAll=9
+TouchBorderActivateClass=9
+
+[Effect-slide]
+SlideBackground=false
+
 [ElectricBorders]
 Bottom=None
 BottomLeft=None
@@ -52,7 +75,7 @@ TopLeft=ActivityManager
 AnimationDurationFactor=0.25
 
 [ModifierOnlyShortcuts]
-Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Overview
+Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose
 
 [NightColor]
 Active=true
@@ -67,6 +90,7 @@ diminactiveEnabled=true
 flipswitchEnabled=true
 highlightwindowEnabled=true
 kwin4_effect_fadeEnabled=false
+kwin4_effect_fadedesktopEnabled=true
 kwin4_effect_rubberband_maximizeEnabled=false
 kwin4_effect_scaleEnabled=true
 kwin4_effect_squashEnabled=false
@@ -74,6 +98,7 @@ magiclampEnabled=true
 minimizeallEnabled=false
 overviewEnabled=true
 sheetEnabled=true
+slideEnabled=false
 slidingtooltipsEnabled=false
 synchronizeskipswitcherEnabled=false
 videowallEnabled=false
