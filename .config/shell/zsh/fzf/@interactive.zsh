@@ -20,15 +20,20 @@ fi
 # Additional bindings in fzf context.
 FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --bind ctrl-space:toggle+down
---bind ctrl-s:beginning-of-line
 --bind alt-s:toggle-sort
 --bind alt-p:toggle-preview
 --bind alt-a:toggle-all
 --bind alt-g:top
---bind shift-down:preview-page-down
---bind shift-up:preview-page-up
+--bind ctrl-f:page-down
+--bind ctrl-b:page-up
+--bind ctrl-d:half-page-down
+--bind ctrl-u:half-page-up
+--bind shift-down:preview-down
+--bind shift-up:preview-up
 --bind alt-j:preview-down
---bind alt-k:preview-up'
+--bind alt-k:preview-up
+--bind alt-J:preview-page-down
+--bind alt-K:preview-page-up'
 
 # Abstract away the fzf command for optional tmux integration.
 function fzf {

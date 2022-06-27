@@ -465,7 +465,7 @@ bindkey "$keys[Alt]r" replace-pattern
 bindkey "$keys[Alt]R" replace-pattern-again
 
 # Insert 'sudo ' at the beginning of the line.
-bindkey "$keys[Control]X$keys[Control]S" prepend-sudo
+bindkey "$keys[Control]X$keys[Control]A" prepend-sudo
 
 # Toggle comment at the start of the line. Note that we use pound-toggle which
 # is similar to pount insert, but meant to work around some issues.
