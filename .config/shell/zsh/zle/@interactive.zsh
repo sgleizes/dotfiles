@@ -465,7 +465,7 @@ bindkey "$keys[Alt]r" replace-pattern
 bindkey "$keys[Alt]R" replace-pattern-again
 
 # Insert 'sudo ' at the beginning of the line.
-bindkey "$keys[Control]X$keys[Control]S" prepend-sudo
+bindkey "$keys[Control]X$keys[Control]A" prepend-sudo
 
 # Toggle comment at the start of the line. Note that we use pound-toggle which
 # is similar to pount insert, but meant to work around some issues.
@@ -622,7 +622,7 @@ function _zle_unbind_widgets {
 # These bindings are added when executing `compinit`, which has not necessarily
 # been done at this time depending on the configuration setup.
 #
-# Specifically, zinit provides its own compdef function and allows `compinit`
+# Specifically, zi provides its own compdef function and allows `compinit`
 # to run asynchronously after the first prompt is shown.
 # This function is thus meant to be called after the call to compinit.
 function _rebind_compsys_widgets {
@@ -660,17 +660,17 @@ function _rebind_compsys_widgets {
 }
 
 # Rebind widgets immediately if compinit has been loaded.
-# During the initial zinit run, plugins are loaded synchronously, so compinit
-# is already available in this case. We check this as we want zinit to download
+# During the initial zi run, plugins are loaded synchronously, so compinit
+# is already available in this case. We check this as we want zi to download
 # the null repository anyway so that it doesn't show up during the second load.
-if (( $+functions[compinit] && ! $+functions[zinit] )); then
+if (( $+functions[compinit] && ! $+functions[zi] )); then
   _rebind_compsys_widgets
 else
   # Postpone rebinding after the asynchronous compinit.
-  zinit ice wait lucid nocompile \
+  zi ice wait lucid nocompile \
     id-as'hack/rebind-compsys-widgets' \
     nocd atload'_rebind_compsys_widgets'
-  zinit light zdharma/null
+  zi light z-shell/null
 fi
 
 unset key{,map}

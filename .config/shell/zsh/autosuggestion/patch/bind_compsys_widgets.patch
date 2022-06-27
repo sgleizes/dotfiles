@@ -1,0 +1,24 @@
+diff --git i/src/bind.zsh w/src/bind.zsh
+index 1dde137..4273f54 100644
+--- i/src/bind.zsh
++++ w/src/bind.zsh
+@@ -68,7 +68,6 @@ _zsh_autosuggest_bind_widgets() {
+ 
+ 	ignore_widgets=(
+ 		.\*
+-		_\*
+ 		${_ZSH_AUTOSUGGEST_BUILTIN_ACTIONS/#/autosuggest-}
+ 		$ZSH_AUTOSUGGEST_ORIGINAL_WIDGET_PREFIX\*
+ 		$ZSH_AUTOSUGGEST_IGNORE_WIDGETS
+diff --git i/zsh-autosuggestions.zsh w/zsh-autosuggestions.zsh
+index b19cac7..cac78c6 100644
+--- i/zsh-autosuggestions.zsh
++++ w/zsh-autosuggestions.zsh
+@@ -198,7 +198,6 @@ _zsh_autosuggest_bind_widgets() {
+ 
+ 	ignore_widgets=(
+ 		.\*
+-		_\*
+ 		${_ZSH_AUTOSUGGEST_BUILTIN_ACTIONS/#/autosuggest-}
+ 		$ZSH_AUTOSUGGEST_ORIGINAL_WIDGET_PREFIX\*
+ 		$ZSH_AUTOSUGGEST_IGNORE_WIDGETS

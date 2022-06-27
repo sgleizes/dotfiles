@@ -13,15 +13,15 @@ if (( $+commands[atool] )); then
 fi
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   return 1
 fi
 
 if [[ ! "$alternative" ]]; then
   # Provide functions to create, list and extract archives.
   # https://github.com/sorin-ionescu/prezto/blob/master/modules/archive/README.md
-  zinit ice wait'0b' lucid svn pick'/dev/null'
-  zinit snippet PZT::modules/archive
+  zi ice wait'0b' lucid svn pick'/dev/null'
+  zi snippet PZT::modules/archive
 
   # Usability aliases.
   alias ac='archive'
@@ -30,8 +30,8 @@ if [[ ! "$alternative" ]]; then
 fi
 
 # Color the contents of tar archives using LS_COLORS.
-zinit ice wait'0b' lucid depth=1 fbin'bin/tarcolor' nocompile
-zinit light msabramo/tarcolor
+zi ice wait'0b' lucid depth=1 fbin'bin/tarcolor' nocompile
+zi light msabramo/tarcolor
 
 # Better implementation of tarcolorauto.
 function tar {

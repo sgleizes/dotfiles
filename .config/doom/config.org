@@ -61,7 +61,7 @@ systemctl --user enable --now emacs.target
 
 Since I don't want a new graphical frame to be created every time a file is
 opened, I wrote this launcher script to wrap ~emacsclient~:
-#+begin_src sh :tangle ~/.local/bin/emacs-xclient :tangle-mode (identity #o755)
+#+begin_src sh :tangle ~/.local/bin/my/emacs-xclient :tangle-mode (identity #o755)
 #!/usr/bin/env bash
 # Wrap the emacsclient command to open a new graphical frame if none exist or if
 # no files are specified, else open the given files in the most-recent graphical
@@ -2070,7 +2070,7 @@ Add a script to start an ~ediff~ session in a new graphical frame.
 
 Note that it depends on a ~+workspace/rename-frame~ function that automatically
 generates a unique name for the new perspective (workspace).
-#+begin_src sh :tangle ~/.local/bin/ediff :tangle-mode (identity #o755)
+#+begin_src sh :tangle ~/.local/bin/my/ediff :tangle-mode (identity #o755)
 #!/usr/bin/env bash
 # Start an ediff session in a new emacs frame. Inspired by:
 # https://gist.github.com/ptrv/0b460291e14a4a3c6372
@@ -5265,7 +5265,7 @@ Advise existing capture commands and add project capture commands.
 **** External command
 
 Override doom's org-capture script with my own variant.
-#+begin_src sh :tangle ~/.local/bin/org-capture :tangle-mode (identity #o755)
+#+begin_src sh :tangle ~/.local/bin/my/org-capture :tangle-mode (identity #o755)
 #!/usr/bin/env sh
 # Open an org-capture popup frame.
 #

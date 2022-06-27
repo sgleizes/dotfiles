@@ -79,7 +79,7 @@ command mkdir -p \
 # launcher, it should be updated to use <command> instead of /usr/bin/<command>.
 
 # Prepend user binaries to PATH to allow overriding system commands.
-path=($XDG_BIN_HOME $XDG_BIN_HOME/xdg $path)
+path=($XDG_BIN_HOME $XDG_BIN_HOME/my $XDG_BIN_HOME/xdg $path)
 
 #
 # Session environment

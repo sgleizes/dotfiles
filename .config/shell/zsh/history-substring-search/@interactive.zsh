@@ -8,7 +8,7 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   return 1
 fi
 
@@ -35,5 +35,5 @@ function _configure_history_substring_search {
   unfunction _configure_history_substring_search
 }
 
-zinit ice wait lucid depth=1 atload'_configure_history_substring_search'
-zinit light zsh-users/zsh-history-substring-search
+zi ice wait lucid depth=1 atload'_configure_history_substring_search'
+zi light zsh-users/zsh-history-substring-search

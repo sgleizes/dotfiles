@@ -6,7 +6,7 @@
 theme='redhat'
 
 # Use powerlevel10k if available.
-if (( $+functions[zinit] )); then
+if (( $+functions[zi] )); then
   # Enable Powerlevel10k instant prompt. Should run early during interactive shell setup.
   # Initialization code that may require console input (password prompts, [y/n]
   # confirmations, etc.) must run before this block; everything else may run after.
@@ -14,9 +14,9 @@ if (( $+functions[zinit] )); then
     source "$XDG_CACHE_HOME/p10k-instant-prompt-${(%):-%n}.zsh"
   fi
 
-  zinit ice depth=1 pick'/dev/null'
-  zinit light romkatv/powerlevel10k
-  zinit fpath --front romkatv/powerlevel10k
+  zi ice depth=1 pick'/dev/null'
+  zi light romkatv/powerlevel10k
+  zi add-fpath --front romkatv/powerlevel10k
 
   theme='powerlevel10k'
 fi

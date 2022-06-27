@@ -8,7 +8,7 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   return 1
 fi
 
@@ -44,29 +44,34 @@ ZSH_AUTOSUGGEST_CLEAR_WIDGETS=(
   down-line-or-history
   up-history
   down-history
-  # BUG: The suggestion is not cleared when using compsys widgets.
-  # https://github.com/zsh-users/zsh-autosuggestions/issues/531
   _most_recent_file
   _history-complete-older
   _history-complete-newer
-  # BUG: Not working either
   run-help
-  which-command
 )
 
 ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   orig-\*
   zle-\*
   beep
-  run-help
   set-local-history
   which-command
+  # BUG: Does not work: If bound the widget inserts the widget name (.run-help)
+  # in the command line instead of the function-name.  So for now the widget is
+  # ignored and the suggestion not cleared...
+  run-help
   # BUG: This allows yank-pop to work properly but prevents updating the
   # suggestion after a yank, leaving the previous suggestion displayed.
   # https://github.com/zsh-users/zsh-autosuggestions/issues/526
-  # yank
-  # yank-pop
+  # Does not work even with this related patch:
+  # https://github.com/zsh-users/zsh-autosuggestions/issues/363
+  yank
+  yank-pop
 )
 
-zinit ice wait lucid depth=1 atload'_zsh_autosuggest_start'
-zinit light zsh-users/zsh-autosuggestions
+# Patch the plugin to also bind widgets that start with `_`.
+zi ice wait lucid depth=1 nocompile'!' \
+  patch"${0:h}/patch/bind_compsys_widgets.patch;\
+        ${0:h}/patch/preserve-kill-yank-flags.patch" \
+  atload'_zsh_autosuggest_start'
+zi light zsh-users/zsh-autosuggestions

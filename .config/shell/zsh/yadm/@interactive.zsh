@@ -3,7 +3,7 @@
 #
 # NOTE: This module defines an additional git wrapper command and should be
 # loaded before the git module.
-# NOTE: Helper commands are provided as executable in ~/.local/bin.
+# NOTE: Helper commands are provided as executable in ~/.local/bin/my.
 #
 
 # Abort if requirements are not met.
