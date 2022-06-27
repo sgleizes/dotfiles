@@ -49,7 +49,7 @@
 /tutanota-desktop/
 /tmux/plugin/
 /unity3d/
-/zinit/
+/zi/
 
 # Exceptions for directories with uninteresting contents.
 /Nextcloud/**
