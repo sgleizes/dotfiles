@@ -11,8 +11,8 @@
 #   ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
-# Install and load the zinit plugin manager.
-xsh module zinit interactive
+# Install and load the zi plugin manager.
+xsh module zi interactive
 
 # Load the tmux module first in case autostart is enabled.
 xsh module tmux interactive:login

@@ -6,7 +6,7 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   return 1
 fi
 
@@ -27,7 +27,7 @@ function _patch_zsh_you_should_use {
 
 # Setup you-should-use, without global aliases support.
 # The plugin is also patched to work with all defined git wrappers and aliases.
-zinit ice wait'0b' lucid depth=1 reset \
+zi ice wait'0b' lucid depth=1 reset \
   atclone'_patch_zsh_you_should_use' \
   atpull'%atclone' nocompile'!'
-zinit light MichaelAquilina/zsh-you-should-use
+zi light MichaelAquilina/zsh-you-should-use

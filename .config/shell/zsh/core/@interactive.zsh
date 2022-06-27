@@ -149,18 +149,18 @@ fi
 #
 
 # Abort if requirements are not met.
-if [[ $TERM == 'dumb' || $+functions[zinit] == 0 ]]; then
+if [[ $TERM == 'dumb' || $+functions[zi] == 0 ]]; then
   return 2
 fi
 
 # Setup LS_COLORS.
 # Completion styles are configured with these colors in the completion module.
-# See https://zdharma.org/zinit/wiki/LS_COLORS-explanation/
-zinit ice wait'0b' lucid depth=1 reset \
+# See https://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/
+zi ice wait'0b' lucid depth=1 reset \
   atclone'sed -i "/DIR/c\DIR 38;5;39;1" LS_COLORS
           sed -i "/EXEC/c\EXEC 38;5;214;1" LS_COLORS
           dircolors -b LS_COLORS > .dircolors.sh' \
   atpull'%atclone' nocompile'!' \
   pick'.dircolors.sh' \
   atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}'
-zinit light trapd00r/LS_COLORS
+zi light trapd00r/LS_COLORS

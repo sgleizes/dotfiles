@@ -48,7 +48,7 @@ if [[ ! $ZKEY_AUTORUN ]]; then
 fi
 
 # Run the guard immediately or asynchronously.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   zkeyguard
 else
   # Handle asynchronous printing of the output.
@@ -60,8 +60,8 @@ else
   }
 
   # Run after all external plugins have been loaded.
-  zinit ice wait'0c' lucid nocompile \
+  zi ice wait'0c' lucid nocompile \
     id-as'guard/zkey' \
     nocd atload'_async_zkeyguard'
-  zinit light zdharma/null
+  zi light z-shell/null
 fi

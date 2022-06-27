@@ -8,7 +8,7 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   return 1
 fi
 
@@ -68,5 +68,7 @@ ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
   # yank-pop
 )
 
-zinit ice wait lucid depth=1 atload'_zsh_autosuggest_start'
-zinit light zsh-users/zsh-autosuggestions
+# Patch the plugin to also bind widgets that start with `_`.
+zi ice wait lucid depth=1 nocompile'!' \
+  atload'_zsh_autosuggest_start'
+zi light zsh-users/zsh-autosuggestions

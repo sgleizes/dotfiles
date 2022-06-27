@@ -65,7 +65,7 @@ if [[ ! $ZOPT_AUTORUN ]]; then
 fi
 
 # Run the guard immediately or asynchronously.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   zoptguard
 else
   # Handle asynchronous printing of the output.
@@ -77,8 +77,8 @@ else
   }
 
   # Run after all external plugins have been loaded.
-  zinit ice wait'0c' lucid nocompile \
+  zi ice wait'0c' lucid nocompile \
     id-as'guard/zopt' \
     nocd atload'_async_zoptguard'
-  zinit light zdharma/null
+  zi light z-shell/null
 fi

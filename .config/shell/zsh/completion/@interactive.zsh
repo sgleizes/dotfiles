@@ -173,7 +173,7 @@ fpath+=('/usr/share/zsh/vendor-completions/')
 #
 
 # Abort if requirements are not met, run compinit synchronously in this case.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   autoload -Uz compinit && compinit -d "$ZCACHEDIR/zcompdump"
   return 0
 fi
@@ -181,8 +181,8 @@ fi
 # Additional completion definitions.
 # This will run compinit when the plugin is loaded and replay all previous
 # calls to compdef. All external completions should be loaded before.
-# See https://github.com/zdharma/zinit#calling-compinit-with-turbo-mode
-zinit ice wait lucid depth=1 blockf \
-  atpull'zinit creinstall -q .' \
+# See https://github.com/zdharma-continuum/zinit#calling-compinit-without-turbo-mode
+zi ice wait lucid depth=1 blockf \
+  atpull'zi creinstall -q .' \
   atload'zicompinit; zicdreplay'
-zinit light zsh-users/zsh-completions
+zi light zsh-users/zsh-completions

@@ -76,7 +76,7 @@ function _update_git_user_commands {
 }
 
 # Abort if requirements are not met.
-if (( ! $+functions[zinit] )); then
+if (( ! $+functions[zi] )); then
   _update_git_user_commands
   return 2
 fi
@@ -88,7 +88,7 @@ function git $_git_wrapper_commands {
     # Wrap the git clone command to prettify output.
     clone)
       command "$0" clone --progress "${@:2}" \
-        |& { $ZINIT[BIN_DIR]/git-process-output.zsh || cat; } 2>/dev/null ;;
+        |& { $ZI[BIN_DIR]/lib/zsh/git-process-output.zsh || cat; } 2>/dev/null ;;
     # Wrap the git stash clear command for safety.
     stash)
       [[ "$2" == 'clear' ]] && { git-stash-clear-interactive; return }
@@ -111,17 +111,17 @@ function git $_git_wrapper_commands {
 # the _git completion function that ships with zsh by using the user-commands style.
 # Therefore, it does not have any loading order requirement.
 if (( $+commands[git-extras] )); then
-  zinit ice wait'0b' lucid id-as'tj/git-extras-completion' \
+  zi ice wait'0b' lucid id-as'tj/git-extras-completion' \
     atload'_update_git_user_commands'
-  zinit snippet "https://github.com/tj/git-extras/raw/$(git-extras -v)/etc/git-extras-completion.zsh"
+  zi snippet "https://github.com/tj/git-extras/raw/$(git-extras -v)/etc/git-extras-completion.zsh"
 fi
 
 # Automatically detect and escape zsh globbing meta-characters when used with
 # git refspec characters like `[^~{}]`. NOTE: This must be loaded _after_
-# url-quote-magic, which is the motivation for the zinit 'wait slot'.
+# url-quote-magic, which is the motivation for the zi 'wait slot'.
 # The plugin is patched to work with all defined git wrappers and aliases.
-zinit ice wait'0b' lucid depth=1 reset \
+zi ice wait'0b' lucid depth=1 reset \
   atclone'sed -i "s;(\*/|)git;(*/|)("${(j:|:)$(_list_git_wrappers)}");g" git-escape-magic' \
   atpull'%atclone' nocompile'!' \
   pick'git-escape-magic'
-zinit light knu/zsh-git-escape-magic
+zi light knu/zsh-git-escape-magic
