@@ -377,7 +377,7 @@ Type=SIMPLE_ACTION_DATA
 ActionsCount=1
 
 [Data_2_2Actions0]
-CommandURL=/home/psydev/.local/bin/org-capture
+CommandURL=/home/psydev/.local/bin/my/org-capture
 Type=COMMAND_URL
 
 [Data_2_2Conditions]
