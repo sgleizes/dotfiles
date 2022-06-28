@@ -94,15 +94,13 @@ See [usage](#usage) for examples and information about xsh commands.
 On most Linux systems, these programs should already be installed.
 
 For Unix systems using the BSD implementations of `coreutils`, so far only macOS
-is supported and requires the installation of GNU `coreutils` and `util-linux`:
+is supported and requires the installation of GNU `coreutils`:
 
 ```sh
-brew install coreutils util-linux
+brew install coreutils
 ```
 
-The `coreutils` prefixed with `g` will automatically be used if available,
-however the `column` utility from `util-linux` must be reachable from your
-`PATH` for the `list` command to work.
+The `coreutils` prefixed with `g` will automatically be used if available.
 
 ## Supported shells
 
@@ -202,12 +200,27 @@ runcom won't be loaded.
 
 To differentiate module runcoms from other files and to emphasize the special
 role of these files in module directories, they must respect the following
-naming scheme: `@<runcom>.<ext>`.
+naming scheme: `[name]@<runcom>.<ext>`.
 
 For example, the file representing the `login` runcom for the `core` module of
-the `bash` shell must be `bash/core/@login.bash`.
+the `bash` shell is `bash/core/@login.bash`.
 Note that for the (somewhat special) `posix` shell, the extension is `.sh` and
 not `.posix`
+
+An optional name can be added to module runcoms, e.g. `zsh/core/core@login.zsh`.
+
+Multiple files can also be defined for the same runcom, they will be loaded in the
+order defined by the current locale (alphabetically).
+
+It is therefore possible to further split the configuration in multiple ordered
+files:
+
+```
+zsh/core/
+  01-opt@interactive.zsh
+  02-alias@interactive.zsh
+  ...
+```
 
 You can change the special character for runcom files by setting the environment
 variable `XSH_RUNCOM_PREFIX` (default `@`). Like `XSH_DIR` this should be set
@@ -624,7 +637,7 @@ is a shame when it comes to benchmarking...
 Unfortunately, the invocation of bash runcoms is dependent on patches added
 by OS distributors and compile-time options. The implementation for the runcoms
 of each shell has not been tested on a variety of OS distributions so far, so
-please open an issue if you find that xsh if not behaving like it should on your
+please open an issue if you find that xsh is not behaving like it should on your
 distribution.
 
 ## Updating
