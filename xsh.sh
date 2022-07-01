@@ -38,7 +38,7 @@ XSHELL="${XSHELL#-}" # remove leading '-' for login shells
 # global value, if any. This would prevent processes started from xsh units to
 # properly inherit the global value.
 XSH_DIR="${XSH_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/xsh}"
-XSH_CONFIG_DIR="${XSH_CONFIG_DIR:-$XSH_DIR}"
+XSH_CONFIG_DIR="${XSH_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/shell}"
 XSH_RUNCOM_PREFIX="${XSH_RUNCOM_PREFIX:-@}"
 
 # A simple framework for shell configuration management.
@@ -61,7 +61,7 @@ XSH_RUNCOM_PREFIX="${XSH_RUNCOM_PREFIX:-@}"
 #   -v, --verbose          Set XSH_VERBOSE, see below.
 # Globals:
 #   XSH_DIR            Base xsh repository directory (default: ~/.config/xsh).
-#   XSH_CONFIG_DIR     Base xsh configuration directory (default: $XSH_DIR).
+#   XSH_CONFIG_DIR     Base xsh configuration directory (default: ~/.config/shell).
 #   XSH_RUNCOM_PREFIX  Prefix for module runcom files (default: @).
 #   XSH_SHELLS         Colon-separated list of shell candidates to lookup for units.
 #   XSH_BENCHMARK      Enable benchmarking the loading time of runcoms and units.
@@ -226,7 +226,7 @@ _xsh_bootstrap() {
 }
 
 # Create new module runcoms for the current or specified shells.
-# Valid values for the runcoms argument are: env, login, interactive, logout.
+# Typical values for the runcoms argument are: env, login, interactive, logout.
 # Multiple values can be specified separated by colons (e.g. env:login).
 # By default the module is registered for the interactive runcom.
 #
@@ -329,7 +329,7 @@ _xsh_list() {
 }
 
 # Load a runcom of a module in the current shell.
-# The runcom argument, if any, must be one of: env, login, interactive, logout.
+# The runcom argument, if any, is typically one of: env, login, interactive, logout.
 # By default the current runcom is used, or 'interactive' if that is not set.
 #
 # Usage: xsh load <module> [runcom]
@@ -356,7 +356,7 @@ _xsh_load() {
 }
 
 # Register module(s) to be loaded by the current shell.
-# Valid values for the runcoms argument are: env, login, interactive, logout.
+# Typical values for the runcoms argument are: env, login, interactive, logout.
 # Multiple values can be specified separated by colons (e.g. env:login).
 # By default or with the special value '-', the module is registered for all runcoms.
 # Multiple modules can be specified, in which case the runcom argument is required
@@ -387,7 +387,7 @@ _xsh_module() {
 }
 
 # Load the given runcom of each registered module.
-# The runcom argument, if any, must be one of: env, login, interactive, logout.
+# The runcom argument, if any, is typically one of: env, login, interactive, logout.
 # By default the current runcom is used, or 'interactive' if that is not set.
 #
 # Usage: xsh runcom [runcom]
@@ -531,7 +531,7 @@ _xsh_source_unit() {
   fi
 
   _XSH_LEVEL="${_XSH_LEVEL%*+}"
-  return $err
+  return $_err
 }
 
 # Create a default init file for the given shell.
