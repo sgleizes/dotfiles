@@ -58,9 +58,9 @@ _k_friendly_name=Custom Shortcuts Service
 [kmix]
 _k_friendly_name=Audio Volume
 decrease_microphone_volume=Microphone Volume Down,Microphone Volume Down,Decrease Microphone Volume
-decrease_volume=Volume Down,Volume Down,Decrease Volume
+decrease_volume=Volume Down\tF6,Volume Down,Decrease Volume
 increase_microphone_volume=Microphone Volume Up,Microphone Volume Up,Increase Microphone Volume
-increase_volume=Volume Up,Volume Up,Increase Volume
+increase_volume=Volume Up\tF7,Volume Up,Increase Volume
 mic_mute=Microphone Mute,Microphone Mute\tMeta+Volume Mute,Mute Microphone
 mute=Volume Mute,Volume Mute,Mute
 
@@ -278,11 +278,11 @@ activate entry 7=Meta+7,Meta+7,Activate Entry 7
 activate entry 8=Meta+8,Meta+8,Activate Entry 8
 activate entry 9=Meta+9,Meta+9,Activate Entry 9
 activate widget 40=F12,none,Activate Application Dashboard Widget
-clear-history=none,,Clear Clipboard History
+clear-history=none,none,Clear Clipboard History
 clipboard_action=none,Meta+Ctrl+X,Automatic Action Popup Menu
-cycleNextAction=none,,Next History Item
-cyclePrevAction=none,,Previous History Item
-edit_clipboard=none,,Edit Contents…
+cycleNextAction=none,none,Next History Item
+cyclePrevAction=none,none,Previous History Item
+edit_clipboard=none,none,Edit Contents…
 new instance for entry 1=Meta+!,Meta+Ctrl+1,New Instance for Entry 1
 new instance for entry 10=Meta+),Meta+Ctrl+0,New Instance for Entry 10
 new instance for entry 11=none,Meta+Ctrl+Z,New Instance for Entry 11
@@ -306,7 +306,7 @@ repeat_action=none,Meta+Ctrl+R,Manually Invoke Action on Current Clipboard
 show latte global settings=none,Meta+W,Show Latte Global Settings
 show latte view=none,Meta+`,Show Latte Dock/Panel
 show view settings=none,Meta+A,Cycle Through Dock/Panel Settings Windows
-show-barcode=none,,Show Barcode…
+show-barcode=none,none,Show Barcode…
 show-on-mouse-pos=none,Meta+V,Open Klipper at Mouse Position
 
 [mediacontrol]
