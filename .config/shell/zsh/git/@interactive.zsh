@@ -106,11 +106,23 @@ function git $_git_wrapper_commands {
   esac
 }
 
-# Load completions for git-extras.
-# NOTE: These completions are not defined using `compdef`, they only extend
+# Install git-extras if standalone install is requested.
+# NOTE: Completions for extra-commands are not defined using `compdef`, they only extend
 # the _git completion function that ships with zsh by using the user-commands style.
 # Therefore, it does not have any loading order requirement.
-if (( $+commands[git-extras] )); then
+if [[ $ZSH_STANDALONE_INSTALL2 ]]; then
+  # NOTE: $ZPFX/etc is removed as it is not XDG-compliant and is created by the Makefile
+  # for the bash completion, which I won't use.
+  # Uninstall: zi cd plugin/git-extras && make uninstall PREFIX=$ZPFX && cd - && zi delete plugin/git-extras
+  zi light-mode wait'0b' lucid for id-as'plugin/git-extras' \
+    depth=1 as'null' \
+    src'etc/git-extras-completion.zsh' \
+    make"install PREFIX=$ZPFX" \
+    atload"command rm -rf $ZPFX/etc" \
+    atload'_update_git_user_commands' \
+    @tj/git-extras
+elif (( $+commands[git-extras] )); then
+  # Load completions only for git-extras.
   zi ice wait'0b' lucid \
     id-as'tj/git-extras-completion' \
     atload'_update_git_user_commands'

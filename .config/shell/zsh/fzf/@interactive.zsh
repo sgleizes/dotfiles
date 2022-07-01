@@ -5,6 +5,17 @@
 # therefore should be loaded after the zle module.
 #
 
+# Install fzf if standalone install is requested.
+if (( $+functions[zi] )) && [[ $ZSH_STANDALONE_INSTALL ]]; then
+  # Uninstall: zi delete app/fzf && rm -f $ZI[MAN_DIR]/man1/fzf*.1
+  zi light-mode for id-as'app/fzf' \
+    depth=1 as'null' lbin'!bin/fzf' \
+    atclone'./install --bin' \
+    atclone"\cp -rvf man/* $ZI[MAN_DIR]/" \
+    atpull'%atclone' \
+    @junegunn/fzf
+fi
+
 # Abort if requirements are not met.
 if (( ! $+commands[fzf] )); then
   return 1
@@ -47,9 +58,14 @@ function fzf {
 }
 
 # Add fzf-completion widget.
-fzf_completion='/usr/share/fzf/completion.zsh'
-if [[ -r $fzf_completion ]]; then
-  source $fzf_completion
+fzf_completion=(
+  $ZI[PLUGINS_DIR]/app---fzf/shell/completion.zsh(N)
+  $HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh(N)
+  $XDG_DATA_HOME/fzf/completion.zsh(N)
+  /usr/share/fzf/completion.zsh(N)
+)
+if [[ -r ${fzf_completion[1]} ]]; then
+  source ${fzf_completion[1]}
   source ${0:h}/completion.zsh
 
   # Use a dedicated key instead of a trigger sequence for fuzzy completion.
@@ -66,9 +82,9 @@ fi
 # Additional ZLE widgets.
 source ${0:h}/widgets.zsh
 bindkey "$keys[Control]R" fzf-history
-bindkey "$keys[Alt]L" fzf-locate
-bindkey "$keys[Alt]F" fzf-files
-bindkey "$keys[Alt]C" fzf-cd
+bindkey "$keys[Alt]L"     fzf-locate
+bindkey "$keys[Alt]F"     fzf-files
+bindkey "$keys[Alt]C"     fzf-cd
 
 # Use `fd` instead of `find` if available.
 if (( $+commands[fd] )); then

@@ -8,7 +8,10 @@ typeset -gAH ZI
 ZI[HOME_DIR]="${XDG_CONFIG_HOME:-$HOME/.config}/zi"
 ZI[BIN_DIR]="$ZI[HOME_DIR]/bin"
 ZI[ZCOMPDUMP_PATH]="$ZCACHEDIR/zcompdump"
-ZPFX="$XDG_LIB_HOME/zi"
+
+# Paths for programs installed via zi.
+ZPFX="$HOME/.local"
+ZI[MAN_DIR]="$XDG_DATA_HOME/man"
 
 # Install zi if necessary.
 if [[ ! -f $ZI[BIN_DIR]/zi.zsh ]]; then
@@ -55,6 +58,7 @@ unfunction zpcdclear zpcdreplay zpcompdef zpcompinit
 # Install zi annexes.
 zi light-mode depth=1 for \
   id-as'annex/bin-gem-node' z-shell/z-a-bin-gem-node \
+  id-as'annex/linkbin'      z-shell/z-a-linkbin \
   id-as'annex/patch-dl'     z-shell/z-a-patch-dl
 
 # Install zi consolette for plugin management.

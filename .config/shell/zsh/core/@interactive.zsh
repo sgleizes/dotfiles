@@ -148,6 +148,10 @@ fi
 # External core plugins
 #
 
+# Install optional dependencies of the CLI environment using ZI.
+[[ $ZSH_STANDALONE_INSTALL ]] \
+  && source ${0:h}/standalone.zsh
+
 # Abort if requirements are not met.
 if [[ $TERM == 'dumb' || $+functions[zi] == 0 ]]; then
   return 2

@@ -6,7 +6,7 @@
 # Enable the default zsh options.
 emulate zsh
 
-setopt errexit      # exit the script if any statement returns a non-true valu
+setopt errexit      # exit the script if any statement returns a non-true value
 setopt pipefail     # unveil hidden pipeline command errors
 setopt extendedglob # enable '#', '~', '^' operators and flags in patterns
 
@@ -18,61 +18,6 @@ YADM_DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/yadm"
 : ${YADM_GITCONFIG:=$YADM_DIR/gitconfig}
 : ${YADM_GITIGNORE:=$YADM_DIR/gitignore}
 : ${YADM_UNSTABLE:=$YADM_DIR/unstable}
-
-# List of packages to prompt for automatic installation.
-PACKAGE_LIST=(
-  atool
-  bat
-  btop
-  emacs
-  expac
-  exa
-  fd
-  fzf
-  fasd
-  fortune-mod
-  htop
-  httpie
-  hub
-  imagemagick
-  jq
-  mediainfo
-  mlocate
-  neofetch
-  nnn
-  pacman-contrib
-  pastebinit
-  rclone
-  restic
-  ripgrep
-  rsync
-  strace
-  subversion
-  tealdeer
-  trash-cli
-  tree
-  unison
-  wget
-  xclip
-  youtube-dl
-)
-
-# List of packages to hint for manual installation.
-AUR_PACKAGE_LIST=(
-  advcp
-  archivemount
-  direnv
-  fpp-git
-  git-delta
-  git-extras
-  hex-git
-  kmon
-  lazygit
-  pistol-git
-  ponysay-git
-  tmux-git
-  tmux-xpanes
-)
 
 # Configure the local yadm repository.
 function configure_repo {
@@ -116,40 +61,29 @@ function bootstrap_xsh {
   xsh bootstrap -s posix:bash:zsh >/dev/null
 }
 
-# List packages that are missing among provided arguments.
-function missing_packages {
-  pacman -Sl | awk '{print $2,$4}' | grep -E "^(${(j:|:)@}) $" || true
+# Install a portable version of the latest zsh.
+function install_zsh {
+  local ans
+  print -Pn "%F{green}::%f Install a portable version of the latest zsh? [y/N] "
+  read -sk ans; print
+  if [[ $ans != (y|Y) ]]; then
+    return
+  fi
+
+  xsh -s posix load zsh || true
 }
 
 # Install optional packages for the terminal environment.
 function install_packages {
-  local pkgs ans
-  (( ! $+commands[pacman] )) && return
-
-  pkgs=( $(missing_packages $PACKAGE_LIST[@]) )
-  [[ ! $pkgs ]] && return
-
-  print -P "%F{green}::%f The following optional packages can be automatically installed:"
-  print -f '  %s\n' $pkgs[@]
-  print -Pn "%F{green}::%f Proceed? [Y/n] "
-  read -sk ans; print
-
-  if [[ $ans == ('y'|$'\n') ]] {
-    sudo pacman -Sy $pkgs[@] || true
-  }
-
-  pkgs=( $(missing_packages $AUR_PACKAGE_LIST[@]) )
-  [[ ! $pkgs ]] && return
-
-  print -P "%F{yellow}::%f The following optional packages can be built manually from the AUR:"
-  print -f '  %s\n' $pkgs[@]
+  xsh -s zsh load pacman install \
+    || print -P "%F{yellow}::%f Install homebrew or set ZSH_STANDALONE_INSTALL=1 to install optional CLI tools"
 }
 
 # Change the default login shell for the current user.
 function change_login_shell {
-  if [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]] {
+  if [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]]; then
     return
-  }
+  fi
 
   print -P "%F{green}::%f Changing the login shell to /bin/zsh"
   chsh $USER --shell=/bin/zsh
@@ -160,27 +94,30 @@ function prompt_logout {
   local ans session
   print -Pn "%F{green}::%f It is recommended to relogin using the new shell configuration, logout now? [Y/n] "
   read -sk ans; print
-  [[ $ans != ('y'|$'\n') ]] && return
+  if [[ $ans != (y|Y|$'\n') ]]; then
+    return
+  fi
 
   session=$(loginctl session-status | head -n 1 | awk '{print $1}' || true)
   loginctl terminate-session $session
 }
 
 # Fallback to using git directly if hub is not installed.
-if (( ! $+commands[hub] )) {
+if (( ! $+commands[hub] )); then
   print -P "%F{yellow}::%f 'hub' is not installed: using 'git' as yadm.git-program"
   yadm config yadm.git-program git
-}
+fi
 
 # Remove integration with git if delta is not installed.
-if (( ! $+commands[delta] )) {
+if (( ! $+commands[delta] )); then
   print -P "%F{yellow}::%f 'delta' is not installed: commenting integration with 'git'"
   sed -Ei 's/(path = delta)/# \1/' $HOME/.config/git/config
-}
+fi
 
 configure_repo
 mark_unstable_files
 bootstrap_xsh
+install_zsh
 install_packages
 change_login_shell
 prompt_logout

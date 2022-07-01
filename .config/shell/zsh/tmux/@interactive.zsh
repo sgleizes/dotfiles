@@ -95,7 +95,7 @@ if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID && $WINDOWID != 0 ]] &
       # Interactively ask to enter tmux or a regular shell.
       local ans
       print -n ':: Attach to tmux session? [Y/n] ' && read -sk ans; print
-      [[ $ans == ('y'|$'\n') ]] && attach=true
+      [[ $ans == (y|Y|$'\n') ]] && attach=true
     fi
 
     # Attach to the default session or to the most recently used unattached session.
