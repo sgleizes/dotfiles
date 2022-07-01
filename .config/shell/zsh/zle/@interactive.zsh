@@ -667,10 +667,10 @@ if (( $+functions[compinit] && ! $+functions[zi] )); then
   _rebind_compsys_widgets
 else
   # Postpone rebinding after the asynchronous compinit.
-  zi ice wait lucid nocompile \
+  zi light-mode wait lucid for \
     id-as'hack/rebind-compsys-widgets' \
-    nocd atload'_rebind_compsys_widgets'
-  zi light z-shell/null
+    atload'_rebind_compsys_widgets' nocompile nocd \
+    @z-shell/null
 fi
 
 unset key{,map}

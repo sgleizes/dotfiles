@@ -172,9 +172,24 @@ fpath+=('/usr/share/zsh/vendor-completions/')
 # Additional completion definitions
 #
 
+# Load completions which are not zsh-compatible using bashcompinit.
+# This must run after compinit.
+function _load_bash_completions {
+  autoload -Uz bashcompinit
+  bashcompinit
+
+  # Load pipx completion.
+  if (( $+commands[pipx] && $+commands[register-python-argcomplete] )); then
+    eval "$(register-python-argcomplete pipx)"
+  fi
+
+  unfunction _load_bash_completions
+}
+
 # Abort if requirements are not met, run compinit synchronously in this case.
 if (( ! $+functions[zi] )); then
   autoload -Uz compinit && compinit -d "$ZCACHEDIR/zcompdump"
+  _load_bash_completions
   return 0
 fi
 
@@ -182,7 +197,10 @@ fi
 # This will run compinit when the plugin is loaded and replay all previous
 # calls to compdef. All external completions should be loaded before.
 # See https://github.com/zdharma-continuum/zinit#calling-compinit-without-turbo-mode
-zi ice wait lucid depth=1 blockf \
+zi light-mode wait lucid for \
+  id-as'plugin/zsh-completions' \
+  depth=1 blockf \
   atpull'zi creinstall -q .' \
-  atload'zicompinit; zicdreplay'
-zi light zsh-users/zsh-completions
+  atload'zicompinit; zicdreplay' \
+  atload'_load_bash_completions' \
+  @zsh-users/zsh-completions

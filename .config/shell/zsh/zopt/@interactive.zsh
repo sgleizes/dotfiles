@@ -77,8 +77,8 @@ else
   }
 
   # Run after all external plugins have been loaded.
-  zi ice wait'0c' lucid nocompile \
+  zi light-mode wait'0c' lucid for \
     id-as'guard/zopt' \
-    nocd atload'_async_zoptguard'
-  zi light z-shell/null
+    atload'_async_zoptguard' nocompile nocd \
+    @z-shell/null
 fi

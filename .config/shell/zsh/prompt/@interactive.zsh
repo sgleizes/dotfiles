@@ -14,9 +14,10 @@ if (( $+functions[zi] )); then
     source "$XDG_CACHE_HOME/p10k-instant-prompt-${(%):-%n}.zsh"
   fi
 
-  zi ice depth=1 pick'/dev/null'
-  zi light romkatv/powerlevel10k
-  zi add-fpath --front romkatv/powerlevel10k
+  zi light-mode for id-as'plugin/powerlevel10k' \
+    depth=1 pick'/dev/null' \
+    @romkatv/powerlevel10k
+  zi add-fpath --front plugin/powerlevel10k
 
   theme='powerlevel10k'
 fi

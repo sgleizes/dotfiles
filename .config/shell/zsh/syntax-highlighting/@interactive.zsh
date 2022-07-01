@@ -12,5 +12,7 @@ fi
 
 # Syntax highlighting plugin with the default theme.
 # Use `fast-theme` to configure.
-zi ice wait lucid depth=1 atload'unalias fsh-alias'
-zi light z-shell/fast-syntax-highlighting
+zi light-mode wait lucid for \
+  id-as'plugin/fast-syntax-highlighting' \
+  depth=1 atload'unalias fsh-alias' \
+  @z-shell/fast-syntax-highlighting

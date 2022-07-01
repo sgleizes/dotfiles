@@ -2,6 +2,17 @@
 # Ripgrep configuration module for zsh.
 #
 
+# Install ripgrep if standalone install is requested.
+if (( $+functions[zi] )) && [[ $ZSH_STANDALONE_INSTALL ]]; then
+  # Uninstall: zi delete app/ripgrep && zi cclear && rm -f $ZI[MAN_DIR]/man1/rg.1
+  zi light-mode for id-as'app/ripgrep' \
+    from'gh-r' as'completion' nocompile lbin'!rg' \
+    atclone'\mv -f ripgrep-*/* . && rmdir ripgrep-*/' \
+    atclone"\cp -vf doc/rg.1 $ZI[MAN_DIR]/man1" \
+    atpull'%atclone' \
+    @BurntSushi/ripgrep
+fi
+
 # Abort of requirements are not met.
 if (( ! $+commands[rg] )); then
   return 1

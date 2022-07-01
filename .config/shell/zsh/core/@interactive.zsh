@@ -148,6 +148,10 @@ fi
 # External core plugins
 #
 
+# Install optional dependencies of the CLI environment using ZI.
+[[ $ZSH_STANDALONE_INSTALL ]] \
+  && source ${0:h}/standalone.zsh
+
 # Abort if requirements are not met.
 if [[ $TERM == 'dumb' || $+functions[zi] == 0 ]]; then
   return 2
@@ -156,11 +160,13 @@ fi
 # Setup LS_COLORS.
 # Completion styles are configured with these colors in the completion module.
 # See https://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/
-zi ice wait'0b' lucid depth=1 reset \
+zi light-mode wait'0b' lucid for \
+  id-as'plugin/ls-colors' \
+  depth=1 reset \
   atclone'sed -i "/DIR/c\DIR 38;5;39;1" LS_COLORS
           sed -i "/EXEC/c\EXEC 38;5;214;1" LS_COLORS
           dircolors -b LS_COLORS > .dircolors.sh' \
   atpull'%atclone' nocompile'!' \
   pick'.dircolors.sh' \
-  atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}'
-zi light trapd00r/LS_COLORS
+  atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}' \
+  @trapd00r/LS_COLORS

@@ -70,8 +70,10 @@ ZSH_AUTOSUGGEST_IGNORE_WIDGETS=(
 )
 
 # Patch the plugin to also bind widgets that start with `_`.
-zi ice wait lucid depth=1 nocompile'!' \
+zi light-mode wait lucid for \
+  id-as'plugin/zsh-autosuggestions' \
+  depth=1 nocompile'!' \
   patch"${0:h}/patch/bind_compsys_widgets.patch;\
         ${0:h}/patch/preserve-kill-yank-flags.patch" \
-  atload'_zsh_autosuggest_start'
-zi light zsh-users/zsh-autosuggestions
+  atload'_zsh_autosuggest_start' \
+  @zsh-users/zsh-autosuggestions

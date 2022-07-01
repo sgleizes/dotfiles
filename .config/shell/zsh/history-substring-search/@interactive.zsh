@@ -35,5 +35,7 @@ function _configure_history_substring_search {
   unfunction _configure_history_substring_search
 }
 
-zi ice wait lucid depth=1 atload'_configure_history_substring_search'
-zi light zsh-users/zsh-history-substring-search
+zi light-mode wait lucid for \
+  id-as'plugin/zsh-history-substring-search' \
+  depth=1 atload'_configure_history_substring_search' \
+  @zsh-users/zsh-history-substring-search

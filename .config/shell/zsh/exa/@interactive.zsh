@@ -2,6 +2,18 @@
 # Exa configuration module for zsh.
 #
 
+# Install exa if standalone install is requested.
+if (( $+functions[zi] )) && [[ $ZSH_STANDALONE_INSTALL ]]; then
+  # Uninstall: zi delete app/exa && zi cclear && rm -f $ZI[MAN_DIR]/{man1/exa.1,man5/exa_colors.5}
+  zi light-mode for id-as'app/exa' \
+    from'gh-r' as'completion' nocompile lbin'!' \
+    atclone'\cp -f completions/exa.zsh _exa' \
+    atclone"\cp -vf man/exa.1 $ZI[MAN_DIR]/man1" \
+    atclone"\cp -vf man/exa_colors.5 $ZI[MAN_DIR]/man5" \
+    atpull'%atclone' \
+    @ogham/exa
+fi
+
 # Abort if requirements are not met.
 if (( ! $+commands[exa] )); then
   return 1

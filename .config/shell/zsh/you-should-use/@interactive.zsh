@@ -27,7 +27,9 @@ function _patch_zsh_you_should_use {
 
 # Setup you-should-use, without global aliases support.
 # The plugin is also patched to work with all defined git wrappers and aliases.
-zi ice wait'0b' lucid depth=1 reset \
+zi light-mode wait'0b' lucid for \
+  id-as'plugin/zsh-you-should-use' \
+  depth=1 reset nocompile'!' \
   atclone'_patch_zsh_you_should_use' \
-  atpull'%atclone' nocompile'!'
-zi light MichaelAquilina/zsh-you-should-use
+  atpull'%atclone' \
+  @MichaelAquilina/zsh-you-should-use

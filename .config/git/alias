@@ -50,7 +50,7 @@
   co  = checkout
   cr  = revert
   cs  = show
-  cp  = cherry-pick --ff
+  cpi = cherry-pick --ff
   cpa = cherry-pick --no-commit
 
   # Fetch (f)
