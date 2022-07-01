@@ -1,5 +1,5 @@
 #
-# Zi configuration module for zsh.
+# ZI configuration module for zsh.
 # https://github.com/z-shell/zi
 #
 
@@ -54,10 +54,10 @@ unfunction zpcdclear zpcdreplay zpcompdef zpcompinit
 
 # Install zi annexes.
 zi light-mode depth=1 for \
-  z-shell/z-a-bin-gem-node \
-  z-shell/z-a-patch-dl
+  id-as'annex/bin-gem-node' z-shell/z-a-bin-gem-node \
+  id-as'annex/patch-dl'     z-shell/z-a-patch-dl
 
 # Install zi consolette for plugin management.
 zi light-mode wait'0c' lucid depth=1 trackbinds for \
-  blockf bindmap'^O^Z -> hold' z-shell/zui \
-         bindmap'^O^J -> ^O^Z' z-shell/zi-console
+  id-as'lib/zui' blockf bindmap'^O^Z -> hold' z-shell/zui \
+  id-as'app/ziconsole'  bindmap'^O^J -> ^O^Z' z-shell/zi-console

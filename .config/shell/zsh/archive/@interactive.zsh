@@ -30,8 +30,10 @@ if [[ ! "$alternative" ]]; then
 fi
 
 # Color the contents of tar archives using LS_COLORS.
-zi ice wait'0b' lucid depth=1 fbin'bin/tarcolor' nocompile
-zi light msabramo/tarcolor
+zi light-mode wait'0b' lucid for \
+  id-as'plugin/tarcolor' \
+  depth=1 fbin'bin/tarcolor' nocompile \
+  @msabramo/tarcolor
 
 # Better implementation of tarcolorauto.
 function tar {

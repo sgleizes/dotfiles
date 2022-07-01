@@ -182,7 +182,9 @@ fi
 # This will run compinit when the plugin is loaded and replay all previous
 # calls to compdef. All external completions should be loaded before.
 # See https://github.com/zdharma-continuum/zinit#calling-compinit-without-turbo-mode
-zi ice wait lucid depth=1 blockf \
+zi light-mode wait lucid for \
+  id-as'plugin/zsh-completions' \
+  depth=1 blockf \
   atpull'zi creinstall -q .' \
-  atload'zicompinit; zicdreplay'
-zi light zsh-users/zsh-completions
+  atload'zicompinit; zicdreplay' \
+  @zsh-users/zsh-completions
