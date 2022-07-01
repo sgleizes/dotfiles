@@ -76,6 +76,7 @@ function install_zsh {
 # Install optional packages for the terminal environment.
 function install_packages {
   xsh -s zsh load pacman install \
+    || xsh -s zsh load brew install \
     || print -P "%F{yellow}::%f Install homebrew or set ZSH_STANDALONE_INSTALL=1 to install optional CLI tools"
 }
 

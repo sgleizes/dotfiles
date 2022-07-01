@@ -27,6 +27,7 @@ xsh module history   interactive
 
 # Load application-specific modules that have no specific requirements.
 xsh module archive    interactive
+xsh module brew       interactive
 xsh module direnv     interactive
 xsh module docker     interactive
 xsh module exa        interactive
