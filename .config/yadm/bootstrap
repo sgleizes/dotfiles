@@ -80,6 +80,21 @@ function install_packages {
     || print -P "%F{yellow}::%f Install homebrew or set ZSH_STANDALONE_INSTALL=1 to install optional CLI tools"
 }
 
+# Enable integration with optional dependencies.
+function enable_integrations {
+  # Use hub as yadm git-program if installed.
+  if (( $+commands[hub] )); then
+    print -P "%F{blue}::%f Using 'hub' as yadm.git-program"
+    yadm config yadm.git-program hub
+  fi
+
+  # Add integration with git if delta is installed.
+  if (( $+commands[delta] )); then
+    print -P "%F{blue}::%f Enabling 'delta' integration with 'git'"
+    sed -Ei 's/# (path = delta)/\1/' $HOME/.config/git/config
+  fi
+}
+
 # Change the default login shell for the current user.
 function change_login_shell {
   if [[ $(cat /etc/passwd | grep $USER) == *:/bin/zsh ]]; then
@@ -103,22 +118,11 @@ function prompt_logout {
   loginctl terminate-session $session
 }
 
-# Fallback to using git directly if hub is not installed.
-if (( ! $+commands[hub] )); then
-  print -P "%F{yellow}::%f 'hub' is not installed: using 'git' as yadm.git-program"
-  yadm config yadm.git-program git
-fi
-
-# Remove integration with git if delta is not installed.
-if (( ! $+commands[delta] )); then
-  print -P "%F{yellow}::%f 'delta' is not installed: commenting integration with 'git'"
-  sed -Ei 's/(path = delta)/# \1/' $HOME/.config/git/config
-fi
-
 configure_repo
 mark_unstable_files
 bootstrap_xsh
 install_zsh
 install_packages
+enable_integrations
 change_login_shell
 prompt_logout

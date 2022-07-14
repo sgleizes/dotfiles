@@ -10,48 +10,56 @@ if (( ! $+commands[pacman] )); then
   return 1
 fi
 
-# List of pacman packages to prompt for automatic installation.
-PACMAN_PACKAGE_LIST=(
+# Lists of pacman packages to prompt for automatic installation.
+PACMAN_PACKAGES_BASIC=(
   atool
   bat
   btop
-  direnv
-  emacs
-  expac
   exa
   fd
-  fzf
   fasd
-  fortune-mod
-  git-delta
+  fzf
   hex
   htop
+  mlocate
+  neofetch
+  nnn
+  ripgrep
+  trash-cli
+  tree
+  wget
+)
+PACMAN_PACKAGES_DEV=(
+  archivemount
+  direnv
+  emacs
+  fpp
+  git-delta
+  git-extras
   httpie
   hub
   imagemagick
   jq
-  kmon
-  lazygit
   mediainfo
-  mlocate
-  neofetch
-  nnn
-  pacman-contrib
   pastebinit
-  ponysay
-  rclone
-  restic
-  ripgrep
   rsync
   strace
   subversion
   tealdeer
   tmux
-  trash-cli
-  tree
-  unison
-  wget
+  tmux-xpanes
   xclip
+)
+PACMAN_PACKAGES_EXTRA=(
+  expac
+  fortune-mod
+  kmon
+  lazygit
+  pacman-contrib
+  ponysay
+  rclone
+  restic
+  unison
   youtube-dl
 )
 
@@ -65,25 +73,26 @@ AUR_PACKAGE_LIST=(
   tmux-xpanes
 )
 
-# Install missing optional packages for the terminal environment using pacman.
+# Prompt for installation of the given package group using pacman.
+# Usage: install_packages <group> <pkgs...>
 function install_packages {
+  local group=$1
   local pkgs ans
 
-  pkgs=( $(missing_packages $PACMAN_PACKAGE_LIST[@]) )
+  pkgs=( $(missing_packages ${@:2}) )
   if [[ ! $pkgs ]]; then
     return
   fi
 
-  print -P "%F{green}::%f The following optional CLI tools can be automatically installed:"
+  print -P "%F{green}::%f The following $group CLI packages can be installed using pacman:"
   print -f '  %s\n' $pkgs[@]
   print -Pn "%F{green}::%f Proceed? [Y/n] "
   read -sk ans; print
   if [[ $ans != (y|Y|$'\n') ]]; then
-    return 1
+    return
   fi
 
   sudo pacman -Sy $pkgs[@]
-  list_aur_packages
 }
 
 # List missing AUR packages.
@@ -109,12 +118,17 @@ function missing_aur_packages {
   local foreign_pkgs
 
   foreign_pkgs=( $(pacman -Qqem) )
-  printf '%s\n' $@ | grep -vE "^(${(j:|:)foreign_pkgs})" || true
+  print -l $@ | grep -vE "^(${(j:|:)foreign_pkgs})" || true
 }
 
-if ! install_packages; then
+if ! install_packages 'basic' $PACMAN_PACKAGES_BASIC[@] \
+   || ! install_packages 'dev' $PACMAN_PACKAGES_DEV[@] \
+   || ! install_packages 'extra' $PACMAN_PACKAGES_EXTRA[@]; then
   return 2
 fi
+
+# List additiona packages that could not be installed via pacman.
+list_aur_packages
 
 # Reload the shell to update configuration with newly installed packages.
 # NOTE: This is only executed if the shell is interactive (otherwise reload is undefined).

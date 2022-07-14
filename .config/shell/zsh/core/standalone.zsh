@@ -38,6 +38,14 @@ zi light-mode for id-as'app/btop' \
   make"install PREFIX=$ZPFX" \
   @aristocratos/btop
 
+# Install delta: https://github.com/dandavison/delta/
+zi light-mode for id-as'app/delta' \
+  from'gh-r' as'null' lbin'!' \
+  atclone'\mv -f delta-*/* . && rmdir delta-*/' \
+  atpull'%atclone' \
+  atload'compdef _gnu_generic delta' \
+  @dandavison/delta
+
 # Install fd: https://github.com/sharkdp/fd
 zi light-mode for id-as'app/fd' \
   from'gh-r' as'completion' nocompile lbin'!' \

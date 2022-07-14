@@ -1,6 +1,0 @@
-#
-# This file is read by the pam_env module before the user's login shell starts.
-# Only simple assignments are supported, see pam_env.conf(5).
-#
-
-XSH_CONFIG_DIR  DEFAULT=@{HOME}/.config/shell

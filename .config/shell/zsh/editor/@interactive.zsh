@@ -8,7 +8,6 @@
 # Convenience aliases.
 alias edit='${(z)VISUAL:-${(z)EDITOR}}'
 alias e='edit'
-alias ex='emacs-xclient'
 
 if (( $+commands[emacs] )); then
   unalias edit
@@ -29,6 +28,9 @@ if (( $+commands[emacs] )); then
       ${(z)VISUAL:-${(z)EDITOR}} "$@"
     fi
   }
+  
+  # Add alias to graphical emacs client.
+  alias ex='emacs-xclient'
 
   # Install the emacs configuration framework.
   source ${0:h}/doom-emacs.zsh
