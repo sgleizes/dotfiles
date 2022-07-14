@@ -64,8 +64,8 @@ fzf_completion=(
   $XDG_DATA_HOME/fzf/completion.zsh(N)
   /usr/share/fzf/completion.zsh(N)
 )
-if [[ -r ${fzf_completion[1]} ]]; then
-  source ${fzf_completion[1]}
+if [[ -r $fzf_completion[1] ]]; then
+  source $fzf_completion[1]
   source ${0:h}/completion.zsh
 
   # Use a dedicated key instead of a trigger sequence for fuzzy completion.
