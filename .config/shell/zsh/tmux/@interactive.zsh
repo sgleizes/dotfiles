@@ -50,7 +50,7 @@ export TMUX_COMMAND_DIR="${TMUX_CONFIG:h}/command"
 # Path to the tmux directory to source other configuration files.
 export TMUX_CONFIG_DIR="${TMUX_CONFIG:h}"
 
-# Create the XDG data directory if necessary.
+# Create the XDG state directory if necessary.
 command mkdir -p ${TMUX_HISTORY:h}
 
 # Install the tmux plugin manager.
@@ -60,7 +60,7 @@ source ${0:h}/tpm.zsh
 # Attempt to detect whether the terminal is started from within another application.
 # In xterm (or terminals mimicking it), WINDOWID is set to 0 if the terminal is not
 # running in a X window (e.g. in a KDE application).
-if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID && $WINDOWID != 0 ]] && { \
+if [[ ! $TMUX && ! $EMACS && ! $INSIDE_EMACS && $WINDOWID != 0 && $TERM != 'linux' ]] && { \
   [[   $SSH_TTY && $TMUX_AUTOSTART == (always|remote) ]] ||
   [[ ! $SSH_TTY && $TMUX_AUTOSTART == (always|local) ]]
 }; then
