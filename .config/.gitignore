@@ -45,6 +45,7 @@
 /skypeforlinux/
 /subversion/
 /supertuxkart/
+/systemd/user/*.wants/
 /teams/
 /tutanota-desktop/
 /tmux/plugin/
