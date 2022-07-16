@@ -4370,9 +4370,10 @@ Ignore prompts to restart server to avoid hangs on server-restart.
   (setq-default lsp-restart 'auto-restart)
   (lsp-enable-which-key-integration t)
 
-  (setq lsp-ui-sideline-show-diagnostics t
+  (setq lsp-warn-no-matched-clients nil
+        lsp-ui-sideline-show-diagnostics t
         lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-show-code-actions t ;; TODO
+        lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-show-with-cursor nil
         lsp-ui-doc-show-with-mouse t
         lsp-ui-doc-alignment 'window
@@ -4410,7 +4411,7 @@ Enable LSP in go.mod files.
 
 Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
 #+begin_src elisp
-(after! flycheck
+(after! lsp-mode
   (set-next-checker! 'go-mode 'lsp 'golangci-lint))
 #+end_src
 
@@ -4420,7 +4421,7 @@ Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
 #+begin_src elisp
-(after! flycheck
+(after! lsp-mode
   (set-next-checker! 'sh-mode 'lsp 'sh-shellcheck))
 #+end_src
 
