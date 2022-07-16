@@ -67,6 +67,9 @@ export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
 [[ -f "$XDG_CACHE_HOME/Xauthority" ]] \
   && export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
 
+# Make GTK applications use the KDE file selection dialog.
+export GTK_USE_PORTAL=1
+
 # Create parent directories for programs requiring it.
 command mkdir -p \
   ${RANDFILE:h} \
@@ -124,4 +127,9 @@ fi
 if (( $+commands[pipx] )); then
   # Add installed python applications to PATH.
   path+=($PIPX_BIN_DIR)
+fi
+
+if [[ -f $CARGO_HOME/bin/cargo ]]; then
+  # Add rust tools and installed applications to PATH.
+  path+=($CARGO_HOME/bin)
 fi
