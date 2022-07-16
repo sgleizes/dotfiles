@@ -1154,15 +1154,6 @@ Add a global hydra for buffer management.
 
 See [[*Centaur tabs][Centaur Tabs]].
 
-** Images
-
-Override quit binding from popups that prevents the buffer from being killed.
-#+begin_src elisp
-(after! image-mode
-  (map! :map image-mode-map
-        :n "q" #'kill-current-buffer))
-#+end_src
-
 ** Line numbers
 
 Relative line numbers are fantastic for knowing how far away line numbers are,
@@ -4072,7 +4063,7 @@ Disable ~shfmt~ formatting for zsh buffers (not supported).
 Redefine the ~shfmt~ formatter with consistent indent settings.
 Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
-(after! format-all
+(after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"
       "-s"   ; simplify the code
@@ -4379,9 +4370,10 @@ Ignore prompts to restart server to avoid hangs on server-restart.
   (setq-default lsp-restart 'auto-restart)
   (lsp-enable-which-key-integration t)
 
-  (setq lsp-ui-sideline-show-diagnostics t
+  (setq lsp-warn-no-matched-clients nil
+        lsp-ui-sideline-show-diagnostics t
         lsp-ui-sideline-show-hover nil
-        lsp-ui-sideline-show-code-actions t ;; TODO
+        lsp-ui-sideline-show-code-actions t
         lsp-ui-doc-show-with-cursor nil
         lsp-ui-doc-show-with-mouse t
         lsp-ui-doc-alignment 'window
@@ -4419,7 +4411,7 @@ Enable LSP in go.mod files.
 
 Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
 #+begin_src elisp
-(after! flycheck
+(after! lsp-mode
   (set-next-checker! 'go-mode 'lsp 'golangci-lint))
 #+end_src
 
@@ -4429,7 +4421,7 @@ Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
 redundant if bash-language-server implements
 https://github.com/bash-lsp/bash-language-server/issues/104
 #+begin_src elisp
-(after! flycheck
+(after! lsp-mode
   (set-next-checker! 'sh-mode 'lsp 'sh-shellcheck))
 #+end_src
 
@@ -6004,14 +5996,14 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
-   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
-   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
-   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
-   :desc "Org planning"           "P" #'+psydev/org-view-planning
-   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
-   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
+   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
+   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
+   :desc "Org planning"           "p" #'+psydev/org-view-planning
+   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
+   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
+   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
    :desc "Org view"               "n" #'+hydra/org-view/body))
 #+end_src
 
@@ -6305,8 +6297,7 @@ Customize bindings.
         :desc "Goto last clock"
         "c"                #'org-clock-goto
         :desc "Goto clock history"
-        "C"                #'+org-clock-goto-select
-        "o"                nil)
+        "C"                #'+org-clock-goto-select)
 
   ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
   (define-key!
@@ -6747,6 +6738,13 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
 #+end_src
 
 ** Perspective
+
+Restore uniquify settings, against developer advice. I need this.
+#+begin_src elisp
+(add-hook! persp-mode
+  (defun +workspace-force-uniquify-buffer-style ()
+    (setq uniquify-buffer-name-style 'forward)))
+#+end_src
 
 Do not save indirect buffers in session.
 FIXME: Saving the 'vars' argument in [[file:~/.config/emacs/modules/ui/workspaces/config.el::defvar +workspaces--indirect-buffers-to-restore nil][doom's workspace configuration]] breaks the session file.
