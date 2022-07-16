@@ -14,7 +14,10 @@
 # Install and load the zi plugin manager.
 xsh module zi interactive
 
-# Load the tmux module first in case autostart is enabled.
+# Load the homebrew module first so that programs can be found in path.
+xsh module brew interactive:login
+
+# Load the tmux module early in case autostart is enabled.
 xsh module tmux interactive:login
 
 # Load the prompt module next to enable powerlevel10k instant prompt.
@@ -27,7 +30,6 @@ xsh module history   interactive
 
 # Load application-specific modules that have no specific requirements.
 xsh module archive    interactive
-xsh module brew       interactive
 xsh module direnv     interactive
 xsh module docker     interactive
 xsh module exa        interactive
