@@ -4,12 +4,12 @@
 #
 
 # Define the aliases for status commands.
-if [[ $TMUX_COMMAND_LOAD ]] {
+if [[ $TMUX_COMMAND_LOAD ]]; then
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" status-hostname="run '$0 hostname'"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" status-username="run '$0 username'"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" status-uptime="run '$0 uptime'"
   return
-}
+fi
 
 # Print the current user and command of the given tty.
 function tty_info {
@@ -52,14 +52,14 @@ function status_username {
   command=$(printf '%s' "$tty_info" | cut -d' ' -f3-)
 
   ssh_or_mosh_args=$(ssh_or_mosh_args "$command")
-  if [[ $ssh_or_mosh_args ]] {
+  if [[ $ssh_or_mosh_args ]]; then
     username=$(ssh -G ${=ssh_or_mosh_args} 2>/dev/null | awk 'NR > 2 { exit } ; /^user / { print $2 }')
     [[ ! $username ]] && username=$( \
       ssh -T -o ControlPath=none -o ProxyCommand="sh -c 'echo %%username%% %r >&2'" ${=ssh_or_mosh_args} 2>&1 \
         | awk '/^%username% / { print $2; exit }')
-  } else {
+  else
     username=$(printf '%s' "$tty_info" | cut -d' ' -f2)
-  }
+  fi
 
   printf '%s\n' "$username"
 }
@@ -71,7 +71,7 @@ function status_hostname {
   command=$(printf '%s' "$tty_info" | cut -d' ' -f3-)
 
   ssh_or_mosh_args=$(ssh_or_mosh_args "$command")
-  if [[ $ssh_or_mosh_args ]] {
+  if [[ $ssh_or_mosh_args ]]; then
     hostname=$(ssh -G ${=ssh_or_mosh_args} 2>/dev/null | awk 'NR > 2 { exit } ; /^hostname / { print $2 }')
     [[ ! "$hostname" ]] && hostname=$( \
       ssh -T -o ControlPath=none -o ProxyCommand="sh -c 'echo %%hostname%% %h >&2'" ${=ssh_or_mosh_args} 2>&1 \
@@ -83,9 +83,11 @@ function status_hostname {
       else \
         split($1, a, ".") ; print a[1] \
     }'
-  } else {
+  elif (( $+commands[hostname] )); then
+    command hostname
+  else
     command hostnamectl hostname
-  }
+  fi
 }
 
 # Display the local or remote uptime of the current tmux pane.
@@ -95,10 +97,10 @@ function status_uptime {
   command=$(printf '%s' "$tty_info" | cut -d' ' -f3-)
 
   ssh_or_mosh_args=$(ssh_or_mosh_args "$command")
-  if [[ $ssh_or_mosh_args ]] {
+  if [[ $ssh_or_mosh_args ]]; then
     printf '-remote-' # too expensive to fetch
     return
-  }
+  fi
 
   boot=0
   now=$(cut -d' ' -f1 </proc/uptime)
@@ -119,11 +121,11 @@ function status_uptime {
   '
 }
 
-while (( $# > 0 )) {
+while (( $# > 0 )); do
   case $1 in
     hostname) status_hostname ;;
     username) status_username ;;
     uptime) status_uptime ;;
   esac
   shift
-}
+done

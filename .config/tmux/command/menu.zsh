@@ -76,11 +76,11 @@ function tmux_pane_menu {
 # Define the aliases for menu commands.
 # NOTE: This approach is required for mouse menus, since the mouse target option (-t=)
 # will only work when display-menu is invoked directly from a binding.
-if [[ $TMUX_COMMAND_LOAD ]] {
+if [[ $TMUX_COMMAND_LOAD ]]; then
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-session="$(tmux_session_menu)"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-window="$(tmux_window_menu)"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-pane="$(tmux_pane_menu)"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-session-mouse="$(MOUSE=1 tmux_session_menu)"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-window-mouse="$(MOUSE=1 tmux_window_menu)"
   tmux set "command-alias[$(( TMUX_COMMAND_LOAD++ ))]" display-menu-pane-mouse="$(MOUSE=1 tmux_pane_menu)"
-}
+fi

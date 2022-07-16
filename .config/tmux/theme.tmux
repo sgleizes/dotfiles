@@ -43,7 +43,7 @@ set -g @themepack-status-right-area-left-format '#($TMUX_COMMAND_DIR/status.zsh 
 set -g @themepack-status-right-area-middle-format '#($TMUX_COMMAND_DIR/status.zsh username)'
 set -g @themepack-status-right-area-right-format '#($TMUX_COMMAND_DIR/status.zsh hostname)'
 # Set a bright color if the hostname is remote.
-set -g @powerline-status-right-area-right-bg "#{?#{!=:#($TMUX_COMMAND_DIR/status.zsh hostname),#(hostnamectl hostname)},#{@powerline-color-alt-1},#{@powerline-color-main-1}}"
+set -g @powerline-status-right-area-right-bg "#{?#{!=:#($TMUX_COMMAND_DIR/status.zsh hostname),#(cat /etc/hostname)},#{@powerline-color-alt-1},#{@powerline-color-main-1}}"
 # Set a red bg color if the current username is 'root'.
 set -g @powerline-status-right-area-middle-bg "#{?#{==:#($TMUX_COMMAND_DIR/status.zsh username),root},#{@powerline-color-alt-2},#{@powerline-color-grey-4}}"
 
