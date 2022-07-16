@@ -20,6 +20,7 @@ fi
 # Uninstall:
 # zi delete app/bat && zi cclear && rm -f $ZI[MAN_DIR]/man1/bat.1
 # zi cd app/btop && make uninstall PREFIX=$ZPFX && cd - && zi delete app/btop
+# zi delete app/delta
 # zi delete app/fd && zi cclear && rm -f $ZI[MAN_DIR]/man1/fd.1
 # zi cd app/neofetch && make uninstall PREFIX=$ZPFX && cd - && zi delete app/neofetch
 
