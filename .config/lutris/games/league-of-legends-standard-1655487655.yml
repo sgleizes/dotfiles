@@ -1,0 +1,19 @@
+game:
+  args: --locale=en_US
+  exe: /home/psydev/Games/league-of-legends/drive_c/Riot Games/Riot Client/RiotClientServices.exe
+  prefix: /home/psydev/Games/league-of-legends
+system:
+  disable_compositor: true
+  env:
+    DXVK_LOG_LEVEL: none
+    DXVK_STATE_CACHE_PATH: /home/psydev/Games/league-of-legends
+    STAGING_SHARED_MEMORY: '1'
+    WINE_LARGE_ADDRESS_AWARE: '1'
+    __GL_SHADER_DISK_CACHE: '1'
+    __GL_SHADER_DISK_CACHE_PATH: /home/psydev/Games/league-of-legends
+  gamemode: false
+  prelaunch_command: /home/psydev/Games/league-of-legends/syscall_check.sh
+  prelaunch_wait: true
+wine:
+  MouseWarpOverride: enable
+  version: lutris-ge-lol-7.0-2-x86_64
