@@ -4,8 +4,6 @@ activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-minimize=true
-minimizerule=3
 title=^\\[Self\\]
 titlematch=3
 types=1
@@ -31,8 +29,6 @@ activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-minimize=true
-minimizerule=3
 title=^\\[News\\]
 titlematch=3
 wmclass=navigator firefox
@@ -108,8 +104,6 @@ wmclassmatch=1
 Description=Firefox - Retro Gaming
 activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 activityrule=2
-desktopfile=emacsclient
-desktopfilerule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
 title=^\\[Retro Gaming\\]
@@ -124,7 +118,6 @@ Description=Firefox - Scratch
 activity=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-minsize=1,1
 title=^\\[Scratch\\]
 titlematch=3
 types=1
@@ -138,7 +131,6 @@ activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=3
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=3
-minsize=1,1
 wmclass=strawberry
 wmclassmatch=1
 
@@ -206,19 +198,6 @@ wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
-[30d79ae2-3561-4e57-8dd0-b9647f563c6c]
-Description=Copy of Firefox - Permaculture
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^\\[Permadev\\]
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
 [4]
 Description=Firefox - Jobs
 activity=b6d870af-2af7-49fe-bce4-606e462b99c6
@@ -243,16 +222,6 @@ titlematch=3
 types=1
 wmclass=navigator firefox
 wmclasscomplete=true
-wmclassmatch=1
-
-[5d1addf5-cd6f-4f07-b6b3-190f51f7a270]
-Description=Interdimensional Dolphin
-activity=00000000-0000-0000-0000-000000000000
-activityrule=3
-desktops=
-desktopsrule=3
-types=1
-wmclass=dolphin
 wmclassmatch=1
 
 [6]
@@ -294,17 +263,6 @@ wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
-[8dca9e72-c57f-4239-a7de-6dfcf99a7f2f]
-Description=Firefox - Scratch
-activity=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
-activityrule=2
-title=^\\[Scratch\\]
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
 [9]
 Description=Firefox - Phone
 activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
@@ -319,39 +277,6 @@ wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
-[95289e4c-2650-4a42-a8bc-b2b4267ff049]
-Description=Mailspring
-desktopfile=mailspring
-desktopfilerule=2
-wmclass=mailspring
-wmclassmatch=1
-
 [General]
 count=23
 rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
-
-[cfa5b3ce-7859-43cb-8d07-69db401e3ead]
-Description=Firefox - Logiciel Libre
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^\\[Logiciel Libre\\]
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
-[f2a0df06-2cc3-4771-aa7f-4b7d8933e877]
-Description=Firefox - Dev
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
-activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
-desktopsrule=2
-title=^\\[Dev\\]
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
