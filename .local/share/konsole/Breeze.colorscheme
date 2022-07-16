@@ -101,8 +101,11 @@ RandomHueRange=360
 RandomSaturationRange=100
 
 [General]
+Anchor=0.5,0.5
 Blur=false
 ColorRandomization=true
 Description=Breeze
-Opacity=0.9
+FillStyle=Tile
+Opacity=0.93
 Wallpaper=
+WallpaperOpacity=1

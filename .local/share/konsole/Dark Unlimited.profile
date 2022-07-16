@@ -33,5 +33,5 @@ HistoryMode=2
 ScrollBarPosition=2
 
 [Terminal Features]
-BidiRenderingEnabled=false
+BidiRenderingEnabled=true
 FlowControlEnabled=false
