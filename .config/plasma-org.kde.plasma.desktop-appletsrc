@@ -34,7 +34,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.haenau
 
 [Containments][100][Configuration]
-PreloadWeight=18
+PreloadWeight=10
 
 [Containments][100][Wallpaper][com.github.zren.inactiveblur][General]
 BlurRadius=20
@@ -62,7 +62,7 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
 [Containments][102][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][102][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -83,7 +83,7 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
 [Containments][105][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][105][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -100,6 +100,9 @@ lastScreen=2
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
+
+[Containments][114][Configuration]
+PreloadWeight=42
 
 [Containments][114][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -120,7 +123,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][115][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][115][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -141,7 +144,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][116][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][116][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -161,7 +164,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][117][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][117][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -181,7 +184,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][118][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][118][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -202,7 +205,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][119][Configuration]
-PreloadWeight=34
+PreloadWeight=26
 
 [Containments][119][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -222,6 +225,9 @@ location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
+[Containments][120][Configuration]
+PreloadWeight=42
+
 [Containments][120][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
 SlidePaths=/usr/share/wallpapers
@@ -239,6 +245,9 @@ lastScreen=2
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
+
+[Containments][121][Configuration]
+PreloadWeight=42
 
 [Containments][121][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -258,6 +267,9 @@ location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
+[Containments][122][Configuration]
+PreloadWeight=42
+
 [Containments][122][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
 SlidePaths=/usr/share/wallpapers
@@ -275,6 +287,9 @@ lastScreen=2
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
+
+[Containments][123][Configuration]
+PreloadWeight=42
 
 [Containments][123][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -294,6 +309,9 @@ location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
+[Containments][126][Configuration]
+PreloadWeight=42
+
 [Containments][126][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
 SlidePaths=/usr/share/wallpapers
@@ -311,6 +329,9 @@ lastScreen=2
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
+
+[Containments][127][Configuration]
+PreloadWeight=42
 
 [Containments][127][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -330,6 +351,16 @@ location=3
 plugin=org.kde.panel
 wallpaperplugin=org.kde.image
 
+[Containments][2][Applets][108]
+immutability=1
+plugin=org.kde.plasma.minimizeall
+
+[Containments][2][Applets][108][Configuration]
+PreloadWeight=42
+
+[Containments][2][Applets][108][Shortcuts]
+global=Meta+Shift+D
+
 [Containments][2][Applets][21]
 immutability=1
 plugin=org.kde.plasma.panelspacer
@@ -345,7 +376,7 @@ immutability=1
 plugin=org.kde.plasma.chiliclock
 
 [Containments][2][Applets][30][Configuration]
-PreloadWeight=84
+PreloadWeight=76
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -365,7 +396,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=5
+PreloadWeight=0
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -444,6 +475,7 @@ plugin=com.github.burlog.plasmoid-sysmon
 PreloadWeight=0
 
 [Containments][2][Applets][49][Configuration][config]
+default_color=#ffaa7f
 label=S
 max_value=4194300
 multiplier=1000
@@ -562,7 +594,7 @@ immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][6][Configuration]
-PreloadWeight=84
+PreloadWeight=76
 SystrayContainmentId=7
 
 [Containments][2][Applets][60]
@@ -579,7 +611,7 @@ showActivityName=false
 PreloadWeight=0
 
 [Containments][2][General]
-AppletOrder=47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;60
+AppletOrder=47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;108;60
 
 [Containments][7]
 activityId=
@@ -595,7 +627,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=73
+PreloadWeight=65
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -605,14 +637,14 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=25
+PreloadWeight=17
 
 [Containments][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=83
+PreloadWeight=75
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -636,7 +668,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=13
+PreloadWeight=5
 
 [Containments][7][Applets][16]
 immutability=1
@@ -650,14 +682,14 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=73
+PreloadWeight=65
 
 [Containments][7][Applets][18]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=84
+PreloadWeight=76
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -704,7 +736,7 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=39
+PreloadWeight=31
 selectedConfig=0
 
 [Containments][7][Applets][73]
