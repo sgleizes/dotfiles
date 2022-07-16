@@ -34,7 +34,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.haenau
 
 [Containments][100][Configuration]
-PreloadWeight=34
+PreloadWeight=18
 
 [Containments][100][Wallpaper][com.github.zren.inactiveblur][General]
 BlurRadius=20
@@ -48,6 +48,278 @@ SlidePaths=/usr/share/wallpapers
 [Containments][100][Wallpaper][org.kde.potd][General]
 FillMode=2
 Provider=natgeo
+
+[Containments][102]
+ItemGeometries-1920x1080=
+ItemGeometries-2560x1440=
+ItemGeometriesHorizontal=
+activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.potd
+
+[Containments][102][Configuration]
+PreloadWeight=34
+
+[Containments][102][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+
+[Containments][102][Wallpaper][org.kde.potd][General]
+FillMode=2
+Provider=bing
+
+[Containments][105]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
+activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.potd
+
+[Containments][105][Configuration]
+PreloadWeight=34
+
+[Containments][105][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+
+[Containments][105][Wallpaper][org.kde.potd][General]
+FillMode=2
+Provider=bing
+
+[Containments][114]
+activityId=880691c7-fa6e-4255-a852-acde63acc631
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][114][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][114][Wallpaper][org.kde.potd][General]
+Category=1065376
+FillMode=2
+Provider=unsplash
+
+[Containments][115]
+activityId=880691c7-fa6e-4255-a852-acde63acc631
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][115][Configuration]
+PreloadWeight=34
+
+[Containments][115][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][115][Wallpaper][org.kde.potd][General]
+Category=1065376
+FillMode=2
+Provider=unsplash
+
+[Containments][116]
+activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][116][Configuration]
+PreloadWeight=34
+
+[Containments][116][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+
+[Containments][116][Wallpaper][org.kde.potd][General]
+Category=1065374
+FillMode=2
+Provider=unsplash
+
+[Containments][117]
+activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][117][Configuration]
+PreloadWeight=34
+
+[Containments][117][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+
+[Containments][117][Wallpaper][org.kde.potd][General]
+Category=1065374
+FillMode=2
+Provider=unsplash
+
+[Containments][118]
+activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][118][Configuration]
+PreloadWeight=34
+
+[Containments][118][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][118][Wallpaper][org.kde.potd][General]
+Category=1111644
+FillMode=2
+Provider=unsplash
+
+[Containments][119]
+activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][119][Configuration]
+PreloadWeight=34
+
+[Containments][119][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][119][Wallpaper][org.kde.potd][General]
+Category=1111644
+FillMode=2
+Provider=unsplash
+
+[Containments][120]
+activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][120][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][120][Wallpaper][org.kde.potd][General]
+Category=1339090
+FillMode=2
+Provider=unsplash
+
+[Containments][121]
+activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][121][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][121][Wallpaper][org.kde.potd][General]
+Category=1339090
+FillMode=2
+Provider=unsplash
+
+[Containments][122]
+activityId=e1fb771e-29d1-4641-a442-b99b55616702
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][122][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][122][Wallpaper][org.kde.potd][General]
+Category=1065390
+FillMode=2
+Provider=unsplash
+
+[Containments][123]
+activityId=e1fb771e-29d1-4641-a442-b99b55616702
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][123][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][123][Wallpaper][org.kde.potd][General]
+Category=1065390
+FillMode=2
+Provider=unsplash
+
+[Containments][126]
+activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
+formfactor=0
+immutability=1
+lastScreen=3
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][126][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][126][Wallpaper][org.kde.potd][General]
+Category=1339276
+FillMode=2
+Provider=unsplash
+
+[Containments][127]
+activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.desktopcontainment
+wallpaperplugin=org.kde.potd
+
+[Containments][127][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
+SlidePaths=/usr/share/wallpapers
+
+[Containments][127][Wallpaper][org.kde.potd][General]
+Category=1339276
+FillMode=2
+Provider=unsplash
 
 [Containments][2]
 activityId=
@@ -73,7 +345,7 @@ immutability=1
 plugin=org.kde.plasma.chiliclock
 
 [Containments][2][Applets][30][Configuration]
-PreloadWeight=100
+PreloadWeight=84
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -241,7 +513,7 @@ immutability=1
 plugin=com.github.davide-sd.ipaddress
 
 [Containments][2][Applets][53][Configuration]
-PreloadWeight=5
+PreloadWeight=0
 
 [Containments][2][Applets][53][Configuration][Appearance]
 labelColor=#ffffff
@@ -283,14 +555,14 @@ PreloadWeight=0
 
 [Containments][2][Applets][55][Configuration][General]
 expanding=false
-length=946
+length=950
 
 [Containments][2][Applets][6]
 immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][6][Configuration]
-PreloadWeight=100
+PreloadWeight=84
 SystrayContainmentId=7
 
 [Containments][2][Applets][60]
@@ -323,7 +595,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=84
+PreloadWeight=73
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -333,14 +605,14 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=41
+PreloadWeight=25
 
 [Containments][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=94
+PreloadWeight=83
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
@@ -364,7 +636,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=24
+PreloadWeight=13
 
 [Containments][7][Applets][16]
 immutability=1
@@ -378,14 +650,14 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=84
+PreloadWeight=73
 
 [Containments][7][Applets][18]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=100
+PreloadWeight=84
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -432,7 +704,7 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=45
+PreloadWeight=39
 selectedConfig=0
 
 [Containments][7][Applets][73]
@@ -630,8 +902,8 @@ PreloadWeight=0
 
 [Containments][88][General]
 ToolBoxButtonState=topcenter
-ToolBoxButtonX=577
-ToolBoxButtonY=24
+ToolBoxButtonX=786
+ToolBoxButtonY=28
 filterMimeTypes=\\0
 iconSize=2
 sortMode=-1
@@ -688,7 +960,7 @@ arrangement=1
 url=file:///home/psydev/Projects/perma
 
 [Containments][90][Wallpaper][org.kde.image][General]
-Image=/home/psydev/Pictures/Wallpapers/Rise.jpg
+Image=file:///home/psydev/Pictures/Wallpapers/Rise.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][90][Wallpaper][org.kde.potd][General]
@@ -712,6 +984,9 @@ wallpaperplugin=org.kde.image
 PreloadWeight=0
 
 [Containments][91][General]
+ToolBoxButtonState=topcenter
+ToolBoxButtonX=786
+ToolBoxButtonY=28
 arrangement=1
 url=file:///home/psydev/Projects/env
 

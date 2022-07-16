@@ -6,7 +6,7 @@
 PLASMA_POTD="$HOME/.cache/plasmashell/plasma_engine_potd"
 SCREENLOCKER_POTD="$HOME/.cache/kscreenlocker_greet/plasma_engine_potd"
 
-if [ -d "$PLASMA_POTD" ]; then
+if [ ! -d "$SCREENLOCKER_POTD" ] && [ -d "$PLASMA_POTD" ]; then
   mkdir -p "${SCREENLOCKER_POTD%/*}"
   ln -s "$PLASMA_POTD" "$SCREENLOCKER_POTD"
 fi
