@@ -65,6 +65,12 @@
 !/syncthing/config.xml
 /youtube-dlg/**
 !/youtube-dlg/settings.json
+/enchant/**
+!/enchant/enchant.ordering
+!/enchant/en.*
+!/enchant/en_US.*
+!/enchant/fr.*
+!/enchant/fr_FR.*
 
 # Exceptions for directories with interesting contents.
 /doom/*.el
