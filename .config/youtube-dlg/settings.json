@@ -26,7 +26,7 @@
         "webm",
         "mp4"
     ],
-    "save_path": "/home/psydev/Downloads",
+    "save_path": "/home/psydev/Audios",
     "output_template": "%(uploader)s/%(title)s.%(ext)s",
     "show_completion_popup": false,
     "locale_name": "en_US",
@@ -36,7 +36,8 @@
     "save_path_dirs": [
         "/home/psydev/Downloads",
         "/home/psydev/Videos",
-        "/home/psydev/Audios"
+        "/home/psydev/Audios",
+        "/home/psydev/Audios/Pending"
     ],
     "audio_format": "vorbis",
     "max_downloads": 0,
