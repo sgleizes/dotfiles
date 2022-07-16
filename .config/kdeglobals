@@ -137,7 +137,7 @@ emoticonsTheme=EmojiOne
 parseMode=2
 
 [General]
-BrowserApplication=firefox.desktop
+BrowserApplication=userapp-Firefox-D3SRI0.desktop
 ColorSchemeHash=d0b3d2da363261958945ede41bfed4e1744dd286
 Name=Breeze Dark
 UseSystemBell=true
@@ -163,7 +163,6 @@ contrast=4
 widgetStyle=Breeze
 
 [KScreen]
-ScaleFactor=1
 ScreenScaleFactors=eDP-1=1;DP-1=1;HDMI-1=1;DP-2=1;HDMI-2=1;DP-3=1;HDMI-3=1;
 
 [PreviewSettings]

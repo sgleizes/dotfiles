@@ -990,7 +990,7 @@ tagPaths=1
 
 [Database Settings]
 Database Connectoptions=UNIX_SOCKET=/home/psydev/.local/share/digikam/db_misc/mysql.socket
-Database Encrypted Password=AwKvr68=
+Database Encrypted Password=AwJDQ0M=
 Database Hostname=
 Database Name=digikam
 Database Name Face=digikam
