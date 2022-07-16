@@ -1154,15 +1154,6 @@ Add a global hydra for buffer management.
 
 See [[*Centaur tabs][Centaur Tabs]].
 
-** Images
-
-Override quit binding from popups that prevents the buffer from being killed.
-#+begin_src elisp
-(after! image-mode
-  (map! :map image-mode-map
-        :n "q" #'kill-current-buffer))
-#+end_src
-
 ** Line numbers
 
 Relative line numbers are fantastic for knowing how far away line numbers are,
@@ -4072,7 +4063,7 @@ Disable ~shfmt~ formatting for zsh buffers (not supported).
 Redefine the ~shfmt~ formatter with consistent indent settings.
 Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
 #+begin_src elisp
-(after! format-all
+(after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"
       "-s"   ; simplify the code
@@ -6305,8 +6296,7 @@ Customize bindings.
         :desc "Goto last clock"
         "c"                #'org-clock-goto
         :desc "Goto clock history"
-        "C"                #'+org-clock-goto-select
-        "o"                nil)
+        "C"                #'+org-clock-goto-select)
 
   ;; Cancel remapping of org-set-tags-command (behavior is much more complete)
   (define-key!
