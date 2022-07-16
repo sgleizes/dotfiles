@@ -1,0 +1,11 @@
+#
+# Patterns of interesting paths in XDG_BIN_HOME.
+#
+
+# Ignore everything by default and add specific files to track.
+/*
+!/.git*
+
+# Subdirectories with managed programs.
+!/my/
+!/xdg/
