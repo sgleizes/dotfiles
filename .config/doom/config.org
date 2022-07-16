@@ -6004,14 +6004,14 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming sidebar"   "u" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org upcoming"           "U" #'+psydev/org-view-upcoming
-   :desc "Org dashboard sidebar"  "d" #'+psydev/org-sidebar-dashboard
-   :desc "Org dashboard"          "D" #'+psydev/org-view-dashboard
-   :desc "Org planning sidebar"   "p" #'+psydev/org-sidebar-planning
-   :desc "Org planning"           "P" #'+psydev/org-view-planning
-   :desc "Org backlog sidebar"    "b" #'+psydev/org-sidebar-backlog
-   :desc "Org backlog"            "B" #'+psydev/org-view-backlog
+   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
+   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
+   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
+   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
+   :desc "Org planning"           "p" #'+psydev/org-view-planning
+   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
+   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
+   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
    :desc "Org view"               "n" #'+hydra/org-view/body))
 #+end_src
 
@@ -6747,6 +6747,13 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
 #+end_src
 
 ** Perspective
+
+Restore uniquify settings, against developer advice. I need this.
+#+begin_src elisp
+(add-hook! persp-mode
+  (defun +workspace-force-uniquify-buffer-style ()
+    (setq uniquify-buffer-name-style 'forward)))
+#+end_src
 
 Do not save indirect buffers in session.
 FIXME: Saving the 'vars' argument in [[file:~/.config/emacs/modules/ui/workspaces/config.el::defvar +workspaces--indirect-buffers-to-restore nil][doom's workspace configuration]] breaks the session file.
