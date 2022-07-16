@@ -1,0 +1,12 @@
+[ElisaFileIndexer]
+RootPath[$e]=$HOME/Audios/Musique
+
+[PlayerSettings]
+UseFavoriteStyleRatings=true
+
+[UiSettings]
+ColorScheme=
+
+[Views]
+EmbeddedView=AllGenres
+SortOrderPreferences=Artist::Album::==AscendingOrder
