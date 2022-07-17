@@ -4563,6 +4563,12 @@ Configure the context shown when revealing an org heading.
         (default . ancestors)))
 #+end_src
 
+Enable auto-revert in org mode buffers to avoid too many syncthing conflicts.
+#+begin_src elisp
+(after! org
+  (add-hook! org-mode #'auto-revert-mode))
+#+end_src
+
 *** Document Structure
 
 Configure the behavior of M-RET and friends, and ensure that headings are terminated by blank lines.
