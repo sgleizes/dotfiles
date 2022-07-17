@@ -104,7 +104,7 @@ done
 #+end_src
 
 The desktop entry must now be modified to use the above script and icon:
-#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop :mkdirp yes
+#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
 [Desktop Entry]
 Name=Emacs (Client)
 GenericName=Text Editor
@@ -115,9 +115,9 @@ Icon=doom-emacs
 Type=Application
 Terminal=false
 Categories=Development;TextEditor;
-Keywords=emacsclient;
 StartupNotify=true
 StartupWMClass=Emacs
+Keywords=emacsclient;
 #+end_src
 
 * Doom Modules
@@ -724,10 +724,10 @@ Add a global hydra to change the font-size interactively.
 (delq! t custom-theme-load-path) ; Remove default emacs theme from search path
 #+end_src
 
-Let's make graphical frames slightly transparent.
+Make graphical frames slightly transparent.
 #+begin_src elisp
 (add-to-list 'default-frame-alist
-             '(alpha . (90 . 90)))
+             '(alpha . (95 . 95)))
 #+end_src
 
 Do not show encoding in the modeline if the value is the default =LF UTF-8=.
@@ -1329,6 +1329,7 @@ Adapt solar holidays to diary-compatible expressions.
 Add support for included diary files.
 #+begin_src elisp
 (after! calendar
+  (setq diary-file "~/.local/share/emacs/etc/diary")
   (add-hook 'diary-list-entries-hook #'diary-include-other-diary-files)
   (add-hook 'diary-list-entries-hook #'diary-sort-entries t)
   (add-hook 'diary-mark-entries-hook #'diary-mark-included-diary-files))
@@ -4560,6 +4561,12 @@ Configure the context shown when revealing an org heading.
         (bookmark-jump . lineage)
         (isearch . lineage)
         (default . ancestors)))
+#+end_src
+
+Enable auto-revert in org mode buffers to avoid too many syncthing conflicts.
+#+begin_src elisp
+(after! org
+  (add-hook! org-mode #'auto-revert-mode))
 #+end_src
 
 *** Document Structure
