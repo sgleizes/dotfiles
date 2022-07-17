@@ -104,7 +104,7 @@ done
 #+end_src
 
 The desktop entry must now be modified to use the above script and icon:
-#+begin_src conf :tangle ~/.local/share/applications/emacsclient.desktop :mkdirp yes
+#+begin_src conf :tangle ~/.local/share/applications/emacs.desktop :mkdirp yes
 [Desktop Entry]
 Name=Emacs (Client)
 GenericName=Text Editor
@@ -115,9 +115,9 @@ Icon=doom-emacs
 Type=Application
 Terminal=false
 Categories=Development;TextEditor;
-Keywords=emacsclient;
 StartupNotify=true
 StartupWMClass=Emacs
+Keywords=emacsclient;
 #+end_src
 
 * Doom Modules
