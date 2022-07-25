@@ -47,14 +47,16 @@ display=Display\tMeta+P,Display\tMeta+P,Switch Display
 _k_friendly_name=Custom Shortcuts Service
 {0a42811a-6f12-4541-b0ea-4026ebd6fa5c}=Meta+Shift+S,none,Open KSysGuard
 {174484f8-ce99-4f17-a751-65dab783c632}=Meta+Shift+O,none,Open KOrganizer
+{2c73aec9-d058-44c4-9c92-c9ef1c09ce32}=,none,Open Enpass Assistant
 {2ef1e646-d3e4-4b53-b6a4-bd52ebf1b154}=Meta+Return,none,Org Capture
-{5eadaaf5-a7d7-497b-be42-486b69eeb729}=Meta+Shift+V,none,Open Enpass
+{5eadaaf5-a7d7-497b-be42-486b69eeb729}=Meta+|,none,Open Enpass
 {60caaefd-902d-44a0-9073-c5bfcaf39455}=Meta+Shift+Y,none,Open YAC Reader
 {6ef95682-4c6e-4c94-a0ec-a1d2b81ed87e}=Meta+.,none,Open KCharSelect
 {8bcb9ff3-81db-4ad8-8b69-329fade3fda3}=Meta+Shift+C,none,Open Bleachbit
 {d4398f24-a434-4e64-bed1-91912dae476d}=Meta+Shift+T,none,Open KTorrent
 {d688d6f5-a229-4bed-8ffb-20484940d15e}=Meta+?,none,Show Keyboard Layout
 {dce4f073-f3aa-434b-9784-160aaa41d763}=Meta+\\,\tTools,none,Open System Settings
+{defd7989-dd78-4c5e-8f1c-be30efb9a3fc}=Meta+\\\\,none,Open Enpass Assistant
 
 [kmix]
 _k_friendly_name=Audio Volume
@@ -348,6 +350,7 @@ activate widget 263=none,none,Activate Application Launcher Widget
 activate widget 3=Alt+F1,none,Activate Application Launcher Widget
 activate widget 36=none,none,Activate Virtual Desktop Bar Widget
 activate widget 71=none,none,Activate Syncthing Widget
+activate widget 72=,none,Activate Syncthing Widget
 clear-history=none,,Clear Clipboard History
 clipboard_action=Ctrl+Alt+X,Meta+Ctrl+X,Automatic Action Popup Menu
 cycle-panels=Meta+Alt+P,Meta+Alt+P,Move keyboard focus between panels

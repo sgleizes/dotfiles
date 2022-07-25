@@ -376,7 +376,7 @@ immutability=1
 plugin=org.kde.plasma.chiliclock
 
 [Containments][2][Applets][30][Configuration]
-PreloadWeight=76
+PreloadWeight=100
 
 [Containments][2][Applets][30][Configuration][Appearance]
 customOffsetX=37.03703703703704
@@ -396,7 +396,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=0
+PreloadWeight=10
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -545,7 +545,7 @@ immutability=1
 plugin=com.github.davide-sd.ipaddress
 
 [Containments][2][Applets][53][Configuration]
-PreloadWeight=0
+PreloadWeight=5
 
 [Containments][2][Applets][53][Configuration][Appearance]
 labelColor=#ffffff
@@ -594,7 +594,7 @@ immutability=1
 plugin=org.kde.plasma.systemtray
 
 [Containments][2][Applets][6][Configuration]
-PreloadWeight=76
+PreloadWeight=100
 SystrayContainmentId=7
 
 [Containments][2][Applets][60]
@@ -627,7 +627,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=65
+PreloadWeight=75
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -668,7 +668,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=5
+PreloadWeight=10
 
 [Containments][7][Applets][16]
 immutability=1
@@ -682,14 +682,14 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=65
+PreloadWeight=80
 
 [Containments][7][Applets][18]
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=76
+PreloadWeight=100
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -736,15 +736,18 @@ immutability=1
 plugin=martchus.syncthingplasmoid
 
 [Containments][7][Applets][72][Configuration]
-PreloadWeight=31
+PreloadWeight=100
+brightColors=true
+passiveStates=
 selectedConfig=0
+size=20,25
 
 [Containments][7][Applets][73]
 immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][7][Applets][73][Configuration]
-PreloadWeight=0
+PreloadWeight=10
 
 [Containments][7][Applets][74]
 immutability=1

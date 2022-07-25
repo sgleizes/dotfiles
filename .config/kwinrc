@@ -170,7 +170,7 @@ ElectricBorderDelay=150
 ElectricBorderMaximize=true
 ElectricBorderTiling=true
 ElectricBorders=1
-Placement=Smart
+Placement=Centered
 SeparateScreenFocus=true
 
 [org.kde.kdecoration2]
