@@ -1,0 +1,12 @@
+# Yamllint configuration file.
+# It extends the default conf by adjusting some options.
+# Reference: https://yamllint.readthedocs.io/en/stable/rules.html
+# Default: https://yamllint.readthedocs.io/en/stable/configuration.html#default-configuration
+
+extends: default
+
+rules:
+  comments:
+    min-spaces-from-content: 1
+  document-start: disable
+  line-length: disable
