@@ -4084,6 +4084,17 @@ Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
     :modes 'sh-mode))
 #+end_src
 
+*** Bindings
+
+Map format all global toogle binding and remap flycheck toggle.
+#+begin_src elisp
+(map! :leader :prefix "t"
+      :desc "Format"
+      "f" #'format-all-mode
+      :desc "Flycheck"
+      "v" #'flycheck-mode)
+#+end_src
+
 ** Go
 *** Bindings
 
