@@ -7,6 +7,9 @@
         <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
+        <device id="3XI7HSK-27UBNSP-252COYE-D52L2U6-PFFN7T4-UOIVDAE-F7ZC6WT-VYRPRAJ" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
         <minDiskFree unit="%">1</minDiskFree>
         <versioning type="simple">
             <param key="cleanoutDays" val="7"></param>
@@ -79,6 +82,9 @@
             <encryptionPassword></encryptionPassword>
         </device>
         <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" introducedBy="">
+            <encryptionPassword></encryptionPassword>
+        </device>
+        <device id="3XI7HSK-27UBNSP-252COYE-D52L2U6-PFFN7T4-UOIVDAE-F7ZC6WT-VYRPRAJ" introducedBy="">
             <encryptionPassword></encryptionPassword>
         </device>
         <minDiskFree unit="%">1</minDiskFree>
@@ -300,6 +306,16 @@
         <remoteGUIPort>0</remoteGUIPort>
     </device>
     <device id="XFVCXV7-U3AZY7Y-HY35VWY-QS5U6WD-WKVPGH5-FEBEPD5-NHTR7KR-XTP2OAV" name="android-fp3" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
+        <address>dynamic</address>
+        <paused>false</paused>
+        <autoAcceptFolders>false</autoAcceptFolders>
+        <maxSendKbps>0</maxSendKbps>
+        <maxRecvKbps>0</maxRecvKbps>
+        <maxRequestKiB>0</maxRequestKiB>
+        <untrusted>false</untrusted>
+        <remoteGUIPort>0</remoteGUIPort>
+    </device>
+    <device id="3XI7HSK-27UBNSP-252COYE-D52L2U6-PFFN7T4-UOIVDAE-F7ZC6WT-VYRPRAJ" name="ubuntu-latitude" compression="metadata" introducer="false" skipIntroductionRemovals="false" introducedBy="">
         <address>dynamic</address>
         <paused>false</paused>
         <autoAcceptFolders>false</autoAcceptFolders>
