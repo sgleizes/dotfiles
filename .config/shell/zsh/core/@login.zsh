@@ -48,6 +48,7 @@ export KDEHOME="$XDG_CONFIG_HOME/kde4" # legacy way for KDE4 applications
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
 export WGETRC="$XDG_CONFIG_HOME/wget/config"
+export HTML_TIDY="$XDG_CONFIG_HOME/tidy/tidy.conf"
 
 # XDG_DATA_HOME environment overrides.
 # export GNUPGHOME="$XDG_DATA_HOME/gnupg" # NOTE: Does not really work for all programs
