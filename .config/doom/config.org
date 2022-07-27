@@ -4678,8 +4678,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
                     ;; (todo-keyword)
                     ('todo)))))))
 
-      (when (org-invisible-p)
-        (org-show-hidden-entry))
+      (when (org-invisible-p2) ; NOTE: EDIT: Use org-invisible-p2 instead of org-invisible
+        (org-fold-show-hidden-entry))
       (when (and (bound-and-true-p evil-local-mode)
                  (not (evil-emacs-state-p)))
         (evil-insert 1))))
