@@ -140,10 +140,6 @@ if (( $+commands[espeak-ng] )); then
   alias speak-fr='speak-ng -v roa/fr'
 fi
 
-if [[ -d $XDG_PROJECTS_DIR/env/util/xdg-ninja ]]; then
-  alias xdg-ninja='$XDG_PROJECTS_DIR/env/util/xdg-ninja/xdg-ninja.sh'
-fi
-
 #
 # External core plugins
 #
@@ -170,3 +166,9 @@ zi light-mode wait'0b' lucid for \
   pick'.dircolors.sh' \
   atload'zstyle ":completion:*:default" list-colors ${(s.:.)LS_COLORS}' \
   @trapd00r/LS_COLORS
+
+# Install xdg-ninja: https://github.com/b3nj5m1n/xdg-ninja
+zi light-mode for id-as'app/xdg-ninja' \
+  as'null' lbin'!xdg-ninja.sh -> xdg-ninja' \
+  atclone'\rm -f programs/{bash,profile,zsh}.json' \
+  @b3nj5m1n/xdg-ninja
