@@ -17,7 +17,7 @@
 set -s default-terminal "$TMUX_TERM"
 
 # Enable true color.
-set -ga terminal-overrides ",xterm-256color:Tc"
+set -ga terminal-overrides ",$TMUX_TERM:Tc"
 
 # Faster command sequences. Over a slow network this might need to be increased.
 set -s escape-time 10

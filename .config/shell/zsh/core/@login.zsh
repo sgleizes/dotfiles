@@ -51,6 +51,8 @@ export WGETRC="$XDG_CONFIG_HOME/wget/config"
 export HTML_TIDY="$XDG_CONFIG_HOME/tidy/tidy.conf"
 
 # XDG_DATA_HOME environment overrides.
+export TERMINFO="$XDG_DATA_HOME/terminfo"
+export TERMINFO_DIRS="$XDG_DATA_HOME/terminfo:/usr/share/terminfo"
 # export GNUPGHOME="$XDG_DATA_HOME/gnupg" # NOTE: Does not really work for all programs
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export SSB_HOME="$XDG_DATA_HOME/zoom"
@@ -67,9 +69,6 @@ export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
 # It should be located in XDG_RUNTIME_DIR but sddm does not allow that.
 [[ -f "$XDG_CACHE_HOME/Xauthority" ]] \
   && export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
-
-# Make GTK applications use the KDE file selection dialog.
-export GTK_USE_PORTAL=1
 
 # Create parent directories for programs requiring it.
 command mkdir -p \
@@ -88,6 +87,9 @@ path=($XDG_BIN_HOME $XDG_BIN_HOME/my $XDG_BIN_HOME/xdg $path)
 #
 # Session environment
 #
+
+# Make GTK applications use the KDE file selection dialog.
+export GTK_USE_PORTAL=1
 
 if (( $+commands[optimus-manager] && $+commands[gamemoderun] )); then
   # Configure gamemode to run games on the Nvidia GPU (optimus-manager) and with mangohud.
@@ -111,6 +113,10 @@ if (( $+commands[wine] )); then
   # See also https://forum.winehq.org/viewtopic.php?f=8&t=36177
   export VK_ICD_FILENAMES='/usr/share/vulkan/icd.d/intel_icd.x86_64.json'
 fi
+
+#
+# Additional PATH directories.
+#
 
 if (( $+commands[go] )); then
   # Add installed go binaries to PATH.
