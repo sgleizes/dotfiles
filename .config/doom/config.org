@@ -4206,7 +4206,8 @@ Configure ~go-gen-test~ integration.
 (use-package! hydra-posframe
   :after hydra
   :config
-  (hydra-posframe-mode)
+  (when (display-graphic-p)
+    (hydra-posframe-mode))
   (setq hydra-posframe-border-width 1
         hydra-posframe-poshandler #'posframe-poshandler-frame-bottom-center
         hydra-posframe-parameters `((left-fringe . 15)
