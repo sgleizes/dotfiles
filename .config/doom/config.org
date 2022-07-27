@@ -860,9 +860,6 @@ Improve terminal integration. Taken from the ~tty~ module.
 ;; and will switch back to it when Emacs is started or resumed. A nil
 ;; `visible-cursor' prevents this.
 (setq visible-cursor nil)
-
-;; Enable the mouse in terminal Emacs
-(add-hook 'tty-setup-hook #'xterm-mouse-mode)
 #+end_src
 
 Disable minor modes that are undesired in terminal frames.
@@ -3917,11 +3914,11 @@ Customize, disabled by default for now as I often mistype and set marks unwillin
 
 #+begin_src elisp
 (add-hook! 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
-;; Restore my default terminal cursor.
-(add-hook! 'delete-terminal-functions
-  (defun +doom-restore-terminal-cursor (terminal)
-    (unless (display-graphic-p terminal)
-      (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'bar)))))
+
+;; Override tmux check function as it doesn't seem to work with tmux escape sequences.
+(after! evil-terminal-cursor-changer
+  (unless (display-graphic-p)
+    (defun etcc--in-tmux? () nil)))
 #+end_src
 
 ** Fasd
@@ -4206,7 +4203,8 @@ Configure ~go-gen-test~ integration.
 (use-package! hydra-posframe
   :after hydra
   :config
-  (hydra-posframe-mode)
+  (when (display-graphic-p)
+    (hydra-posframe-mode))
   (setq hydra-posframe-border-width 1
         hydra-posframe-poshandler #'posframe-poshandler-frame-bottom-center
         hydra-posframe-parameters `((left-fringe . 15)
@@ -4678,8 +4676,8 @@ Patch doom's org-insert-item variant to better respect blank settings.
                     ;; (todo-keyword)
                     ('todo)))))))
 
-      (when (org-invisible-p)
-        (org-show-hidden-entry))
+      (when (org-invisible-p2) ; NOTE: EDIT: Use org-invisible-p2 instead of org-invisible
+        (org-fold-show-hidden-entry))
       (when (and (bound-and-true-p evil-local-mode)
                  (not (evil-emacs-state-p)))
         (evil-insert 1))))
