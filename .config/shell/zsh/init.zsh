@@ -34,6 +34,7 @@ xsh module archive    interactive
 xsh module direnv     interactive
 xsh module docker     interactive
 xsh module exa        interactive
+xsh module ssh        interactive
 xsh module gpg        interactive:login
 xsh module pager      interactive:env
 xsh module rclone     interactive
