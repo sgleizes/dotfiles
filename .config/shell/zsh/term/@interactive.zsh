@@ -10,6 +10,6 @@
 
 # To setup xterm-24bit, run the following from this module directory:
 # /usr/bin/tic -x -o ~/.local/share/terminfo xterm-24bit.terminfo
-if [[ -f $TERMINFO/x/xterm-24bit ]]; then
+if [[ $TERM != (dumb|linux) && -f $TERMINFO/x/xterm-24bit ]]; then
   export TERM=xterm-24bit
 fi
