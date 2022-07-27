@@ -34,9 +34,13 @@ fi
 # NOTE: The parameters below are exported to be used from within the tmux config file.
 
 # Figure out the TERM to use inside tmux.
-(( $terminfo[colors] >= 256 )) \
-  && export TMUX_TERM='tmux-256color' \
-  || export TMUX_TERM='tmux'
+if [[ $terminfo[setb24] ]]; then
+  export TMUX_TERM="$TERM"
+elif (( $terminfo[colors] >= 256 )); then
+  export TMUX_TERM='tmux-256color'
+else
+  export TMUX_TERM='tmux'
+fi
 
 # Path to the tmux command history.
 export TMUX_HISTORY="$XDG_STATE_HOME/tmux/history"

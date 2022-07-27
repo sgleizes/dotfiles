@@ -11,15 +11,16 @@
 #   ZSH_PROF='' zsh -ic zprof
 (( $+ZSH_PROF )) && zmodload zsh/zprof
 
+# Setup the terminal first.
+xsh module term interactive
+
 # Install and load the zi plugin manager.
 xsh module zi interactive
-
-# Load the homebrew module first so that programs can be found in path.
+# Load the homebrew module so that programs can be found in path.
 xsh module brew interactive:login
 
 # Load the tmux module early in case autostart is enabled.
 xsh module tmux interactive:login
-
 # Load the prompt module next to enable powerlevel10k instant prompt.
 xsh module prompt interactive
 
@@ -33,6 +34,7 @@ xsh module archive    interactive
 xsh module direnv     interactive
 xsh module docker     interactive
 xsh module exa        interactive
+xsh module ssh        interactive
 xsh module gpg        interactive:login
 xsh module pager      interactive:env
 xsh module rclone     interactive
