@@ -122,8 +122,9 @@
   wdt = difftool
   wr  = restore --staged --worktree
   wrp = restore --staged --worktree --patch
+  wt  = worktree
   wc  = clean
-  wx = rm -r
+  wx  = rm -r
 
   # Miscellaneous
   rem = remote --verbose

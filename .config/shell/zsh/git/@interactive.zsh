@@ -86,11 +86,11 @@ fi
 function git $_git_wrapper_commands {
   case $1 in
     # Wrap the git clone command to prettify output.
-    clone)
+    clone|fc)
       command "$0" clone --progress "${@:2}" \
         |& { $ZI[BIN_DIR]/lib/zsh/git-process-output.zsh || cat; } 2>/dev/null ;;
     # Wrap the git stash clear command for safety.
-    stash)
+    stash|s)
       [[ "$2" == 'clear' ]] && { git-stash-clear-interactive; return }
       command "$0" "$@" ;;
     # Bypass hub commands that conflict with better 'git-extras' commands.
