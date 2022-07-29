@@ -49,6 +49,8 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export PSQLRC="$XDG_CONFIG_HOME/psql/psqlrc"
 export WGETRC="$XDG_CONFIG_HOME/wget/config"
 export HTML_TIDY="$XDG_CONFIG_HOME/tidy/tidy.conf"
+export CDS_FILE="$XDG_CONFIG_HOME/cdsctl/config"
+export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
 
 # XDG_DATA_HOME environment overrides.
 export TERMINFO="$XDG_DATA_HOME/terminfo"
@@ -57,6 +59,7 @@ export TERMINFO_DIRS="$XDG_DATA_HOME/terminfo:/usr/share/terminfo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export SSB_HOME="$XDG_DATA_HOME/zoom"
 export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
+export KREW_ROOT="$XDG_DATA_HOME/krew"
 
 # XDG_STATE_HOME environment overrides.
 export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
@@ -118,6 +121,11 @@ fi
 # Additional PATH directories.
 #
 
+if [[ -s "$XDG_LIB_HOME/gvm/scripts/gvm" ]]; then
+  # Source the default GVM environment to make go tools and programs available.
+  source "/home/sgleizes/.local/lib/gvm/scripts/gvm"
+fi
+
 if (( $+commands[go] )); then
   # Add installed go binaries to PATH.
   path+=($GOPATH/bin)
@@ -139,4 +147,9 @@ fi
 if [[ -f $CARGO_HOME/bin/cargo ]]; then
   # Add rust tools and installed applications to PATH.
   path+=($CARGO_HOME/bin)
+fi
+
+if [[ -f $KREW_ROOT/bin/kubectl-krew ]]; then
+  # Add the kubectl plugin manager to PATH.
+  path+=($KREW_ROOT/bin)
 fi
