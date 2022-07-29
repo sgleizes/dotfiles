@@ -39,7 +39,7 @@ set -s history-file "$TMUX_HISTORY"
 # This is a rather contextual choice.
 # See https://superuser.com/questions/968942/why-does-tmux-create-new-windows-as-login-shells-by-default
 #     http://openbsd-archive.7691.n7.nabble.com/tmux-and-login-shells-td170948.html
-set -g default-command "exec /bin/zsh"
+set -g default-command "exec zsh"
 
 # The default command to pipe to in copy-mode.
 set -g copy-command "$TMUX_CLIPBOARD"
