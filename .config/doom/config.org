@@ -4581,6 +4581,14 @@ Enable auto-revert in org mode buffers to avoid too many syncthing conflicts.
   (add-hook! org-mode #'auto-revert-mode))
 #+end_src
 
+Remove the org-encrypt-entries hook that sometimes freezes emacs on save.
+https://github.com/kaushalmodi/ox-hugo/issues/487
+#+begin_src elisp
+(after! org
+  (add-hook! 'org-mode-hook :append
+    (remove-hook 'before-save-hook 'org-encrypt-entries t)))
+#+end_src
+
 *** Document Structure
 
 Configure the behavior of M-RET and friends, and ensure that headings are terminated by blank lines.
