@@ -864,7 +864,7 @@ Improve terminal integration. Taken from the ~tty~ module.
 
 Disable minor modes that are undesired in terminal frames.
 #+begin_src elisp
-(defun +doom-disable-graphical-modes (frame)
+(defun +psydev/disable-graphical-modes (frame)
   "Disable undesired minor-modes in FRAME (default: selected frame)
 if in terminal."
   (interactive)
@@ -876,6 +876,7 @@ if in terminal."
     (centaur-tabs-mode -1)
     (beacon-mode -1)
     (evil-goggles-mode -1)
+    (hydra-posframe-mode -1)
     ;; Disable flyspell hooks
     (remove-hook! '(org-mode-hook
                     markdown-mode-hook
@@ -886,7 +887,7 @@ if in terminal."
                     git-commit-mode-hook)
       #'flyspell-mode)
     (setq +ligatures-in-modes nil)))
-(add-hook! 'after-make-frame-functions '+doom-disable-graphical-modes)
+(add-hook! 'after-make-frame-functions '+psydev/disable-graphical-modes)
 #+end_src
 
 ** Frames
@@ -3914,11 +3915,14 @@ Customize, disabled by default for now as I often mistype and set marks unwillin
 
 #+begin_src elisp
 (add-hook! 'tty-setup-hook #'evil-terminal-cursor-changer-activate)
+#+end_src
 
-;; Override tmux check function as it doesn't seem to work with tmux escape sequences.
-(after! evil-terminal-cursor-changer
-  (unless (display-graphic-p)
-    (defun etcc--in-tmux? () nil)))
+Override tmux check function as it doesn't seem to work with tmux escape sequences.
+#+begin_src elisp
+(add-hook! 'after-make-frame-functions
+  (defun +psydev/fix-etcc-tmux-escape (frame)
+    (unless (display-graphic-p frame)
+      (defun etcc--in-tmux? () nil))))
 #+end_src
 
 ** Fasd
@@ -4203,8 +4207,7 @@ Configure ~go-gen-test~ integration.
 (use-package! hydra-posframe
   :after hydra
   :config
-  (when (display-graphic-p)
-    (hydra-posframe-mode))
+  (hydra-posframe-mode)
   (setq hydra-posframe-border-width 1
         hydra-posframe-poshandler #'posframe-poshandler-frame-bottom-center
         hydra-posframe-parameters `((left-fringe . 15)
@@ -6758,6 +6761,15 @@ Remap all bindings from org-agenda-mode-map which are not overridden by evil.
 #+end_src
 
 ** Perspective
+
+Use a different workspace directory for each daemon instances.
+#+begin_src elisp
+(after! persp-mode
+  (add-hook! 'after-make-frame-functions
+    (defun +psydev/set-persp-save-dir-for-server (_)
+      (unless (or (string-empty-p server-name) (equal server-name "server"))
+        (setq persp-save-dir (concat doom-etc-dir "workspaces@" server-name "/"))))))
+#+end_src
 
 Restore uniquify settings, against developer advice. I need this.
 #+begin_src elisp
