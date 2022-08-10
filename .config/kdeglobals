@@ -138,7 +138,7 @@ parseMode=2
 
 [General]
 BrowserApplication=userapp-Firefox-D3SRI0.desktop
-ColorSchemeHash=d0b3d2da363261958945ede41bfed4e1744dd286
+ColorSchemeHash=bcce7c1c6181c5e14e633cd8301e7a9036b67ac6
 Name=Breeze Dark
 UseSystemBell=true
 XftHintStyle=hintslight

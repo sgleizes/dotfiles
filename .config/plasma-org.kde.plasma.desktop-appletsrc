@@ -73,6 +73,7 @@ Provider=bing
 
 [Containments][105]
 ItemGeometries-1920x1080=
+ItemGeometries-2560x1440=
 ItemGeometriesHorizontal=
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
@@ -396,7 +397,7 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=10
+PreloadWeight=35
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
@@ -627,7 +628,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=75
+PreloadWeight=80
 
 [Containments][7][Applets][10][Configuration][General]
 raiseMaximumVolume=true
@@ -637,7 +638,7 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=17
+PreloadWeight=22
 
 [Containments][7][Applets][12]
 immutability=1
@@ -953,6 +954,7 @@ Provider=bing
 
 [Containments][89]
 ItemGeometries-1920x1080=
+ItemGeometries-2560x1440=
 ItemGeometriesHorizontal=
 activityId=880691c7-fa6e-4255-a852-acde63acc631
 formfactor=0
