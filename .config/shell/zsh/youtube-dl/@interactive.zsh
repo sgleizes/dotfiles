@@ -8,6 +8,7 @@ if (( ! $+commands[youtube-dl] )); then
 fi
 
 # Usability alias.
+alias youtube-dl='yt-dlp'
 alias ydl='youtube-dl'
 
 # Autoload all module functions.

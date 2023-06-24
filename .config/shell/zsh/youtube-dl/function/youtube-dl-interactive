@@ -3,9 +3,9 @@
 #
 
 local fmt
-youtube-dl --list-formats "$@" || return
+yt-dlp --list-formats "$@" || return
 
 print -P "%F{blue}::%f Enter below one 'format code' listed above"
 if read -r fmt; then
-  youtube-dl --format "$fmt" "$@"
+  yt-dlp --format "$fmt" "$@"
 fi
