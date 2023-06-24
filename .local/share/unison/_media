@@ -16,3 +16,6 @@ ignore = Path Pictures/Inbox
 ignore = Path Pictures/Pending
 ignore = Path Pictures/Screenshots
 ignore = Path Pictures/Telegram
+ignore = Path Pictures/.thumbnails
+ignore = Path Pictures/.dtrash
+ignore = Path Pictures/.mysql.digikam
