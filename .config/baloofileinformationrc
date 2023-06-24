@@ -1,5 +1,5 @@
 [Misc]
-version=12
+version=13
 
 [Show]
 channels=false
@@ -18,6 +18,8 @@ kfileitem#permissions=false
 lastModified=false
 lyrics=false
 mimeType=false
+photoGpsLatitude=false
+photoGpsLongitude=false
 photoMeteringMode=false
 photoPixelXDimension=false
 photoPixelYDimension=false

@@ -1,4 +1,6 @@
 [System]
+disableFaceEngine=true
 disableOpenCL=false
+enableLogging=false
 useHighDpiPixmaps=false
 useHighDpiScaling=false

@@ -9,94 +9,94 @@
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
-; Section: Images
-
-
-; Section: Tables
+; Section: Colors
 
 
 ; Section: Fonts
 
 
-; Section: Colors
-
-
 ; Section: General
+
+
+; Section: Images
+
+
+; Section: Tables
 
  (gnc:restore-html-style-sheet "Default" "Footer" options))))
 (let ((template (gnc:html-style-sheet-template-find "Footer")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
-; Section: Images
-
-
-; Section: Tables
+; Section: Colors
 
 
 ; Section: Fonts
 
 
-; Section: Colors
-
-
 ; Section: General
+
+
+; Section: Images
+
+
+; Section: Tables
 
  (gnc:restore-html-style-sheet "Footer" "Footer" options))))
 (let ((template (gnc:html-style-sheet-template-find "Head or Tail")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
-; Section: Images
-
-
-; Section: Tables
+; Section: Colors
 
 
 ; Section: Fonts
 
 
-; Section: Colors
-
-
 ; Section: General
+
+
+; Section: Images
+
+
+; Section: Tables
 
  (gnc:restore-html-style-sheet "Head or Tail" "Head or Tail" options))))
 (let ((template (gnc:html-style-sheet-template-find "Easy")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
-; Section: Images
-
-
-; Section: Tables
+; Section: Colors
 
 
 ; Section: Fonts
 
 
-; Section: Colors
-
-
 ; Section: General
+
+
+; Section: Images
+
+
+; Section: Tables
 
  (gnc:restore-html-style-sheet "Easy" "Easy" options))))
 (let ((template (gnc:html-style-sheet-template-find "Fancy")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
-; Section: Images
-
-
-; Section: Tables
+; Section: Colors
 
 
 ; Section: Fonts
 
 
-; Section: Colors
-
-
 ; Section: General
+
+
+; Section: Images
+
+
+; Section: Tables
 
  (gnc:restore-html-style-sheet "Technicolor" "Fancy" options))))

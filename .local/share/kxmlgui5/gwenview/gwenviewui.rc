@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <!DOCTYPE gui SYSTEM 'kpartgui.dtd'>
-<gui version="65" name="gwenview">
+<gui version="67" name="gwenview">
  <MenuBar>
   <Menu name="file">
    <Action name="file_save"/>
@@ -66,7 +66,9 @@
    <Separator/>
    <Action name="resize"/>
    <Action name="crop"/>
+   <Action name="brightness_contrast_gamma"/>
    <Action name="red_eye_reduction"/>
+   <Action name="annotate"/>
   </Menu>
   <Menu name="go">
    <Action name="go_first"/>
@@ -93,7 +95,7 @@
    <Action name="options_configure"/>
   </Menu>
  </MenuBar>
- <ToolBar noMerge="1" alreadyVisited="1" name="mainToolBar">
+ <ToolBar alreadyVisited="1" noMerge="1" name="mainToolBar">
   <text translationDomain="gwenview">Main Toolbar</text>
   <Action name="go_start_page"/>
   <Separator name="separator_0"/>
@@ -112,6 +114,6 @@
   <Action name="share"/>
  </ToolBar>
  <ActionProperties scheme="Default">
-  <Action priority="0" name="fullscreen"/>
+  <Action name="fullscreen" priority="0"/>
  </ActionProperties>
 </gui>

@@ -34,7 +34,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.haenau
 
 [Containments][100][Configuration]
-PreloadWeight=10
+PreloadWeight=2
 
 [Containments][100][Wallpaper][com.github.zren.inactiveblur][General]
 BlurRadius=20
@@ -62,7 +62,7 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
 [Containments][102][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][102][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -84,7 +84,7 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.potd
 
 [Containments][105][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][105][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -94,6 +94,8 @@ FillMode=2
 Provider=bing
 
 [Containments][114]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
 activityId=880691c7-fa6e-4255-a852-acde63acc631
 formfactor=0
 immutability=1
@@ -103,7 +105,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][114][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][114][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -115,6 +117,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][115]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
 activityId=880691c7-fa6e-4255-a852-acde63acc631
 formfactor=0
 immutability=1
@@ -124,7 +128,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][115][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][115][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -145,7 +149,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][116][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][116][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -156,6 +160,9 @@ FillMode=2
 Provider=unsplash
 
 [Containments][117]
+ItemGeometries-0x0=
+ItemGeometries-2560x1440=
+ItemGeometriesHorizontal=
 activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 formfactor=0
 immutability=1
@@ -165,7 +172,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][117][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][117][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -185,7 +192,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][118][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][118][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -206,7 +213,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][119][Configuration]
-PreloadWeight=26
+PreloadWeight=18
 
 [Containments][119][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -218,6 +225,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][120]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
 activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 formfactor=0
 immutability=1
@@ -227,7 +236,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][120][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][120][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -239,6 +248,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][121]
+ItemGeometries-1920x1080=
+ItemGeometriesHorizontal=
 activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 formfactor=0
 immutability=1
@@ -248,7 +259,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][121][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][121][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -269,7 +280,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][122][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][122][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -290,7 +301,7 @@ plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][123][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][123][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -305,13 +316,13 @@ Provider=unsplash
 activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
 formfactor=0
 immutability=1
-lastScreen=3
+lastScreen=2
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][126][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][126][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -326,13 +337,13 @@ Provider=unsplash
 activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
 formfactor=0
 immutability=1
-lastScreen=2
+lastScreen=1
 location=0
 plugin=org.kde.desktopcontainment
 wallpaperplugin=org.kde.potd
 
 [Containments][127][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][127][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
@@ -357,7 +368,7 @@ immutability=1
 plugin=org.kde.plasma.minimizeall
 
 [Containments][2][Applets][108][Configuration]
-PreloadWeight=42
+PreloadWeight=34
 
 [Containments][2][Applets][108][Shortcuts]
 global=Meta+Shift+D
@@ -397,10 +408,11 @@ immutability=1
 plugin=org.kde.weatherWidget
 
 [Containments][2][Applets][33][Configuration]
-PreloadWeight=35
+PreloadWeight=62
 
 [Containments][2][Applets][33][Configuration][Appearance]
 layoutType=Compact
+renderMeteogram=true
 
 [Containments][2][Applets][33][Configuration][General]
 places=[{"providerId":"owm","placeIdentifier":"2985290","placeAlias":"Saint-Pierreville"},{"providerId":"owm","placeIdentifier":"3002520","placeAlias":"Le Pouzin"},{"providerId":"owm","placeIdentifier":"3033912","placeAlias":"Bédarrides"},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy"},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon"}]
@@ -546,7 +558,7 @@ immutability=1
 plugin=com.github.davide-sd.ipaddress
 
 [Containments][2][Applets][53][Configuration]
-PreloadWeight=5
+PreloadWeight=12
 
 [Containments][2][Applets][53][Configuration][Appearance]
 labelColor=#ffffff
@@ -621,6 +633,8 @@ immutability=1
 lastScreen=0
 location=3
 plugin=org.kde.plasma.private.systemtray
+popupHeight=432
+popupWidth=432
 wallpaperplugin=org.kde.image
 
 [Containments][7][Applets][10]
@@ -628,9 +642,10 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][7][Applets][10][Configuration]
-PreloadWeight=80
+PreloadWeight=100
 
 [Containments][7][Applets][10][Configuration][General]
+migrated=true
 raiseMaximumVolume=true
 
 [Containments][7][Applets][11]
@@ -638,17 +653,24 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=22
+PreloadWeight=29
 
 [Containments][7][Applets][12]
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
 [Containments][7][Applets][12][Configuration]
-PreloadWeight=75
+PreloadWeight=100
 
 [Containments][7][Applets][12][Configuration][General]
 popupOnNewDevice=false
+
+[Containments][7][Applets][129]
+immutability=1
+plugin=org.kde.kscreen
+
+[Containments][7][Applets][129][Configuration]
+PreloadWeight=70
 
 [Containments][7][Applets][13]
 immutability=1
@@ -669,7 +691,7 @@ immutability=1
 plugin=org.kde.plasma.notifications
 
 [Containments][7][Applets][15][Configuration]
-PreloadWeight=10
+PreloadWeight=12
 
 [Containments][7][Applets][16]
 immutability=1
@@ -683,7 +705,7 @@ immutability=1
 plugin=org.kde.plasma.networkmanagement
 
 [Containments][7][Applets][17][Configuration]
-PreloadWeight=80
+PreloadWeight=100
 
 [Containments][7][Applets][18]
 immutability=1
@@ -721,7 +743,7 @@ immutability=1
 plugin=gr.ictpro.jsalatas.plasma.pstate
 
 [Containments][7][Applets][71][Configuration]
-PreloadWeight=0
+PreloadWeight=97
 brightColors=true
 passiveStates=
 selectedConfig=0
@@ -748,7 +770,7 @@ immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][7][Applets][73][Configuration]
-PreloadWeight=10
+PreloadWeight=22
 
 [Containments][7][Applets][74]
 immutability=1
@@ -761,10 +783,12 @@ PreloadWeight=0
 PreloadWeight=0
 
 [Containments][7][General]
-extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
-knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate
+extraItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate,org.kde.kscreen
+knownItems=org.kde.plasma.bluetooth,org.kde.plasma.notifications,org.kde.plasma.mediacontroller,org.kde.plasma.devicenotifier,org.kde.plasma.battery,org.kde.plasma.volume,org.kde.plasma.keyboardindicator,org.kde.plasma.clipboard,org.kde.plasma.nightcolorcontrol,org.kde.plasma.networkmanagement,org.kde.plasma.printmanager,org.kde.kdeconnect,martchus.syncthingplasmoid,org.kde.plasma.keyboardlayout,org.kde.plasma.manage-inputmethod,gr.ictpro.jsalatas.plasma.pstate,org.kde.kscreen
 
 [Containments][73]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=b6d870af-2af7-49fe-bce4-606e462b99c6
 formfactor=0
 immutability=1
@@ -796,6 +820,10 @@ wallpaperplugin=
 wallpaperplugin=
 
 [Containments][84]
+ItemGeometries-0x0=
+ItemGeometries-1920x1080=
+ItemGeometries-2560x1440=
+ItemGeometriesHorizontal=
 activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 formfactor=0
 immutability=1
@@ -825,9 +853,10 @@ FillMode=2
 Provider=unsplash
 
 [Containments][88]
-ItemGeometries-1920x1080=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
-ItemGeometries-2560x1440=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
-ItemGeometriesHorizontal=Applet-77:0,432,464,608,0;Applet-85:752,448,464,128,0;Applet-86:848,576,320,192,0;Applet-79:1456,448,464,592,0;
+ItemGeometries-0x0=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
+ItemGeometries-1920x1080=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
+ItemGeometries-2560x1440=Applet-77:0,800,464,608,0;Applet-79:2096,928,464,144,0;Applet-85:2032,1072,464,208,0;Applet-86:2032,1280,320,128,0;
+ItemGeometriesHorizontal=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
 immutability=1
@@ -842,13 +871,14 @@ plugin=org.kde.plasma.mediaframe
 
 [Containments][88][Applets][77][Configuration]
 PreloadWeight=0
+UserBackgroundHints=NoBackground
 
 [Containments][88][Applets][77][Configuration][General]
 interval=86400
 leftClickOpenImage=false
 pauseOnMouseOver=false
 randomize=false
-useBackground=false
+useBackground=
 
 [Containments][88][Applets][77][Configuration][Paths]
 pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"folder"}
@@ -953,6 +983,7 @@ FillMode=2
 Provider=bing
 
 [Containments][89]
+ItemGeometries-0x0=
 ItemGeometries-1920x1080=
 ItemGeometries-2560x1440=
 ItemGeometriesHorizontal=
@@ -1006,6 +1037,7 @@ FillMode=2
 Provider=unsplash
 
 [Containments][91]
+ItemGeometries-0x0=
 ItemGeometries-1920x1080=
 ItemGeometries-2560x1440=
 ItemGeometriesHorizontal=
@@ -1082,6 +1114,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][95]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=880691c7-fa6e-4255-a852-acde63acc631
 formfactor=0
 immutability=1
@@ -1122,6 +1156,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][97]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 formfactor=0
 immutability=1

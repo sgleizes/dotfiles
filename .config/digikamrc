@@ -13,6 +13,7 @@ Default Icon Size=138
 Default Tree Face Size=48
 Default Tree Icon Size=22
 Icon Show Aspect Ratio=false
+Icon Show Color Label=true
 Icon Show Comments=false
 Icon Show Coordinates=true
 Icon Show Date=false
@@ -21,6 +22,7 @@ Icon Show Image Format=false
 Icon Show Modification Date=false
 Icon Show Name=true
 Icon Show Overlays=true
+Icon Show Pick Label=true
 Icon Show Rating=false
 Icon Show Resolution=false
 Icon Show Size=false
@@ -81,10 +83,10 @@ TreeView Font=Noto Sans,10,-1,5,50,0,0,0,0,0
 Update Type=0
 
 [AlbumFolderView Sidebar]
-CurrentIndex=4
-Expansion=0,61,63,64,65,67,68,69,70,327,91,92,93,115,122,133,165,279,319,286,321,329,322,325,326,331,332,333,334,335,289,290,336,337,338,339,340,341,85,-3,1,3,4,5,6,51,308,309,52,346,53,310,347,348,351,349,350,352,355,379,356,380,357,375,376,385,381,382,387,411,419,311,312,313,314,353,354,358,359,373,374,377,378,408,31,32,33,54,55,56,-2
+CurrentIndex=12
+Expansion=0,1,4,6,436,9,12,473,14,20
 RestoreChecked=false
-Selection=4
+Selection=12
 SortColumn=0
 SortOrder=0
 
@@ -93,7 +95,7 @@ CaseSensitive=0
 
 [AlbumSelectWidget]
 AlbumTreeViewCurrentIndex=
-AlbumTreeViewExpansion=1
+AlbumTreeViewExpansion=57,1
 AlbumTreeViewRestoreChecked=false
 AlbumTreeViewSelection=
 AlbumTreeViewSortColumn=0
@@ -105,11 +107,20 @@ Sync Baloo to Digikam=false
 Sync Digikam to Baloo=false
 
 [Batch Queue Manager Settings]
+2560x1440 screen: XPosition=0
+2560x1440 screen: YPosition=0
 BqmBottomSplitter=AAAA/wAAAAEAAAACAAAAkQAAAJEB/////wEAAAABAA==
-BqmTopSplitter=AAAA/wAAAAEAAAADAAAAkQAAAG0AAAByAf////8BAAAAAQA=
+BqmTopSplitter=AAAA/wAAAAEAAAADAAAAkQAAAG0AAACXAf////8BAAAAAQA=
 BqmVerticalSplitter=AAAA/wAAAAEAAAACAAAAowAAAJsB/////wEAAAACAA==
+HDMI-1=HDMI-1
+HDMI-1 HDMI-2 XPosition 1920x1080=0
+HDMI-1 HDMI-2 YPosition 1920x1080=0
+HDMI-1 XPosition 1920x1080 HDMI-1=0
 HDMI-1 XPosition 2560x1440=0
+HDMI-1 XPosition 2560x1440 HDMI-1=0
+HDMI-1 YPosition 1920x1080 HDMI-1=0
 HDMI-1 YPosition 2560x1440=0
+HDMI-1 YPosition 2560x1440 HDMI-1=0
 eDP-1 HDMI-1 XPosition 2560x1440=0
 eDP-1 HDMI-1 YPosition 2560x1440=0
 eDP-1 XPosition 1920x1080=0
@@ -990,7 +1001,7 @@ tagPaths=1
 
 [Database Settings]
 Database Connectoptions=UNIX_SOCKET=/home/psydev/.local/share/digikam/db_misc/mysql.socket
-Database Encrypted Password=AwJNTU0=
+Database Encrypted Password=AwIYGBg=
 Database Hostname=
 Database Name=digikam
 Database Name Face=digikam
@@ -999,6 +1010,7 @@ Database Name Thumbnails=digikam
 Database Port=-1
 Database Type=QMYSQL
 Database Username=root
+Database WAL Mode=false
 Internal Database Server=true
 Internal Database Server Mysql Admin Command=mysqladmin
 Internal Database Server Mysql Init Command=mysql_install_db
@@ -1190,13 +1202,13 @@ Use Yolo V3=false
 [Face Management Settings]
 AlbumComboBox-Checked=
 AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=1
+AlbumComboBox-Expansion=57,1
 AlbumComboBox-RestoreChecked=true
 AlbumComboBox-Selection=
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 AlbumTypeEntry=0
-Already Scanned Handling=Skip
+Already Scanned Handling=0
 Face Scan Main Task=Detect
 TagComboBox-Checked=
 TagComboBox-CurrentIndex=
@@ -1252,7 +1264,7 @@ SortOrder=0
 [Fuzzy Search View]
 AlbumComboBox-Checked=
 AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=1
+AlbumComboBox-Expansion=57,1
 AlbumComboBox-RestoreChecked=true
 AlbumComboBox-Selection=
 AlbumComboBox-SortColumn=0
@@ -1299,6 +1311,14 @@ Zoom=marble:900
 CaseSensitive=0
 
 [General Settings]
+1920x1080 screen: Window-Maximized=true
+2 screens: Window-Maximized=true
+2560x1440 screen: Height=573
+2560x1440 screen: Width=1140
+2560x1440 screen: Window-Maximized=true
+2560x1440 screen: XPosition=710
+2560x1440 screen: YPosition=445
+3 screens: Window-Maximized=true
 Application Font=Noto Sans,10,-1,5,50,0,0,0,0,0
 Application Style=breeze
 Apply Sidebar Changes Directly=true
@@ -1310,15 +1330,28 @@ FullScreen Hide SideBars=false
 FullScreen Hide StatusBar=false
 FullScreen Hide ThumbBar=true
 FullScreen Hide ToolBars=false
-HDMI-1 Height 2560x1440=1412
-HDMI-1 Width 2560x1440=1276
+HDMI-1=HDMI-1
+HDMI-1 HDMI-2 Height 2560x1440=1440
+HDMI-1 HDMI-2 Width 2560x1440=2560
+HDMI-1 HDMI-2 Window-Maximized 2560x1440=true
+HDMI-1 HDMI-2 XPosition 2560x1440=1920
+HDMI-1 HDMI-2 YPosition 2560x1440=0
+HDMI-1 Height 2560x1440=933
+HDMI-1 Height 2560x1440 HDMI-1=1412
+HDMI-1 Width 2560x1440=1698
+HDMI-1 Width 2560x1440 HDMI-1=1276
+HDMI-1 Window-Maximized 1920x1080 HDMI-1=true
 HDMI-1 Window-Maximized 2560x1440=true
-HDMI-1 XPosition 2560x1440=0
-HDMI-1 YPosition 2560x1440=28
+HDMI-1 Window-Maximized 2560x1440 HDMI-1=true
+HDMI-1 XPosition 2560x1440=1040
+HDMI-1 XPosition 2560x1440 HDMI-1=0
+HDMI-1 YPosition 2560x1440=307
+HDMI-1 YPosition 2560x1440 HDMI-1=28
 HDMI-1 eDP-1 HDMI-2 Window-Maximized 1920x1080=true
 HDMI-1 eDP-1 Window-Maximized 1920x1080=true
 HDMI-1 eDP-1 Window-Maximized 2560x1440=true
 HDMI-2 Window-Maximized 1920x1080=true
+HDMI-2 Window-Maximized 1920x1080 HDMI-2=true
 Icon Theme=breeze-dark
 Scan At Start=true
 Scroll Current Item To Center=false
@@ -1335,12 +1368,15 @@ eDP-1 HDMI-1 Height 1920x1080=1440
 eDP-1 HDMI-1 Height 2560x1440=1440
 eDP-1 HDMI-1 Width 1920x1080=1920
 eDP-1 HDMI-1 Width 2560x1440=2560
+eDP-1 HDMI-1 Window-Maximized 1920x1080 eDP-1=true
 eDP-1 HDMI-1 XPosition 1920x1080=318
 eDP-1 HDMI-1 XPosition 2560x1440=0
 eDP-1 HDMI-1 YPosition 1920x1080=1076
 eDP-1 HDMI-1 YPosition 2560x1440=-4
 eDP-1 HDMI-2 Window-Maximized 1920x1080=true
+eDP-1 HDMI-2 Window-Maximized 1920x1080 eDP-1=true
 eDP-1 Window-Maximized 1920x1080=true
+eDP-1 Window-Maximized 1920x1080 eDP-1=true
 
 [Geolocation Edit Settings]
 Bookmarks visible=false
@@ -1537,14 +1573,23 @@ PickSelection=
 RatingSelection=
 
 [LightTable Settings]
+2560x1440 screen: XPosition=0
+2560x1440 screen: YPosition=0
 Auto Load Right Panel=true
 Auto Sync Preview=true
 Clear On Close=false
 FullScreen Hide SideBars=false
 FullScreen Hide StatusBar=false
 FullScreen Hide ToolBars=false
+HDMI-1=HDMI-1
+HDMI-1 HDMI-2 XPosition 1920x1080=0
+HDMI-1 HDMI-2 YPosition 1920x1080=0
+HDMI-1 XPosition 1920x1080 HDMI-1=0
 HDMI-1 XPosition 2560x1440=0
+HDMI-1 XPosition 2560x1440 HDMI-1=0
+HDMI-1 YPosition 1920x1080 HDMI-1=0
 HDMI-1 YPosition 2560x1440=0
+HDMI-1 YPosition 2560x1440 HDMI-1=0
 Horizontal Splitter State=AAAA/wAAAAEAAAADAAABgwAAAG0AAAGDAf////8AAAAAAQE=
 Navigate By Pair=false
 Show Thumbbar=true
@@ -1714,6 +1759,72 @@ Version Properties View Mode=2
 [Media Player Settings]
 Volume=100
 
+[MediaPlayer AVFilterAudio]
+enable=true
+options=
+
+[MediaPlayer AVFilterVideo]
+enable=true
+options=
+
+[MediaPlayer AVFormat]
+analyzeduration=5000000
+avioflags=0
+enable=false
+extra=
+probesize=5000000
+
+[MediaPlayer Ass]
+font_file=
+fonts_dir=
+force_font_file=false
+
+[MediaPlayer Buffer]
+value=-1
+
+[MediaPlayer Capture]
+dir=/home/psydev/Pictures
+format=png
+quality=100
+
+[MediaPlayer Decoder Video]
+priority=FFmpeg,HW FFmpeg
+zeroCopy=true
+
+[MediaPlayer General]
+abort_timeout=true
+force_fps=0
+last_file=
+timeout=30
+
+[MediaPlayer OpenGL]
+angle_platform=d3d9
+egl=false
+type=OpenGLES
+
+[MediaPlayer Preview]
+enabled=true
+height=90
+width=160
+
+[MediaPlayer Shader]
+enable=false
+fbo=false
+fragHeader=
+fragPostProcess=//negate color effect\ngl_FragColor.rgb = vec3(1.0-gl_FragColor.r, 1.0-gl_FragColor.g, 1.0-gl_FragColor.b);
+fragSample=// horizontal mirror effect\nvec4 sample2d(sampler2D tex, vec2 pos, int p) {\n    return texture(tex, vec2(1.0-pos.x, pos.y));\n}
+
+[MediaPlayer Subtitle]
+autoLoad=true
+bottom margin=8
+color=255,255,255
+delay=0
+enabled=true
+engines=FFmpeg,LibASS
+font=Noto Sans,20,-1,5,75,0,0,0,0,0
+outline=true
+outline_color=0,0,255
+
 [Metadata Settings]
 Clear Metadata If Rescan=false
 Custom Sidecar Extensions=
@@ -1765,10 +1876,10 @@ eDP-1 Height 1920x1080=750
 eDP-1 Width 1920x1080=800
 
 [Search Sidebar]
-CurrentIndex=
+CurrentIndex=1
 Expansion=1
 RestoreChecked=false
-Selection=
+Selection=1
 SortColumn=0
 SortOrder=0
 
@@ -1778,7 +1889,7 @@ CaseSensitive=0
 [Sketch Search View]
 AlbumComboBox-Checked=
 AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=1
+AlbumComboBox-Expansion=57,1
 AlbumComboBox-RestoreChecked=true
 AlbumComboBox-Selection=
 AlbumComboBox-SortColumn=0
@@ -1836,6 +1947,9 @@ SortColumn=0
 SortOrder=0
 
 [TimeLineViewSearchDateBar Search Text Tool]
+CaseSensitive=0
+
+[TranslatorLangSearchBar Search Text Tool]
 CaseSensitive=0
 
 [Versioning Settings]

@@ -51,6 +51,96 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Permadev - Easy Invoice", based on template "67112f318bef4fc496bdc27d106bbda4"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "67112f318bef4fc496bdc27d106bbda4" "Easy Invoice"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Layout
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 3 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'invoice))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 3 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'company))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 1 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
+
+
+; Section: Display
+
+
+; Section: Display Columns
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Tax Amount")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Discount")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Action")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Taxable")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Date")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Custom Title")))
+  ((lambda (o) (if o (gnc:option-set-value o "Facture"))) option))
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Permadev - Easy Invoice"
+    'report-guid "6fe36d4898124f0595af355b98a1c3a1"
+    'parent-type "67112f318bef4fc496bdc27d106bbda4"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "67112f318bef4fc496bdc27d106bbda4" "Easy Invoice")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Options for saved report "Income & Expense Linechart", based on template "e533c998186b11e1b2e2001558291366"
 (let ()
   (define (options-gen)
@@ -146,6 +236,135 @@
     'options-generator options-gen
     'menu-path (list gnc:menuname-custom)
     'renderer (gnc:report-template-renderer/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Permadev - Fancy Invoice", based on template "3ce293441e894423a2425d7a22dd1ac6"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "3ce293441e894423a2425d7a22dd1ac6" "Fancy Invoice"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Layout
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 3 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'invoice))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 1 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+
+; Section: Display
+
+
+; Section: Display Columns
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Tax Amount")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Discount")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Action")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Taxable")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Date")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: General
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Permadev - Fancy Invoice"
+    'report-guid "a33ce16e57d242f6b4f58d83a720f4b5"
+    'parent-type "3ce293441e894423a2425d7a22dd1ac6"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "3ce293441e894423a2425d7a22dd1ac6" "Fancy Invoice")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Permadev - Customer Report", based on template "c146317be32e4948a561ec7fc89d15c1"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "c146317be32e4948a561ec7fc89d15c1" "Customer Report"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Display Columns
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Tax")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Sale")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Customer")))
+  ((lambda (o) (if o (gnc:option-set-value o '(2 . "00000000000000000000000000000000")))) option))
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Permadev - Customer Report"
+    'report-guid "eeb5c8135b2e4e2bac4e823135c93295"
+    'parent-type "c146317be32e4948a561ec7fc89d15c1"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "c146317be32e4948a561ec7fc89d15c1" "Customer Report")
   )
 )
 

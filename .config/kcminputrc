@@ -5,6 +5,7 @@ RepeatDelay=250
 RepeatRate=40
 
 [Mouse]
-X11LibInputXAccelProfileFlat=false
+X11LibInputXAccelProfileFlat=true
+XLbInptAccelProfileFlat=true
 XLbInptPointerAcceleration=-0.2
 cursorTheme=breeze_cursors

@@ -1,12 +1,10 @@
 [CompactMode]
-FontWeight=50
 PreviewSize=32
 
 [Desktop Entry]
 DefaultProfile=Dark Unlimited.profile
 
 [DetailsMode]
-FontWeight=50
 PreviewSize=32
 
 [Favorite Profiles]
@@ -17,11 +15,8 @@ HiddenFilesShown=true
 
 [General]
 ShowCopyMoveMenu=true
-Version=201
+Version=202
 ViewPropsTimestamp=2020,4,9,0,27,3
-
-[IconsMode]
-FontWeight=50
 
 [Open-with settings]
 CompletionMode=1

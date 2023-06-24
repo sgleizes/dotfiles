@@ -11,6 +11,9 @@ DefaultProfile=Dark Unlimited.profile
 [Favorite Profiles]
 Favorites=Dark Unlimited.profile,Light Unlimited.profile
 
+[General]
+ConfigVersion=1
+
 [KonsoleWindow]
 RemoveWindowTitleBarAndFrame=true
 ShowMenuBarByDefault=false
