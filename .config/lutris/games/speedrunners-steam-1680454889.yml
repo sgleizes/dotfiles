@@ -1,0 +1,14 @@
+game:
+  appid: '207140'
+game_slug: speedrunners
+name: SpeedRunners
+requires: null
+script:
+  game:
+    appid: 207140
+service: steam
+service_id: 207140
+slug: speedrunners-steam
+variables: {}
+version: Steam
+year: 2016
