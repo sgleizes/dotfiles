@@ -74,9 +74,6 @@ Right=None
 Top=None
 TopLeft=ActivityManager
 
-[ModifierOnlyShortcuts]
-Meta=org.kde.kglobalaccel,/component/kwin,,invokeShortcut,Expose
-
 [MouseBindings]
 CommandAll2=Minimize
 CommandAllWheel=Change Opacity

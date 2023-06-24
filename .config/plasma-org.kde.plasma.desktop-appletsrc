@@ -354,6 +354,21 @@ Category=1339276
 FillMode=2
 Provider=unsplash
 
+[Containments][128]
+activityId=81e43b82-8ee6-4e56-8374-96fd151dc7bd
+formfactor=0
+immutability=1
+lastScreen=0
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
+[Containments][128][Configuration]
+PreloadWeight=42
+
+[Containments][128][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.jpg
+
 [Containments][2]
 activityId=
 formfactor=2

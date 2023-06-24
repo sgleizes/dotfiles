@@ -222,6 +222,16 @@ wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
+[5957a046-6777-4b3b-a568-7360f6498a52]
+Description=Interdimensional Keepass
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=\\0
+desktopsrule=3
+types=1
+wmclass=keepassxc
+wmclassmatch=1
+
 [6]
 Description=Firefox - Dev
 activity=b6d870af-2af7-49fe-bce4-606e462b99c6
