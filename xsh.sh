@@ -27,7 +27,7 @@
 #
 
 # shellcheck shell=sh disable=SC1090 disable=SC1007 disable=SC3043
-XSH_VERSION='0.3.2'
+XSH_VERSION='0.4.0'
 
 # Figure out the name of the current shell.
 XSHELL="${ZSH_NAME:-${0##*/}}"
@@ -450,7 +450,7 @@ _xsh_load_registered() {
 _xsh_load_units() {
   local name="$1"
   local path="${2+${2%/}/}"  # ensure path ends with a /, if specified
-  local sh= ext= unit=
+  local sh= ext= unit= found=
 
   # Assign the shells as positional parameters.
   # shellcheck disable=SC2086
@@ -467,16 +467,19 @@ _xsh_load_units() {
 
     # All matched units are sorted according to the collating sequence in effect
     # in the current locale (LC_COLLATE) and loaded in that deterministic order.
-    for unit in "$XSH_CONFIG_DIR/$sh/$path"*"$name.$ext"; do
+    # NOTE: Workaround the edge case of XSH_RUNCOM_PREFIX=. where POSIX pathname expansion
+    # rules prevents hidden files from being matched.
+    for unit in "$XSH_CONFIG_DIR/$sh/$path$name.$ext" \
+                "$XSH_CONFIG_DIR/$sh/$path"*?"$name.$ext"; do
       # No distinction is made between a failed glob and a non-readable file.
-      # Both cases abort the search for the current shell.
-      if [ ! -r "$unit" ]; then
-        continue 2
+      # Both cases are skipped.
+      if [ -r "$unit" ]; then
+        found=1
+        _XSH_LOAD_UNITS="${_XSH_LOAD_UNITS:+$_XSH_LOAD_UNITS; }_xsh_source_unit '$unit'"
       fi
-
-      _XSH_LOAD_UNITS="${_XSH_LOAD_UNITS:+$_XSH_LOAD_UNITS; }_xsh_source_unit '$unit'"
     done
-    return 0
+
+    [ "$found" ] && return 0
   done
   return 1
 }
