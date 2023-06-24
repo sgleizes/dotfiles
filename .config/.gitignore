@@ -27,6 +27,7 @@
 /kde.org/
 /kde4/
 /kdeconnect/
+/keepassxc/
 /libaccounts-glib/
 /libreoffice/
 /menus/
@@ -97,6 +98,7 @@
 /kconf_updaterc
 /kdeconnect.apprc
 /kded_device_automounterrc
+/KeePassXCrc
 /kfontinstuirc
 /kfontviewrc
 /kgammarc
