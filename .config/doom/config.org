@@ -724,10 +724,10 @@ Add a global hydra to change the font-size interactively.
 (delq! t custom-theme-load-path) ; Remove default emacs theme from search path
 #+end_src
 
-Make graphical frames slightly transparent.
+Make graphical frames slightly transparent. Or not.
 #+begin_src elisp
-(add-to-list 'default-frame-alist
-             '(alpha . (95 . 95)))
+;; (add-to-list 'default-frame-alist
+;;              '(alpha . (95 . 95)))
 #+end_src
 
 Do not show encoding in the modeline if the value is the default =LF UTF-8=.
