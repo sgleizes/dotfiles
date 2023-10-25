@@ -2,27 +2,6 @@
 <!DOCTYPE khotnewstuff3>
 <hotnewstuffregistry>
  <stuff category="105">
-  <name>Transparent folder view</name>
-  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
-  <author>thevladsoft</author>
-  <homepage>https://store.kde.org/p/1490722</homepage>
-  <licence></licence>
-  <version>2.0</version>
-  <rating>61</rating>
-  <downloads>702</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.desktopcontainment-trans</installedfile>
-  <id>1490722</id>
-  <releasedate>2021-03-13</releasedate>
-  <summary>Folder view fork that can have a transparent background independently of the desktop theme, and can hide icons with a double-click in an empty area. You can use it both as a plasmoid, or as an alternative for the desktop (right click on the desktop, "configure desktop...", etc.).&lt;br />
-&lt;br...</summary>
-  <changelog></changelog>
-  <preview>https://cn.opendesktop.org/cache/100x100-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</preview>
-  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2MTU2NzczNjciLCJvIjoiMSIsInMiOiIzNjg1NmY5NjIwNDcxN2M1YTc0MDMxMTdhY2YzMDU0ODYxYjM1MTJmMzE1NGUzYWZkZTRkODcyMDcxZDNiM2EyNDg5ZDg2NDEzYzcyNmZlZDRjNGFlM2UwZTAyOWYzZTZhMzQ2YzUyZDIxOTMwMmU5MWNiNDk3NDIwMzY0YTNiNCIsInQiOjE2MTk1NjM1NzcsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.LsrNVUe1fGx-PRwscEdl5ipF1x6v896NngDpHcoooms/org.kde.folder-trans.v2.0.plasmoid</payload>
-  <tags>linux,unix,extension,kde,plasma,plasma##majorversion=5,widget,gplv3,efi</tags>
-  <status>installed</status>
- </stuff>
- <stuff category="105">
   <name>Public IP Address widget</name>
   <providerid>https://api.kde-look.org/ocs/v1/</providerid>
   <author>davide-sd</author>
@@ -68,29 +47,46 @@ Installation is pretty simple and straight forward:&lt;br />
   <status>installed</status>
  </stuff>
  <stuff category="424">
-  <name>Weather Widget</name>
+  <name>weather-widget-2</name>
   <providerid>https://api.kde-look.org/ocs/v1/</providerid>
-  <author>clearmartin</author>
-  <homepage>https://store.kde.org/p/998917</homepage>
+  <author>blackadderkate</author>
+  <homepage>https://store.kde.org/p/1683743</homepage>
   <licence></licence>
-  <version>1.6.10</version>
+  <version>v. 2.3.3</version>
   <rating>86</rating>
-  <downloads>160511</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.weatherWidget</installedfile>
-  <id>998917</id>
-  <releasedate>2017-10-06</releasedate>
-  <summary>Plasmoid for showing weather information from yr.no and Open Weather Map servers.&lt;br />
+  <downloads>32081</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.weatherWidget-2</installedfile>
+  <id>1683743</id>
+  <releasedate>2022-10-17</releasedate>
+  <summary>An updated version of the "plasma-applet-weather-widget" by Kotelnik (a.k.a. clearmartin).&lt;br />
 &lt;br />
-Features:&lt;br />
-- shows basic info (with font-like icons) in panel&lt;br />
-- shows meteogram + long term forecast in expanded plasmoid&lt;br />
-- shows more info and near future forecast in tooltip&lt;br />
--...</summary>
+YR.NO have changed their API and the original Weather Widget no longer works correctly with their data, and the project seems to be abandoned. This is a modified version of his widget that...</summary>
   <changelog></changelog>
-  <preview>https://cn.opendesktop.org/cache/100x100-0/img//hive/content-pre1/169572-1.png</preview>
-  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img//hive/content-pre1/169572-1.png</previewBig>
-  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE1MDczMzI3NTAiLCJvIjoiMSIsInMiOiJjN2U3MjA1ODg1ZWVjZDRhMDM3OGZkMTE1ZmU1OGVlMDBlODZmODMzNTljZjMxM2UxOGFhYWU1MTc3OWM3NjE4NTdiODE4NTdmY2NlNzc1NDQwMTdkYTQxMTQ4ODM4YzQ3MjcyY2NkMTQ2NjQwYWUxOTIzOTYxZmFiMzIwODQ5NCIsInQiOjE2MTk2NTQ0MjMsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.wuO5hK6q-LMdDiTxoVbUbFV3oi8xO9RYZLZLh8tYvJU/plasma-applet-weather-widget.plasmoid</payload>
-  <tags>linux,unix,extension,plasma##majorversion=5,widget,kde,plasma,weather</tags>
+  <preview>https://images.pling.com/cache/100x100-0/img/00/00/64/24/56/1683743/screenshot-20220114-115455.png</preview>
+  <previewBig>https://images.pling.com/cache/770x540-0/img/00/00/64/24/56/1683743/screenshot-20220114-115455.png</previewBig>
+  <payload>https://files03.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2NjYwMDg0MzciLCJvIjoiMSIsInMiOiI3MGU3NjhkNjJkMDdiZWU3MzVjNDY0NzI5ZjQ0YTY4NzkwMWRiOGFhNzE2YjdjYTIyNGUyYjIyYTI1ZGE2Y2NlZDBlMTY1YmRkZWJhYjRjNWQwZmFmOWEzZjhkODg3NmNkNDUwNDRjZjQzMzA4NjI2MGE1NDU5ZjViMmE1NWZiOCIsInQiOjE2OTQxMDg3MTgsInN0ZnAiOm51bGwsInN0aXAiOiI5MC41Mi4xNS4yNTMifQ.we7D4kDuQDUKMwOrSy4d-09RWCXaVM-ZveCKIiqAozw/weather-widget-2.3.3.plasmoid</payload>
+  <tags>plasma,plasma##majorversion=5,weather,widget,desktop,gplv2,efi,extension,linux,meteogram,kde,unix</tags>
+  <status>installed</status>
+ </stuff>
+ <stuff category="105">
+  <name>Transparent folder view</name>
+  <providerid>https://api.kde-look.org/ocs/v1/</providerid>
+  <author>thevladsoft</author>
+  <homepage>https://store.kde.org/p/1490722</homepage>
+  <licence></licence>
+  <version>2.0</version>
+  <rating>61</rating>
+  <downloads>702</downloads>
+  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.desktopcontainment-trans</installedfile>
+  <id>1490722</id>
+  <releasedate>2021-03-13</releasedate>
+  <summary>Folder view fork that can have a transparent background independently of the desktop theme, and can hide icons with a double-click in an empty area. You can use it both as a plasmoid, or as an alternative for the desktop (right click on the desktop, "configure desktop...", etc.).&lt;br />
+&lt;br...</summary>
+  <changelog></changelog>
+  <preview>https://cn.opendesktop.org/cache/100x100-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</preview>
+  <previewBig>https://cn.opendesktop.org/cache/770x540-0/img/9/4/5/5/0360b2b2c7037861441d2596aa4fd392c420005a51eab9f696c9adc710a9208aee4a.png</previewBig>
+  <payload>https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2MTU2NzczNjciLCJvIjoiMSIsInMiOiIzNjg1NmY5NjIwNDcxN2M1YTc0MDMxMTdhY2YzMDU0ODYxYjM1MTJmMzE1NGUzYWZkZTRkODcyMDcxZDNiM2EyNDg5ZDg2NDEzYzcyNmZlZDRjNGFlM2UwZTAyOWYzZTZhMzQ2YzUyZDIxOTMwMmU5MWNiNDk3NDIwMzY0YTNiNCIsInQiOjE2MTk1NjM1NzcsInN0ZnAiOm51bGwsInN0aXAiOiI4My4yMjIuNTAuNTAifQ.LsrNVUe1fGx-PRwscEdl5ipF1x6v896NngDpHcoooms/org.kde.folder-trans.v2.0.plasmoid</payload>
+  <tags>linux,unix,extension,kde,plasma,plasma##majorversion=5,widget,gplv3,efi</tags>
   <status>installed</status>
  </stuff>
 </hotnewstuffregistry>

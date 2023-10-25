@@ -25,6 +25,8 @@ run associated application=true
 RightButton;NoModifier=org.kde.contextmenu
 
 [Containments][100]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
 formfactor=0
 immutability=1
@@ -355,6 +357,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][128]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=81e43b82-8ee6-4e56-8374-96fd151dc7bd
 formfactor=0
 immutability=1
@@ -368,6 +372,35 @@ PreloadWeight=42
 
 [Containments][128][Wallpaper][org.kde.image][General]
 Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.jpg
+
+[Containments][130]
+activityId=
+formfactor=2
+immutability=1
+lastScreen=0
+location=4
+plugin=org.kde.panel
+wallpaperplugin=org.kde.image
+
+[Containments][130][Applets][131]
+immutability=1
+plugin=org.kde.plasma.kickoff
+
+[Containments][130][Applets][131][Configuration]
+PreloadWeight=100
+popupHeight=514
+popupWidth=651
+
+[Containments][130][Applets][131][Configuration][General]
+compactMode=true
+favoritesPortedToKAstats=true
+systemFavorites=suspend\\,hibernate\\,reboot\\,shutdown
+
+[Containments][130][Applets][131][Shortcuts]
+global=Meta+Space
+
+[Containments][130][General]
+AppletOrder=131
 
 [Containments][2]
 activityId=
@@ -387,6 +420,24 @@ PreloadWeight=34
 
 [Containments][2][Applets][108][Shortcuts]
 global=Meta+Shift+D
+
+[Containments][2][Applets][135]
+immutability=1
+plugin=org.kde.weatherWidget-2
+
+[Containments][2][Applets][135][Configuration]
+PreloadWeight=100
+
+[Containments][2][Applets][135][Configuration][Appearance]
+layoutType=Compact
+widgetFontSize=12
+
+[Containments][2][Applets][135][Configuration][General]
+firstRun=false
+places=[{"providerId":"owm","placeIdentifier":"2985290","placeAlias":"Saint-Pierreville","timezoneID":0},{"providerId":"owm","placeIdentifier":"3033912","placeAlias":"Bédarrides","timezoneID":0},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy","timezoneID":0},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon","timezoneID":0}]
+
+[Containments][2][Applets][135][Configuration][Units]
+windSpeedType=kmh
 
 [Containments][2][Applets][21]
 immutability=1
@@ -417,20 +468,6 @@ fontSize=16
 showSeconds=true
 showWeekNumbers=true
 use24hFormat=2
-
-[Containments][2][Applets][33]
-immutability=1
-plugin=org.kde.weatherWidget
-
-[Containments][2][Applets][33][Configuration]
-PreloadWeight=62
-
-[Containments][2][Applets][33][Configuration][Appearance]
-layoutType=Compact
-renderMeteogram=true
-
-[Containments][2][Applets][33][Configuration][General]
-places=[{"providerId":"owm","placeIdentifier":"2985290","placeAlias":"Saint-Pierreville"},{"providerId":"owm","placeIdentifier":"3002520","placeAlias":"Le Pouzin"},{"providerId":"owm","placeIdentifier":"3033912","placeAlias":"Bédarrides"},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy"},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon"}]
 
 [Containments][2][Applets][36]
 immutability=1
@@ -639,7 +676,7 @@ showActivityName=false
 PreloadWeight=0
 
 [Containments][2][General]
-AppletOrder=47;54;48;49;52;50;51;55;33;45;30;53;21;6;36;108;60
+AppletOrder=47;54;48;49;52;50;51;55;135;45;30;53;21;6;36;108;60
 
 [Containments][7]
 activityId=
@@ -668,7 +705,7 @@ immutability=1
 plugin=org.kde.plasma.clipboard
 
 [Containments][7][Applets][11][Configuration]
-PreloadWeight=29
+PreloadWeight=59
 
 [Containments][7][Applets][12]
 immutability=1
@@ -685,7 +722,7 @@ immutability=1
 plugin=org.kde.kscreen
 
 [Containments][7][Applets][129][Configuration]
-PreloadWeight=70
+PreloadWeight=80
 
 [Containments][7][Applets][13]
 immutability=1
@@ -727,7 +764,7 @@ immutability=1
 plugin=org.kde.plasma.mediacontroller
 
 [Containments][7][Applets][18][Configuration]
-PreloadWeight=100
+PreloadWeight=20
 
 [Containments][7][Applets][18][Shortcuts]
 global=Meta+M
@@ -737,7 +774,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][7][Applets][19][Configuration]
-PreloadWeight=0
+PreloadWeight=10
 
 [Containments][7][Applets][69]
 immutability=1
@@ -758,7 +795,7 @@ immutability=1
 plugin=gr.ictpro.jsalatas.plasma.pstate
 
 [Containments][7][Applets][71][Configuration]
-PreloadWeight=97
+PreloadWeight=100
 brightColors=true
 passiveStates=
 selectedConfig=0
@@ -785,7 +822,7 @@ immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][7][Applets][73][Configuration]
-PreloadWeight=22
+PreloadWeight=37
 
 [Containments][7][Applets][74]
 immutability=1
@@ -870,7 +907,7 @@ Provider=unsplash
 [Containments][88]
 ItemGeometries-0x0=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
 ItemGeometries-1920x1080=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
-ItemGeometries-2560x1440=Applet-77:0,800,464,608,0;Applet-79:2096,928,464,144,0;Applet-85:2032,1072,464,208,0;Applet-86:2032,1280,320,128,0;
+ItemGeometries-2560x1440=Applet-77:0,768,464,592,0;Applet-79:2096,928,464,144,0;Applet-86:1712,1184,320,176,0;Applet-85:2032,1072,464,208,0;
 ItemGeometriesHorizontal=Applet-77:0,96,464,592,0;Applet-79:816,0,464,240,0;Applet-85:784,400,448,128,0;Applet-86:848,528,320,192,0;
 activityId=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 formfactor=0
@@ -983,8 +1020,8 @@ PreloadWeight=0
 
 [Containments][88][General]
 ToolBoxButtonState=topcenter
-ToolBoxButtonX=786
-ToolBoxButtonY=28
+ToolBoxButtonX=764
+ToolBoxButtonY=24
 filterMimeTypes=\\0
 iconSize=2
 sortMode=-1
@@ -1027,6 +1064,8 @@ FillMode=2
 Provider=unsplash
 
 [Containments][90]
+ItemGeometries-0x0=
+ItemGeometriesHorizontal=
 activityId=e1fb771e-29d1-4641-a442-b99b55616702
 formfactor=0
 immutability=1
@@ -1216,6 +1255,13 @@ Provider=unsplash
 max_value=2000
 monitor_type=3
 multiplier=1000
+
+[Containments2Appletsts][135][Configuration][Appearance]
+layoutType=Compact
+widgetFontSize=11
+
+[Containments2Appletsts][135][Configuration][General]
+places=[{"providerId":"owm","placeIdentifier":"2985290","placeAlias":"Saint-Pierreville","timezoneID":0},{"providerId":"owm","placeIdentifier":"3033912","placeAlias":"Bédarrides","timezoneID":0},{"providerId":"owm","placeIdentifier":"6442836","placeAlias":"Mouxy","timezoneID":0},{"providerId":"owm","placeIdentifier":"3024532","placeAlias":"Morillon","timezoneID":0}]
 
 [Containments2Appletsts][27][Configuration][General]
 cacheDirtyColor=85,170,255

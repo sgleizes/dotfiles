@@ -1,5 +1,5 @@
 <!DOCTYPE gui>
-<gui version="436" translationDomain="korganizer" name="korganizer">
+<gui version="437" name="korganizer" translationDomain="korganizer">
  <MenuBar>
   <Menu name="file">
    <text>&amp;File</text>
@@ -101,6 +101,7 @@
   </Menu>
   <Menu name="settings">
    <text>&amp;Settings</text>
+   <Action name="colorscheme_menu"/>
    <Menu name="sidebar" append="show_merge">
     <text>&amp;Sidebar</text>
     <Action name="show_datenavigator"/>
@@ -121,8 +122,27 @@
    <Action name="show_intro"/>
   </Menu>
  </MenuBar>
- <ToolBar alreadyVisited="1" name="mainToolBar" noMerge="1">
-  <text translationDomain="korganizer" context="main toolbar">Main</text>
+ <ToolBar noMerge="1" hidden="true" name="filter_toolbar">
+  <text translationDomain="korganizer">Filters Toolbar</text>
+  <Action name="filter_select"/>
+  <Action name="edit_filters"/>
+ </ToolBar>
+ <ToolBar noMerge="1" hidden="true" name="schedule_toolbar">
+  <text translationDomain="korganizer">Schedule</text>
+  <Action name="schedule_publish"/>
+  <Action name="schedule_request"/>
+  <Action name="schedule_reply"/>
+  <Action name="addressbook"/>
+ </ToolBar>
+ <ToolBar noMerge="1" name="korganizer_toolbar">
+  <text translationDomain="korganizer">Views</text>
+  <Action name="view_agenda"/>
+  <Action name="view_month"/>
+  <Action name="view_timeline"/>
+  <Merge/>
+ </ToolBar>
+ <ToolBar noMerge="1" alreadyVisited="1" name="mainToolBar">
+  <text context="main toolbar" translationDomain="korganizer">Main</text>
   <Action name="new_event"/>
   <!--
     <Separator/>
@@ -134,25 +154,6 @@
   <Action name="go_today"/>
   <Action name="select_day"/>
   <Action name="select_week"/>
- </ToolBar>
- <ToolBar name="korganizer_toolbar" noMerge="1">
-  <text translationDomain="korganizer">Views</text>
-  <Action name="view_agenda"/>
-  <Action name="view_month"/>
-  <Action name="view_timeline"/>
-  <Merge/>
- </ToolBar>
- <ToolBar hidden="true" name="schedule_toolbar" noMerge="1">
-  <text translationDomain="korganizer">Schedule</text>
-  <Action name="schedule_publish"/>
-  <Action name="schedule_request"/>
-  <Action name="schedule_reply"/>
-  <Action name="addressbook"/>
- </ToolBar>
- <ToolBar hidden="true" name="filter_toolbar" noMerge="1">
-  <text translationDomain="korganizer">Filters Toolbar</text>
-  <Action name="filter_select"/>
-  <Action name="edit_filters"/>
  </ToolBar>
  <Menu name="rmb_selection_popup">
   <Action name="new_event"/>

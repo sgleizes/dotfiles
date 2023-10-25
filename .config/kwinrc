@@ -74,6 +74,9 @@ Right=None
 Top=None
 TopLeft=ActivityManager
 
+[ModifierOnlyShortcuts]
+Meta=
+
 [MouseBindings]
 CommandAll2=Minimize
 CommandAllWheel=Change Opacity

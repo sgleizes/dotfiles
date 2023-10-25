@@ -1,18 +1,137 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Options for saved report "Assets Over Time", based on template "e9cf815f79db44bcb637d0295093ae3d"
+;; Options for saved report "Income Over Time", based on template "44f81bee049b4b3ea908f8dac9a9474e"
 (let ()
   (define (options-gen)
     (let
          (
-           (options (gnc:report-template-new-options/report-guid "e9cf815f79db44bcb637d0295093ae3d" "Assets Over Time"))
+           (options (gnc:report-template-new-options/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Accounts
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Maximum Bars")))
+  ((lambda (o) (if o (gnc:option-set-value o '12.0))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Show table")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Width")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1500)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 750)))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Start Date")))
+  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577833200)))) option))
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Income Over Time"
+    'report-guid "2a31a047481e43b18f842f489cd2525d"
+    'parent-type "44f81bee049b4b3ea908f8dac9a9474e"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Expense Over Time", based on template "b1f15b2052c149df93e698fe85a81ea6"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time"))
            (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
          )
 ; Section: Accounts
 
 (let ((option (gnc:lookup-option options
                                  "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "b61dbd6c53e84fe9b94fc4ec589db9b1" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
                                  "Levels of Subaccounts")))
-  ((lambda (o) (if o (gnc:option-set-value o '3))) option))
+  ((lambda (o) (if o (gnc:option-set-value o 'all))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Maximum Bars")))
+  ((lambda (o) (if o (gnc:option-set-value o '24.0))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Show table")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Start Date")))
+  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577876340)))) option))
+
+
+      options
+    )
+  )
+  (gnc:define-report 
+    'version 1
+    'name "Expense Over Time"
+    'report-guid "ead6e83c0d834137bbfb5d24e4daeec3"
+    'parent-type "b1f15b2052c149df93e698fe85a81ea6"
+    'options-generator options-gen
+    'menu-path (list gnc:menuname-custom)
+    'renderer (gnc:report-template-renderer/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time")
+  )
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Options for saved report "Income/Expense Chart", based on template "80769921e87943adade887b9835a7685"
+(let ()
+  (define (options-gen)
+    (let
+         (
+           (options (gnc:report-template-new-options/report-guid "80769921e87943adade887b9835a7685" "Income/Expense Chart"))
+           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
+         )
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("a7000d29bbcf43728ea3842ae82a732f" "5d26712b31c24ba3b65d7176f87f2c5a" "fc3dfe4d3b5e48908dd81ad4f37361bc" "65d6b8c104494bbda7363bc452288bd4" "605701bb2bbf44ca910543dff41ff018" "76b7a706bcdc44ceb1ff5bbef5f07c08" "12d249b58de547e18d4ec44d644efe71" "2949157f21974c9cb0892a55acb097dc" "77ef473e15cf4c4da19f849bfc2341ff" "550a14b443de468ba3da6d98d3caab30" "3e1363ff4fea48a6a0e248dcbfcc7230" "e6ca203c320e46dfb048e847fd3b34ca" "2b1cc88c8ec64152b4689c2bd63ba109" "47965bb527e64852a477f518f1f6f369" "674009921a3c42979ebea18822cd4dc9" "a869733b20a446919f541a7223ddc6f6" "c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "b61dbd6c53e84fe9b94fc4ec589db9b1" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
 
 
 ; Section: Display
@@ -27,13 +146,8 @@
 
 (let ((option (gnc:lookup-option options
                                  "General"
-                                 "End Date")))
-  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1640991600)))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "General"
                                  "Start Date")))
-  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1585177200)))) option))
+  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577876340)))) option))
 
 
       options
@@ -41,12 +155,12 @@
   )
   (gnc:define-report 
     'version 1
-    'name "Assets Over Time"
-    'report-guid "0bc95ba1a6594d9dba040a077b8daa2d"
-    'parent-type "e9cf815f79db44bcb637d0295093ae3d"
+    'name "Income/Expense Chart"
+    'report-guid "bcadaffb82364e378219010d93c58e31"
+    'parent-type "80769921e87943adade887b9835a7685"
     'options-generator options-gen
     'menu-path (list gnc:menuname-custom)
-    'renderer (gnc:report-template-renderer/report-guid "e9cf815f79db44bcb637d0295093ae3d" "Assets Over Time")
+    'renderer (gnc:report-template-renderer/report-guid "80769921e87943adade887b9835a7685" "Income/Expense Chart")
   )
 )
 
@@ -59,7 +173,61 @@
            (options (gnc:report-template-new-options/report-guid "67112f318bef4fc496bdc27d106bbda4" "Easy Invoice"))
            (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
          )
+; Section: Display
+
+
+; Section: Display Columns
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Date")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Action")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Discount")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Taxable")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
+                                 "Tax Amount")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Custom Title")))
+  ((lambda (o) (if o (gnc:option-set-value o "Facture"))) option))
+
+
 ; Section: Layout
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 1 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'company))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
 
 (let ((option (gnc:lookup-option options
                                  "Layout"
@@ -70,60 +238,6 @@
                                  "Layout"
                                  "Row 3 Right")))
   ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 2 Left")))
-  ((lambda (o) (if o (gnc:option-set-value o 'company))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 1 Right")))
-  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 2 Right")))
-  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
-
-
-; Section: Display
-
-
-; Section: Display Columns
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Tax Amount")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Discount")))
-  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Action")))
-  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Taxable")))
-  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Date")))
-  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
-
-
-; Section: General
-
-(let ((option (gnc:lookup-option options
-                                 "General"
-                                 "Custom Title")))
-  ((lambda (o) (if o (gnc:option-set-value o "Facture"))) option))
 
 
       options
@@ -141,62 +255,25 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Options for saved report "Income & Expense Linechart", based on template "e533c998186b11e1b2e2001558291366"
+;; Options for saved report "Assets Over Time", based on template "e9cf815f79db44bcb637d0295093ae3d"
 (let ()
   (define (options-gen)
     (let
          (
-           (options (gnc:report-template-new-options/report-guid "e533c998186b11e1b2e2001558291366" "Income & Expense Linechart"))
+           (options (gnc:report-template-new-options/report-guid "e9cf815f79db44bcb637d0295093ae3d" "Assets Over Time"))
            (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
          )
 ; Section: Accounts
 
-
-; Section: Display
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("0786646697ef44d0a722ec1084d1c42e" "d4018cfd82ec460382a6ebed8e001566" "39cf35f57fb049ad828690221bc201cb" "83c8656df4c64b52947c66667983d570" "391055915f754753a4e2e539ce009bb4" "a27cd45e24e44553a42d5cff96bc4002" "f6d249d5f8694271bdf16462b70184de" "7fb101e28cea43b0b96eed8e4e0e35ff" "d09a42fddc2645a38d955e15357b7d31" "d159b412425c4b899058f45e92ed299a" "461faf0a92d44b8ba3f9bd89093987a8" "7a75902f87a246bcbbe55bf0602b8f5f" "b904f5bc316c4933a2cb159384819e21" "2c324e698fa646e99d558abeccac8bce" "301541fda57e4733b11ab2973deb3835" "49f144c25b0e487b8c663b76fd42d285" "63d0f88994fa4a6394c6f9544e6c3ecc" "48ff5afa9ca545cb9c8de41778d70276" "ab354365a6bb41699d9aee6e5c9497c0" "22eec4a8f6274be6ae96d8900224bed7" "30c20f65fad54dcc839c9fb6c01f74b4" "a872985bea814bab9e11e1e4c280580e" "6c70fc33d675420fbf9427431ec5aba3" "38abfe4601684d53914021e8903a9903" "0385ad3dc2c9434fb84199c59cc6dab3" "bbdc2e9a9fe94d7b9bb29fc73764a1f1")))) option))
 
 (let ((option (gnc:lookup-option options
-                                 "Display"
-                                 "Show table")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
-
-
-; Section: General
-
-(let ((option (gnc:lookup-option options
-                                 "General"
-                                 "Stylesheet")))
-  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "General"
-                                 "Start Date")))
-  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577833200)))) option))
-
-
-      options
-    )
-  )
-  (gnc:define-report 
-    'version 1
-    'name "Income & Expense Linechart"
-    'report-guid "2d2c3a4c34244501a6cdbb3aff8339dc"
-    'parent-type "e533c998186b11e1b2e2001558291366"
-    'options-generator options-gen
-    'menu-path (list gnc:menuname-custom)
-    'renderer (gnc:report-template-renderer/report-guid "e533c998186b11e1b2e2001558291366" "Income & Expense Linechart")
-  )
-)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Options for saved report "Expense Over Time", based on template "b1f15b2052c149df93e698fe85a81ea6"
-(let ()
-  (define (options-gen)
-    (let
-         (
-           (options (gnc:report-template-new-options/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time"))
-           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
-         )
-; Section: Accounts
+                                 "Accounts"
+                                 "Levels of Subaccounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '3))) option))
 
 
 ; Section: Display
@@ -204,12 +281,7 @@
 (let ((option (gnc:lookup-option options
                                  "Display"
                                  "Maximum Bars")))
-  ((lambda (o) (if o (gnc:option-set-value o 12.0))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display"
-                                 "Show table")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+  ((lambda (o) (if o (gnc:option-set-value o '15.0))) option))
 
 
 ; Section: General
@@ -222,7 +294,12 @@
 (let ((option (gnc:lookup-option options
                                  "General"
                                  "Start Date")))
-  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577833200)))) option))
+  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577876340)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "End Date")))
+  ((lambda (o) (if o (gnc:option-set-value o '(relative . today)))) option))
 
 
       options
@@ -230,12 +307,12 @@
   )
   (gnc:define-report 
     'version 1
-    'name "Expense Over Time"
-    'report-guid "0672fc0a0cdb4d78b979840aadfa609e"
-    'parent-type "b1f15b2052c149df93e698fe85a81ea6"
+    'name "Assets Over Time"
+    'report-guid "7904dd741ba54e19881b1f0139d5eb33"
+    'parent-type "e9cf815f79db44bcb637d0295093ae3d"
     'options-generator options-gen
     'menu-path (list gnc:menuname-custom)
-    'renderer (gnc:report-template-renderer/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time")
+    'renderer (gnc:report-template-renderer/report-guid "e9cf815f79db44bcb637d0295093ae3d" "Assets Over Time")
   )
 )
 
@@ -248,29 +325,6 @@
            (options (gnc:report-template-new-options/report-guid "3ce293441e894423a2425d7a22dd1ac6" "Fancy Invoice"))
            (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
          )
-; Section: Layout
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 3 Left")))
-  ((lambda (o) (if o (gnc:option-set-value o 'invoice))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 2 Left")))
-  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 1 Right")))
-  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Layout"
-                                 "Row 2 Right")))
-  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
-
-
 ; Section: Display
 
 
@@ -278,12 +332,7 @@
 
 (let ((option (gnc:lookup-option options
                                  "Display Columns"
-                                 "Tax Amount")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Discount")))
+                                 "Date")))
   ((lambda (o) (if o (gnc:option-set-value o #f))) option))
 
 (let ((option (gnc:lookup-option options
@@ -293,16 +342,44 @@
 
 (let ((option (gnc:lookup-option options
                                  "Display Columns"
+                                 "Discount")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display Columns"
                                  "Taxable")))
   ((lambda (o) (if o (gnc:option-set-value o #f))) option))
 
 (let ((option (gnc:lookup-option options
                                  "Display Columns"
-                                 "Date")))
-  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+                                 "Tax Amount")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
 
 
 ; Section: General
+
+
+; Section: Layout
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 1 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'client))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 2 Right")))
+  ((lambda (o) (if o (gnc:option-set-value o 'none))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Layout"
+                                 "Row 3 Left")))
+  ((lambda (o) (if o (gnc:option-set-value o 'invoice))) option))
 
 
       options
@@ -320,25 +397,68 @@
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Options for saved report "Permadev - Customer Report", based on template "c146317be32e4948a561ec7fc89d15c1"
+;; Options for saved report "Dashboard", based on template "d8ba4a2e89e8479ca9f6eccdeb164588"
 (let ()
   (define (options-gen)
     (let
          (
-           (options (gnc:report-template-new-options/report-guid "c146317be32e4948a561ec7fc89d15c1" "Customer Report"))
+           (options (gnc:report-template-new-options/report-guid "d8ba4a2e89e8479ca9f6eccdeb164588" "Multicolumn View"))
            (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
          )
-; Section: Display Columns
+; Section: General
 
 (let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Tax")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+                                 "General"
+                                 "Report name")))
+  ((lambda (o) (if o (gnc:option-set-value o "Dashboard"))) option))
 
 (let ((option (gnc:lookup-option options
-                                 "Display Columns"
-                                 "Sale")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Number of columns")))
+  ((lambda (o) (if o (gnc:option-set-value o '2.0))) option))
+
+
+; Section: __general
+
+(let ((option (gnc:lookup-option options
+                                 "__general"
+                                 "report-list")))
+  ((lambda (o) (if o (gnc:option-set-value o '((237 1 1 #f) (238 1 1 #f) (239 2 1 #f) (240 2 1 #f) (241 2 1 #f) (242 1 1 #f) (243 1 1 #f))))) option))
+
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Expense Accounts"
+      (let ((options (gnc:report-template-new-options/report-guid "9bf1892805cb4336be6320fe48ce5446" "Expense Accounts")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "b61dbd6c53e84fe9b94fc4ec589db9b1" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Maximum Slices")))
+  ((lambda (o) (if o (gnc:option-set-value o '15.0))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Width")))
+  ((lambda (o) (if o (gnc:option-set-value o '(percent . 65)))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 400)))) option))
 
 
 ; Section: General
@@ -348,36 +468,102 @@
                                  "Stylesheet")))
   ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
 
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "9bf1892805cb4336be6320fe48ce5446" "Expense Accounts" "" options))
+          )
+        )
+      )
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Income Accounts"
+      (let ((options (gnc:report-template-new-options/report-guid "e1bd09b8a1dd49dd85760db9d82b045c" "Income Accounts")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("a7000d29bbcf43728ea3842ae82a732f" "5d26712b31c24ba3b65d7176f87f2c5a" "fc3dfe4d3b5e48908dd81ad4f37361bc" "65d6b8c104494bbda7363bc452288bd4" "605701bb2bbf44ca910543dff41ff018" "76b7a706bcdc44ceb1ff5bbef5f07c08" "12d249b58de547e18d4ec44d644efe71" "2949157f21974c9cb0892a55acb097dc" "77ef473e15cf4c4da19f849bfc2341ff" "550a14b443de468ba3da6d98d3caab30" "3e1363ff4fea48a6a0e248dcbfcc7230" "e6ca203c320e46dfb048e847fd3b34ca" "2b1cc88c8ec64152b4689c2bd63ba109" "47965bb527e64852a477f518f1f6f369" "674009921a3c42979ebea18822cd4dc9" "a869733b20a446919f541a7223ddc6f6")))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 400)))) option))
+
+
+; Section: General
+
 (let ((option (gnc:lookup-option options
                                  "General"
-                                 "Customer")))
-  ((lambda (o) (if o (gnc:option-set-value o '(2 . "00000000000000000000000000000000")))) option))
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
 
 
-      options
-    )
-  )
-  (gnc:define-report 
-    'version 1
-    'name "Permadev - Customer Report"
-    'report-guid "eeb5c8135b2e4e2bac4e823135c93295"
-    'parent-type "c146317be32e4948a561ec7fc89d15c1"
-    'options-generator options-gen
-    'menu-path (list gnc:menuname-custom)
-    'renderer (gnc:report-template-renderer/report-guid "c146317be32e4948a561ec7fc89d15c1" "Customer Report")
-  )
-)
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "e1bd09b8a1dd49dd85760db9d82b045c" "Income Accounts" "" options))
+          )
+        )
+      )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Options for saved report "Income Over Time", based on template "44f81bee049b4b3ea908f8dac9a9474e"
-(let ()
-  (define (options-gen)
-    (let
-         (
-           (options (gnc:report-template-new-options/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time"))
-           (new-embedded-report-ids '()) ;; only used with Multicolumn View Reports
-         )
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Income/Expense Chart"
+      (let ((options (gnc:report-template-new-options/report-guid "80769921e87943adade887b9835a7685" "Income/Expense Chart")))
 ; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("a7000d29bbcf43728ea3842ae82a732f" "5d26712b31c24ba3b65d7176f87f2c5a" "fc3dfe4d3b5e48908dd81ad4f37361bc" "65d6b8c104494bbda7363bc452288bd4" "605701bb2bbf44ca910543dff41ff018" "76b7a706bcdc44ceb1ff5bbef5f07c08" "12d249b58de547e18d4ec44d644efe71" "2949157f21974c9cb0892a55acb097dc" "77ef473e15cf4c4da19f849bfc2341ff" "550a14b443de468ba3da6d98d3caab30" "3e1363ff4fea48a6a0e248dcbfcc7230" "e6ca203c320e46dfb048e847fd3b34ca" "2b1cc88c8ec64152b4689c2bd63ba109" "47965bb527e64852a477f518f1f6f369" "674009921a3c42979ebea18822cd4dc9" "a869733b20a446919f541a7223ddc6f6" "c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "b61dbd6c53e84fe9b94fc4ec589db9b1" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Plot Height")))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1000)))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "80769921e87943adade887b9835a7685" "Income/Expense Chart" "" options))
+          )
+        )
+      )
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Expense Over Time"
+      (let ((options (gnc:report-template-new-options/report-guid "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "b61dbd6c53e84fe9b94fc4ec589db9b1" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Levels of Subaccounts")))
+  ((lambda (o) (if o (gnc:option-set-value o 'all))) option))
 
 
 ; Section: Display
@@ -385,43 +571,218 @@
 (let ((option (gnc:lookup-option options
                                  "Display"
                                  "Maximum Bars")))
-  ((lambda (o) (if o (gnc:option-set-value o 12.0))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display"
-                                 "Plot Width")))
-  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1500.0)))) option))
-
-(let ((option (gnc:lookup-option options
-                                 "Display"
-                                 "Show table")))
-  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+  ((lambda (o) (if o (gnc:option-set-value o '20.0))) option))
 
 (let ((option (gnc:lookup-option options
                                  "Display"
                                  "Plot Height")))
-  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 750.0)))) option))
+  ((lambda (o) (if o (gnc:option-set-value o '(pixels . 1000)))) option))
 
 
 ; Section: General
 
 (let ((option (gnc:lookup-option options
                                  "General"
-                                 "Start Date")))
-  ((lambda (o) (if o (gnc:option-set-value o '(absolute . 1577833200)))) option))
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
 
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "b1f15b2052c149df93e698fe85a81ea6" "Expense Over Time" "0672fc0a0cdb4d78b979840aadfa609e" options))
+          )
+        )
+      )
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Income Statement"
+      (let ((options (gnc:report-template-new-options/report-guid "0e94fd0277ba11e8825d43e27232c9d4" "Income Statement (Multicolumn)")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("a7000d29bbcf43728ea3842ae82a732f" "5d26712b31c24ba3b65d7176f87f2c5a" "fc3dfe4d3b5e48908dd81ad4f37361bc" "65d6b8c104494bbda7363bc452288bd4" "605701bb2bbf44ca910543dff41ff018" "76b7a706bcdc44ceb1ff5bbef5f07c08" "12d249b58de547e18d4ec44d644efe71" "2949157f21974c9cb0892a55acb097dc" "77ef473e15cf4c4da19f849bfc2341ff" "550a14b443de468ba3da6d98d3caab30" "3e1363ff4fea48a6a0e248dcbfcc7230" "e6ca203c320e46dfb048e847fd3b34ca" "2b1cc88c8ec64152b4689c2bd63ba109" "47965bb527e64852a477f518f1f6f369" "674009921a3c42979ebea18822cd4dc9" "a869733b20a446919f541a7223ddc6f6" "9d6aa8b756d34588802e847bf28e267a" "8bdb428df24f42eaba9860f142a12422" "57b9093be74245719ffe5fbc04c06495" "85a5233c709a40f7828f399d2dabfa2b" "0775a9f46f734fdca409b59aacf3e16f" "e262a11dcad94824b82529f40251137c" "8b1b108d7d8d4332a7af81b099d5b730" "c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "b61dbd6c53e84fe9b94fc4ec589db9b1" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df" "0786646697ef44d0a722ec1084d1c42e" "d4018cfd82ec460382a6ebed8e001566" "39cf35f57fb049ad828690221bc201cb" "83c8656df4c64b52947c66667983d570" "391055915f754753a4e2e539ce009bb4" "a27cd45e24e44553a42d5cff96bc4002" "f6d249d5f8694271bdf16462b70184de" "7fb101e28cea43b0b96eed8e4e0e35ff" "d09a42fddc2645a38d955e15357b7d31" "d159b412425c4b899058f45e92ed299a" "461faf0a92d44b8ba3f9bd89093987a8" "7a75902f87a246bcbbe55bf0602b8f5f" "b904f5bc316c4933a2cb159384819e21" "2c324e698fa646e99d558abeccac8bce" "301541fda57e4733b11ab2973deb3835" "49f144c25b0e487b8c663b76fd42d285" "63d0f88994fa4a6394c6f9544e6c3ecc" "48ff5afa9ca545cb9c8de41778d70276" "ab354365a6bb41699d9aee6e5c9497c0" "22eec4a8f6274be6ae96d8900224bed7" "30c20f65fad54dcc839c9fb6c01f74b4" "a872985bea814bab9e11e1e4c280580e" "6c70fc33d675420fbf9427431ec5aba3" "38abfe4601684d53914021e8903a9903" "0385ad3dc2c9434fb84199c59cc6dab3" "bbdc2e9a9fe94d7b9bb29fc73764a1f1")))) option))
+
+
+; Section: Commodities
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Include accounts with zero total balances")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Omit zero balance figures")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Report name")))
+  ((lambda (o) (if o (gnc:option-set-value o "Income Statement"))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Disable amount indenting")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "0e94fd0277ba11e8825d43e27232c9d4" "Income Statement (Multicolumn)" "" options))
+          )
+        )
+      )
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Account Summary"
+      (let ((options (gnc:report-template-new-options/report-guid "3298541c236b494998b236dfad6ad752" "Account Summary")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("a7000d29bbcf43728ea3842ae82a732f" "5d26712b31c24ba3b65d7176f87f2c5a" "fc3dfe4d3b5e48908dd81ad4f37361bc" "65d6b8c104494bbda7363bc452288bd4" "605701bb2bbf44ca910543dff41ff018" "76b7a706bcdc44ceb1ff5bbef5f07c08" "12d249b58de547e18d4ec44d644efe71" "2949157f21974c9cb0892a55acb097dc" "77ef473e15cf4c4da19f849bfc2341ff" "550a14b443de468ba3da6d98d3caab30" "3e1363ff4fea48a6a0e248dcbfcc7230" "e6ca203c320e46dfb048e847fd3b34ca" "2b1cc88c8ec64152b4689c2bd63ba109" "47965bb527e64852a477f518f1f6f369" "674009921a3c42979ebea18822cd4dc9" "a869733b20a446919f541a7223ddc6f6" "9d6aa8b756d34588802e847bf28e267a" "8bdb428df24f42eaba9860f142a12422" "57b9093be74245719ffe5fbc04c06495" "0786646697ef44d0a722ec1084d1c42e" "d4018cfd82ec460382a6ebed8e001566" "39cf35f57fb049ad828690221bc201cb" "83c8656df4c64b52947c66667983d570" "391055915f754753a4e2e539ce009bb4" "a27cd45e24e44553a42d5cff96bc4002" "f6d249d5f8694271bdf16462b70184de" "7fb101e28cea43b0b96eed8e4e0e35ff" "d09a42fddc2645a38d955e15357b7d31" "d159b412425c4b899058f45e92ed299a" "461faf0a92d44b8ba3f9bd89093987a8" "7a75902f87a246bcbbe55bf0602b8f5f" "b904f5bc316c4933a2cb159384819e21" "2c324e698fa646e99d558abeccac8bce" "301541fda57e4733b11ab2973deb3835" "49f144c25b0e487b8c663b76fd42d285" "63d0f88994fa4a6394c6f9544e6c3ecc" "48ff5afa9ca545cb9c8de41778d70276" "ab354365a6bb41699d9aee6e5c9497c0" "22eec4a8f6274be6ae96d8900224bed7" "30c20f65fad54dcc839c9fb6c01f74b4" "a872985bea814bab9e11e1e4c280580e" "6c70fc33d675420fbf9427431ec5aba3" "38abfe4601684d53914021e8903a9903" "0385ad3dc2c9434fb84199c59cc6dab3" "bbdc2e9a9fe94d7b9bb29fc73764a1f1")))) option))
+
+
+; Section: Commodities
+
+(let ((option (gnc:lookup-option options
+                                 "Commodities"
+                                 "Show Foreign Currencies")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Omit zero balance figures")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Parent account balances")))
+  ((lambda (o) (if o (gnc:option-set-value o 'recursive-bal))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Account Code")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "3298541c236b494998b236dfad6ad752" "Account Summary" "" options))
+          )
+        )
+      )
+
+      ;;;; Options for embedded report
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      ;; options for report "Account Summary"
+      (let ((options (gnc:report-template-new-options/report-guid "3298541c236b494998b236dfad6ad752" "Account Summary")))
+; Section: Accounts
+
+(let ((option (gnc:lookup-option options
+                                 "Accounts"
+                                 "Accounts")))
+  ((lambda (o) (if o (gnc:option-set-value o '("85a5233c709a40f7828f399d2dabfa2b" "0775a9f46f734fdca409b59aacf3e16f" "e262a11dcad94824b82529f40251137c" "8b1b108d7d8d4332a7af81b099d5b730" "c23aba19cbe34376bbcf5c641dc7cfac" "c94c89684916498b8ebff5b94e97b763" "69d2fbb94a564ab0a23f7ab22bd1d67b" "502446cb4e3548b089e51c1e236390d1" "c00176c732a3460da80fc0dca1cb559f" "eea0834754a34bdb9ab55985a7183597" "2dea085b4d5249efa8f1473478350325" "1a18008a6e594ea599ff3a72ed247a39" "2f0226bebe504b13a1ce3071f3f44713" "c290e3cd9a3844a0a01344d19c1be9cd" "064bc0b2f08746a2841613461d1ecf76" "fa25eed7ef834a70af321f3a5be03105" "e734ecd7e85e4e70a631fc63147388e8" "2a16709a33e44ab09c8518cd9effcb55" "d847229b4ee041aab4100235a8226476" "a99aabca6b0a412a94a029cc4c696def" "96ae634ed1c64c348819a2e9dae34dcb" "85130be2e2b1493d85bdbc73945bb4b5" "f46adacdd52b4220ae6e1ae8037a6b94" "a535549d22ea468fa84520992b8c41c6" "78f8b0eb33304ddd8fb58cbd91c5e69c" "e1b08c0766ec410781f4182937b9ede9" "b9f635e7768642c4a662bb46fef21064" "ffbcba3ab43943c9b87b92e19dd9e825" "5f004dd3f4e441789adaa9573e6a0c21" "56a08fdd13e4432583a14f78bc43ff55" "4b229fb1570642948d31c0a22f9fe614" "607b99649c80464faa135ec5a13db45d" "7fb970fa1bc64fbf9a8bd83966849a7b" "79f97ea322f148d88f939557e795c07a" "70dd8d4c37d94479b8c22681f0f343b2" "4a8d8c319f62445e816e3345667355f6" "ff05699dce5f48798048b5b7ca1dc2ec" "bceb455501da41b6b1c6f1c3ba80feba" "74100e06952d49b98cc7c35b6294ad84" "736f83e6ba50457a987d55ba5ba8ce20" "6d4e8ab551a54a2589749eb68efe7514" "6acfd78a553a4888857168c550eed098" "43ebd5aeaaf04dc2b1c6a2dcc8946963" "45a9ee74ce39407ca0042bb25c1149d8" "52244efae6bf4bc281cc5416bac9320a" "7ee2d901171b42e28b0f300ac1dd7720" "ae51161710fe42e0881cd40a244609a2" "c6a17844a7d54baa98120efa3e0d37bc" "d2bc78a8508b42b988024167e85cf8f4" "60a5707f1c9f490caa0dec9e9370a73a" "aff53715d2064d27a9265289cd262e32" "b77d84fae1b4438a9fff88ba544be6af" "ce3b2705c71f4a348d05f27bcffb8329" "fa5005db97cb42cebdbc0f41b9c59520" "90a0c010f9fa43b0acf4d72efd654814" "1a4c665360ed45488e58e90d9b744311" "0876be41c966439eae2b9621de95b0d7" "3a1c9d7b7e4749e9844ec520a17ca756" "91b5cac9bae84c8b9e602b955343ea20" "128f9af741034ad2b69cff1d383bf3e2" "3820362680ca455a9a8fc446620db821" "bf158a904b69441e82e85e928ccda0c8" "5cd9cd05ebfc4583962fc897d82d440b" "c7e7451726304a3bbc0de9ac4108ec70" "ec6645aaa68044f88cdc2962f8433910" "811ae27ea1f14454b4e630bc96e60ff8" "17c257ef8e3e4bf5be35700f6a8ce389" "ddadaf48cd774c189094f30b1236a4ca" "7b08a206426b4241bed646be20769dc7" "a748481eb18b45f5b3921c8a07044134" "768c895fcf7e495cb60021243b442ef8" "1017f8335b484f35a9ec8bf62f27e35b" "c3dfc4984a8442d4ae6b6be1674ff10c" "57bbc8ff3c8a485da4a53343790ab5d2" "11c7df78f701494bad0f09149173edb6" "41c6d08f68d84915b796e35cb6f11893" "01a11608f19042adaf4e5e26ef773872" "471ef973dcaf440f9ac21154eaaefd67" "72314869462d47d2b7bbf91e7a1b5db8" "f4663a2ce11b4dbf9f021ad95c2d1547" "998a580b65a448f4a1652c7e1952865b" "bdd89e671af74593a1bc35520e930cda" "c08e8d8613164173b659841d9fb19290" "e52bc858561b416bb9c61d7deb3c9cf4" "2ef228bca6764cb3822e0b8ee7ebb026" "a35a24240b05478199da5437d1b42c37" "3b83ec4bb6aa42f0a6c291516cd7c17f" "51a2eea0847f40c0960a6b1bbb433ef4" "95504792d6b048eab1ade5e5b1d5db07" "3c2431bb0613484d852b07d56964e836" "33c1eb216c3a4390aa9b2532f10aa023" "8ce868f20da845ef891589642b6c4ba4" "678fbaaa9fe74d98a6aa8da20f00dccf" "fb2026b1b60547bb8b250da79c85edca" "7f90f5955a294f70ba1f9a1d6683338c" "e7ba1a55683b41829273d95c23ffe587" "c6a716ed2fa8461dafd93398d7eab391" "94363bfb24c340928a9fe2c334ddf966" "26244d77b9da4711961db1392489a7f9" "54a836e5bf504098b88bca0560639d2a" "aaae239e22fb4ece98f87aef9d3f49e8" "0ad245e025b24beebe1a0808e2acce3a" "4a33204ee6d14f5f8a0733513830eb34" "029468ae7cd644e08a4130d0b9925729" "febc1205e9bf4e9993c40e840b28bb97" "ba185f97b61b4bb08216994c1122a58f" "e7fa13c9de564b18bd5256e418fda3e5" "cbdc2424d76d4a6a8247fe0ed98a19af" "e65e816158eb4b2ab3cb27e911d135c9" "d02614b99ee74d16a2885fff2ab4ecad" "471c82f4c3aa4ad688dc269d8aec463c" "d057c4b4807245dc8c2dc8cd687d35ae" "591f472744bd4c6087be2d26ce18cbcb" "69c31c8248c54a2e8408f7ae6adfd305" "12756034d9984e348e2866999d24ac8a" "9f7ffcb1d76946a0a2000a5b2624c872" "910114e1553a47db9b92f3a5f78eec86" "619a9db384db43008c97bc1d4bfe7ac7" "abdd805ed29140a382b1043d00e64365" "6bf72f9d1d0a482e846792975e691fac" "edddb6809a3f4ddb9881b420a2f58857" "a97632a542794ca3b2e22a0bcaf2d5b9" "a7c53fbee03a4f3799d5c112b35522cb" "4a4d722d4c6a48578423642e50097c86" "b61dbd6c53e84fe9b94fc4ec589db9b1" "754eeacb353e44a2a0ec5a357ea1ea5d" "f5f98eafd79f441d80099dc0141ce6f3" "95bde0948cbb42f7a5b31a6273baa0df")))) option))
+
+
+; Section: Commodities
+
+(let ((option (gnc:lookup-option options
+                                 "Commodities"
+                                 "Show Foreign Currencies")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: Display
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Omit zero balance figures")))
+  ((lambda (o) (if o (gnc:option-set-value o #t))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Parent account balances")))
+  ((lambda (o) (if o (gnc:option-set-value o 'recursive-bal))) option))
+
+(let ((option (gnc:lookup-option options
+                                 "Display"
+                                 "Account Code")))
+  ((lambda (o) (if o (gnc:option-set-value o #f))) option))
+
+
+; Section: General
+
+(let ((option (gnc:lookup-option options
+                                 "General"
+                                 "Stylesheet")))
+  ((lambda (o) (if o (gnc:option-set-value o '#{CSS-based stylesheet \x28;experimental\x29;}#))) option))
+
+
+        (set! new-embedded-report-ids
+          (append
+            new-embedded-report-ids
+              (list (gnc:restore-report-by-guid-with-custom-template #f "3298541c236b494998b236dfad6ad752" "Account Summary" "" options))
+          )
+        )
+      )
+
+      ;;;; Update Section: __general
+      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      (let*
+        (
+          (option (gnc-lookup-option (gnc:optiondb options) "__general" "report-list"))
+          (saved-report-list (GncOption-get-value option))
+        )
+        (
+          (lambda (option)
+            (if option ((gnc:option-setter option) (map (lambda (x y) (cons x (cdr y))) new-embedded-report-ids saved-report-list)))
+          )
+          option
+        )
+      )
 
       options
     )
   )
   (gnc:define-report 
     'version 1
-    'name "Income Over Time"
-    'report-guid "6b5ae05300ae4fbf94aee48350320c44"
-    'parent-type "44f81bee049b4b3ea908f8dac9a9474e"
+    'name "Dashboard"
+    'report-guid "eed185d3c28b441092da7e14e01895b1"
+    'parent-type "d8ba4a2e89e8479ca9f6eccdeb164588"
     'options-generator options-gen
     'menu-path (list gnc:menuname-custom)
-    'renderer (gnc:report-template-renderer/report-guid "44f81bee049b4b3ea908f8dac9a9474e" "Income Over Time")
+    'renderer (gnc:report-template-renderer/report-guid "d8ba4a2e89e8479ca9f6eccdeb164588" "Multicolumn View")
   )
 )
 

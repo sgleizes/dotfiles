@@ -29,3 +29,4 @@ Plugins=appimagethumbnail,audiothumbnail,blenderthumbnail,comicbookthumbnail,djv
 
 [VersionControl]
 enabledPlugins=Git
+

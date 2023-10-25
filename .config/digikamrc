@@ -36,6 +36,7 @@ Image Sorting=0
 Item Left Click Action=0
 Preview Convert To Eight Bit=true
 Preview Load Full Image Size=false
+Preview Scale Fit To Window=false
 Preview Show Icons=true
 Rating Filter Condition=0
 Recursive Albums=true
@@ -83,10 +84,10 @@ TreeView Font=Noto Sans,10,-1,5,50,0,0,0,0,0
 Update Type=0
 
 [AlbumFolderView Sidebar]
-CurrentIndex=12
-Expansion=0,1,4,6,436,9,12,473,14,20
+CurrentIndex=39
+Expansion=0,1,4,5,6,23,436,359,9,12,29,28,39,473,14,20
 RestoreChecked=false
-Selection=12
+Selection=39
 SortColumn=0
 SortOrder=0
 
@@ -94,10 +95,10 @@ SortOrder=0
 CaseSensitive=0
 
 [AlbumSelectWidget]
-AlbumTreeViewCurrentIndex=
-AlbumTreeViewExpansion=57,1
+AlbumTreeViewCurrentIndex=50
+AlbumTreeViewExpansion=57,1,6
 AlbumTreeViewRestoreChecked=false
-AlbumTreeViewSelection=
+AlbumTreeViewSelection=50
 AlbumTreeViewSortColumn=0
 AlbumTreeViewSortOrder=0
 CaseSensitive=0
@@ -1001,7 +1002,7 @@ tagPaths=1
 
 [Database Settings]
 Database Connectoptions=UNIX_SOCKET=/home/psydev/.local/share/digikam/db_misc/mysql.socket
-Database Encrypted Password=AwIYGBg=
+Database Encrypted Password=AwJWVlY=
 Database Hostname=
 Database Name=digikam
 Database Name Face=digikam
@@ -1034,9 +1035,12 @@ ActiveTab=4
 DigikamProperties Expanded=true
 FileProperties Expanded=true
 ItemProperties Expanded=true
+LocationProperties Expanded=true
 Minimized=false
 PhotographProperties Expanded=true
 RestoreSize=-1
+RightsProperties Expanded=true
+TagsProperties Expanded=true
 VideoProperties Expanded=true
 
 [Digikam Right Sidebar][Captions Tags Properties Tab]
@@ -1232,6 +1236,7 @@ AlbumComboBox-SortOrder=0
 AlbumTypeEntry=0
 Last maximum similarity=100
 Last minimum similarity=90
+Last reference image method=0
 Last search album tag relation=0
 Last search results restriction=0
 Lower bound for minimum similarity=40
@@ -1313,11 +1318,11 @@ CaseSensitive=0
 [General Settings]
 1920x1080 screen: Window-Maximized=true
 2 screens: Window-Maximized=true
-2560x1440 screen: Height=573
-2560x1440 screen: Width=1140
+2560x1440 screen: Height=1368
+2560x1440 screen: Width=1276
 2560x1440 screen: Window-Maximized=true
-2560x1440 screen: XPosition=710
-2560x1440 screen: YPosition=445
+2560x1440 screen: XPosition=1284
+2560x1440 screen: YPosition=24
 3 screens: Window-Maximized=true
 Application Font=Noto Sans,10,-1,5,50,0,0,0,0,0
 Application Style=breeze
@@ -1603,9 +1608,12 @@ ActiveTab=0
 DigikamProperties Expanded=true
 FileProperties Expanded=true
 ItemProperties Expanded=true
+LocationProperties Expanded=true
 Minimized=true
 PhotographProperties Expanded=true
 RestoreSize=33
+RightsProperties Expanded=true
+TagsProperties Expanded=true
 VideoProperties Expanded=true
 
 [LightTable Settings][Left Sidebar][Captions Tags Properties Tab]
@@ -1682,9 +1690,12 @@ ActiveTab=0
 DigikamProperties Expanded=true
 FileProperties Expanded=true
 ItemProperties Expanded=true
+LocationProperties Expanded=true
 Minimized=true
 PhotographProperties Expanded=true
 RestoreSize=32
+RightsProperties Expanded=true
+TagsProperties Expanded=true
 VideoProperties Expanded=true
 
 [LightTable Settings][Right Sidebar][Captions Tags Properties Tab]
@@ -1885,6 +1896,16 @@ SortOrder=0
 
 [SearchBar Search Text Tool]
 CaseSensitive=0
+
+[Select Reference]
+AlbumComboBox-Checked=
+AlbumComboBox-CurrentIndex=
+AlbumComboBox-Expansion=
+AlbumComboBox-RestoreChecked=true
+AlbumComboBox-Selection=
+AlbumComboBox-SortColumn=0
+AlbumComboBox-SortOrder=0
+UseWholeAlbumsEntry=false
 
 [Sketch Search View]
 AlbumComboBox-Checked=
