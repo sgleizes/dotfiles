@@ -63,6 +63,7 @@ mkcd() { mkd "$@" && cd "${@:$#}"; } # ${@:$#} is a bashism
 alias sc='systemctl'
 alias scu='sc --user'
 alias jc='journalctl --catalog'
+alias jcu='jc --user'
 alias jcb='jc --boot=0'
 alias jcf='jc --follow'
 alias jce='jc -b0 -p err..alert'
