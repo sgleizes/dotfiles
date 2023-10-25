@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+if ! command -v wmctrl &>/dev/null; then
+  echo "!! wmctrl is not available"
+  exit 2
+fi
+
+win="$1"
+if [[ ! "$win" ]]; then
+  echo "!! a window title argument is required"
+  exit 1
+fi
+
+wmctrl -l | grep "$win" &&\
+  wmctrl -a "$win"
