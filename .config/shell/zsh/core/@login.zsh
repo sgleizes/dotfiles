@@ -23,7 +23,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 
 # Export needed XDG user directories.
-export XDG_PROJECTS_DIR="$(xdg-user-dir PROJECTS)"
+export XDG_PROJECTS_DIR=$(xdg-user-dir PROJECTS 2>/dev/null || echo "$HOME/Projects")
 
 # XDG paths for zsh.
 export ZDATADIR=${ZDATADIR:-$XDG_STATE_HOME/zsh}
