@@ -595,9 +595,9 @@ Disable for now. I find it less clear than the default letters, and it also crea
 
 [[https://gitlab.com/ideasman42/emacs-scroll-on-jump][This package]] allows to control the scrolling on any operation that jumps to a new location.
 #+begin_src elisp
-(package! scroll-on-jump :recipe
-  (:host gitlab
-   :repo "ideasman42/emacs-scroll-on-jump"))
+;; (package! scroll-on-jump :recipe
+;;  (:host gitlab
+;;   :repo "ideasman42/emacs-scroll-on-jump"))
 #+end_src
 
 ** Systemd
@@ -1785,19 +1785,19 @@ r,/ : /
   (let* ((c (char-to-string path))
          (new-path
           (cl-case (intern c)
-            ('e "/etc")
-            ('u "/usr")
-            ('d "/dev")
-            ('l (file-truename default-directory))
-            ('L (file-truename (dired-get-filename)))
-            ('o "/opt")
-            ('v "/var")
-            ('h  "~/")
-            ('m "/media")
-            ('M "/mnt")
-            ('s "/srv")
-            ('r "/")
-            ('/ "/"))))
+            (e "/etc")
+            (u "/usr")
+            (d "/dev")
+            (l (file-truename default-directory))
+            (L (file-truename (dired-get-filename)))
+            (o "/opt")
+            (v "/var")
+            (h  "~/")
+            (m "/media")
+            (M "/mnt")
+            (s "/srv")
+            (r "/")
+            (/ "/"))))
     (when (string-equal c "q")
       (keyboard-quit))
     (when (and new-path (file-directory-p new-path))
@@ -2376,18 +2376,18 @@ Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33faf
                                (if (= a-day b-day)
                                    ;; Same day: compare unread, then tags, then domain, then timestamp
                                    (cl-case (psydev/elfeed-search-unread< a-tags b-tags)
-                                     ('< nil)
-                                     ('> 't)
-                                     ('= ;; Same unread status; compare feed title
+                                     (< nil)
+                                     (> 't)
+                                     (= ;; Same unread status; compare feed title
                                       ;; Same day: compare tags, then domain, then timestamp
                                       (cl-case (psydev/elfeed-search-tags< a-tags b-tags)
-                                        ('< nil)
-                                        ('> 't)
-                                        ('= ;; Same tags; compare feed title
+                                        (< nil)
+                                        (> 't)
+                                        (= ;; Same tags; compare feed title
                                          (cl-case (psydev/elfeed-search-feed< a b)
-                                           ('< nil)
-                                           ('> 't)
-                                           ('= ;; Same site; compare timestamp
+                                           (< nil)
+                                           (> 't)
+                                           (= ;; Same site; compare timestamp
                                             (< (elfeed-entry-date a) (elfeed-entry-date b))))))))
                                  ;; Different day: compare day
                                  (< a-day b-day)))))
@@ -3843,7 +3843,7 @@ Add the missing arrow-key variants of the window navigation commands.
   :nv "C-p" nil
   :nv "C-n" nil)
  ;; Rebind multiple-cursors hydra
- (:when (featurep! :editor multiple-cursors)
+ (:when (modulep! :editor multiple-cursors)
   :nv "M-z"             #'evil-mc-hydra/body)
  ;; Use more consistent bindings for workspaces/window navigation
  :m "] TAB"           #'+workspace/switch-right
@@ -4310,6 +4310,9 @@ Customize ivy-posframe.
 
 Extend the default hydra for ivy.
 #+begin_src elisp
+;; Fix regression in emacs 29.1: error Eager macro-expansion failure: (void-variable hydra-ivy/heads)
+(eval-when-compile (require 'ivy-hydra))
+
 (after! ivy-hydra
   (defhydra+ hydra-ivy (:hint nil :color pink)
     "
@@ -5945,8 +5948,8 @@ Define a view dispatcher hydra.
 
   (defun +hydra/org-view--set-scope (scope)
     (cl-case scope
-      ('buffer (progn (setq +psydev/org-view-scope 'buffer)))
-      ('file (let ((file (read-file-name "Select File: " org-directory nil (confirm-nonexistent-file-or-buffer))))
+      (buffer (progn (setq +psydev/org-view-scope 'buffer)))
+      (file (let ((file (read-file-name "Select File: " org-directory nil (confirm-nonexistent-file-or-buffer))))
                (when file
                  (setq +psydev/org-view-scope file))))
       (t (progn (setq +psydev/org-view-scope #'org-agenda-files)))))
