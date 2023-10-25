@@ -30,12 +30,10 @@ PACMAN_PACKAGES_BASIC=(
   wget
 )
 PACMAN_PACKAGES_DEV=(
-  archivemount
   direnv
   emacs
-  fpp
   git-delta
-  git-extras
+  glow
   httpie
   hub
   imagemagick
@@ -47,7 +45,6 @@ PACMAN_PACKAGES_DEV=(
   subversion
   tealdeer
   tmux
-  tmux-xpanes
   xclip
 )
 PACMAN_PACKAGES_EXTRA=(
@@ -60,14 +57,13 @@ PACMAN_PACKAGES_EXTRA=(
   rclone
   restic
   unison
-  youtube-dl
+  yt-dlp
 )
 
 # List of AUR packages to hint for manual installation.
 AUR_PACKAGE_LIST=(
-  advcp
+  advcpmv
   archivemount
-  fpp-git
   git-extras
   pistol-git
   tmux-xpanes
@@ -118,6 +114,10 @@ function missing_aur_packages {
   local foreign_pkgs
 
   foreign_pkgs=( $(pacman -Qqem) )
+  if [[ ! $foreign_pkgs ]]; then
+    print -l $@
+  fi
+
   print -l $@ | grep -vE "^(${(j:|:)foreign_pkgs})" || true
 }
 

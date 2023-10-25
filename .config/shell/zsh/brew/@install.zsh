@@ -13,7 +13,7 @@ fi
 # Lists of homebrew packages to prompt for automatic installation.
 BREW_PACKAGES_BASIC=(
   # NOTE: Missing recipe
-  # advcp
+  # advcpmv
   atool
   bat
   btop
@@ -40,9 +40,9 @@ BREW_PACKAGES_DEV=(
   direnv
   # NOTE: Built --without-x
   # emacs
-  fpp
   git-delta
   git-extras
+  glow
   httpie
   hub
   imagemagick
@@ -67,7 +67,7 @@ BREW_PACKAGES_EXTRA=(
   rclone
   restic
   unison
-  youtube-dl
+  yt-dlp
 )
 
 # Prompt for installation of the given package group using homebrew.
