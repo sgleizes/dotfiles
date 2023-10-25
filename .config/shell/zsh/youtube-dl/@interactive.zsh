@@ -3,7 +3,7 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[youtube-dl] )); then
+if (( ! $+commands[yt-dlp] )); then
   return 1
 fi
 

@@ -23,7 +23,7 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
 
 # Export needed XDG user directories.
-export XDG_PROJECTS_DIR="$(xdg-user-dir PROJECTS)"
+export XDG_PROJECTS_DIR=$(xdg-user-dir PROJECTS 2>/dev/null || echo "$HOME/Projects")
 
 # XDG paths for zsh.
 export ZDATADIR=${ZDATADIR:-$XDG_STATE_HOME/zsh}
@@ -67,11 +67,6 @@ export NODE_REPL_HISTORY="$XDG_STATE_HOME/node/repl_history"
 # XDG_CACHE_HOME environment overrides.
 export RANDFILE="$XDG_CACHE_HOME/openssl/randfile"
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
-
-# XDG path to the X server auth cookie. This must match the display manager setting.
-# It should be located in XDG_RUNTIME_DIR but sddm does not allow that.
-[[ -f "$XDG_CACHE_HOME/Xauthority" ]] \
-  && export XAUTHORITY="$XDG_CACHE_HOME/Xauthority"
 
 # Create parent directories for programs requiring it.
 command mkdir -p \

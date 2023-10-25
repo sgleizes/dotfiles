@@ -1,17 +1,17 @@
 #
-# Unison profile for synchonizing files between the Homeworld and Mothership HDD.
+# Unison profile for synchonizing files between the Expansion and Homeworld HDD.
 #
 
 include _common
 include _all
 
 # Label and shortcut key for this profile in the graphical UI.
-label = Synchronize files between the Homeworld and Mothership HDD
-key = 5
+label = Synchronize files between the Expansion and Homeworld HDD
+key = 4
 
 # Synchronization roots.
+root = /run/media/psydev/EXPANSION
 root = /run/media/psydev/HOMEWORLD
-root = /run/media/psydev/MOTHERSHIP
 
 # Make sure not to do anything if the drives are not mounted.
 mountpoint = Documents
@@ -21,12 +21,12 @@ fastcheck = true
 # FAT: disable permissions, chmod, links, case and ignore inode changes.
 fat = true
 
-# Do not delete anything from HOMEWORLD.
-nodeletion = /run/media/psydev/HOMEWORLD
+# Do not delete anything from EXPANSION.
+nodeletion = /run/media/psydev/EXPANSION
 
 # Additional paths to backup.
 path = Archives
-# path = Backups
+path = Backups
 
 # Ignored paths.
 ignore = Path Videos

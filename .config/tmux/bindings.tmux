@@ -276,18 +276,6 @@ bind -N 'Show the pane menu' 'M-P' display-menu-pane
 bind -N 'Edit the tmux configuration'   'e' edit-config
 bind -N 'Reload the tmux configuration' 'r' reload
 
-# Integration with https://github.com/facebook/pathpicker.
-bind -N 'Run path-picker on the current pane visible contents' 'f' {
-  capture-pane -J
-  send C-u # push-line - coupled to zsh bindings
-  send "tmux show-buffer | fpp ; tmux delete-buffer" 'Enter'
-}
-bind -N 'Run path-picker on the current pane history' 'F' {
-  capture-pane -J -S-
-  send C-u # push-line - coupled to zsh bindings
-  send "tmux show-buffer | fpp ; tmux delete-buffer" 'Enter'
-}
-
 # Enter copy mode.
 bind -N 'Enter copy mode'    'Enter' copy-mode
 

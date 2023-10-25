@@ -7,4 +7,4 @@ include _all
 
 # Label and shortcut key for this profile in the graphical UI.
 label = Synchronize all files with the Homeworld HDD
-key = 1
+key = 2

@@ -14,5 +14,5 @@ fi
 # Use `fast-theme` to configure.
 zi light-mode wait lucid for \
   id-as'plugin/fast-syntax-highlighting' \
-  depth=1 atload'unalias fsh-alias' \
+  depth=1 \
   @z-shell/fast-syntax-highlighting

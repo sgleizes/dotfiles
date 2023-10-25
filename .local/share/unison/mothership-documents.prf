@@ -5,6 +5,5 @@
 include _mothership
 include _documents
 
-# Label and shortcut key for this profile in the graphical UI.
+# Label for this profile in the graphical UI.
 label = Synchronize documents with the Mothership HDD
-key = 6

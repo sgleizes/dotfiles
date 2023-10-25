@@ -1,8 +1,9 @@
 #
-# Exa configuration module for zsh.
+# Exa/Eza configuration module for zsh.
 #
 
 # Install exa if standalone install is requested.
+# NOTE: This does not currently support eza. To upgrade when needed.
 if (( $+functions[zi] )) && [[ $ZSH_STANDALONE_INSTALL ]]; then
   # Uninstall: zi delete app/exa && zi cclear && rm -f $ZI[MAN_DIR]/{man1/exa.1,man5/exa_colors.5}
   zi light-mode for id-as'app/exa' \
@@ -15,16 +16,16 @@ if (( $+functions[zi] )) && [[ $ZSH_STANDALONE_INSTALL ]]; then
 fi
 
 # Abort if requirements are not met.
-if (( ! $+commands[exa] )); then
+if (( ! $+commands[eza] )); then
   return 1
 fi
 
 # Quick switch to opt-in git support.
-# To enable set `EXA_GIT` to any value.
-alias exa='exa ${EXA_GIT+--git}'
+# To enable set `EZA_GIT` to any value.
+alias eza='eza ${EZA_GIT+--git}'
 
 # Override original aliases with similar, yet improved behavior.
-alias ls='exa --group-directories-first' # list directories first by default
+alias ls='eza --group-directories-first' # list directories first by default
 alias lsa='ls -a'                        # short list, hidden files
 alias l='ls -l'                          # list in long format
 alias ll='ls -lGh'                       # list as a grid with header
@@ -39,7 +40,7 @@ alias lta='l --sort=acc --time=acc'      # list sorted by access time, most rece
 
 # Color theme.
 if (( $terminfo[colors] >= 256 )); then
-  export EXA_COLORS="\
+  export EZA_COLORS="\
 ur=38;5;41:\
 uw=38;5;41:\
 ux=38;5;41;4:\
@@ -61,7 +62,7 @@ gn=38;5;9;1:\
 da=38;5;145:\
 "
 elif (( $terminfo[colors] >= 8 )); then
-  export EXA_COLORS="\
+  export EZA_COLORS="\
 ur=1;32:\
 uw=1;32:\
 ux=1;32:\
