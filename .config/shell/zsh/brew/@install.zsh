@@ -17,7 +17,7 @@ BREW_PACKAGES_BASIC=(
   atool
   bat
   btop
-  exa
+  eza
   fd
   fzf
   fasd
@@ -62,7 +62,6 @@ BREW_PACKAGES_EXTRA=(
   fortune
   # NOTE: Missing recipe
   # kmon
-  lazygit
   ponysay
   rclone
   restic

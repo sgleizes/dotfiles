@@ -15,7 +15,7 @@ PACMAN_PACKAGES_BASIC=(
   atool
   bat
   btop
-  exa
+  eza
   fd
   fasd
   fzf
@@ -51,7 +51,6 @@ PACMAN_PACKAGES_EXTRA=(
   expac
   fortune-mod
   kmon
-  lazygit
   pacman-contrib
   ponysay
   rclone
