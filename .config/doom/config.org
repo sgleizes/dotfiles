@@ -34,14 +34,13 @@ SuccessExitStatus=15
 Restart=on-failure
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target
 #+end_src
 
 This unit file is extended by the following /drop-in snippet/ that sets-up the
 right environment for ~emacs~ daemons:
 #+begin_src systemd :tangle ~/.config/systemd/user/emacs@.service.d/env.conf :mkdirp yes
 [Service]
-Environment=XAUTHORITY=%C/Xauthority
 Environment=DOOMDIR=%E/doom
 Environment=DOOMLOCALDIR=%h/.local/share/emacs
 #+end_src
@@ -53,7 +52,7 @@ Description=Emacs text editor daemons
 Wants=emacs@terminal.service emacs@graphical.service
 
 [Install]
-WantedBy=default.target
+WantedBy=graphical-session.target
 #+end_src
 
 Which is then enabled and started with:
