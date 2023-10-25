@@ -1,41 +1,41 @@
 diff --git i/lib/zsh/git-process-output.zsh w/lib/zsh/git-process-output.zsh
-index cc6a606..5d84385 100755
+index a0b9529..253b2d7 100755
 --- i/lib/zsh/git-process-output.zsh
 +++ w/lib/zsh/git-process-output.zsh
-@@ -58,7 +58,7 @@ timeline() {
+@@ -50,7 +50,7 @@ timeline() {
      last_time=$SECONDS
    }
-   print -nr -- ${frames_splitted[cur_frame+1]}" "
--  print -nPr "%F{165}"
-+  print -nPr "%F{11}"
-   print -f "%s %s" "${bar// /░}" ""
-   print -nPr "%f"
+   builtin print -nr -- ${frames_splitted[cur_frame+1]}" "
+-  builtin print -nPr "%F{201}"
++  builtin print -nPr "%F{11}"
+   builtin print -f "%s %s" "${bar// /░}" ""
+   builtin print -nPr "%f"
  }
-@@ -68,9 +68,9 @@ timeline() {
+@@ -61,9 +61,9 @@ timeline() {
  # $4 - receiving percentage
  # $5 - resolving percentage
  print_my_line() {
--  local col="%F{200}" col3="%F{200}" col4="%F{200}" col5="%F{200}"
--  [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{201}"
--  [[ -n "${5#...}" ]] && col4="%F{201}"
-+  local col="%F{221}" col3="%F{221}" col4="%F{201}" col5="%F{221}"
-+  [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{220}"
-+  [[ -n "${5#...}" ]] && col4="%F{220}"
+-  local col="%F{201}" col3="%F{201}" col4="%F{201}" col5="%F{046}"
+-  [[ -n "${4#...}" && -z "${5#...}" ]] && local col="%F{226}" col3="%F{226}" col4="%F{226}"
+-  [[ -n "${5#...}" ]] && local col="%F{201}" col3="%F{046}" col4="%F{046}"
++  local col="%F{221}" col3="%F{221}" col4="%F{221}" col5="%F{208}"
++  [[ -n "${4#...}" && -z "${5#...}" ]] && local col="%F{226}" col3="%F{161}" col4="%F{161}"
++  [[ -n "${5#...}" ]] && local col="%F{201}" col3="%F{046}" col4="%F{208}"
    if (( COLS >= 70 )) {
-     print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RES%f: $5%}  "
+     builtin print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RES%f: $5%}  "
    } elif (( COLS >= 60 )) {
-@@ -82,10 +82,10 @@ print_my_line() {
+@@ -75,10 +75,10 @@ print_my_line() {
  }
  
  print_my_line_compress() {
--  local col="%F{201}" col3="%F{201}" col4="%F{201}" col5="%F{201}"
--  [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{201}"
--  [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{201}"
--  [[ -n "${6#...}" ]] && col5="%F{201}"
-+  local col="%F{220}" col3="%F{220}" col4="%F{220}" col5="%F{220}"
-+  [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{220}"
-+  [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{220}"
-+  [[ -n "${6#...}" ]] && col5="%F{220}"
+-  local col="%F{201}" col3="%F{201}" col4="%F{201}" col5="%F{046}"
+-  [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && local col="%F{226}" col3="%F{226}" col4="%F{226}" col5="%F{226}"
+-  [[ -n "${5#...}" && -z "${6#...}" ]] && local col="%F{201}" col3="%F{226}" col4="%F{226}" col5="%F{226}"
+-  [[ -n "${6#...}" ]] && local col3="%F{201}" col4="%F{046}" col5="%F{046}"
++  local col="%F{221}" col3="%F{221}" col4="%F{221}" col5="%F{208}"
++  [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && local col="%F{161}" col3="%F{161}" col4="%F{161}" col5="%F{161}"
++  [[ -n "${5#...}" && -z "${6#...}" ]] && local col="%F{221}" col3="%F{161}" col4="%F{161}" col5="%F{161}"
++  [[ -n "${6#...}" ]] && local col3="%F{221}" col4="%F{208}" col5="%F{208}"
    if (( COLS >= 80 )) {
-     print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RES%f: $6%%}  "
+     builtin print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RES%f: $6%%}  "
    } elif (( COLS >= 65 )) {
