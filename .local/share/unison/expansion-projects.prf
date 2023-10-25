@@ -1,0 +1,9 @@
+#
+# Unison profile for synchonizing projects with the Expansion HDD.
+#
+
+include _expansion
+include _projects
+
+# Label for this profile in the graphical UI.
+label = Synchronize projects with the Expansion HDD

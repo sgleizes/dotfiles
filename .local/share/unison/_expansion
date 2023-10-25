@@ -1,0 +1,29 @@
+#
+# Unison profile for synchronizing with the Expansion HDD.
+#
+
+include _common
+
+# Synchronization roots.
+root = /home/psydev
+root = /run/media/psydev/EXPANSION
+
+# Make sure not to do anything if the drive is not mounted.
+mountpoint = Documents
+
+# FAT: disable permissions, chmod, links, case and ignore inode changes.
+fat = true
+
+# Do not delete anything from HOME.
+nodeletion = /home/psydev
+
+# Only sync new or updated media from HOME.
+nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
+noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
+nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /run/media/psydev/EXPANSION
+
+# Ignored projects.
+ignore = Path Projects/*/archive
+ignore = Path Projects/env/{aur,dotfiles}
+ignore = Path Projects/ext
+ignore = Path Projects/school
