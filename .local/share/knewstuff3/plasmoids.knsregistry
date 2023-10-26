@@ -10,7 +10,7 @@
   <version>1.2</version>
   <rating>75</rating>
   <downloads>11365</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/com.github.davide-sd.ipaddress</installedfile>
+  <installedfile>/home/maker/.local/share/plasma/plasmoids/com.github.davide-sd.ipaddress</installedfile>
   <id>1289644</id>
   <releasedate>2020-05-27</releasedate>
   <summary>&lt;strong>NOTE&lt;/strong>&lt;br />
@@ -32,7 +32,7 @@ There are two version available:&lt;br />
   <version>0.1</version>
   <rating>76</rating>
   <downloads>20594</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/com.github.burlog.plasmoid-sysmon</installedfile>
+  <installedfile>/home/maker/.local/share/plasma/plasmoids/com.github.burlog.plasmoid-sysmon</installedfile>
   <id>1198939</id>
   <releasedate>2017-11-30</releasedate>
   <summary>The sysmon plasmoid is based on KDE standard system load plasmoids which are constrained to some chosen metrics like CPU load. In contrast, the sysmon can show any metric provided by the System Monitor data source engine.&lt;br />
@@ -55,7 +55,7 @@ Installation is pretty simple and straight forward:&lt;br />
   <version>v. 2.3.3</version>
   <rating>86</rating>
   <downloads>32081</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.weatherWidget-2</installedfile>
+  <installedfile>/home/maker/.local/share/plasma/plasmoids/org.kde.weatherWidget-2</installedfile>
   <id>1683743</id>
   <releasedate>2022-10-17</releasedate>
   <summary>An updated version of the "plasma-applet-weather-widget" by Kotelnik (a.k.a. clearmartin).&lt;br />
@@ -77,7 +77,7 @@ YR.NO have changed their API and the original Weather Widget no longer works cor
   <version>2.0</version>
   <rating>61</rating>
   <downloads>702</downloads>
-  <installedfile>/home/psydev/.local/share/plasma/plasmoids/org.kde.desktopcontainment-trans</installedfile>
+  <installedfile>/home/maker/.local/share/plasma/plasmoids/org.kde.desktopcontainment-trans</installedfile>
   <id>1490722</id>
   <releasedate>2021-03-13</releasedate>
   <summary>Folder view fork that can have a transparent background independently of the desktop theme, and can hide icons with a double-click in an empty area. You can use it both as a plasmoid, or as an alternative for the desktop (right click on the desktop, "configure desktop...", etc.).&lt;br />

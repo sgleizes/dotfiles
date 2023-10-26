@@ -1,7 +1,7 @@
 [Desktop Entry]
 Comment[en_US]=
 Comment=
-Exec=/home/psydev/.config/plasma-workspace/login/lockscreen-potd.sh
+Exec=/home/maker/.config/plasma-workspace/login/lockscreen-potd.sh
 GenericName[en_US]=
 GenericName=
 Icon=dialog-scripts

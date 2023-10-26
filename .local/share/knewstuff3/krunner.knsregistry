@@ -10,7 +10,7 @@
   <version>2.4.0</version>
   <rating>71</rating>
   <downloads>259</downloads>
-  <installedfile>/home/psydev/.local/share/krunner-sources/QuickWebShortcuts-2.4.0/*</installedfile>
+  <installedfile>/home/maker/.local/share/krunner-sources/QuickWebShortcuts-2.4.0/*</installedfile>
   <id>1310571</id>
   <releasedate>2020-03-14</releasedate>
   <summary>This plugin allows you to use search engines inside Krunner. But instead of specifying the search engine every time can set one you want to use. Additionally it provides search suggestions and direct links. These can be configured in the config dialog, by default they are disabled.&lt;br...</summary>

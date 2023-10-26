@@ -41,10 +41,10 @@ PreloadWeight=2
 [Containments][100][Wallpaper][com.github.zren.inactiveblur][General]
 BlurRadius=20
 FillMode=2
-Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Wanderer_Eyes.jpg
 
 [Containments][100][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Wanderer_Eyes.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][100][Wallpaper][org.kde.potd][General]
@@ -854,10 +854,10 @@ PreloadWeight=0
 
 [Containments][73][General]
 arrangement=1
-url=file:///home/psydev/Projects/job
+url=file:///home/maker/Projects/job
 
 [Containments][73][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Light-Field-Rendering-JPG-2319x1024.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Light-Field-Rendering-JPG-2319x1024.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][73][Wallpaper][org.kde.potd][General]
@@ -893,10 +893,10 @@ ToolBoxButtonX=739
 ToolBoxButtonY=28
 arrangement=1
 iconSize=2
-url=file:///home/psydev/Games
+url=file:///home/maker/Games
 
 [Containments][84][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Union.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Union.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][84][Wallpaper][org.kde.potd][General]
@@ -933,7 +933,7 @@ randomize=false
 useBackground=
 
 [Containments][88][Applets][77][Configuration][Paths]
-pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"folder"}
+pathList={"path":"file:///home/maker/Resources/Société/One Nation"\\,"type":"folder"}
 
 [Containments][88][Applets][79]
 activityId=
@@ -957,7 +957,7 @@ wallpaperplugin=
 
 [Containments][88][Applets][79][Configuration][General]
 iconSize=2
-url=file:///home/psydev/Downloads
+url=file:///home/maker/Downloads
 
 [Containments][88][Applets][85]
 activityId=
@@ -985,7 +985,7 @@ filterMode=1
 filterPattern=Audios Books Pictures Tracks Videos
 iconSize=2
 textLines=1
-url=file:///home/psydev
+url=file:///home/maker
 
 [Containments][88][Applets][86]
 activityId=
@@ -1013,7 +1013,7 @@ filterPattern=Documents Resources Notes
 iconSize=2
 labelMode=0
 textLines=1
-url=file:///home/psydev
+url=file:///home/maker
 
 [Containments][88][Configuration]
 PreloadWeight=0
@@ -1027,7 +1027,7 @@ iconSize=2
 sortMode=-1
 
 [Containments][88][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Wanderer_Eyes.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Wanderer_Eyes.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][88][Wallpaper][org.kde.potd][General]
@@ -1052,10 +1052,10 @@ PreloadWeight=0
 
 [Containments][89][General]
 arrangement=1
-url=file:///home/psydev/Documents/Habitat/Saint-Pierreville
+url=file:///home/maker/Documents/Habitat/Saint-Pierreville
 
 [Containments][89][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Manifestor.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Manifestor.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][89][Wallpaper][org.kde.potd][General]
@@ -1079,10 +1079,10 @@ PreloadWeight=0
 
 [Containments][90][General]
 arrangement=1
-url=file:///home/psydev/Projects/perma
+url=file:///home/maker/Projects/perma
 
 [Containments][90][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Rise.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Rise.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][90][Wallpaper][org.kde.potd][General]
@@ -1111,10 +1111,10 @@ ToolBoxButtonState=topcenter
 ToolBoxButtonX=786
 ToolBoxButtonY=28
 arrangement=1
-url=file:///home/psydev/Projects/env
+url=file:///home/maker/Projects/env
 
 [Containments][91][Wallpaper][org.kde.image][General]
-Image=file:///home/psydev/Pictures/Wallpapers/Love_is_a_Riot-1774x1024.jpg
+Image=file:///home/maker/Pictures/Wallpapers/Love_is_a_Riot-1774x1024.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][91][Wallpaper][org.kde.potd][General]
@@ -1339,10 +1339,10 @@ randomize=false
 useBackground=false
 
 [Containments82Appletsts][77][Configuration][Paths]
-pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"folder"}
+pathList={"path":"file:///home/maker/Resources/Société/One Nation"\\,"type":"folder"}
 
 [Containments82Appletsts][79][Configuration][General]
-url=file:///home/psydev/Downloads
+url=file:///home/maker/Downloads
 
 [Containments88Appletsts][77][Configuration][General]
 interval=86400
@@ -1352,12 +1352,12 @@ randomize=false
 useBackground=false
 
 [Containments88Appletsts][77][Configuration][Paths]
-pathList={"path":"file:///home/psydev/Resources/Société/One Nation"\\,"type":"folder"}
+pathList={"path":"file:///home/maker/Resources/Société/One Nation"\\,"type":"folder"}
 
 [Containments88Appletsts][79][Configuration][General]
 iconSize=2
 sortMode=-1
-url=file:///home/psydev/Downloads
+url=file:///home/maker/Downloads
 
 [Containments88Appletsts][85][Configuration][General]
 filterMimeTypes=inode/directory
@@ -1365,7 +1365,7 @@ filterMode=1
 filterPattern=Audios Books Pictures Tracks Videos
 iconSize=2
 textLines=1
-url=file:///home/psydev
+url=file:///home/maker
 
 [Containments88Appletsts][86][Configuration][General]
 filterMimeTypes=inode/directory
@@ -1374,5 +1374,5 @@ filterPattern=Documents Resources Notes
 iconSize=2
 labelMode=0
 textLines=1
-url=file:///home/psydev
+url=file:///home/maker
 

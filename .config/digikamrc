@@ -1001,7 +1001,7 @@ subspace=1
 tagPaths=1
 
 [Database Settings]
-Database Connectoptions=UNIX_SOCKET=/home/psydev/.local/share/digikam/db_misc/mysql.socket
+Database Connectoptions=UNIX_SOCKET=/home/maker/.local/share/digikam/db_misc/mysql.socket
 Database Encrypted Password=AwJWVlY=
 Database Hostname=
 Database Name=digikam
@@ -1016,7 +1016,7 @@ Internal Database Server=true
 Internal Database Server Mysql Admin Command=mysqladmin
 Internal Database Server Mysql Init Command=mysql_install_db
 Internal Database Server Mysql Server Command=mysqld
-Internal Database Server Path=/home/psydev/Pictures
+Internal Database Server Path=/home/maker/Pictures
 
 [DateFolderView Sidebar]
 CurrentIndex=47
@@ -1395,7 +1395,7 @@ eDP-1 HDMI-1 Height 2560x1440=750
 eDP-1 HDMI-1 Width 2560x1440=800
 
 [Geolocation Edit Settings][Correlator Widget]
-GPX File Open Last Directory=/home/psydev/Documents
+GPX File Open Last Directory=/home/maker/Documents
 Interpolate=true
 Max Gap Time=00:00:30
 Max Inter Dist Time=00:15:00
@@ -1794,7 +1794,7 @@ force_font_file=false
 value=-1
 
 [MediaPlayer Capture]
-dir=/home/psydev/Pictures
+dir=/home/maker/Pictures
 format=png
 quality=100
 

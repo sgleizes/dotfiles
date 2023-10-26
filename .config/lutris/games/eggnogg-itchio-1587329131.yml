@@ -3,4 +3,4 @@ game:
 linux: {}
 system:
   env:
-    HOME: /home/psydev/.local/share/steam
+    HOME: /home/maker/.local/share/steam

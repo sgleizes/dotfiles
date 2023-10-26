@@ -14,5 +14,5 @@ quitAfterSaveCopyExport=true
 [Save]
 compressionQuality=90
 copySaveLocation=false
-defaultSaveLocation=file:///home/psydev/Pictures/Screenshots/
+defaultSaveLocation=file:///home/maker/Pictures/Screenshots/
 saveFilenameFormat=Screenshot_%Y%M%D_%H%m%S
