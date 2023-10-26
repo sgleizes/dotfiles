@@ -10,8 +10,8 @@ label = Synchronize files between the Expansion and Homeworld HDD
 key = 4
 
 # Synchronization roots.
-root = /run/media/psydev/EXPANSION
-root = /run/media/psydev/HOMEWORLD
+root = /run/media/maker/EXPANSION
+root = /run/media/maker/HOMEWORLD
 
 # Make sure not to do anything if the drives are not mounted.
 mountpoint = Documents
@@ -22,7 +22,7 @@ fastcheck = true
 fat = true
 
 # Do not delete anything from EXPANSION.
-nodeletion = /run/media/psydev/EXPANSION
+nodeletion = /run/media/maker/EXPANSION
 
 # Additional paths to backup.
 path = Archives

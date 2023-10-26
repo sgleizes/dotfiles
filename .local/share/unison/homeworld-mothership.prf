@@ -10,8 +10,8 @@ label = Synchronize files between the Homeworld and Mothership HDD
 key = 5
 
 # Synchronization roots.
-root = /run/media/psydev/HOMEWORLD
-root = /run/media/psydev/MOTHERSHIP
+root = /run/media/maker/HOMEWORLD
+root = /run/media/maker/MOTHERSHIP
 
 # Make sure not to do anything if the drives are not mounted.
 mountpoint = Documents
@@ -22,7 +22,7 @@ fastcheck = true
 fat = true
 
 # Do not delete anything from HOMEWORLD.
-nodeletion = /run/media/psydev/HOMEWORLD
+nodeletion = /run/media/maker/HOMEWORLD
 
 # Additional paths to backup.
 path = Archives

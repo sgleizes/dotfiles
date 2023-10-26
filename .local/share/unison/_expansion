@@ -5,8 +5,8 @@
 include _common
 
 # Synchronization roots.
-root = /home/psydev
-root = /run/media/psydev/EXPANSION
+root = /home/maker
+root = /run/media/maker/EXPANSION
 
 # Make sure not to do anything if the drive is not mounted.
 mountpoint = Documents
@@ -15,12 +15,12 @@ mountpoint = Documents
 fat = true
 
 # Do not delete anything from HOME.
-nodeletion = /home/psydev
+nodeletion = /home/maker
 
 # Only sync new or updated media from HOME.
-nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
-noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/psydev
-nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /run/media/psydev/EXPANSION
+nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/maker
+noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/maker
+nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /run/media/maker/EXPANSION
 
 # Ignored projects.
 ignore = Path Projects/*/archive

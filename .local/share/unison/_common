@@ -3,7 +3,7 @@
 #
 
 # XDG path for the log file.
-logfile = /home/psydev/.local/share/unison/unison.log
+logfile = /home/maker/.local/share/unison/unison.log
 
 # Use the external rsync for files larger than 2MB.
 copythreshold = 2000
