@@ -8,7 +8,7 @@ if (( ! $+commands[restic] || ! $+commands[kwalletcli] )); then
 fi
 
 # Location of the restic repository.
-export RESTIC_REPOSITORY='/run/media/psydev/HOMEWORLD/Backups/Restic'
+export RESTIC_REPOSITORY='/run/media/maker/HOMEWORLD/Backups/Restic'
 
 # Command to retrieve the password to the restic repository.
 export RESTIC_PASSWORD_COMMAND='kwalletcli -f restic -e repository'

@@ -83,4 +83,4 @@
 #secureprotocol = auto
 
 # XDG location for HSTS file
-hsts_file = /home/psydev/.cache/wget/hsts
+hsts_file = /home/maker/.cache/wget/hsts
