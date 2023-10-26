@@ -684,7 +684,7 @@ They all accept either a font-spec, font string (=”Input Mono-12”=), or [[ht
 Set preferred order for all-the-icons fonts, since some unicode characters override each other.
 #+begin_src elisp
 (after! all-the-icons
-  (defun psydev/doom-init-all-the-icons-fonts-h ()
+  (defun maker/doom-init-all-the-icons-fonts-h ()
     (when (fboundp 'set-fontset-font)
       (dolist (font (list
                      "all-the-icons"
@@ -696,7 +696,7 @@ Set preferred order for all-the-icons fonts, since some unicode characters overr
         (set-fontset-font t 'unicode font nil 'append))
       ;; Specific overrides for some icons
       (set-fontset-font t (cons ? ?) "Weather Icons" nil 'prepend))))
-(advice-add #'doom-init-all-the-icons-fonts-h :override #'psydev/doom-init-all-the-icons-fonts-h)
+(advice-add #'doom-init-all-the-icons-fonts-h :override #'maker/doom-init-all-the-icons-fonts-h)
 #+end_src
 
 Add a global hydra to change the font-size interactively.
@@ -863,7 +863,7 @@ Improve terminal integration. Taken from the ~tty~ module.
 
 Disable minor modes that are undesired in terminal frames.
 #+begin_src elisp
-(defun +psydev/disable-graphical-modes (frame)
+(defun +maker/disable-graphical-modes (frame)
   "Disable undesired minor-modes in FRAME (default: selected frame)
 if in terminal."
   (interactive)
@@ -886,7 +886,7 @@ if in terminal."
                     git-commit-mode-hook)
       #'flyspell-mode)
     (setq +ligatures-in-modes nil)))
-(add-hook! 'after-make-frame-functions '+psydev/disable-graphical-modes)
+(add-hook! 'after-make-frame-functions '+maker/disable-graphical-modes)
 #+end_src
 
 ** Frames
@@ -1210,7 +1210,7 @@ Add post-jump hook to show context around point in org-mode.
 #+begin_src elisp
 (after! better-jumper
   (add-hook! 'better-jumper-post-jump-hook
-    (defun +psydev/org-better-jumper-visibility ()
+    (defun +maker/org-better-jumper-visibility ()
       (when (derived-mode-p 'org-mode)
         (org-show-set-visibility 'lineage)))))
 #+end_src
@@ -1971,7 +1971,7 @@ Disable tabs in ediff buffers.
 #+begin_src elisp
 (after! ediff
   (add-hook! 'ediff-prepare-buffer-hook
-    (defun +psydev/ediff-no-tabs ()
+    (defun +maker/ediff-no-tabs ()
       (centaur-tabs-local-mode 1))))
 #+end_src
 
@@ -1979,7 +1979,7 @@ Focus the registry frame when opening the registry.
 #+begin_src elisp
 (after! ediff
   (add-hook! 'ediff-show-registry-hook
-    (defun +psydev/focus-ediff-registry ()
+    (defun +maker/focus-ediff-registry ()
       (x-focus-frame (window-frame
 		      (ediff-get-visible-buffer-window ediff-registry-buffer))))))
 #+end_src
@@ -2153,7 +2153,7 @@ Configure elfeed general settings.
 (use-package! elfeed
   :config
   (setq elfeed-search-remain-on-entry 't
-        elfeed-search-sort-function #'psydev/elfeed-search-entry<
+        elfeed-search-sort-function #'maker/elfeed-search-entry<
         elfeed-sort-order 'ascending)
   (elfeed-set-max-connections 8) ; default is 16
   (elfeed-set-timeout 60))       ; default is 30
@@ -2165,7 +2165,7 @@ Fix elfeed-search-selected to avoid including the line below selection.
 This is properly not the right approach to this issue but is functional.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-selected (&optional ignore-region-p)
+  (defun maker/elfeed-search-selected (&optional ignore-region-p)
     "Return a list of the currently selected feeds.
 
 If IGNORE-REGION-P is non-nil, only return the entry under point."
@@ -2180,13 +2180,13 @@ If IGNORE-REGION-P is non-nil, only return the entry under point."
                  finally (return (if ignore-region-p
                                      (car selected)
                                    selected))))))
-  (advice-add #'elfeed-search-selected :override #'psydev/elfeed-search-selected))
+  (advice-add #'elfeed-search-selected :override #'maker/elfeed-search-selected))
 #+end_src
 
 Override ~elfeed-db-compact~ to bypass the projectile cache.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-db-compact ()
+  (defun maker/elfeed-db-compact ()
     "Minimize the Elfeed database storage size on the filesystem."
     (interactive)
     ;; `delete-file-projectile-remove-from-cache' slows down `elfeed-db-compact'
@@ -2200,7 +2200,7 @@ Override ~elfeed-db-compact~ to bypass the projectile cache.
 Add date separator overlay. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
 #+begin_src elisp
 (after! elfeed
-  (cl-defun psydev/elfeed-search-add-separators (&key (min-group-size 2))
+  (cl-defun maker/elfeed-search-add-separators (&key (min-group-size 2))
     "Insert overlay spacers where the current date changes.
 If no group has at least MIN-GROUP-SIZE items, no spacers will be
 inserted. "
@@ -2240,21 +2240,21 @@ inserted. "
                  finally do (when (< largest-group-size min-group-size)
                               (ov-clear))))))
 
-  (defun psydev/elfeed-search-post-process ()
-    (psydev/elfeed-search-add-separators :min-group-size 1))
+  (defun maker/elfeed-search-post-process ()
+    (maker/elfeed-search-add-separators :min-group-size 1))
 
-  (defun psydev/elfeed-forward-day ()
+  (defun maker/elfeed-forward-day ()
     "Move forward to the next day."
     (interactive)
     (let ((o (ov-in-next 'type 'date-separator)))
       (if o (goto-char (ov-end o)))))
-  (defun psydev/elfeed-backward-day ()
+  (defun maker/elfeed-backward-day ()
     "Move backward to the previous day."
     (interactive)
     (let ((o (ov-in-prev 'type 'date-separator)))
       (if o (goto-char (ov-end o)))))
 
-  (add-hook 'elfeed-search-update-hook #'psydev/elfeed-search-post-process))
+  (add-hook 'elfeed-search-update-hook #'maker/elfeed-search-post-process))
 #+end_src
 
 Add missing overlay commands.
@@ -2365,7 +2365,7 @@ VAL unspecified, only the presence of property is tested)."
 Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-entry< (a b)
+  (defun maker/elfeed-search-entry< (a b)
     "Return non-nil if A should be sorted before B."
     (with-no-warnings (defvar a-tags) (defvar b-tags)) ; NOTE Needed to fix void a-tags?
     (cl-flet* ((tags (it) (elfeed-entry-tags it))
@@ -2375,16 +2375,16 @@ Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33faf
                                     (b-day (day b)))
                                (if (= a-day b-day)
                                    ;; Same day: compare unread, then tags, then domain, then timestamp
-                                   (cl-case (psydev/elfeed-search-unread< a-tags b-tags)
+                                   (cl-case (maker/elfeed-search-unread< a-tags b-tags)
                                      (< nil)
                                      (> 't)
                                      (= ;; Same unread status; compare feed title
                                       ;; Same day: compare tags, then domain, then timestamp
-                                      (cl-case (psydev/elfeed-search-tags< a-tags b-tags)
+                                      (cl-case (maker/elfeed-search-tags< a-tags b-tags)
                                         (< nil)
                                         (> 't)
                                         (= ;; Same tags; compare feed title
-                                         (cl-case (psydev/elfeed-search-feed< a b)
+                                         (cl-case (maker/elfeed-search-feed< a b)
                                            (< nil)
                                            (> 't)
                                            (= ;; Same site; compare timestamp
@@ -2401,7 +2401,7 @@ Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33faf
               (b-starred t)
               (t (compare-days a b))))))
 
-  (defun psydev/elfeed-search-unread< (a-tags b-tags)
+  (defun maker/elfeed-search-unread< (a-tags b-tags)
     "Return the relationship of A's unread tag to B's."
     (cl-flet ((unread (it) (member 'unread it)))
       (let ((a-unread (unread a-tags))
@@ -2410,7 +2410,7 @@ Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33faf
               ((not b-unread) '<)
               (t '>)))))
 
-  (defun psydev/elfeed-search-tags< (a-tags b-tags)
+  (defun maker/elfeed-search-tags< (a-tags b-tags)
     "Return the relationship of A's tags to B's."
     ;; Convert list of symbols to comma-separated string of tags
     (if (not (or a-tags b-tags))
@@ -2437,7 +2437,7 @@ Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33faf
                     ((string< a-string b-string) '<)
                     (t '>))))))))
 
-  (defun psydev/elfeed-search-feed< (a b)
+  (defun maker/elfeed-search-feed< (a b)
     "Return the relationship of A's feed to B's.
 If alphabetically less or greater than, return `<' or `>',
 respectively.  If the same, return `='."
@@ -2452,11 +2452,11 @@ respectively.  If the same, return `='."
 Add commands to toggle custom sort (much slower).
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-toggle-sort ()
+  (defun maker/elfeed-toggle-sort ()
     "Toggle the advanced sort function."
     (interactive)
     (if (not elfeed-search-sort-function)
-        (setq elfeed-search-sort-function #'psydev/elfeed-search-entry<
+        (setq elfeed-search-sort-function #'maker/elfeed-search-entry<
               elfeed-sort-order 'ascending)
       (setq elfeed-search-sort-function nil
             elfeed-sort-order 'descending))
@@ -2473,35 +2473,35 @@ See [[*Elfeed goodies][Elfeed goodies]].
 Add commands to show entry contents in the search buffer directly.
 #+begin_src elisp
 (after! elfeed
-  (defmacro psydev/elfeed-search-at-entry (entry &rest body)
+  (defmacro maker/elfeed-search-at-entry (entry &rest body)
     "Eval BODY with point at ENTRY."
     (declare (indent defun))
     `(when-let* ((n (cl-position ,entry elfeed-search-entries)))
        (elfeed-goto-line (+ elfeed-search--offset n))
        ,@body))
 
-  (defun psydev/elfeed-search-excerpt-toggle-selected (&optional hide-all)
+  (defun maker/elfeed-search-excerpt-toggle-selected (&optional hide-all)
     "Toggle excerpts on selected entries.
 With prefix, hide all excerpts."
     (interactive (list current-prefix-arg))
     (if hide-all
         (ov-clear 'type 'excerpt)
       (--each (elfeed-search-selected)
-        (psydev/elfeed-search-at-entry it (psydev/elfeed-excerpt-toggle)))))
+        (maker/elfeed-search-at-entry it (maker/elfeed-excerpt-toggle)))))
 
-  (defun psydev/elfeed-excerpt-toggle ()
+  (defun maker/elfeed-excerpt-toggle ()
     (interactive)
-    (or (psydev/elfeed-excerpt-hide)
-        (psydev/elfeed-excerpt-insert)))
+    (or (maker/elfeed-excerpt-hide)
+        (maker/elfeed-excerpt-insert)))
 
-  (defun psydev/elfeed-excerpt-hide ()
+  (defun maker/elfeed-excerpt-hide ()
     (interactive)
     (when-let ((pos (1+ (line-end-position)))
                (overlay (car (ov-in 'type 'excerpt pos pos))))
       (delete-overlay overlay)
       t))
 
-  (defun psydev/elfeed-wrap-string (string length)
+  (defun maker/elfeed-wrap-string (string length)
     "Wrap STRING to LENGTH."
     (if (<= (length string) length)
         string
@@ -2511,7 +2511,7 @@ With prefix, hide all excerpts."
                   (fill-region (point-min) (point-max))
                   (buffer-string))))))
 
-  (defun psydev/elfeed-excerpt-insert ()
+  (defun maker/elfeed-excerpt-insert ()
     "Show excerpt of current entry."
     (interactive)
     (when-let* ((pos (1+ (line-end-position)))
@@ -2523,7 +2523,7 @@ With prefix, hide all excerpts."
                               (with-temp-buffer
                                 (elfeed-insert-html it)
                                 (buffer-string))
-                              (psydev/elfeed-wrap-string it width)
+                              (maker/elfeed-wrap-string it width)
                               (concat it "\n")
                               (propertize it 'face '(:inherit (variable-pitch default))))))
       (ov pos pos
@@ -2538,7 +2538,7 @@ With prefix, hide all excerpts."
 Add commands to mark all items as read/unread (avoid having to select all entries).
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-mark-all-read ()
+  (defun maker/elfeed-search-mark-all-read ()
     "Mark all entries as read in the current buffer."
     (interactive)
     (when (y-or-n-p "Really mark all items as read?")
@@ -2547,7 +2547,7 @@ Add commands to mark all items as read/unread (avoid having to select all entrie
         (elfeed-untag entries 'unread)
         (elfeed-search-update :force))))
 
-  (defun psydev/elfeed-search-mark-all-unread ()
+  (defun maker/elfeed-search-mark-all-unread ()
     "Mark all entries as unread in the current buffer."
     (interactive)
     (when (y-or-n-p "Really mark all items as unread?")
@@ -2560,7 +2560,7 @@ Add commands to mark all items as read/unread (avoid having to select all entrie
 Add commands to mark more selective groups of items as read. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-toggle-tag-group (tag predicate)
+  (defun maker/elfeed-search-toggle-tag-group (tag predicate)
     "Mark all entries as read in the group at point, grouped by PREDICATE."
     (let* ((offset (- (line-number-at-pos) elfeed-search--offset))
            (current-entry (nth offset elfeed-search-entries))
@@ -2574,28 +2574,28 @@ Add commands to mark more selective groups of items as read. Thanks, [[https://g
         (elfeed-tag entries tag))
       (mapc #'elfeed-search-update-entry entries)))
 
-  (defun psydev/elfeed-search-toggle-day-site-as-read ()
+  (defun maker/elfeed-search-toggle-day-site-as-read ()
     "Mark all entries as read in the current site and day at point."
     (interactive)
-    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
                                                      (list (time-to-days (seconds-to-time (elfeed-entry-date entry)))
                                                            (elfeed-entry-feed entry)))))
-  (defun psydev/elfeed-search-toggle-site-as-read ()
+  (defun maker/elfeed-search-toggle-site-as-read ()
     "Mark all entries as read in the current site and day at point."
     (interactive)
-    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
                                                      (elfeed-entry-feed entry))))
-  (defun psydev/elfeed-search-toggle-day-as-read ()
+  (defun maker/elfeed-search-toggle-day-as-read ()
     "Mark all entries as unread in the day at point."
     (interactive)
-    (psydev/elfeed-search-toggle-tag-group 'unread (lambda (entry)
+    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
                                                      (time-to-days (seconds-to-time (elfeed-entry-date entry)))))))
 #+end_src
 
 Add a command to quickly toggle the =unread= tag.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-toggle-unread ()
+  (defun maker/elfeed-search-toggle-unread ()
     "Toggle `unread' tag on selected entries."
     (interactive)
     (elfeed-search-toggle-all 'unread)))
@@ -2604,7 +2604,7 @@ Add a command to quickly toggle the =unread= tag.
 Add a command to quickly toggle the =starred= tag.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-search-toggle-star ()
+  (defun maker/elfeed-search-toggle-star ()
     "Toggle `starred' tag on selected entries."
     (interactive)
     (elfeed-search-toggle-all 'starred)))
@@ -2615,7 +2615,7 @@ Add a command to quickly toggle the =starred= tag.
 Add a command to delete entries from the database.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-delete-entries (pred)
+  (defun maker/elfeed-delete-entries (pred)
     "Delete entries from `elfeed-db-index' and `elfeed-db-entries' that PRED returns non-nil for.
 PRED is called with one argument, the entry."
     (let ((size-before (ht-size elfeed-db-entries))
@@ -2629,13 +2629,13 @@ PRED is called with one argument, the entry."
       (a-list 'before size-before
               'after (ht-size elfeed-db-entries))))
 
-  (defun psydev/elfeed-search-delete-selected ()
+  (defun maker/elfeed-search-delete-selected ()
     "Delete selected entries from database."
     ;; TODO This could probably be much more efficient.
     (interactive)
     (when (y-or-n-p "Really delete entries from database?")
       (--each (elfeed-search-selected)
-        (psydev/elfeed-delete-entries
+        (maker/elfeed-delete-entries
          (lambda (entry)
            (eq (elfeed-entry-id entry) (elfeed-entry-id it)))))
       (elfeed-search-update :force))))
@@ -2644,26 +2644,26 @@ PRED is called with one argument, the entry."
 Add a command to delete old entries to keep decent performances.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-delete-old-entries (&optional before)
+  (defun maker/elfeed-delete-old-entries (&optional before)
     "Delete elfeed entries older than BEFORE, defaults to 2 weeks."
     (interactive)
     (let* ((before (or before "1 year ago"))
            (before-time (elfeed-time-duration before))
            (old-entries (make-hash-table :test 'equal)))
-      (psydev/elfeed-delete-entries
+      (maker/elfeed-delete-entries
        (lambda (entry)
          (let ((date (elfeed-entry-date entry)))
            (and (< date (- (float-time) before-time))
                 (not (member 'unread (elfeed-entry-tags entry)))
                 (not (member 'starred (elfeed-entry-tags entry))))))))
-    (psydev/elfeed-db-compact)
+    (maker/elfeed-db-compact)
     (elfeed-dashboard-update-links)))
 #+end_src
 
 Add a command to list dead feeds.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-dead-feeds (&optional years)
+  (defun maker/elfeed-dead-feeds (&optional years)
     "List feeds that haven't posted anything in YEARS."
     (interactive "p")
     (with-current-buffer (get-buffer-create "*Elfeed Dead Feeds*")
@@ -2821,7 +2821,7 @@ Tries to intelligently handle components based on their prefix:
 The custom filter hydra.
 #+begin_src elisp
 (unpackaged/elfeed-search-view-hydra-define
-  psydev/elfeed-search-filter-hydra
+  maker/elfeed-search-filter-hydra
   (:foreign-keys warn)
   ("Filter"
    (("<tab>" (lambda () (elfeed-search-live-filter)) "Set")
@@ -2860,45 +2860,45 @@ The custom filter hydra.
 Mark entries older than 2 weeks as read.
 #+begin_src elisp
 (after! elfeed
-  (defvar psydev/elfeed-outdated-tagger
+  (defvar maker/elfeed-outdated-tagger
     (elfeed-make-tagger :before "2 weeks ago"
                         :remove 'unread))
 
-  (defvar psydev/elfeed-odysee-marker
+  (defvar maker/elfeed-odysee-marker
     (elfeed-make-tagger :feed-url "lbryfeed\\.melroy\\.org"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "odysee"))))
-  (defvar psydev/elfeed-bitchute-marker
+  (defvar maker/elfeed-bitchute-marker
     (elfeed-make-tagger :feed-url "bitchute\\.com"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "bitchute"))))
-  (defvar psydev/elfeed-youtube-marker
+  (defvar maker/elfeed-youtube-marker
     (elfeed-make-tagger :feed-url "youtube\\.com"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "youtube"))))
-  (defvar psydev/elfeed-twitter-marker
+  (defvar maker/elfeed-twitter-marker
     (elfeed-make-tagger :feed-url "bridge=Twitter"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "twitter"))))
-  (defvar psydev/elfeed-reddit-marker
+  (defvar maker/elfeed-reddit-marker
     (elfeed-make-tagger :feed-url "reddit\\.com"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "reddit"))))
-  (defvar psydev/elfeed-github-marker
+  (defvar maker/elfeed-github-marker
     (elfeed-make-tagger :feed-url "github\\.com"
                         :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "github"))))
 
   ;; Mark entries older than 2 weeks as read.
   (add-hook! 'elfeed-new-entry-hook
-    (defun psydev/elfeed-mark-outdated-as-read (entry)
+    (defun maker/elfeed-mark-outdated-as-read (entry)
       (when (not (elfeed-tagged-p 'starred entry))
-        (funcall psydev/elfeed-outdated-tagger entry))))
+        (funcall maker/elfeed-outdated-tagger entry))))
 
   ;; Mark all video entries with an icon tag.
   (add-hook! 'elfeed-new-entry-hook
-    (defun psydev/elfeed-mark-entry-source (entry)
+    (defun maker/elfeed-mark-entry-source (entry)
       (cond
-       ((funcall psydev/elfeed-odysee-marker entry))
-       ((funcall psydev/elfeed-bitchute-marker entry))
-       ((funcall psydev/elfeed-youtube-marker entry))
-       ((funcall psydev/elfeed-twitter-marker entry))
-       ((funcall psydev/elfeed-reddit-marker entry))
-       ((funcall psydev/elfeed-github-marker entry))))))
+       ((funcall maker/elfeed-odysee-marker entry))
+       ((funcall maker/elfeed-bitchute-marker entry))
+       ((funcall maker/elfeed-youtube-marker entry))
+       ((funcall maker/elfeed-twitter-marker entry))
+       ((funcall maker/elfeed-reddit-marker entry))
+       ((funcall maker/elfeed-github-marker entry))))))
 #+end_src
 
 *** Bindings
@@ -2907,27 +2907,27 @@ Configure bindings.
 #+begin_src elisp
 (map! :after elfeed
       :map elfeed-search-mode-map
-      :n  "C-j"        #'psydev/elfeed-forward-day
-      :n  "C-k"        #'psydev/elfeed-backward-day
-      :n  "<S-return>" #'psydev/elfeed-search-excerpt-toggle-selected
+      :n  "C-j"        #'maker/elfeed-forward-day
+      :n  "C-k"        #'maker/elfeed-backward-day
+      :n  "<S-return>" #'maker/elfeed-search-excerpt-toggle-selected
       :n  "R"          #'elfeed-search-fetch
       :n  "H"          #'elfeed-apply-hooks-now
       :n  "J"          #'elfeed-apply-autotags-now
       :n  "t"          #'elfeed-search-set-entry-title
       :n  "T"          #'elfeed-search-set-feed-title
       :n  "="          #'elfeed-search-toggle-all
-      :n  "s"          #'psydev/elfeed-toggle-sort
+      :n  "s"          #'maker/elfeed-toggle-sort
       :n  "f"          #'elfeed-search-live-filter
       :n  "F"          #'elfeed-search-clear-filter
-      :n  "M-f"        #'psydev/elfeed-search-filter-hydra/body
-      :nv "m"          #'psydev/elfeed-search-toggle-star
-      :nv "u"          #'psydev/elfeed-search-toggle-unread
-      :n  "i"          #'psydev/elfeed-search-toggle-day-site-as-read
-      :n  "I"          #'psydev/elfeed-search-toggle-site-as-read
-      :n  "o"          #'psydev/elfeed-search-toggle-day-as-read
-      :n  "a"          #'psydev/elfeed-search-mark-all-read
-      :n  "A"          #'psydev/elfeed-search-mark-all-unread
-      :nv "d"          #'psydev/elfeed-search-delete-selected
+      :n  "M-f"        #'maker/elfeed-search-filter-hydra/body
+      :nv "m"          #'maker/elfeed-search-toggle-star
+      :nv "u"          #'maker/elfeed-search-toggle-unread
+      :n  "i"          #'maker/elfeed-search-toggle-day-site-as-read
+      :n  "I"          #'maker/elfeed-search-toggle-site-as-read
+      :n  "o"          #'maker/elfeed-search-toggle-day-as-read
+      :n  "a"          #'maker/elfeed-search-mark-all-read
+      :n  "A"          #'maker/elfeed-search-mark-all-unread
+      :nv "d"          #'maker/elfeed-search-delete-selected
       :n  "L"          #'elfeed-goodies/toggle-logs
       :n  "q"          #'elfeed-search-quit-window
       :n  "Q"          #'elfeed-kill-buffer
@@ -2974,7 +2974,7 @@ current users."
 Prevent elfeed-org from opening source buffers unexpectedly.
 #+begin_src elisp
 (after! elfeed-org
-  (defadvice! +psydev/consistent-elfeed-org-buffers (fn &rest args)
+  (defadvice! +maker/consistent-elfeed-org-buffers (fn &rest args)
     :around #'rmh-elfeed-org-import-headlines-from-files
     (save-excursion (apply fn args))))
 #+end_src
@@ -2991,7 +2991,7 @@ Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
 Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
 #+begin_src elisp
 (after! elfeed-org
-  (defun psydev/+rss-cleanup-h ()
+  (defun maker/+rss-cleanup-h ()
     "Clean up after an elfeed session. Kills all elfeed buffers."
     (interactive)
     ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
@@ -3012,7 +3012,7 @@ Also fix perspective issues: killing twice the elfeed-search buffers was messing
       (mapc #'kill-buffer show-buffers))
     ;; (+workspace/delete +rss-workspace-name)
     )
-  (advice-add #'+rss-cleanup-h :override #'psydev/+rss-cleanup-h))
+  (advice-add #'+rss-cleanup-h :override #'maker/+rss-cleanup-h))
 #+end_src
 
 ** Elfeed dashboard
@@ -3033,7 +3033,7 @@ Configure dashboard.
   ;; FIXME: Too slow, fallback to manual update
   ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
 
-  (defun psydev/elfeed-dashboard-all ()
+  (defun maker/elfeed-dashboard-all ()
     "Open the full version of the elfeed dashboard"
     (interactive)
     (let ((elfeed-dashboard-file "~/Notes/elfeed/dashboard-all.org"))
@@ -3045,7 +3045,7 @@ Add hooks to improve the usability and readability of the dashboard.
 (after! elfeed-dashboard
   ;; Remove ineffective code called on dashboard open, use hook instead.
   ;; Also create a dedicated perspective for elfeed.
-  (defun psydev/elfeed-dashboard ()
+  (defun maker/elfeed-dashboard ()
     "Open the elfeed dasboard."
     (interactive)
     ;; NOTE: Dedicated workspace version.
@@ -3072,7 +3072,7 @@ Add hooks to improve the usability and readability of the dashboard.
 
     ;; (+workspace/display)
     )
-  (advice-add #'elfeed-dashboard :override #'psydev/elfeed-dashboard)
+  (advice-add #'elfeed-dashboard :override #'maker/elfeed-dashboard)
 
   ;; Cleanup elfeed on dashboard exit.
   (add-hook! elfeed-dashboard-mode
@@ -3080,7 +3080,7 @@ Add hooks to improve the usability and readability of the dashboard.
 
   ;; Really update links when opening the dashboard.
   (add-hook! elfeed-dashboard-mode
-    (defun psydev/elfeed-dashboard-setup ()
+    (defun maker/elfeed-dashboard-setup ()
       ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
       (setq elfeed-dashboard--buf (current-buffer))
       ;; FIXME: Slow, fallback to manual update?
@@ -3089,22 +3089,22 @@ Add hooks to improve the usability and readability of the dashboard.
 
   ;; Move point to the first selectable shortcut.
   (add-hook! elfeed-dashboard-mode
-    (defun psydev/elfeed-dashboard-top ()
+    (defun maker/elfeed-dashboard-top ()
       (goto-line 3)))
 
   ;; Disable evil-org-mode for now, I could not find a way to make elfeed-dashboard-mode-map
   ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
   (add-hook! elfeed-dashboard-mode
-    (defun psydev/elfeed-dashboard-override-keymap ()
+    (defun maker/elfeed-dashboard-override-keymap ()
       (evil-org-mode 0)))
 
   ;; Take advantage of org-mode capabilities to improve prettiness.
   (add-hook! elfeed-dashboard-mode
-    (defun psydev/elfeed-dashboard-prettify ()
+    (defun maker/elfeed-dashboard-prettify ()
       (rename-buffer (concat "elfeed/" (file-name-base elfeed-dashboard-file)))
       (solaire-mode 1)
       (centaur-tabs-local-mode 1)
-      (psydev/elfeed-dashboard-emphasis)
+      (maker/elfeed-dashboard-emphasis)
       (when (not org-link-descriptive)
         (org-toggle-link-display))
       (let ((org-image-actual-width 188))
@@ -3115,7 +3115,7 @@ Add hooks to improve the usability and readability of the dashboard.
       (+org-pretty-mode 1)))
 
   ;; Remove emphasis that can appear in feed titles.
-  (defun psydev/elfeed-dashboard-emphasis ()
+  (defun maker/elfeed-dashboard-emphasis ()
     (setq-local org-emphasis-alist
                 '(("*" bold)
                   ("_" underline)
@@ -3123,7 +3123,7 @@ Add hooks to improve the usability and readability of the dashboard.
                   ("~" org-code verbatim))))
 
   ;; Toggle additional customization on edit.
-  (defun psydev/elfeed-dashboard-edit ()
+  (defun maker/elfeed-dashboard-edit ()
     "Edit dashboard."
     (interactive)
     (+org-pretty-mode 0)
@@ -3133,15 +3133,15 @@ Add hooks to improve the usability and readability of the dashboard.
     (setq buffer-read-only nil)
     (org-mode)
     (org-toggle-link-display)
-    (psydev/elfeed-dashboard-emphasis)
+    (maker/elfeed-dashboard-emphasis)
     (centaur-tabs-local-mode -1)
     (solaire-mode 0)
     (visual-fill-column-mode -1)
     (rename-buffer (file-name-nondirectory elfeed-dashboard-file)))
-  (advice-add #'elfeed-dashboard-edit :override #'psydev/elfeed-dashboard-edit)
+  (advice-add #'elfeed-dashboard-edit :override #'maker/elfeed-dashboard-edit)
 
   ;; Do not enable whitespace-mode in elfeed-dasboard (tabs used for icon alignment)
-  (defadvice! psydev/elfeed-dashboard-prevent-whitespace-mode (fn &rest args)
+  (defadvice! maker/elfeed-dashboard-prevent-whitespace-mode (fn &rest args)
     :around #'doom-highlight-non-default-indentation-h
     (unless (eq major-mode 'elfeed-dashboard-mode)
       (apply fn args))))
@@ -3150,7 +3150,7 @@ Add hooks to improve the usability and readability of the dashboard.
 Add custom command to open elfeed or the dashboard entry at point.
 #+begin_src elisp
 (after! elfeed-dashboard
-  (defun psydev/elfeed-dashboard-open (&optional arg)
+  (defun maker/elfeed-dashboard-open (&optional arg)
     "Open the first elfeed link on the current line, or open elfeed if none are found.
 
 With a numeric prefix, opens the nth elfeed link on the current line."
@@ -3166,15 +3166,15 @@ With a numeric prefix, opens the nth elfeed link on the current line."
 Generalize status updates while elfeed is updating.
 #+begin_src elisp
 (after! elfeed-dashboard
-  (defun psydev/elfeed-dashboard-update ()
+  (defun maker/elfeed-dashboard-update ()
     "Fetch new feeds, if there are no updates already in progress."
     (interactive)
     (unless elfeed-dashboard--elfeed-update-timer
       (elfeed-update)))
-  (advice-add #'elfeed-dashboard-update :override #'psydev/elfeed-dashboard-update)
+  (advice-add #'elfeed-dashboard-update :override #'maker/elfeed-dashboard-update)
 
   (add-hook! 'elfeed-update-init-hooks
-    (defun psydev/elfeed-update-info ()
+    (defun maker/elfeed-update-info ()
       "Display status information while elfeed fetches feeds."
       (unless elfeed-dashboard--elfeed-update-timer
         (setq elfeed-dashboard--elfeed-update-timer
@@ -3190,7 +3190,7 @@ Generalize status updates while elfeed is updating.
 Patch keymap function to support evil-mode and key combinations.
 #+begin_src elisp
 (after! elfeed-dashboard
-  (defun psydev/elfeed-dashboard-parse-keymap ()
+  (defun maker/elfeed-dashboard-parse-keymap ()
     "Install key binding defined as KEYMAP:VALUE.
 
 VALUE is composed of \"keybinding | function-call\" with
@@ -3212,7 +3212,7 @@ to group keymaps at the same place."
             (evil-define-key* 'normal elfeed-dashboard-mode-map (kbd key)
               (eval (car (read-from-string
                           (format "(lambda () (interactive) (%s))" call))))))))))
-  (advice-add #'elfeed-dashboard-parse-keymap :override #'psydev/elfeed-dashboard-parse-keymap))
+  (advice-add #'elfeed-dashboard-parse-keymap :override #'maker/elfeed-dashboard-parse-keymap))
 #+end_src
 
 Add top level binding.
@@ -3221,7 +3221,7 @@ Add top level binding.
       :leader
       (:prefix-map ("o" . "open")
        :desc "Elfeed" "n" #'elfeed-dashboard
-       :desc "Elfeed (all)" "N" #'psydev/elfeed-dashboard-all))
+       :desc "Elfeed (all)" "N" #'maker/elfeed-dashboard-all))
 #+end_src
 
 ** Elfeed goodies
@@ -3244,31 +3244,31 @@ Configure basic settings and setup goodies.
   ;; Use a special (hidden) tag for feeds with HTML entry titles.
   (setq elfeed-goodies/html-decode-title-tags '(html))
   ;; Declare the list of hidden tags.
-  (defvar psydev/elfeed-hidden-tags '("unread" "starred" "html")
+  (defvar maker/elfeed-hidden-tags '("unread" "starred" "html")
     "Tags that are hidden from elfeed views.")
 
   ;; Customized version of elfeed-goodies/setup
-  (defun psydev/elfeed-goodies/setup ()
+  (defun maker/elfeed-goodies/setup ()
     "Setup Elfeed with adaptive header bar and entries."
     (interactive)
     (add-hook 'elfeed-show-mode-hook #'elfeed-goodies/show-mode-setup)
     (add-hook 'elfeed-show-mode-hook
-              (defun psydev/elfeed-show-mode-fill-column ()
+              (defun maker/elfeed-show-mode-fill-column ()
                 (setq visual-fill-column-width 85)))
     (add-hook 'elfeed-new-entry-hook #'elfeed-goodies/html-decode-title)
     (when (boundp 'elfeed-new-entry-parse-hook)
       (add-hook 'elfeed-new-entry-parse-hook #'elfeed-goodies/parse-author))
     (setq elfeed-search-header-function #'elfeed-goodies/search-header-draw
-          elfeed-search-print-entry-function #'psydev/elfeed-goodies/entry-line-draw
+          elfeed-search-print-entry-function #'maker/elfeed-goodies/entry-line-draw
           ;; NOTE Prefer doom's horizontal popup
           ;; elfeed-show-entry-switch #'elfeed-goodies/switch-pane
           ;; elfeed-show-entry-delete #'elfeed-goodies/delete-pane
           elfeed-show-entry-switch #'pop-to-buffer
           elfeed-show-entry-delete #'+rss/delete-pane
           elfeed-show-refresh-function #'elfeed-goodies/show-refresh--plain))
-  (advice-add #'elfeed-goodies/setup :override #'psydev/elfeed-goodies/setup)
+  (advice-add #'elfeed-goodies/setup :override #'maker/elfeed-goodies/setup)
 
-  (psydev/elfeed-goodies/setup))
+  (maker/elfeed-goodies/setup))
 #+end_src
 
 *** Faces
@@ -3277,7 +3277,7 @@ Define the color theme for header and entries.
 #+begin_src elisp
 (after! elfeed-goodies
   ;; TODO Tricky to implement, try again if really needed
-  (defface psydev/elfeed-search-shown-face '((t (:background "gray23")))
+  (defface maker/elfeed-search-shown-face '((t (:background "gray23")))
     "Face used in search mode for the entry shown in elfeed-show-mode."
     :group 'elfeed)
 
@@ -3306,7 +3306,7 @@ Patch the header drawing function for ~elfeed-search-mode~.
 (after! elfeed-goodies
   ;; NOTE Updated attribution of powerline fonts
   ;; NOTE Added face properties for filter, (unread-count and last-update
-  (defun psydev/elfeed-goodies/search-header/rhs (separator-left separator-right search-filter stats update)
+  (defun maker/elfeed-goodies/search-header/rhs (separator-left separator-right search-filter stats update)
     (list
      (funcall separator-right 'mode-line 'powerline-active0)
      (powerline-raw
@@ -3330,7 +3330,7 @@ Patch the header drawing function for ~elfeed-search-mode~.
 
   ;; NOTE Changed Subject -> Title
   ;; NOTE Updated attribution of powerline fonts and removed columns
-  (defun psydev/elfeed-goodies/search-header/draw-wide (separator-left separator-right search-filter stats db-time)
+  (defun maker/elfeed-goodies/search-header/draw-wide (separator-left separator-right search-filter stats db-time)
     (let* ((update (format-time-string "%Y-%m-%d %H:%M:%S" db-time)) ; NOTE Removed timezone
            (lhs (list
                  (powerline-raw
@@ -3346,7 +3346,7 @@ Patch the header drawing function for ~elfeed-search-mode~.
               (powerline-render rhs))))
 
   ;; NOTE Changed Subject -> Title
-  (defun psydev/elfeed-goodies/search-header/draw-tight (separator-left separator-right search-filter stats db-time)
+  (defun maker/elfeed-goodies/search-header/draw-tight (separator-left separator-right search-filter stats db-time)
     (let* ((update (format-time-string "%H:%M:%S" db-time))
            (lhs (list
                  (powerline-raw " Title" 'mode-line 'l)))
@@ -3355,22 +3355,22 @@ Patch the header drawing function for ~elfeed-search-mode~.
               (powerline-fill 'mode-line (powerline-width rhs))
               (powerline-render rhs))))
 
-  (advice-add #'search-header/rhs :override #'psydev/elfeed-goodies/search-header/rhs)
-  (advice-add #'search-header/draw-wide :override #'psydev/elfeed-goodies/search-header/draw-wide)
-  (advice-add #'search-header/draw-tight :override #'psydev/elfeed-goodies/search-header/draw-tight))
+  (advice-add #'search-header/rhs :override #'maker/elfeed-goodies/search-header/rhs)
+  (advice-add #'search-header/draw-wide :override #'maker/elfeed-goodies/search-header/draw-wide)
+  (advice-add #'search-header/draw-tight :override #'maker/elfeed-goodies/search-header/draw-tight))
 #+end_src
 
 Patch the header drawing function for ~elfeed-show-mode~.
 #+begin_src elisp
 (after! elfeed-goodies
-  (defun psydev/elfeed-goodies/entry-header-line ()
+  (defun maker/elfeed-goodies/entry-header-line ()
     "Print the header line for elfeed-show-mode."
     (cl-flet ((tags (entry)
                     (seq-difference (--map (substring-no-properties (symbol-name it))
                                            (elfeed-entry-tags entry))
-                                    psydev/elfeed-hidden-tags)))
+                                    maker/elfeed-hidden-tags)))
       (let* (;; (entry-face 'elfeed-search-feed-face)
-             ;; (entry-face (psydev/elfeed-search--entry-face elfeed-show-entry))
+             ;; (entry-face (maker/elfeed-search--entry-face elfeed-show-entry))
              (title-faces (elfeed-search--faces (elfeed-entry-tags elfeed-show-entry)))
 
              (tags (mapconcat
@@ -3410,7 +3410,7 @@ Patch the header drawing function for ~elfeed-show-mode~.
          (powerline-render lhs)
          (powerline-fill 'mode-line (powerline-width rhs))
          (powerline-render rhs)))))
-  (advice-add #'elfeed-goodies/entry-header-line :override #'psydev/elfeed-goodies/entry-header-line))
+  (advice-add #'elfeed-goodies/entry-header-line :override #'maker/elfeed-goodies/entry-header-line))
 #+end_src
 
 *** Search Entries
@@ -3418,7 +3418,7 @@ Patch the header drawing function for ~elfeed-show-mode~.
 Add a function to define how the face is selected for each entry.
 #+begin_src elisp
 (after! elfeed-goodies
-  (defun psydev/elfeed-search--entry-face (entry)
+  (defun maker/elfeed-search--entry-face (entry)
     "Return face for ENTRY."
     (let ((rainbow-identifiers-cie-l*a*b*-color-count 256)
           (rainbow-identifiers-cie-l*a*b*-lightness 60)
@@ -3444,7 +3444,7 @@ Add a function to define how the face is selected for each entry.
 Add functions to define how icons are selected for each entry.
 #+begin_src elisp
 (after! elfeed-goodies
-  (defun psydev/elfeed-search--entry-status (entry)
+  (defun maker/elfeed-search--entry-status (entry)
     "Return the status character for ENTRY."
     (let* ((unread-p (member 'unread (elfeed-entry-tags entry)))
            (starred-p (member 'starred (elfeed-entry-tags entry))))
@@ -3453,7 +3453,7 @@ Add functions to define how icons are selected for each entry.
             (unread-p "•")
             (t " "))))
 
-  (defun psydev/elfeed-search--entry-icon (entry)
+  (defun maker/elfeed-search--entry-icon (entry)
     "Return the feed icon for ENTRY."
     (let* ((feed (elfeed-entry-feed entry))
            (feed-source (elfeed-meta feed :source)))
@@ -3470,7 +3470,7 @@ Add functions to define how icons are selected for each entry.
 Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa]].
 #+begin_src elisp
 (after! elfeed-goodies
-  (defun psydev/elfeed-goodies/entry-line-draw (entry)
+  (defun maker/elfeed-goodies/entry-line-draw (entry)
     "Print ENTRY to the buffer."
     (cl-flet ((add-faces (str &rest faces)
                          (dolist (face faces str)
@@ -3479,13 +3479,13 @@ Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa
               (tags (entry)
                     (seq-difference (--map (substring-no-properties (symbol-name it))
                                            (elfeed-entry-tags entry))
-                                    psydev/elfeed-hidden-tags)))
+                                    maker/elfeed-hidden-tags)))
       (let* (;; Choose color and faces first
              ;; See https://www.reddit.com/r/emacs/comments/7a976a/face_applied_to_result_of_symbolname_becomes/
              (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-             (entry-face (psydev/elfeed-search--entry-face entry))
-             (entry-status (psydev/elfeed-search--entry-status entry))
-             (entry-icon (psydev/elfeed-search--entry-icon entry))
+             (entry-face (maker/elfeed-search--entry-face entry))
+             (entry-status (maker/elfeed-search--entry-status entry))
+             (entry-icon (maker/elfeed-search--entry-icon entry))
 
              ;; Feed
              (feed (elfeed-entry-feed entry))
@@ -3519,7 +3519,7 @@ Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa
                     'kbd-help title)))
         (insert line))))
 
-  (advice-add #'elfeed-goodies/entry-line-draw :override #'psydev/elfeed-goodies/entry-line-draw))
+  (advice-add #'elfeed-goodies/entry-line-draw :override #'maker/elfeed-goodies/entry-line-draw))
 #+end_src
 
 Replace "End of entries." string by empty-list placeholder.
@@ -3548,11 +3548,11 @@ When FORCE is non-nil, redraw even when the database hasn't changed."
 Remove string sort on tags to keep original order by tag-inheritance from org file.
 #+begin_src elisp
 (after! elfeed
-  (defun psydev/elfeed-normalize-tags (tags &rest more-tags)
+  (defun maker/elfeed-normalize-tags (tags &rest more-tags)
     "Return the normalized tag list for TAGS."
     (let ((all (apply #'append tags (nconc more-tags (list ())))))
       (cl-delete-duplicates all)))
-  (advice-add #'elfeed-normalize-tags :override #'psydev/elfeed-normalize-tags))
+  (advice-add #'elfeed-normalize-tags :override #'maker/elfeed-normalize-tags))
 #+end_src
 
 *** Bindings
@@ -3743,7 +3743,7 @@ Rework narrow operator.
 Smarter behavior for yank-pop.
 Inspired from https://karthinks.com/software/a-better-yank-pop-binding/
 #+begin_src elisp
-(defun psydev/kill-ring-or-yank-pop (&optional arg)
+(defun maker/kill-ring-or-yank-pop (&optional arg)
   "Call `+default/yank-pop'. If called after a yank, call `yank-pop' instead."
   (interactive "*p")
   (cond ((eq last-command 'yank)
@@ -3836,7 +3836,7 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "zN"             #'+evil:narrow-buffer-indirect
  :nv "zw"             #'doom/widen-indirectly-narrowed-buffer
  ;; Rearrange some yank/paste commands
- :n "M-p"             #'psydev/kill-ring-or-yank-pop
+ :n "M-p"             #'maker/kill-ring-or-yank-pop
  :n "C-p"             #'+default/yank-pop
  :n "M-y"             #'duplicate-line-or-region
  (:map evil-mc-key-map
@@ -3919,7 +3919,7 @@ Customize, disabled by default for now as I often mistype and set marks unwillin
 Override tmux check function as it doesn't seem to work with tmux escape sequences.
 #+begin_src elisp
 (add-hook! 'after-make-frame-functions
-  (defun +psydev/fix-etcc-tmux-escape (frame)
+  (defun +maker/fix-etcc-tmux-escape (frame)
     (unless (display-graphic-p frame)
       (defun etcc--in-tmux? () nil))))
 #+end_src
@@ -4279,7 +4279,7 @@ Customize ivy-posframe.
 (after! ivy-posframe
   (setq ivy-posframe-min-height ivy-height
         ivy-posframe-min-width 90
-        ivy-posframe-size-function #'psydev/ivy-posframe-get-size
+        ivy-posframe-size-function #'maker/ivy-posframe-get-size
         ivy-posframe-border-width 8
         ivy-posframe-parameters `((left-fringe . 2)
                                   (right-fringe . 2)))
@@ -4291,7 +4291,7 @@ Customize ivy-posframe.
     (setf (alist-get fn ivy-posframe-display-functions-alist)
           #'ivy-display-function-fallback))
 
-  (defun psydev/ivy-posframe-get-size ()
+  (defun maker/ivy-posframe-get-size ()
     "Dynamic, fixed size function used by `ivy-posframe-size-function'."
     (setq ivy-posframe-width (round (* (frame-width) 0.618))) ; NOTE EDIT
     (list
@@ -4418,7 +4418,7 @@ If ~+format-with-lsp~ is disabled and goimports is used, this is not needed.
 #+begin_src elisp
 (after! lsp-mode
   (add-hook 'go-mode-hook
-            (defun +psydev/lsp-go-organize-imports-on-save ()
+            (defun +maker/lsp-go-organize-imports-on-save ()
               (add-hook 'before-save-hook #'lsp-organize-imports t t))))
 #+end_src
 
@@ -4470,7 +4470,7 @@ Enable gravatars when viewing commits. The service used by default is [[https://
 Add a magit command for ~push --all~.
 #+begin_src elisp
 (after! magit
-  (defun psydev/magit-push-all ()
+  (defun maker/magit-push-all ()
     "Push all branches."
     (interactive)
     (magit-run-git-async "push" "-v"
@@ -4478,7 +4478,7 @@ Add a magit command for ~push --all~.
                          "--all"))
 
   (transient-append-suffix 'magit-push '(2 0 -1)
-    '("a" "all branches" psydev/magit-push-all)))
+    '("a" "all branches" maker/magit-push-all)))
 #+end_src
 
 *** Yadm
@@ -4606,7 +4606,7 @@ Configure the behavior of M-RET and friends, and ensure that headings are termin
 Patch doom's org-insert-item variant to better respect blank settings.
 #+begin_src elisp
 (after! org
-  (defun psydev/+org--insert-item (direction)
+  (defun maker/+org--insert-item (direction)
     (let ((context (org-element-lineage
                     (org-element-context)
                     '(table table-row headline inlinetask item plain-list)
@@ -4694,19 +4694,19 @@ Patch doom's org-insert-item variant to better respect blank settings.
       (when (and (bound-and-true-p evil-local-mode)
                  (not (evil-emacs-state-p)))
         (evil-insert 1))))
-  (advice-add #'+org--insert-item :override #'psydev/+org--insert-item))
+  (advice-add #'+org--insert-item :override #'maker/+org--insert-item))
 #+end_src
 
 Add functions to move to prev/next (potentially invisible) heading
 #+begin_src elisp
 (after! org
-  (defun +psydev/org-previous-heading (arg)
+  (defun +maker/org-previous-heading (arg)
     "Move to the previous (potentially invisible) heading.
 With ARG, repeats or can move forward if negative."
     (interactive "p")
     (outline-previous-heading)
     (org-show-set-visibility 'minimal))
-  (defun +psydev/org-next-heading (arg)
+  (defun +maker/org-next-heading (arg)
     "Move to the next (potentially invisible) heading.
 With ARG, repeats or can move forward if negative."
     (interactive "p")
@@ -4717,7 +4717,7 @@ With ARG, repeats or can move forward if negative."
 Advise org heading insert commands to enter evil insert mode.
 #+begin_src elisp
 (after! org
-  (defadvice! +psydev/evil-insert-mode (&rest _)
+  (defadvice! +maker/evil-insert-mode (&rest _)
     :after (list #'org-ctrl-c-ret
                  #'org-insert-heading
                  #'org-insert-subheading
@@ -4852,7 +4852,7 @@ Heavily inspired from:
 https://emacs.stackexchange.com/questions/9433/how-to-make-org-prompt-for-a-timestamp-when-changing-state-of-a-todo/9451#9451
 #+begin_src elisp
 (after! org
-  (defun +psydev/org-todo-with-date (&optional arg)
+  (defun +maker/org-todo-with-date (&optional arg)
     "Like `org-todo' but the time of change will be prompted."
     (interactive "P")
     (cl-letf* ((org-read-date-prefer-future nil)
@@ -4947,7 +4947,7 @@ Configure tags alignment.
   (setq org-tags-column -132)
   ;; Workaround incorrect tag alignments on headings containing links with a title
   (add-hook 'org-cycle-hook
-            (defun psydev/org-cycle-align-tags (state)
+            (defun maker/org-cycle-align-tags (state)
               (setq org-tags-column (- 3 (window-body-width)))
               (when (not (memq state '(overview folded))) (org-align-tags 't)))))
 #+end_src
@@ -4991,7 +4991,7 @@ Configure org-refile.
         org-refile-targets
         '((nil :maxlevel . 4)
           (org-agenda-files :maxlevel . 4))
-        org-refile-target-verify-function #'+psydev/org-refile-target-verify))
+        org-refile-target-verify-function #'+maker/org-refile-target-verify))
 #+end_src
 
 Configure archiving behavior.
@@ -5003,7 +5003,7 @@ Configure archiving behavior.
 
   ;; Do not keep archive buffers alive.
   (add-hook! 'org-archive-hook
-             (defun +psydev/kill-archive-buffers ()
+             (defun +maker/kill-archive-buffers ()
                (doom/kill-matching-buffers "\\.org_archive$"))))
 #+end_src
 
@@ -5012,35 +5012,35 @@ Configure archiving behavior.
 Define target filter functions.
 #+begin_src elisp
 (after! org
-  (defun +psydev/org-refile-target-verify ()
+  (defun +maker/org-refile-target-verify ()
     "Remove TODO-items that are not projects from refile targets."
     (let ((todo (org-get-todo-state)))
       (if (and todo (not (equal todo "PROJ")))
           (progn (org-end-of-subtree) nil)
         t)))
 
-  (defun +psydev/org-refile-target-verify-context ()
+  (defun +maker/org-refile-target-verify-context ()
     "Remove TODO-items that are not projects, and headings not matching GTD context from refile targets."
     (let ((tags (org-get-tags-at))
           (todo (org-get-todo-state)))
       (unless (or (and todo (not (equal todo "PROJ")))
-                  (and +psydev/org-view-context
-                       (if (eq +psydev/org-view-context 'none)
+                  (and +maker/org-view-context
+                       (if (eq +maker/org-view-context 'none)
                            (cl-member-if (lambda (tag) (string-match-p "^@.+" tag)) tags)
-                         (not (member +psydev/org-view-context tags)))))
+                         (not (member +maker/org-view-context tags)))))
         t))))
 #+end_src
 
 Prevent refiling at file toplevel in agenda files.
 #+begin_src elisp
 (after! org
-  (defun psydev/org-refile-filter-targets (orig-fun &rest args)
+  (defun maker/org-refile-filter-targets (orig-fun &rest args)
     (let ((targets (apply orig-fun args))
           (agenda-files (mapcar #'file-name-nondirectory (org-agenda-files))))
       (cl-remove-if (lambda (x)
                       (member (car x) agenda-files))
                     targets)))
-  (advice-add 'org-refile-get-targets :around #'psydev/org-refile-filter-targets))
+  (advice-add 'org-refile-get-targets :around #'maker/org-refile-filter-targets))
 #+end_src
 
 **** Refile commands
@@ -5048,12 +5048,12 @@ Prevent refiling at file toplevel in agenda files.
 Define additional refile commands.
 #+begin_src elisp
 (after! org
-  (defun +psydev/org-refile-to-context (&rest _)
+  (defun +maker/org-refile-to-context (&rest _)
     "Refile current heading to targets in the currently selected scope and context."
     (interactive "P")
-    (let* ((scope (unless (eq +psydev/org-view-scope 'buffer) +psydev/org-view-scope))
+    (let* ((scope (unless (eq +maker/org-view-scope 'buffer) +maker/org-view-scope))
            (org-refile-targets `((,scope :maxlevel . 4)))
-           (org-refile-target-verify-function #'+psydev/org-refile-target-verify-context)
+           (org-refile-target-verify-function #'+maker/org-refile-target-verify-context)
            current-prefix-arg)
       (call-interactively #'org-refile))))
 #+end_src
@@ -5067,7 +5067,7 @@ Customize bindings.
         :localleader
         :prefix ("r" . "Refile")
         "R"  #'org-refile-reverse
-        "n"  #'+psydev/org-refile-to-context))
+        "n"  #'+maker/org-refile-to-context))
 #+end_src
 
 *** Capture
@@ -5090,7 +5090,7 @@ Configure org-capture settings.
 
   ;; Hide header line in capture buffer.
   ;; FIXME: This does not work for org-mks select interface.
-  (defadvice! psydev/org-capture-frame-disable-tabs (&rest _)
+  (defadvice! maker/org-capture-frame-disable-tabs (&rest _)
     :after #'org-capture
     (when (+org-capture-frame-p)
       (centaur-tabs-local-mode 1))))
@@ -5226,38 +5226,38 @@ Define generic capture templates used in other contexts.
 Advise existing capture commands and add project capture commands.
 #+begin_src elisp
 (after! org-capture
-  (defun psydev/org-capture-target (&optional project-root)
+  (defun maker/org-capture-target (&optional project-root)
     "Get the org capture target file based on current or selected context."
     (let* ((project-root (or project-root (projectile-project-root))))
       (cond
        ;; Use the current buffer only if in org-mode
-       ((and (eq +psydev/org-view-scope 'buffer)
+       ((and (eq +maker/org-view-scope 'buffer)
              (eq major-mode 'org-mode))
         (buffer-file-name))
        ;; Use the current project notes file if available
-       ((and (eq +psydev/org-view-scope 'buffer)
+       ((and (eq +maker/org-view-scope 'buffer)
              project-root)
-        (+psydev/projectile-get-project-notes-file project-root))
+        (+maker/projectile-get-project-notes-file project-root))
        ;; Use the selected org file if set
-       ((and (stringp +psydev/org-view-scope)
-             (file-name-absolute-p +psydev/org-view-scope))
-        +psydev/org-view-scope)
+       ((and (stringp +maker/org-view-scope)
+             (file-name-absolute-p +maker/org-view-scope))
+        +maker/org-view-scope)
        ;; Fallback to default
        (t org-default-notes-file))))
 
-  (defvar psydev/org-capture--project-only nil)
+  (defvar maker/org-capture--project-only nil)
 
-  (defadvice! psydev/org-context-capture-ad (fn &rest args)
+  (defadvice! maker/org-context-capture-ad (fn &rest args)
     "Add additional capture templates based on current or selected context."
     :around (list #'org-capture #'counsel-org-capture)
     (let* ((project-root (projectile-project-root))
-           (target-file (psydev/org-capture-target project-root))
+           (target-file (maker/org-capture-target project-root))
            (parent-name (format "%s [%s]"
                                 (if project-root "Project" "Context")
                                 (file-name-base target-file)))
            (org-capture-templates
             (append org-capture-templates
-                    (unless (or psydev/org-capture--project-only
+                    (unless (or maker/org-capture--project-only
                                 (equal target-file org-default-notes-file))
                       (doct `((,parent-name :keys "c"
                                             :file ,target-file :olp ("Inbox")
@@ -5265,26 +5265,26 @@ Advise existing capture commands and add project capture commands.
                                             ,+org-capture-generic-templates)))))))
       (apply fn args)))
 
-  (defun psydev/org-project-capture-ad (fn &rest args)
+  (defun maker/org-project-capture-ad (fn &rest args)
     "Replace default by project capture templates and invoke the given capture command."
     (let* ((project-root (projectile-acquire-root))
-           (project-notes-file (+psydev/projectile-get-project-notes-file project-root))
+           (project-notes-file (+maker/projectile-get-project-notes-file project-root))
            (org-capture-templates
             (doct `((:group "Project"
                      :file ,project-notes-file :olp ("Inbox")
                      :children
                      ,+org-capture-generic-templates))))
-           (psydev/org-capture--project-only t))
+           (maker/org-capture--project-only t))
       (apply fn args)))
 
-  (defun psydev/org-project-capture (&optional goto keys)
+  (defun maker/org-project-capture (&optional goto keys)
     "Capture something into a project."
     (interactive "P")
-    (psydev/org-project-capture-ad #'org-capture goto keys))
-  (defun psydev/counsel-org-project-capture ()
+    (maker/org-project-capture-ad #'org-capture goto keys))
+  (defun maker/counsel-org-project-capture ()
     "Capture something into a project."
     (interactive)
-    (psydev/org-project-capture-ad #'counsel-org-capture)))
+    (maker/org-project-capture-ad #'counsel-org-capture)))
 #+end_src
 
 **** External command
@@ -5337,9 +5337,9 @@ Customize bindings.
 
          (:prefix "p"
           :desc "Org project capture"
-          "x" #'psydev/org-project-capture
+          "x" #'maker/org-project-capture
           :desc "Counsel project capture"
-          "X" #'psydev/counsel-org-project-capture))
+          "X" #'maker/counsel-org-project-capture))
 
         ;; Bind all evil variants explicitly to force hint to display these
         :map org-capture-mode-map
@@ -5500,20 +5500,20 @@ Configure default sorting.
 Define custom agenda views.
 #+begin_src elisp
 (after! org
-  (defvar +psydev/org-agenda-groups
+  (defvar +maker/org-agenda-groups
         '((:name "Schedule" :time-grid t)
           (:auto-outline-path t :order 99)))
 
   (setq org-agenda-custom-commands
         '(("d" "Agenda for current day" agenda ""
            ((org-agenda-span 'day)
-            (org-super-agenda-groups +psydev/org-agenda-groups)))
+            (org-super-agenda-groups +maker/org-agenda-groups)))
 
           ("w" "Agenda for current week" agenda ""
-           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+           ((org-super-agenda-groups +maker/org-agenda-groups)))
 
           ("e" "Appointments for current week" agenda* ""
-           ((org-super-agenda-groups +psydev/org-agenda-groups)))
+           ((org-super-agenda-groups +maker/org-agenda-groups)))
 
           ("l" "Log of the current week" agenda ""
            ((org-agenda-overriding-header "Activity Log")
@@ -5543,7 +5543,7 @@ Does not integrate well with dired-view-file, which seems to permanently add 'q'
 It could be interesting to use a similar approach than dired-view-file for agenda indirect buffers.
 #+begin_src elisp
 (after! org-agenda
-  (defadvice! +psydev/org-agenda-indirect-buffer (&rest _)
+  (defadvice! +maker/org-agenda-indirect-buffer (&rest _)
     :after #'org-agenda-tree-to-indirect-buffer
     (unless current-prefix-arg
       (select-window (get-buffer-window org-agenda-last-indirect-buffer))
@@ -5551,7 +5551,7 @@ It could be interesting to use a similar approach than dired-view-file for agend
       (use-local-map (copy-keymap (current-local-map)))
       (local-set-key "q" #'kill-buffer-and-window)))
 
-  (defun +psydev/org-agenda-tree-to-indirect-buffer-new ()
+  (defun +maker/org-agenda-tree-to-indirect-buffer-new ()
     (interactive)
     (let ((orig-buffer (current-buffer))
           (current-prefix-arg '(4)))
@@ -5650,8 +5650,8 @@ Customize bindings.
         :m "S-RET"      #'org-agenda-recenter
         :m [M-return]   #'org-agenda-tree-to-indirect-buffer
         :m "M-RET"      #'org-agenda-tree-to-indirect-buffer
-        :m [M-S-return] #'+psydev/org-agenda-tree-to-indirect-buffer-new
-        :m "M-S-RET"    #'+psydev/org-agenda-tree-to-indirect-buffer-new
+        :m [M-S-return] #'+maker/org-agenda-tree-to-indirect-buffer-new
+        :m "M-S-RET"    #'+maker/org-agenda-tree-to-indirect-buffer-new
 
         ;; Move cursor by items instead of lines by default
         :m "j"          #'org-agenda-next-line
@@ -5729,25 +5729,25 @@ Customize bindings.
 Interactive functions to display custom Org QL Views.
 #+begin_src elisp
 (after! org-ql
-  (defvar +psydev/org-view-scope 'buffer
+  (defvar +maker/org-view-scope 'buffer
     "The currently selected scope for Org Views.
 
 The special symbol `buffer' means to use the current buffer.")
-  (defvar +psydev/org-view-context nil
+  (defvar +maker/org-view-context nil
     "The currently selected context tag for Org Views.
 
 The special symbol `none' means to not match headlines with any context tag.")
-  (defvar +psydev/org-view-tags nil
+  (defvar +maker/org-view-tags nil
     "The currently selected tags for Org Views.")
 
   ;; ✴✳🏵🌼☘
-  (defvar +psydev/org-view-groups-dashboard
+  (defvar +maker/org-view-groups-dashboard
     '((:name "📅 Scheduled" :scheduled t)
       (:name "🌀 Projects" :todo "PROJ")
       (:auto-outline-path t))
     "Org super agenda groups for dashboard views.")
 
-  (defvar +psydev/org-view-groups-planning
+  (defvar +maker/org-view-groups-planning
     '((:name "🔥 Active" :todo "ACTV") ;
       (:name "⭕ Top Priorities" :and (:priority>= "B" :not (:todo "PROJ")))
       (:name "📅 Scheduled" :scheduled t)
@@ -5759,79 +5759,79 @@ The special symbol `none' means to not match headlines with any context tag.")
       (:auto-outline-path t))
     "Org super agenda groups for planning views.")
 
-  (defvar +psydev/org-view-groups-backlog
-    '((:name "🎯 Goals" :transformer #'+psydev/org-view-goals-transformer :todo nil)
+  (defvar +maker/org-view-groups-backlog
+    '((:name "🎯 Goals" :transformer #'+maker/org-view-goals-transformer :todo nil)
       (:auto-outline-path t))
     "Org super agenda groups for backlog views.")
 
-  (defun +psydev/org-view-goals-transformer (item)
+  (defun +maker/org-view-goals-transformer (item)
     (org-super-agenda--when-with-marker-buffer (org-super-agenda--get-marker item)
       (s-replace-regexp "Goals\\|Objectifs" (car (last (org-get-outline-path))) item)))
 
-  (defun +psydev/org-view-upcoming ()
+  (defun +maker/org-view-upcoming ()
     (interactive)
-    (+psydev/org-view-make
-     :buffers-files +psydev/org-view-scope
+    (+maker/org-view-make
+     :buffers-files +maker/org-view-scope
      :narrow t
      :query '(and (or (scheduled)
                       (deadline auto))
                   (not (done)))
-     :context +psydev/org-view-context
-     :tags +psydev/org-view-tags
+     :context +maker/org-view-context
+     :tags +maker/org-view-tags
      :super-groups '((:auto-planning t))
      :title "Upcoming"))
 
-  (defun +psydev/org-view-dashboard ()
+  (defun +maker/org-view-dashboard ()
     (interactive)
-    (+psydev/org-view-make
-     :buffers-files +psydev/org-view-scope
+    (+maker/org-view-make
+     :buffers-files +maker/org-view-scope
      :narrow t
      :query '(and (todo)
                   (not (todo "SMDY" "IDEA"))
                   (not (ancestors (todo "SMDY" "IDEA")))
                   (or (todo "ACTV") (priority '>= "B")))
-     :context +psydev/org-view-context
-     :tags +psydev/org-view-tags
-     :super-groups +psydev/org-view-groups-dashboard
+     :context +maker/org-view-context
+     :tags +maker/org-view-tags
+     :super-groups +maker/org-view-groups-dashboard
      :title "Dashboard"))
 
-  (defun +psydev/org-view-planning ()
+  (defun +maker/org-view-planning ()
     (interactive)
-    (+psydev/org-view-make
-     :buffers-files +psydev/org-view-scope
+    (+maker/org-view-make
+     :buffers-files +maker/org-view-scope
      :narrow t
      :query '(and (todo)
                   (not (todo "SMDY" "IDEA"))
                   (not (ancestors (todo "SMDY" "IDEA"))))
-     :context +psydev/org-view-context
-     :tags +psydev/org-view-tags
-     :super-groups +psydev/org-view-groups-planning
+     :context +maker/org-view-context
+     :tags +maker/org-view-tags
+     :super-groups +maker/org-view-groups-planning
      :title "Planning"))
 
-  (defun +psydev/org-view-backlog ()
+  (defun +maker/org-view-backlog ()
     (interactive)
-    (+psydev/org-view-make
-     :buffers-files +psydev/org-view-scope
+    (+maker/org-view-make
+     :buffers-files +maker/org-view-scope
      :narrow t
      :query '(and (or (todo)
                       (heading-regexp "^\\(Goals\\|Objectifs\\)$"))
                   (not (tags "read" "listen" "watch")))
-     :context +psydev/org-view-context
-     :tags +psydev/org-view-tags
-     :super-groups +psydev/org-view-groups-backlog
+     :context +maker/org-view-context
+     :tags +maker/org-view-tags
+     :super-groups +maker/org-view-groups-backlog
      :title "Backlog"))
 
-  (cl-defun +psydev/org-view-make (&key buffers-files query narrow super-groups sort title context tags)
-    (let ((buffers-files (+psydev/org-view-target buffers-files))
-          (query (append query (+psydev/org-view-make-query context tags)))
+  (cl-defun +maker/org-view-make (&key buffers-files query narrow super-groups sort title context tags)
+    (let ((buffers-files (+maker/org-view-target buffers-files))
+          (query (append query (+maker/org-view-make-query context tags)))
           (sort (or sort '(priority scheduled))))
       (org-ql-search buffers-files query
         :narrow narrow
         :super-groups super-groups
         :sort sort
-        :title (+psydev/org-view--make-title title buffers-files context tags))))
+        :title (+maker/org-view--make-title title buffers-files context tags))))
 
-  (defun +psydev/org-view-target (scope)
+  (defun +maker/org-view-target (scope)
     (cond
      ;; Use the current buffer only if in org-mode
      ((and (equal scope 'buffer)
@@ -5840,7 +5840,7 @@ The special symbol `none' means to not match headlines with any context tag.")
      ;; Use the current project notes file if available
      ((and (equal scope 'buffer)
            (projectile-project-p))
-      (+psydev/projectile-get-project-notes-file))
+      (+maker/projectile-get-project-notes-file))
      ;; Use the selected org file if set
      ((and (stringp scope)
            (file-name-absolute-p scope))
@@ -5848,7 +5848,7 @@ The special symbol `none' means to not match headlines with any context tag.")
      ;; Fallback to default
      (t #'org-agenda-files)))
 
-  (defun +psydev/org-view-make-query (&optional context tags)
+  (defun +maker/org-view-make-query (&optional context tags)
     (append
      (when context
        (if (eq context 'none)
@@ -5856,7 +5856,7 @@ The special symbol `none' means to not match headlines with any context tag.")
          `((tags ,context))))
      (when tags `((tags ,@tags)))))
 
-  (defun +psydev/org-view--make-title (name &optional buffers-files context tags)
+  (defun +maker/org-view--make-title (name &optional buffers-files context tags)
     (let ((source (when buffers-files (format " in %s" buffers-files)))
           (suffix (mapconcat (lambda (it) (format "%s" it))
                              (remove nil (list context tags))
@@ -5871,60 +5871,60 @@ The special symbol `none' means to not match headlines with any context tag.")
 Define sidebar views.
 #+begin_src elisp
 (after! org-sidebar
-  (defun +psydev/org-sidebar--daily-agenda-fn (source-buffer)
+  (defun +maker/org-sidebar--daily-agenda-fn (source-buffer)
     "Return an Org Agenda buffer showing the daily agenda in SOURCE-BUFFER."
     (save-window-excursion (org-agenda nil "d"))
     org-agenda-buffer)
 
-  (defun +psydev/org-sidebar--upcoming-fn (source-buffer)
+  (defun +maker/org-sidebar--upcoming-fn (source-buffer)
     "Return an Org QL View buffer showing unscheduled, un-deadlined items in SOURCE-BUFFER."
     (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Upcoming*")))
       (let ((org-ql-view-buffer display-buffer)
-            (+psydev/org-view-scope 'buffer))
-        (save-window-excursion (+psydev/org-view-upcoming)))
+            (+maker/org-view-scope 'buffer))
+        (save-window-excursion (+maker/org-view-upcoming)))
       display-buffer))
-  (defun +psydev/org-sidebar-agenda-upcoming ()
+  (defun +maker/org-sidebar-agenda-upcoming ()
     (interactive)
-    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--daily-agenda-fn +psydev/org-sidebar--upcoming-fn)))
+    (let ((org-sidebar-default-fns '(+maker/org-sidebar--daily-agenda-fn +maker/org-sidebar--upcoming-fn)))
       (org-sidebar-toggle)))
 
-  (defun +psydev/org-sidebar--dashboard-fn (source-buffer)
+  (defun +maker/org-sidebar--dashboard-fn (source-buffer)
     "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
     (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Dashboard*")))
       (let ((org-ql-view-buffer display-buffer)
-            (+psydev/org-view-scope 'buffer))
-        (save-window-excursion (+psydev/org-view-dashboard)))
+            (+maker/org-view-scope 'buffer))
+        (save-window-excursion (+maker/org-view-dashboard)))
       display-buffer))
-  (defun +psydev/org-sidebar-dashboard ()
+  (defun +maker/org-sidebar-dashboard ()
     (interactive)
-    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn)))
+    (let ((org-sidebar-default-fns '(+maker/org-sidebar--dashboard-fn)))
       (org-sidebar-toggle)))
 
-  (defun +psydev/org-sidebar--planning-fn (source-buffer)
+  (defun +maker/org-sidebar--planning-fn (source-buffer)
     "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
     (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Planning*")))
       (let ((org-ql-view-buffer display-buffer)
-            (+psydev/org-view-scope 'buffer))
-        (save-window-excursion (+psydev/org-view-planning)))
+            (+maker/org-view-scope 'buffer))
+        (save-window-excursion (+maker/org-view-planning)))
       display-buffer))
-  (defun +psydev/org-sidebar-planning ()
+  (defun +maker/org-sidebar-planning ()
     (interactive)
-    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--planning-fn)))
+    (let ((org-sidebar-default-fns '(+maker/org-sidebar--planning-fn)))
       (org-sidebar-toggle)))
 
-  (defun +psydev/org-sidebar--backlog-fn (source-buffer)
+  (defun +maker/org-sidebar--backlog-fn (source-buffer)
     "Return an Org QL View buffer showing active and high-priority items in SOURCE-BUFFER."
     (let ((display-buffer (org-ql-view--buffer "*Org Sidebar: Org QL View: Backlog*")))
       (let ((org-ql-view-buffer display-buffer)
-            (+psydev/org-view-scope 'buffer))
-        (save-window-excursion (+psydev/org-view-backlog)))
+            (+maker/org-view-scope 'buffer))
+        (save-window-excursion (+maker/org-view-backlog)))
       display-buffer))
-  (defun +psydev/org-sidebar-backlog ()
+  (defun +maker/org-sidebar-backlog ()
     (interactive)
-    (let ((org-sidebar-default-fns '(+psydev/org-sidebar--backlog-fn)))
+    (let ((org-sidebar-default-fns '(+maker/org-sidebar--backlog-fn)))
       (org-sidebar-toggle)))
 
-  (setq org-sidebar-default-fns '(+psydev/org-sidebar--dashboard-fn +psydev/org-sidebar--planning-fn)))
+  (setq org-sidebar-default-fns '(+maker/org-sidebar--dashboard-fn +maker/org-sidebar--planning-fn)))
 #+end_src
 
 **** Hydra
@@ -5934,25 +5934,25 @@ Define a view dispatcher hydra.
 (after! (org-ql pretty-hydra)
   (defun +hydra/org-view--format-view-head (name)
     (concat name " "
-            (when (not (eq +psydev/org-view-scope #'org-agenda-files)) "<")
-            (when +psydev/org-view-context "@")
-            (when +psydev/org-view-tags "+")))
+            (when (not (eq +maker/org-view-scope #'org-agenda-files)) "<")
+            (when +maker/org-view-context "@")
+            (when +maker/org-view-tags "+")))
   (defun +hydra/org-view--format-tree-head (name)
     (concat name " "
-            (when +psydev/org-view-context "@")
-            (when +psydev/org-view-tags "+")))
+            (when +maker/org-view-context "@")
+            (when +maker/org-view-tags "+")))
   (defun +hydra/org-view--format-context-head (val)
-    (format "%s %s" (if (equal +psydev/org-view-context val) "[x]" "[ ]") val))
+    (format "%s %s" (if (equal +maker/org-view-context val) "[x]" "[ ]") val))
   (defun +hydra/org-view--format-tag-head (tag)
-    (format "%s %s" (if (member tag +psydev/org-view-tags) "[x]" "[ ]") tag))
+    (format "%s %s" (if (member tag +maker/org-view-tags) "[x]" "[ ]") tag))
 
   (defun +hydra/org-view--set-scope (scope)
     (cl-case scope
-      (buffer (progn (setq +psydev/org-view-scope 'buffer)))
+      (buffer (progn (setq +maker/org-view-scope 'buffer)))
       (file (let ((file (read-file-name "Select File: " org-directory nil (confirm-nonexistent-file-or-buffer))))
                (when file
-                 (setq +psydev/org-view-scope file))))
-      (t (progn (setq +psydev/org-view-scope #'org-agenda-files)))))
+                 (setq +maker/org-view-scope file))))
+      (t (progn (setq +maker/org-view-scope #'org-agenda-files)))))
 
   (pretty-hydra-define +hydra/org-view
     (:color teal :separator "═" :title (+hydra/title-generator "Org Views" "tasks" 51))
@@ -5962,60 +5962,60 @@ Define a view dispatcher hydra.
       ("ae" (org-agenda current-prefix-arg "e") "week events")
       ("al" (org-agenda current-prefix-arg "l") "week log"))
      "View"
-     (("u" +psydev/org-view-upcoming (+hydra/org-view--format-view-head "upcoming") :width 13)
-      ("d" +psydev/org-view-dashboard (+hydra/org-view--format-view-head "dashboard") :width 13)
-      ("p" +psydev/org-view-planning (+hydra/org-view--format-view-head "planning") :width 13)
-      ("b" +psydev/org-view-backlog (+hydra/org-view--format-view-head "backlog") :width 13))
+     (("u" +maker/org-view-upcoming (+hydra/org-view--format-view-head "upcoming") :width 13)
+      ("d" +maker/org-view-dashboard (+hydra/org-view--format-view-head "dashboard") :width 13)
+      ("p" +maker/org-view-planning (+hydra/org-view--format-view-head "planning") :width 13)
+      ("b" +maker/org-view-backlog (+hydra/org-view--format-view-head "backlog") :width 13))
      "Tree"
      (("tp" (org-ql-sparse-tree
              (append '(and (todo "PROJ"))
-                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+                     (+maker/org-view-make-query +maker/org-view-context +maker/org-view-tags)))
        (+hydra/org-view--format-tree-head "project") :width 10)
       ("tt" (org-ql-sparse-tree
              (append '(and (todo))
-                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+                     (+maker/org-view-make-query +maker/org-view-context +maker/org-view-tags)))
        (+hydra/org-view--format-tree-head "todo") :width 10)
       ("tm" (org-ql-sparse-tree
              (append '(and (tags))
-                     (+psydev/org-view-make-query +psydev/org-view-context +psydev/org-view-tags)))
+                     (+maker/org-view-make-query +maker/org-view-context +maker/org-view-tags)))
        (+hydra/org-view--format-tree-head "tag") :width 10)
       ;; NOTE: Occur command does not support tags as it would hardly make sense
       ("to" (progn (org-check-for-org-mode)
-                   (unless +psydev/org-view-context
+                   (unless +maker/org-view-context
                      (error "Cannot show occurrences of unset context"))
-                   (when (eq +psydev/org-view-context 'none)
+                   (when (eq +maker/org-view-context 'none)
                      (error "Cannot show occurrences of `none' context"))
-                   (org-occur +psydev/org-view-context))
+                   (org-occur +maker/org-view-context))
        (+hydra/org-view--format-tree-head "occur") :width 10))
      "Scope (<)"
      (("<" (+hydra/org-view--set-scope 'all)
-       (format "%s all" (if (eq +psydev/org-view-scope #'org-agenda-files) "[x]" "[ ]")) :width 18
+       (format "%s all" (if (eq +maker/org-view-scope #'org-agenda-files) "[x]" "[ ]")) :width 18
        :color red)
       ("/" (+hydra/org-view--set-scope 'file)
-       (if (and (stringp +psydev/org-view-scope) (s-starts-with-p "/" +psydev/org-view-scope))
-           (format "[x] %s" (file-name-nondirectory +psydev/org-view-scope))
+       (if (and (stringp +maker/org-view-scope) (s-starts-with-p "/" +maker/org-view-scope))
+           (format "[x] %s" (file-name-nondirectory +maker/org-view-scope))
          (format "[ ] select file")) :width 18
        :color red)
       ("." (+hydra/org-view--set-scope 'buffer)
-       (format "%s current buffer" (if (equal +psydev/org-view-scope 'buffer) "[x]" "[ ]")) :width 18
+       (format "%s current buffer" (if (equal +maker/org-view-scope 'buffer) "[x]" "[ ]")) :width 18
        :color red))
      "Context (@)"
-     (("@" (setq +psydev/org-view-context nil)
-       (format "%s all" (if (not +psydev/org-view-context) "[x]" "[ ]")) :width 11
+     (("@" (setq +maker/org-view-context nil)
+       (format "%s all" (if (not +maker/org-view-context) "[x]" "[ ]")) :width 11
        :color red)
-      ("!" (setq +psydev/org-view-context 'none) (+hydra/org-view--format-context-head 'none) :width 11 :color red)
-      ("s" (setq +psydev/org-view-context "@self") (+hydra/org-view--format-context-head "@self") :width 11 :color red)
-      ("h" (setq +psydev/org-view-context "@home") (+hydra/org-view--format-context-head "@home") :width 11 :color red)
-      ("w" (setq +psydev/org-view-context "@work") (+hydra/org-view--format-context-head "@work") :width 11 :color red)
-      ("P" (setq +psydev/org-view-context "@people") (+hydra/org-view--format-context-head "@people") :width 11 :color red))
+      ("!" (setq +maker/org-view-context 'none) (+hydra/org-view--format-context-head 'none) :width 11 :color red)
+      ("s" (setq +maker/org-view-context "@self") (+hydra/org-view--format-context-head "@self") :width 11 :color red)
+      ("h" (setq +maker/org-view-context "@home") (+hydra/org-view--format-context-head "@home") :width 11 :color red)
+      ("w" (setq +maker/org-view-context "@work") (+hydra/org-view--format-context-head "@work") :width 11 :color red)
+      ("P" (setq +maker/org-view-context "@people") (+hydra/org-view--format-context-head "@people") :width 11 :color red))
      "Tags (+)"
-     (("+" (setq +psydev/org-view-tags nil)
-       (format "%s all" (if (not +psydev/org-view-tags) "[x]" "[ ]")) :width 10
+     (("+" (setq +maker/org-view-tags nil)
+       (format "%s all" (if (not +maker/org-view-tags) "[x]" "[ ]")) :width 10
        :color red)
-      ("r" (add-to-list '+psydev/org-view-tags "read") (+hydra/org-view--format-tag-head "read") :width 10 :color red)
-      ("l" (add-to-list '+psydev/org-view-tags "listen") (+hydra/org-view--format-tag-head "listen") :width 10 :color red)
-      ("v" (add-to-list '+psydev/org-view-tags "watch") (+hydra/org-view--format-tag-head "watch") :width 10 :color red)
-      ("n" (add-to-list '+psydev/org-view-tags "need") (+hydra/org-view--format-tag-head "need") :width 10 :color red)
+      ("r" (add-to-list '+maker/org-view-tags "read") (+hydra/org-view--format-tag-head "read") :width 10 :color red)
+      ("l" (add-to-list '+maker/org-view-tags "listen") (+hydra/org-view--format-tag-head "listen") :width 10 :color red)
+      ("v" (add-to-list '+maker/org-view-tags "watch") (+hydra/org-view--format-tag-head "watch") :width 10 :color red)
+      ("n" (add-to-list '+maker/org-view-tags "need") (+hydra/org-view--format-tag-head "need") :width 10 :color red)
 
       ("q" nil)
       ("<escape>" nil)))))
@@ -6029,14 +6029,14 @@ Customize bindings.
   ;; Leader bindings
   (map! :leader
    :prefix "n"
-   :desc "Org upcoming"           "u" #'+psydev/org-view-upcoming
-   :desc "Org upcoming sidebar"   "U" #'+psydev/org-sidebar-agenda-upcoming
-   :desc "Org dashboard"          "d" #'+psydev/org-view-dashboard
-   :desc "Org dashboard sidebar"  "D" #'+psydev/org-sidebar-dashboard
-   :desc "Org planning"           "p" #'+psydev/org-view-planning
-   :desc "Org planning sidebar"   "P" #'+psydev/org-sidebar-planning
-   :desc "Org backlog"            "b" #'+psydev/org-view-backlog
-   :desc "Org backlog sidebar"    "B" #'+psydev/org-sidebar-backlog
+   :desc "Org upcoming"           "u" #'+maker/org-view-upcoming
+   :desc "Org upcoming sidebar"   "U" #'+maker/org-sidebar-agenda-upcoming
+   :desc "Org dashboard"          "d" #'+maker/org-view-dashboard
+   :desc "Org dashboard sidebar"  "D" #'+maker/org-sidebar-dashboard
+   :desc "Org planning"           "p" #'+maker/org-view-planning
+   :desc "Org planning sidebar"   "P" #'+maker/org-sidebar-planning
+   :desc "Org backlog"            "b" #'+maker/org-view-backlog
+   :desc "Org backlog sidebar"    "B" #'+maker/org-sidebar-backlog
    :desc "Org view"               "n" #'+hydra/org-view/body))
 #+end_src
 
@@ -6145,7 +6145,7 @@ Customize priorities faces.
 Advise functions that jump to locations to show context around point in org-mode.
 #+begin_src elisp
 (after! (evil-vars undo-fu)
-  (defadvice! +psydev/org-jump-visibility (&rest _)
+  (defadvice! +maker/org-jump-visibility (&rest _)
     :after (list evil-undo-function evil-redo-function
                  #'goto-last-change)
     (when (derived-mode-p 'org-mode)
@@ -6155,7 +6155,7 @@ Advise functions that jump to locations to show context around point in org-mode
 Advise functions that unexpectedly scroll window to top to recenter.
 #+begin_src elisp
 (after! org
-  (defadvice! +psydev/org-recenter (&rest _)
+  (defadvice! +maker/org-recenter (&rest _)
     :after (list #'org-toggle-heading
                  #'org-archive-subtree)
     (evil-scroll-line-to-center nil)))
@@ -6176,7 +6176,7 @@ Customize popup rules for org-related buffers.
 Add a command to always spawn new indirect buffers.
 #+begin_src elisp
 (after! org
-  (defun +psydev/org-tree-to-indirect-buffer-new ()
+  (defun +maker/org-tree-to-indirect-buffer-new ()
     (interactive)
     (let ((orig-buffer (current-buffer))
           (current-prefix-arg '(4)))
@@ -6234,12 +6234,12 @@ Customize bindings.
 
         ;; Consistent narrowing commands with other modes.
         :nv "zn"            #'org-narrow-to-subtree
-        :nv "zN"            #'+psydev/org-tree-to-indirect-buffer-new
+        :nv "zN"            #'+maker/org-tree-to-indirect-buffer-new
 
         ;; Bind custom implementation of prev/next fold commands for org-mode.
         ;; FIXME: +fold/next stopped working in org-mode at some point in 2021...
-        :m "zj"             #'+psydev/org-next-heading
-        :m "zk"             #'+psydev/org-previous-heading
+        :m "zj"             #'+maker/org-next-heading
+        :m "zk"             #'+maker/org-previous-heading
 
         ;; Bind org-reveal to something more accessible and consistent.
         :n "z <return>"     #'org-reveal
@@ -6304,7 +6304,7 @@ Customize bindings.
          "H"                 #'org-list-make-subtree
          "O"                 #'org-property-action
          "X"                 #'org-toggle-radio-button
-         "T"                 #'+psydev/org-todo-with-date
+         "T"                 #'+maker/org-todo-with-date
          "C"                 #'org-timer-set-timer
          "I"                 #'org-timer-item
          "e"                 #'org-edit-special
@@ -6391,7 +6391,7 @@ Configuration and integration with doom.
 Compile agenda prefix format when displaying an org-ql-view.
 #+begin_src elisp
 (after! org-ql
-  (defadvice! psydev/org-ql-view-prefix-format (&rest _)
+  (defadvice! maker/org-ql-view-prefix-format (&rest _)
     :before #'org-ql-search
     (org-compile-prefix-format 'todo)))
 #+end_src
@@ -6476,7 +6476,7 @@ Custom toggle function to autofocus the tree sidebar.
 #+begin_src elisp
 (after! org-sidebar
   ;;
-  (defun +psydev/org-sidebar-tree-toggle ()
+  (defun +maker/org-sidebar-tree-toggle ()
     (interactive)
     (org-sidebar-tree-toggle)
     (let* ((tree-window (--first (window-parameter it 'org-sidebar-tree-window)
@@ -6491,7 +6491,7 @@ Make sure truncate line is enabled instead of toggled.
 (after! org-sidebar
   (remove-hook 'org-ql-sidebar-buffer-setup-hook #'toggle-truncate-lines)
   (add-hook! 'org-ql-sidebar-buffer-setup-hook
-    (defun psydev/org-sidebar-buffer-setup ()
+    (defun maker/org-sidebar-buffer-setup ()
       (toggle-truncate-lines 1))))
 #+end_src
 
@@ -6501,7 +6501,7 @@ Workaround issue displaying sidebar buffers.
 ;;   ;; NOTE: This was NOT happening when I started using sidebar, and suddenly started to happen
 ;;   ;; while I was working on other emacs stuff. Need to identify the cause for  this.
 ;;   (add-hook! 'org-sidebar-window-after-display-hook
-;;     (defun psydev/org-sidebar-fix-display ()
+;;     (defun maker/org-sidebar-fix-display ()
 ;;       (force-window-update (selected-window))
 ;;       (redisplay))))
 #+end_src
@@ -6649,7 +6649,7 @@ Integrate with doom/evil bindings.
   ;; Leader bindings
   (map! :leader :prefix "n"
     :desc "Org task sidebar"  "o" #'org-sidebar-toggle
-    :desc "Org tree sidebar"  "O" #'+psydev/org-sidebar-tree-toggle)
+    :desc "Org tree sidebar"  "O" #'+maker/org-sidebar-tree-toggle)
 
   ;; Configure bindings to override default org/evil bindings
   (evil-make-overriding-map org-sidebar-tree-map 'normal)
@@ -6776,7 +6776,7 @@ Use a different workspace directory for each daemon instances.
 #+begin_src elisp
 (after! persp-mode
   (add-hook! 'after-make-frame-functions
-    (defun +psydev/set-persp-save-dir-for-server (_)
+    (defun +maker/set-persp-save-dir-for-server (_)
       (unless (or (string-empty-p server-name) (equal server-name "server"))
         (setq persp-save-dir (concat doom-etc-dir "workspaces@" server-name "/"))))))
 #+end_src
@@ -6861,7 +6861,7 @@ Add project name and type in the modeline.
 Add helper function to retrieve the notes file for a project.
 #+begin_src elisp
 (after! projectile
-  (defun +psydev/projectile-get-project-notes-file (&optional project-root)
+  (defun +maker/projectile-get-project-notes-file (&optional project-root)
     (let* ((project-root (or project-root (projectile-project-root)))
            (project-name (projectile-project-name project-root)))
       (when project-root
