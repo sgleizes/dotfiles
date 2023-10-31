@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+if ! command -v kscreen-doctor &>/dev/null; then
+  echo "!! kscreen-doctor is not available"
+  exit 2
+fi
+
+if kscreen-doctor -o | grep -q 'DP-1.*disabled'; then
+  kscreen-doctor output.DP-1.enable output.DP-1.mode.446 output.HDMI-0.position.1920,0
+else
+  kscreen-doctor output.DP-1.disable
+fi
