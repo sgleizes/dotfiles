@@ -39,7 +39,7 @@ FolderViewDropArea {
     id: root
     objectName:"folder"// isFolder ? "folder" : "desktop"
     
-    Plasmoid.backgroundHints: PlasmaCore.Types.ShadowBackground | PlasmaCore.Types.ConfigurableBackground
+    Plasmoid.backgroundHints: plasmoid.configuration.userdefinedback ? PlasmaCore.Types.NoBackground :PlasmaCore.Types.ShadowBackground | PlasmaCore.Types.ConfigurableBackground
 
     width: isPopup ? undefined : preferredWidth(false) // Initial size when adding to e.g. desktop.
     height: isPopup ? undefined : preferredHeight(false) // Initial size when adding to e.g. desktop.
@@ -52,7 +52,20 @@ FolderViewDropArea {
 
     Layout.maximumWidth: isPopup ? preferredWidth(false) : -1
     Layout.maximumHeight: isPopup ? preferredHeight(false) : -1
-
+    
+    
+    Rectangle {
+            id: fondo
+            x: root,x
+            y: root,y
+            visible: plasmoid.configuration.userdefinedback
+            color: plasmoid.configuration.usethemebackcolor? theme.backgroundColor : plasmoid.configuration.usercolor
+//             color: "gray"
+            width: root.width
+            height: root.height
+//             radius: width/2.
+            opacity: plasmoid.configuration.opacityslider/100.
+    } 
     function switchSize() {
         // Support expanding into the full representation on very thick vertical panels.
         if (isPopup && plasmoid.formFactor === PlasmaCore.Types.Vertical) {
@@ -71,7 +84,7 @@ FolderViewDropArea {
     property bool isFolder: true//(plasmoid.pluginName === "org.kde.plasma.folder")
     property bool isContainment: ("containmentType" in plasmoid)
     property bool isPopup: (plasmoid.location !== PlasmaCore.Types.Floating)
-    property bool useListViewMode: isPopup && plasmoid.configuration.viewMode === 0
+    property bool useListViewMode: /*isPopup && */plasmoid.configuration.viewMode /*=== 0*/
 
     property Component appletAppearanceComponent
     property Item toolBox

@@ -9,7 +9,7 @@ X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
 
 
 X-KDE-PluginInfo-Name=org.kde.desktopcontainment-trans
-X-KDE-PluginInfo-Version=2.0
+X-KDE-PluginInfo-Version=3.2
 X-KDE-PluginInfo-Category=File System
 X-KDE-PluginInfo-License=GPL-2.0+
 X-KDE-PluginInfo-EnabledByDefault=true

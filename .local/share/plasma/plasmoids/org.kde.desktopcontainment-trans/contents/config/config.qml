@@ -45,4 +45,11 @@ ConfigModel {
          source: "ConfigFilter.qml"
          visible: isFolder
     }
+    
+    ConfigCategory {
+         name: i18n("User Background")
+         icon: "rectangle-shape"
+         source: "ConfigBackground.qml"
+         visible: isFolder
+    }
 }

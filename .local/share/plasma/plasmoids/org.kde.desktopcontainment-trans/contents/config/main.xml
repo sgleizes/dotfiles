@@ -86,6 +86,10 @@
       <label>Whether to show a popup preview window for Folder View icons for folders.</label>
       <default>true</default>
     </entry>
+    <entry name="dolphin" type="Bool">
+      <label>Whether to show an icon to open folder on dolphin in list view mode.</label>
+      <default>true</default>
+    </entry>
     <entry name="previews" type="Bool">
       <label>Whether to show preview thumbnails in Folder View.</label>
       <default>true</default>
@@ -109,6 +113,10 @@
     <entry name="textLines" type="Int">
       <label>The (maximum) number of lines of text to use below Folder View icons.</label>
       <default>2</default>
+    </entry>
+    <entry name="columnas" type="Int">
+      <label>The (maximum) number of columns in List View.</label>
+      <default>1</default>
     </entry>
     <entry name="textColor" type="String">
       <label>The text color to use below Folder View icons. Only used when serving as containment.</label>
@@ -136,5 +144,31 @@
       <label></label>
       <default>true</default>
     </entry>
+
+    <entry name="iconsHidden" type="Bool">
+      <label> Whether currently the icons are hidden or not if user uses the double click to hide/unhide them</label>
+      <default>true</default>
+    </entry>
+
+    <entry name="userdefinedback" type="Bool">
+      <label>.</label>
+      <default>false</default>
+    </entry>
+    
+    <entry name="usethemebackcolor" type="Bool">
+      <label>.</label>
+      <default>true</default>
+    </entry>
+    
+    <entry name="usercolor" type="String">
+      <label>.</label>
+      <default>gray</default>
+    </entry>
+    
+    <entry name="opacityslider" type="Int">
+      <label>..</label>
+      <default>50</default>
+    </entry>
+    
   </group>
 </kcfg>

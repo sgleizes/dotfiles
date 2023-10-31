@@ -49,12 +49,14 @@ Item {
     property alias cfg_toolTips: toolTips.checked
     property alias cfg_selectionMarkers: selectionMarkers.checked
     property alias cfg_popups: popups.checked
+    property alias cfg_dolphin: dolphin.checked
     property alias cfg_previews: previews.checked
     property alias cfg_previewPlugins: previewPluginsDialog.previewPlugins
     property alias cfg_viewMode: viewMode.currentIndex
     property alias cfg_iconSize: iconSize.value
     property alias cfg_labelWidth: labelWidth.currentIndex
     property alias cfg_textLines: textLines.value
+    property alias cfg_columnas: columnas.value
     
     property alias cfg_doubleclickhide: doubleclick.checked
 
@@ -135,6 +137,7 @@ Item {
         
         CheckBox {
             id: doubleclick
+            visible: !isPopup
 
             text: i18n("Hide icons with a double click in an empty area")
         }
@@ -221,12 +224,12 @@ Item {
         // View Mode section (only if we're a pop-up)
         ComboBox {
             id: viewMode
-            visible: isPopup
+            visible: true/*isPopup*/
             Layout.fillWidth: true
 
             Kirigami.FormData.label: i18nc("whether to use icon or list view", "View mode:")
 
-            model: [i18n("List"), i18n("Icons")]
+            model: [i18n("Icons"),i18n("List")]
         }
 
 
@@ -235,7 +238,7 @@ Item {
             id: iconSize
 
             Layout.fillWidth: true
-            visible: !isPopup || viewMode.currentIndex === 1
+            visible: /*!isPopup &&*/ !viewMode.currentIndex/* === 1*/
 
             Kirigami.FormData.label: i18n("Icon size:")
 
@@ -250,7 +253,7 @@ Item {
 
             Label {
                 Layout.alignment: Qt.AlignLeft
-                visible: !isPopup || viewMode.currentIndex === 1
+                visible: /*!isPopup && */!viewMode.currentIndex/* === 1*/
 
                 text: i18n("Small")
             }
@@ -259,7 +262,7 @@ Item {
             }
             Label {
                 Layout.alignment: Qt.AlignRight
-                visible: !isPopup || viewMode.currentIndex === 1
+                visible: /*!isPopup && */!viewMode.currentIndex/* === 1*/
 
                 text: i18n("Large")
             }
@@ -267,7 +270,7 @@ Item {
 
         ComboBox {
             id: labelWidth
-            visible: !isPopup || viewMode.currentIndex === 1
+            visible: /*!isPopup &&*/ !viewMode.currentIndex/* === 1*/
             Layout.fillWidth: true
 
             Kirigami.FormData.label: i18n("Label width:")
@@ -281,12 +284,23 @@ Item {
 
         SpinBox {
             id: textLines
-            visible: !isPopup || viewMode.currentIndex === 1
+            visible: /*!isPopup && */!viewMode.currentIndex/* === 1*/
 
             Kirigami.FormData.label: i18n("Text lines:")
 
             from: 1
             to: 10
+            stepSize: 1
+        }
+        
+       SpinBox {
+            id: columnas
+            visible:/* isPopup || */viewMode.currentIndex/* === 1*/
+
+            Kirigami.FormData.label: i18n("Columns:")
+
+            from: 1
+            to: 5
             stepSize: 1
         }
 
@@ -313,9 +327,16 @@ Item {
 
         CheckBox {
             id: popups
-            visible: !isPopup
+            visible: /*!isPopup*/!viewMode.currentIndex
 
             text: i18n("Folder preview popups")
+        }
+        
+       CheckBox {
+            id: dolphin
+            visible: /*!isPopup*/viewMode.currentIndex
+
+            text: i18n("Press arrow icon to open in Dolphin")
         }
 
         CheckBox {

@@ -67,7 +67,13 @@ FocusScope {
     property var dialog: null
     property Item editor: null
     
-    property bool iconos: true
+    property bool iconos: plasmoid.configuration.iconsHidden
+
+    Binding {
+        target: plasmoid.configuration
+        property: "iconsHidden"
+        value: iconos
+    }
 
     function positionViewAtBeginning() {
         gridView.positionViewAtBeginning();
@@ -345,8 +351,8 @@ FocusScope {
             if(hoveredItem == null){
                 if(doubleOnNothing){
                     doubleOnNothing=false
-                    if(plasmoid.configuration.doubleclickhide){
-                        iconos= iconos?false:true
+                    if(plasmoid.configuration.doubleclickhide && !isPopup){
+                        iconos = !iconos
                     }
                 }else{
                     doubleOnNothing=true
@@ -619,10 +625,17 @@ FocusScope {
                     }
                     return Math.floor(extraSpacing);
                 }
+                
+                add: Transition {
+                    NumberAnimation { property: "opacity"; from: 0; to: 1; duration: 500 }
+                }
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 400; easing.type: Easing.OutBounce }
+                }
 
                 cellWidth: {
                     if (root.useListViewMode) {
-                        return gridView.width;
+                        return gridView.width*1/plasmoid.configuration.columnas;
                     } else {
                         var iconWidth = iconSize + (2 * units.largeSpacing) + (2 * units.smallSpacing);
                         if (root.isContainment && isRootView && scrollArea.viewportWidth > 0) {
@@ -1115,10 +1128,7 @@ FocusScope {
                         gridView.iconSize = gridView.makeIconSize();
                     }
                     
-                    onDoubleclickhideChanged:{
-                        if(!plasmoid.configuration.doubleclickhide){iconos= true}
-                        
-                    }
+                    onDoubleclickhideChanged: iconos = true
                 }
                 
                 Connections {
@@ -1428,7 +1438,7 @@ FocusScope {
     }
 
     Component.onCompleted: {
-        if (backButton == null && root.useListViewMode) {
+        if (backButton == null /*&& root.useListViewMode*/) {
             backButton = makeBackButton();
         }
     }
