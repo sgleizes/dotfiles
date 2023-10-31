@@ -5349,6 +5349,48 @@ Customize bindings.
         :n "ZZ" #'org-capture-finalize))
 #+end_src
 
+*** Attachments
+**** Settings
+
+Configure org-attach settings.
+#+begin_src elisp
+(after! org-attach
+  (setq org-attach-id-dir (expand-file-name ".attach/" org-directory)
+        org-attach-dir-relative nil
+        org-attach-use-inheritance t
+        org-attach-method 'cp
+        org-attach-preferred-new-method 'id
+        org-attach-archive-delete nil
+        org-attach-auto-tag "ATTACH"
+        org-attach-store-link-p 'attached
+        org-attach-expert nil)
+  )
+#+end_src
+
+**** Bindings
+
+Customize bindings.
+#+begin_src elisp
+(after! org
+  (map! :map org-mode-map
+        :localleader
+        :prefix "a"
+        ;; "a" #'org-attach
+        ;; "d" #'org-attach-delete-one
+        ;; "D" #'org-attach-delete-all
+        ;; "f" #'+org/find-file-in-attachments
+        ;; "l" #'+org/attach-file-and-insert-link
+        ;; "n" #'org-attach-new
+        ;; "o" #'org-attach-open
+        ;; "O" #'org-attach-open-in-emacs
+        ;; "r" #'org-attach-reveal
+        ;; "R" #'org-attach-reveal-in-emacs
+        ;; "u" #'org-attach-url
+        ;; "s" #'org-attach-set-directory
+        ;; "S" #'org-attach-sync
+        ))
+#+end_src
+
 *** Agenda
 **** Settings
 
