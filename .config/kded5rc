@@ -2,7 +2,7 @@
 autoload=false
 
 [Module-device_automounter]
-autoload=true
+autoload=false
 
 [PlasmaBrowserIntegration]
 shownCount=1

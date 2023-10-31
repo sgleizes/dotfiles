@@ -30,6 +30,7 @@ QuitWarn=
 EditMore=true
 
 [View]
-DateNavigatorTop=true
+DateNavigatorTop=false
+ResourcesWidth=242
 ShowDateNavigator=false
-ShowResources=false
+ShowResources=true

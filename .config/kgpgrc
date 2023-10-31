@@ -1,4 +1,9 @@
 [Editor]
+2560x1440 screen: Height=498
+2560x1440 screen: Width=995
+2560x1440 screen: XPosition=0
+2560x1440 screen: YPosition=0
+HDMI-0=HDMI-0
 HDMI-1=HDMI-1
 HDMI-1 Height 2560x1440 HDMI-1=329
 HDMI-1 Width 2560x1440 HDMI-1=752

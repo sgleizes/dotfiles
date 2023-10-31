@@ -9,3 +9,6 @@ X11LibInputXAccelProfileFlat=true
 XLbInptAccelProfileFlat=true
 XLbInptPointerAcceleration=0.2
 cursorTheme=breeze_cursors
+
+[Tmp]
+update_info=delete_cursor_old_default_size.upd:DeleteCursorOldDefaultSize
