@@ -12,7 +12,6 @@
 !/yadm/archive
 
 # Interesting KDE paths.
-!/knewstuff3/
 !/konsole/
 /konsole/bookmarks*
 !/kservices5/
