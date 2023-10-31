@@ -83,7 +83,7 @@ Item {
             ctx.fillStyle = "transparent"
             ctx.strokeStyle = theme.textColor
             ctx.lineWidth = canvas.lineWidth
-            ctx.globalAlpha = .4
+            ctx.globalAlpha = .1
             ctx.beginPath()
             ctx.arc(width / 2, height / 2, min / 2.03, Math.PI / 2, 5 * Math.PI / 2, false)
             ctx.arc(width / 2, height / 2, min / 3.5, Math.PI / 2, 5 * Math.PI / 2, false)
@@ -100,9 +100,9 @@ Item {
         width: parent.width - (Math.min(canvas.height, canvas.width) / 2.03 - Math.min(canvas.height, canvas.width) / 3.5) * 2
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
-        color: "#848484"
+        color: theme.textColor
         font.family: "Fira Mono"
-        font.pointSize: 7
+        font.pointSize: 6
 
         // tells the label to be centered in parent (in the centre of CircularMonitor)
         anchors {

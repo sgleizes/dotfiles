@@ -2,6 +2,10 @@
 closeAfterExtraction=true
 openDestinationFolderAfterExtraction=true
 
+[General]
+LockSidebar=true
+ShowSidebar=true
+
 [KTextEditor Document]
 Allow End of Line Detection=true
 Auto Detect Indent=true
