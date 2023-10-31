@@ -35,19 +35,19 @@ if command -v advcp >/dev/null; then
 fi
 
 # Directory listing.
-alias dud='du -d1' # show total disk usage for direct subdirectories only
+alias dud='du -d1'                                   # show total disk usage for direct subdirectories only
 alias ls='ls --color=auto --group-directories-first' # list directories first by default
 alias lsa='ls -A'                                    # short list, hidden files
-alias l='ls -gGh' # list human readable sizes, no group/owner
-alias ll='ls -lh' # list human readable sizes
-alias la='ll -A'  # list human readable sizes, hidden files
-alias lr='ll -R'  # list human readable sizes, recursively
-alias lx='ll -XB' # list sorted by extension (GNU only)
-alias lk='ll -Sr' # list sorted by size, largest last
-alias lt='ll -tr' # list sorted by modification time, most recent last
-alias ltc='lt -c' # list sorted by change time, most recent last
-alias lta='lt -u' # list sorted by access time, most recent last
-command -v sl >/dev/null && alias sl='sl -al' # mystyping cure
+alias l='ls -gGh'                                    # list human readable sizes, no group/owner
+alias ll='ls -lh'                                    # list human readable sizes
+alias la='ll -A'                                     # list human readable sizes, hidden files
+alias lr='ll -R'                                     # list human readable sizes, recursively
+alias lx='ll -XB'                                    # list sorted by extension (GNU only)
+alias lk='ll -Sr'                                    # list sorted by size, largest last
+alias lt='ll -tr'                                    # list sorted by modification time, most recent last
+alias ltc='lt -c'                                    # list sorted by change time, most recent last
+alias lta='lt -u'                                    # list sorted by access time, most recent last
+command -v sl >/dev/null && alias sl='sl -al'        # mystyping cure
 
 # Tree directory listing.
 alias tl='tree --dirsfirst --filelimit=50'
