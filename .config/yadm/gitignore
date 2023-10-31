@@ -3,9 +3,13 @@
 # This is NOT the global gitignore file, which is .config/git/ignore.
 #
 
-# Non-hidden directories at worktree root.
-/*/
-!/.*/
+# Non-hidden files at worktree root.
+/*
+!/.*
+
+# Exceptions for non-hidden files
+!/README.md
+!/UNLICENSE
 
 # Path to the yadm repository.
 .local/share/yadm/repo.git/
