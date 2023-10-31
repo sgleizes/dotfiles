@@ -28,7 +28,7 @@ import org.kde.plasma.extras 2.0 as PlasmaExtras
 QtControls.Label {
 
     id: label
-    color: fullRoot.useLinkThemeColor ? theme.highlightColor : fullRoot.linkColor
+    color: fullRoot.useLinkThemeColor ? theme.highlightColor : fullRoot.linkColor2
     font.bold: true
     Layout.fillWidth: true
     wrapMode: Text.Wrap
