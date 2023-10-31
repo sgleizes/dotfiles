@@ -4065,23 +4065,17 @@ Disable ~shfmt~ formatting for zsh buffers (not supported).
       (setq +format-with nil))))
 #+end_src
 
-Redefine the ~shfmt~ formatter with consistent indent settings.
-Also format ~zsh~ regions using bash syntax by default (org-mode code snippets).
+Redefine the ~shfmt~ formatter with custom flags.
 #+begin_src elisp
 (after! sh-script
   (set-formatter! 'shfmt
     '("shfmt"
       "-s"   ; simplify the code
       "-bn"  ; binary ops like && and | may start a line
-      ("-i" "%d" tab-width)
-      ("-ln" "%s" (cl-case (and (eql major-mode 'sh-mode)
-                                (boundp 'sh-shell)
-                                (symbol-value 'sh-shell))
-                    (zsh "bash")
-                    (bash "bash")
-                    (mksh "mksh")
-                    (t "posix"))))
-    :modes 'sh-mode))
+      "-ci"  ; switch cases will be indented
+      (unless indent-tabs-mode
+        (list "-i" (number-to-string tab-width))))
+    :modes '(sh-mode)))
 #+end_src
 
 *** Bindings
@@ -4432,16 +4426,6 @@ Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
 #+begin_src elisp
 (after! lsp-mode
   (set-next-checker! 'go-mode 'lsp 'golangci-lint))
-#+end_src
-
-*** Shell
-
-Integrate lsp-mode with Flycheck `sh-shellcheck' checker. It will become
-redundant if bash-language-server implements
-https://github.com/bash-lsp/bash-language-server/issues/104
-#+begin_src elisp
-(after! lsp-mode
-  (set-next-checker! 'sh-mode 'lsp 'sh-shellcheck))
 #+end_src
 
 *** Bindings
