@@ -27,7 +27,7 @@
 #
 
 # shellcheck shell=sh disable=SC1090 disable=SC1007 disable=SC3043
-XSH_VERSION='0.3.2'
+XSH_VERSION='0.4.1'
 
 # Figure out the name of the current shell.
 XSHELL="${ZSH_NAME:-${0##*/}}"
@@ -450,7 +450,7 @@ _xsh_load_registered() {
 _xsh_load_units() {
   local name="$1"
   local path="${2+${2%/}/}"  # ensure path ends with a /, if specified
-  local sh= ext= unit=
+  local sh= ext= unit= found=
 
   # Assign the shells as positional parameters.
   # shellcheck disable=SC2086
@@ -467,16 +467,19 @@ _xsh_load_units() {
 
     # All matched units are sorted according to the collating sequence in effect
     # in the current locale (LC_COLLATE) and loaded in that deterministic order.
-    for unit in "$XSH_CONFIG_DIR/$sh/$path"*"$name.$ext"; do
+    # NOTE: Workaround the edge case of XSH_RUNCOM_PREFIX=. where POSIX pathname expansion
+    # rules prevents hidden files from being matched.
+    for unit in "$XSH_CONFIG_DIR/$sh/$path$name.$ext" \
+                "$XSH_CONFIG_DIR/$sh/$path"*?"$name.$ext"; do
       # No distinction is made between a failed glob and a non-readable file.
-      # Both cases abort the search for the current shell.
-      if [ ! -r "$unit" ]; then
-        continue 2
+      # Both cases are skipped.
+      if [ -r "$unit" ]; then
+        found=1
+        _XSH_LOAD_UNITS="${_XSH_LOAD_UNITS:+$_XSH_LOAD_UNITS; }_xsh_source_unit '$unit'"
       fi
-
-      _XSH_LOAD_UNITS="${_XSH_LOAD_UNITS:+$_XSH_LOAD_UNITS; }_xsh_source_unit '$unit'"
     done
-    return 0
+
+    [ "$found" ] && return 0
   done
   return 1
 }
@@ -524,9 +527,9 @@ _xsh_source_unit() {
       [ "$ZSH_NAME" ] \
         && _elapsed="${$(( SECONDS * 1000 ))%.*}" \
         || _elapsed=$(( $(_xsh_time) - _begin ))
-      _xsh_log "${1#$XSH_CONFIG_DIR/} [${_elapsed}ms]$_errstatus"
+      _xsh_log "${1#"$XSH_CONFIG_DIR"/} [${_elapsed}ms]$_errstatus"
     else
-      _xsh_log "${1#$XSH_CONFIG_DIR/}$_errstatus"
+      _xsh_log "${1#"$XSH_CONFIG_DIR"/}$_errstatus"
     fi
   fi
 
@@ -553,7 +556,7 @@ _xsh_bootstrap_init_file() {
   fi
 
   if [ ! -f "$init" ]; then
-    _xsh_log "[$sh] creating default init file: ${init#$XSH_CONFIG_DIR/}"
+    _xsh_log "[$sh] creating default init file: ${init#"$XSH_CONFIG_DIR"/}"
     command cat >"$init" <<EOF
 #
 # This file is sourced automatically by xsh if the current shell $desc.
@@ -583,7 +586,7 @@ _xsh_bootstrap_module() {
 
   # Check if there are existing module directories.
   if ! command ls -d "$XSH_CONFIG_DIR/$sh"/*/ >/dev/null 2>&1; then
-    _xsh_log "[$sh] creating default module runcom: ${rc#$XSH_CONFIG_DIR/}"
+    _xsh_log "[$sh] creating default module runcom: ${rc#"$XSH_CONFIG_DIR"/}"
     command mkdir "${rc%/*}"
     command cat >"$rc" <<EOF
 #
@@ -626,7 +629,7 @@ _xsh_create_module() {
     rcf="$XSH_CONFIG_DIR/$sh/$mod/${XSH_RUNCOM_PREFIX}$rc.$ext"
 
     if [ "$rc" ] && [ ! -f "$rcf" ]; then
-      _xsh_log "[$sh] creating module runcom: ${rcf#$XSH_CONFIG_DIR/}"
+      _xsh_log "[$sh] creating module runcom: ${rcf#"$XSH_CONFIG_DIR"/}"
       command cat >"$rcf" <<EOF
 #
 # $(_xsh_module_header "$sh" "$mod")
