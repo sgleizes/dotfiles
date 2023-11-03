@@ -5,7 +5,7 @@
 ; Section: General
 
  (gnc:restore-html-style-sheet "CSS-based stylesheet (experimental)" "CSS" options))))
-(let ((template (gnc:html-style-sheet-template-find "Footer")))
+(let ((template (gnc:html-style-sheet-template-find "Plain")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
 
@@ -18,12 +18,9 @@
 ; Section: General
 
 
-; Section: Images
-
-
 ; Section: Tables
 
- (gnc:restore-html-style-sheet "Default" "Footer" options))))
+ (gnc:restore-html-style-sheet "Default" "Plain" options))))
 (let ((template (gnc:html-style-sheet-template-find "Footer")))
   (if template 
     (let ((options ((gnc:html-style-sheet-template-options-generator template)))) 
