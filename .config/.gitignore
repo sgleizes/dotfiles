@@ -56,25 +56,25 @@
 /zi/
 
 # Exceptions for directories with uninteresting contents.
-/Nextcloud/**
-!/Nextcloud/nextcloud.cfg
 /beets/**
 !/beets/config.yaml
 /elinks/**
 !/elinks/elinks.conf
-/nnn/**
-!/nnn/plugins/
-!/nnn/plugins/**
-/syncthing/**
-!/syncthing/config.xml
-/youtube-dlg/**
-!/youtube-dlg/settings.json
 /enchant/**
 !/enchant/enchant.ordering
 !/enchant/en.*
 !/enchant/en_US.*
 !/enchant/fr.*
 !/enchant/fr_FR.*
+/MusicBrainz/**
+!/MusicBrainz/Picard.ini
+/Nextcloud/**
+!/Nextcloud/nextcloud.cfg
+/nnn/**
+!/nnn/plugins/
+!/nnn/plugins/**
+/youtube-dlg/**
+!/youtube-dlg/settings.json
 
 # Exceptions for directories with interesting contents.
 /doom/*.el
