@@ -24,6 +24,7 @@
 /dconf/
 /discord/
 /emacs/
+/fontforge/
 /kde.org/
 /kde4/
 /kdeconnect/
@@ -85,6 +86,8 @@
 # Uninteresting files.
 /bluedevilglobalrc
 /device_automounter_kcmrc
+/discoverrc
+/discoverabstractnotifier.notifyrc
 /drkonqirc
 /email*
 /filetypesrc
@@ -107,6 +110,7 @@
 /kioclientrc
 /kio_ftprc
 /kmail2rc
+/kmixrc
 /korgacrc
 /korganizerrc
 /krdcrc
@@ -121,12 +125,15 @@
 /kwaverc
 /phishingurlrc
 /plasma-nm
+/plasma-welcomerc
 /plasma.emojierrc
+/PlasmaDiscoverUpdates
 /plasmashellrc
 /plasmawindowed-appletsrc
 /plasmawindowedrc
 /plasmoidviewer*
 /print-manager
+/sddmthemeinstallerrc
 /skanliterc
 /soffice.binrc
 /specialmailcollectionsrc
