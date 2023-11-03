@@ -4,7 +4,7 @@ activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Self\\]
+title=^Self -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -12,49 +12,49 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [10]
-Description=Firefox - Nebulae
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+Description=Firefox - Phone
+activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^\\[Nebulae\\]
-titlematch=3
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
-[11]
-Description=Firefox - News
-activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
-activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
-desktopsrule=2
-title=^\\[News\\]
-titlematch=3
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
-[12]
-Description=Firefox - Permaculture
-activity=e1fb771e-29d1-4641-a442-b99b55616702
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^\\[Permaculture\\]
+title=^Phone -
 titlematch=3
 types=1
 wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
-[13]
-Description=Firefox - Permadev
+[11]
+Description=Firefox - Nebulae
 activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+activityrule=2
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktopsrule=2
+title=^Nebulae -
+titlematch=3
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[12]
+Description=Firefox - News
+activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
+activityrule=2
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktopsrule=2
+title=^News -
+titlematch=3
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[13]
+Description=Firefox - Permaculture
+activity=e1fb771e-29d1-4641-a442-b99b55616702
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Permadev\\]
+title=^Permaculture -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -62,12 +62,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [14]
-Description=Firefox - Saint-Pierreville
-activity=880691c7-fa6e-4255-a852-acde63acc631
+Description=Firefox - Permadev
+activity=b6d870af-2af7-49fe-bce4-606e462b99c6
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Saint-Pierreville\\]
+title=^Permadev -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -75,12 +75,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [15]
-Description=Firefox - Oasis
-activity=e1fb771e-29d1-4641-a442-b99b55616702
+Description=Firefox - Saint-Pierreville
+activity=880691c7-fa6e-4255-a852-acde63acc631
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Oasis\\]
+title=^Saint-Pierreville -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -88,12 +88,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [16]
-Description=Firefox - Gaming
-activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
+Description=Firefox - Oasis
+activity=e1fb771e-29d1-4641-a442-b99b55616702
 activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^\\[Gaming\\]
+title=^Oasis -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -101,12 +101,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [17]
-Description=Firefox - Retro Gaming
+Description=Firefox - Gaming
 activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Retro Gaming\\]
+title=^Gaming -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -114,11 +114,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [18]
-Description=Firefox - Scratch
-activity=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
+Description=Firefox - Retro Gaming
+activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-title=^\\[Scratch\\]
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktopsrule=2
+title=^Retro Gaming -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -126,12 +127,15 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [19]
-Description=Strawberry
-activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
-activityrule=3
+Description=Firefox - Scratch
+activity=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
+activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=3
-wmclass=strawberry
+title=^Scratch -
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
 wmclassmatch=1
 
 [2]
@@ -140,7 +144,7 @@ activity=880691c7-fa6e-4255-a852-acde63acc631
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^\\[Cuisine\\]
+title=^Cuisine -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -148,6 +152,15 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [20]
+Description=Strawberry
+activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
+activityrule=3
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=3
+wmclass=strawberry
+wmclassmatch=1
+
+[21]
 Description=Interdimensional Emacs
 activity=00000000-0000-0000-0000-000000000000
 activityrule=3
@@ -157,7 +170,7 @@ types=1
 wmclass=emacs
 wmclassmatch=1
 
-[21]
+[22]
 Description=Interdimensional Dolphin
 activity=00000000-0000-0000-0000-000000000000
 activityrule=3
@@ -167,17 +180,28 @@ types=1
 wmclass=dolphin
 wmclassmatch=1
 
-[22]
+[23]
 Description=Interdimensional Enpass
 activity=00000000-0000-0000-0000-000000000000
 activityrule=3
 desktops=
 desktopsrule=3
+minsize=1,1
 types=1
 wmclass=enpass
 wmclassmatch=2
 
-[23]
+[24]
+Description=Interdimensional Keepass
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
+types=1
+wmclass=keepassxc
+wmclassmatch=2
+
+[25]
 Description=No Minimum Size
 minsize=1,1
 minsizerule=2
@@ -189,7 +213,7 @@ activity=880691c7-fa6e-4255-a852-acde63acc631
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^\\[Percussions\\]
+title=^Percussions -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -202,7 +226,7 @@ activity=b6d870af-2af7-49fe-bce4-606e462b99c6
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Jobs\\]
+title=^Jobs -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -215,7 +239,7 @@ activity=b6d870af-2af7-49fe-bce4-606e462b99c6
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Logiciel Libre\\]
+title=^Logiciel Libre -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -238,7 +262,7 @@ activity=b6d870af-2af7-49fe-bce4-606e462b99c6
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^\\[Dev\\]
+title=^Dev -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -251,7 +275,7 @@ activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[System\\]
+title=^System -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -259,12 +283,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [8]
-Description=Firefox - Xsh
+Description=Firefox - Setup PC/Gaming
 activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^\\[Xsh\\]
+title=^Setup PC/Gaming -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -272,13 +296,13 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [9]
-Description=Firefox - Phone
+Description=Firefox - Xsh
 activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
 minimize=true
-title=^\\[Phone\\]
+title=^Xsh -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -286,5 +310,28 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [General]
-count=23
-rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
+count=25
+rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+
+[b7b4696f-1992-4e8e-b34d-930502288700]
+Description=Firefox - Setup PC/Gaming
+activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+activityrule=2
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=2
+title=^\\[Setup PC/Gaming\\]
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[e4440724-a1ec-4e28-b29d-97395d7f0160]
+Description=Interdimensional Keepass
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
+types=1
+wmclass=keepassxc
+wmclassmatch=2
