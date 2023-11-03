@@ -19,6 +19,7 @@
 /ksysguard/QtWebEngine
 !/kwin/
 !/plasma/
+/plasma/containmentpreviews/
 
 # Keymap configurations for zsh.
 !/zsh/
