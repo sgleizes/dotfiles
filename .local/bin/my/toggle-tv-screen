@@ -6,8 +6,9 @@ if ! command -v kscreen-doctor &>/dev/null; then
   exit 2
 fi
 
-if kscreen-doctor -o | grep -q 'DP-1.*disabled'; then
-  kscreen-doctor output.DP-1.enable output.DP-1.mode.446 output.HDMI-0.position.1920,0
+if [[ $(kscreen-doctor -j | jq '.outputs[] | select(.name=="HDMI-0") | .enabled') == false ]]; then
+  mode=$(kscreen-doctor -j | jq -r '.outputs[] | select(.name=="HDMI-0") | .preferredModes[0]')
+  kscreen-doctor output.HDMI-0.enable output.HDMI-0.mode."$mode" output.DP-1.position.1920,0
 else
-  kscreen-doctor output.DP-1.disable
+  kscreen-doctor output.HDMI-0.disable
 fi
