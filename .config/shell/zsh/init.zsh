@@ -58,6 +58,7 @@ xsh module fasd           interactive
 xsh module git            interactive
 xsh module jq             interactive
 xsh module nnn            interactive
+xsh module aptitude       interactive
 xsh module pacman         interactive
 xsh module you-should-use interactive # load after git
 
