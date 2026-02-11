@@ -46,7 +46,7 @@ fi
 export TMUX_HISTORY="$XDG_STATE_HOME/tmux/history"
 
 # Copy command for clipboard integration.
-export TMUX_CLIPBOARD='xclip -selection clipboard'
+export TMUX_CLIPBOARD='wl-copy'
 
 # Path to the directory for autoloaded tmux commands.
 export TMUX_COMMAND_DIR="${TMUX_CONFIG:h}/command"

@@ -40,7 +40,7 @@ if [[ $theme == 'powerlevel10k' ]]; then
     || source $XDG_CONFIG_HOME/powerlevel10k/p10k-portable.zsh
 
   # Additional customizations.
-  POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN='~|/run/media/*'
+  POWERLEVEL9K_VCS_DISABLED_WORKDIR_PATTERN='~|/media/*'
 
   fpath[1]=() # prompt functions are loaded - cleanup fpath
 fi

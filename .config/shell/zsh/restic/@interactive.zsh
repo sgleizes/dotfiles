@@ -3,15 +3,15 @@
 #
 
 # Abort if requirements are not met.
-if (( ! $+commands[restic] || ! $+commands[kwalletcli] )); then
+if (( ! $+commands[restic] || ! $+commands[kwallet-query] )); then
   return 1
 fi
 
 # Location of the restic repository.
-export RESTIC_REPOSITORY='/run/media/maker/HOMEWORLD/Backups/Restic'
+export RESTIC_REPOSITORY='/media/maker/HOMEWORLD/Backups/Restic'
 
 # Command to retrieve the password to the restic repository.
-export RESTIC_PASSWORD_COMMAND='kwalletcli -f restic -e repository'
+export RESTIC_PASSWORD_COMMAND='kwallet-query kdewallet -f Restic -r Repository'
 
 # Backup the whole system.
 # This requires that the restic executable is assigned the capability to real all files:

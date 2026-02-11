@@ -63,6 +63,7 @@ fzf_completion=(
   $HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh(N)
   $XDG_DATA_HOME/fzf/completion.zsh(N)
   /usr/share/fzf/completion.zsh(N)
+  /usr/share/doc/fzf/examples/completion.zsh(N)
 )
 if [[ -r $fzf_completion[1] ]]; then
   source $fzf_completion[1]

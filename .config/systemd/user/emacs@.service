@@ -3,6 +3,10 @@ Description=Emacs text editor (%i)
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 PartOf=emacs.target
 
+# This is required to make sure emacs starts after the DE is started.
+# Otherwise the server has no XAUTHORITY and clients fail to start (on wayland).
+After=plasma-plasmashell.service
+
 [Service]
 Type=notify
 ExecStart=/usr/bin/emacs --fg-daemon=%i

@@ -79,7 +79,7 @@ autoload -Uz bracketed-paste-url-magic
 zle -N bracketed-paste bracketed-paste-url-magic
 
 # When the command is {sudo,git,openssl,...} <cmd>, get help on <cmd>.
-unalias run-help
+unalias run-help 2>/dev/null
 autoload -Uz run-help run-help-git run-help-ip run-help-openssl run-help-sudo
 alias run-help='LESSOPEN= run-help' # avoid pre-processing zsh helpfiles
 
