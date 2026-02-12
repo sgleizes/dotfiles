@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+
+wakeonlan c8:5b:76:8b:cc:8c
