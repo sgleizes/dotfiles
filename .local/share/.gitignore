@@ -37,12 +37,6 @@
 /lutris/**
 !/lutris/pga.db
 
-# Unison profiles.
-!/unison/
-/unison/ar*
-/unison/fp*
-/unison/unison.log
-
 # VLC extensions.
 !/vlc/
 /vlc/**
