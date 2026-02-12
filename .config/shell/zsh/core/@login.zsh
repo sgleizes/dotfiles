@@ -11,6 +11,7 @@ umask a=rx,u+w
 # References:
 # - https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
 # - https://wiki.archlinux.org/index.php/XDG_Base_Directory
+# - https://github.com/b3nj5m1n/xdg-ninja
 #
 
 # Explicitly set XDG base directory defaults.
@@ -51,6 +52,7 @@ export WGETRC="$XDG_CONFIG_HOME/wget/config"
 export HTML_TIDY="$XDG_CONFIG_HOME/tidy/tidy.conf"
 export CDS_FILE="$XDG_CONFIG_HOME/cdsctl/config"
 export KUBECONFIG="$XDG_CONFIG_HOME/kube/config"
+export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java"
 
 # XDG_DATA_HOME environment overrides.
 export TERMINFO="$XDG_DATA_HOME/terminfo"
