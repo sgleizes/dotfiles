@@ -108,6 +108,6 @@
 # Include more specific configuration files.
 [include]
   path = alias
-  # path = delta
+  path = delta
   path = forge
   path = gpg
