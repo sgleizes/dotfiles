@@ -1,11 +1,17 @@
 [ActivityManager]
-_k_friendly_name=Activity Manager
+_k_friendly_name=System Settings
 switch-to-activity-5a73c567-eb7a-4a34-854a-11f9ecd9c22b=Meta+F12,none,Switch to activity "Scratch"
 switch-to-activity-81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Meta+F1,none,Switch to activity "Self"
-switch-to-activity-81e43b82-8ee6-4e56-8374-96fd151dc7bd=Meta+F8,none,Switch to activity "Party"
-switch-to-activity-a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=Meta+F2,none,Switch to activity "System"
-switch-to-activity-ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Meta+F4,none,Switch to activity "Gaming"
-switch-to-activity-b6d870af-2af7-49fe-bce4-606e462b99c6=Meta+F3,none,Switch to activity "Work"
+switch-to-activity-ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Meta+F8,none,Switch to activity "Gaming"
+switch-to-activity-b6d870af-2af7-49fe-bce4-606e462b99c6=Meta+F2,none,Switch to activity "Work"
+
+[Clementine]
+_k_friendly_name=Clementine
+next_album=Shift+Media Next,none,Next album
+next_track=,none,Next track
+play_pause=,none,Play/Pause
+prev_track=,none,Previous track
+stop=,none,Stop
 
 [KDE Keyboard Layout Switcher]
 Switch keyboard layout to English (US)=none,none,Switch keyboard layout to English (US)

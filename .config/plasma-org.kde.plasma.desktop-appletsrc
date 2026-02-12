@@ -35,7 +35,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.desktopcontainment
-wallpaperplugin=org.kde.haenau
+wallpaperplugin=org.kde.image
 
 [Containments][100][Configuration]
 PreloadWeight=0
@@ -46,7 +46,8 @@ FillMode=2
 Image=file:///home/maker/Pictures/Wallpapers/Wanderer_Eyes.jpg
 
 [Containments][100][Wallpaper][org.kde.image][General]
-Image=file:///home/maker/Pictures/Wallpapers/Wanderer_Eyes.jpg
+Image=/usr/share/wallpapers/summer_1am/
+PreviewImage=/usr/share/wallpapers/summer_1am/
 SlidePaths=/usr/share/wallpapers
 
 [Containments][100][Wallpaper][org.kde.potd][General]
@@ -96,50 +97,6 @@ Image=/home/maker/Pictures/Wallpapers/IMG_20240504_143906_PANO.jpg
 [Containments][105][Wallpaper][org.kde.potd][General]
 FillMode=2
 Provider=bing
-
-[Containments][116]
-ItemGeometriesHorizontal=
-activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-formfactor=0
-immutability=1
-lastScreen=3
-location=0
-plugin=org.kde.desktopcontainment
-wallpaperplugin=org.kde.potd
-
-[Containments][116][Configuration]
-PreloadWeight=2
-
-[Containments][116][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
-
-[Containments][116][Wallpaper][org.kde.potd][General]
-Category=1065374
-FillMode=2
-Provider=unsplash
-
-[Containments][117]
-ItemGeometries-0x0=
-ItemGeometries-2560x1440=
-ItemGeometriesHorizontal=
-activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-formfactor=0
-immutability=1
-lastScreen=2
-location=0
-plugin=org.kde.desktopcontainment
-wallpaperplugin=org.kde.potd
-
-[Containments][117][Configuration]
-PreloadWeight=2
-
-[Containments][117][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.jpg
-
-[Containments][117][Wallpaper][org.kde.potd][General]
-Category=1065374
-FillMode=2
-Provider=unsplash
 
 [Containments][118]
 ItemGeometriesHorizontal=
@@ -275,26 +232,6 @@ Category=1339276
 FillMode=2
 Provider=unsplash
 
-[Containments][128]
-ItemGeometries-0x0=
-ItemGeometries-2560x1440=
-ItemGeometriesHorizontal=
-activityId=81e43b82-8ee6-4e56-8374-96fd151dc7bd
-formfactor=0
-immutability=1
-lastScreen=0
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
-
-[Containments][128][Configuration]
-PreloadWeight=26
-
-[Containments][128][General]
-
-[Containments][128][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/2560x1440.jpg
-
 [Containments][143]
 activityId=
 formfactor=2
@@ -324,7 +261,7 @@ immutability=1
 plugin=org.kde.plasma.icontasks
 
 [Containments][143][Applets][149][Configuration][General]
-launchers=applications:org.kde.konsole.desktop,applications:emacs.desktop,preferred://browser,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:thunderbird.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.strawberrymusicplayer.strawberry.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:element-desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.telegram.desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:signal-desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:gnucash.desktop,preferred://filemanager,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.discordapp.Discord.desktop,applications:com.obsproject.Studio.desktop,applications:org.kde.showfoto.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.musicbrainz.Picard.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.yacreader.YACReader.YACReaderLibrary.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.github.geigi.cozy.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.freecad.FreeCAD.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:sweethome3d.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:FreeFileSync.desktop,applications:org.keepassxc.KeePassXC.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.kde.ktorrent.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.kde.discover.desktop,applications:systemsettings.desktop
+launchers=applications:org.kde.konsole.desktop,applications:emacs.desktop,preferred://browser,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:thunderbird.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.strawberrymusicplayer.strawberry.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:element-desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.telegram.desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:signal-desktop.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:gnucash.desktop,preferred://filemanager,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.kde.ktorrent.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.discordapp.Discord.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.kde.showfoto.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.yacreader.YACReader.YACReaderLibrary.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.nickvision.tubeconverter.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.musicbrainz.Picard.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.github.geigi.cozy.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:sweethome3d.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.freecad.FreeCAD.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:com.obsproject.Studio.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:FreeFileSync.desktop,applications:org.keepassxc.KeePassXC.desktop,[81d1e16f-f8d6-4aa7-91cb-1a7f97689632]\napplications:org.kde.discover.desktop,applications:systemsettings.desktop
 
 [Containments][143][Applets][151]
 immutability=1
@@ -877,7 +814,8 @@ arrangement=1
 url=file:///home/maker/Projects/job
 
 [Containments][73][Wallpaper][org.kde.image][General]
-Image=file:///home/maker/Pictures/Wallpapers/Light-Field-Rendering-JPG-2319x1024.jpg
+Image=/home/maker/Pictures/Wallpapers/Work.jpg
+PreviewImage=/home/maker/Pictures/Wallpapers/Work.jpg
 SlidePaths=/usr/share/wallpapers
 
 [Containments][73][Wallpaper][org.kde.potd][General]
@@ -916,7 +854,8 @@ iconSize=1
 url=file:///home/maker/Games
 
 [Containments][84][Wallpaper][org.kde.image][General]
-Image=file:///home/maker/Pictures/Wallpapers/Union.jpg
+Image=/usr/share/wallpapers/MilkyWay/
+PreviewImage=/usr/share/wallpapers/MilkyWay/
 SlidePaths=/usr/share/wallpapers
 
 [Containments][84][Wallpaper][org.kde.potd][General]
@@ -936,7 +875,7 @@ immutability=1
 lastScreen=0
 location=0
 plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
+wallpaperplugin=org.kde.slideshow
 
 [Containments][88][Applets][153]
 immutability=1
@@ -1018,37 +957,8 @@ SlidePaths=/usr/share/wallpapers
 FillMode=2
 Provider=bing
 
-[Containments][91]
-ItemGeometries-0x0=
-ItemGeometries-1920x1080=
-ItemGeometries-2560x1440=
-ItemGeometriesHorizontal=
-activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-formfactor=0
-immutability=1
-lastScreen=0
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.image
-
-[Containments][91][Configuration]
-PreloadWeight=0
-
-[Containments][91][General]
-ToolBoxButtonState=topcenter
-ToolBoxButtonX=786
-ToolBoxButtonY=28
-arrangement=1
-url=file:///home/maker/Projects/env
-
-[Containments][91][Wallpaper][org.kde.image][General]
-Image=file:///home/maker/Pictures/Wallpapers/Love_is_a_Riot-1774x1024.jpg
-SlidePaths=/usr/share/wallpapers
-
-[Containments][91][Wallpaper][org.kde.potd][General]
-Category=1065374
-FillMode=2
-Provider=unsplash
+[Containments][88][Wallpaper][org.kde.slideshow][General]
+SlidePaths=/home/maker/Pictures/Photos/[2025] L'Hermitage/
 
 [Containments][92]
 ItemGeometries-1920x1080=
@@ -1074,28 +984,6 @@ SlidePaths=/usr/share/wallpapers
 [Containments][92][Wallpaper][org.kde.potd][General]
 FillMode=2
 Provider=bing
-
-[Containments][94]
-ItemGeometries-2560x1440=
-ItemGeometriesHorizontal=
-activityId=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-formfactor=0
-immutability=1
-lastScreen=1
-location=0
-plugin=org.kde.plasma.folder
-wallpaperplugin=org.kde.potd
-
-[Containments][94][Configuration]
-PreloadWeight=0
-
-[Containments][94][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/Next/contents/images/1920x1080.png
-
-[Containments][94][Wallpaper][org.kde.potd][General]
-Category=1065374
-FillMode=2
-Provider=unsplash
 
 [Containments][96]
 ItemGeometriesHorizontal=

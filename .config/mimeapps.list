@@ -1,6 +1,9 @@
+[Added Associations]
+audio/x-opus+ogg=vlc.desktop;
 
 [Default Applications]
-x-scheme-handler/signalcaptcha=signal-desktop.desktop
-x-scheme-handler/io.element.desktop=element-desktop.desktop
+audio/x-opus+ogg=vlc.desktop;
 x-scheme-handler/element=element-desktop.desktop
+x-scheme-handler/io.element.desktop=element-desktop.desktop
 x-scheme-handler/sgnl=signal-desktop.desktop
+x-scheme-handler/signalcaptcha=signal-desktop.desktop

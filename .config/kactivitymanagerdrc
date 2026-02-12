@@ -5,8 +5,6 @@ org.kde.ActivityManager.VirtualDesktopSwitchEnabled=true
 [activities]
 5a73c567-eb7a-4a34-854a-11f9ecd9c22b=Scratch
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=Self
-81e43b82-8ee6-4e56-8374-96fd151dc7bd=Party
-a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=System
 ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=Gaming
 b6d870af-2af7-49fe-bce4-606e462b99c6=Work
 
@@ -16,8 +14,6 @@ b6d870af-2af7-49fe-bce4-606e462b99c6=Work
 [activities-icons]
 5a73c567-eb7a-4a34-854a-11f9ecd9c22b=snap-nodes-center
 81d1e16f-f8d6-4aa7-91cb-1a7f97689632=animal
-81e43b82-8ee6-4e56-8374-96fd151dc7bd=music-note-16th
-a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af=kstars_solarsystem
 ac9500c2-8f31-46b5-b46c-7aa1d307e3a4=preview-render-on
 b6d870af-2af7-49fe-bce4-606e462b99c6=repository
 
