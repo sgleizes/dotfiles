@@ -545,18 +545,6 @@ FIXME: Too slow.
 ;; (package! magit-delta)
 #+end_src
 
-** Org fancy priorities
-
-Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
-#+begin_src elisp
-(package! org-fancy-priorities :disable t)
-#+end_src
-
-#+begin_src elisp :tangle yes
-;; (after! org-fancy-priorities
-;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
-#+end_src
-
 ** Org QL
 
 [[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
@@ -4840,14 +4828,6 @@ Configuration and integration with doom.
           (dedicated . t)
           (inhibit-same-window . t)
           (window-parameters (no-other-window . t)))))
-#+end_src
-
-Compile agenda prefix format when displaying an org-ql-view.
-#+begin_src elisp
-(after! org-ql
-  (defadvice! maker/org-ql-view-prefix-format (&rest _)
-    :before #'org-ql-search
-    (org-compile-prefix-format 'todo)))
 #+end_src
 
 Customize bindings and integrate with doom/evil.
