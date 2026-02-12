@@ -24,6 +24,9 @@ fat = true
 # Do not delete anything from HOMEWORLD.
 nodeletion = /run/media/maker/HOMEWORLD
 
+# Always resolve conflicts in favor of HOMEWORLD.
+prefer = /run/media/maker/HOMEWORLD
+
 # Additional paths to backup.
 path = Archives
 # path = Backups

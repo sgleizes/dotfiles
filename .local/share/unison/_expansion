@@ -17,10 +17,10 @@ fat = true
 # Do not delete anything from HOME.
 nodeletion = /home/maker
 
-# Only sync new or updated media from HOME.
-nocreationpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/maker
-noupdatepartial   = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /home/maker
-nodeletionpartial = BelowPath {Audios,Books,Pictures,Resources,Tracks,Videos} -> /run/media/maker/EXPANSION
+# Only sync new or updated media from HOME (except Resources, Tracks).
+nocreationpartial = BelowPath {Audios,Books,Pictures,Videos} -> /home/maker
+noupdatepartial   = BelowPath {Audios,Books,Pictures,Videos} -> /home/maker
+nodeletionpartial = BelowPath {Audios,Books,Pictures,Videos} -> /run/media/maker/EXPANSION
 
 # Ignored projects.
 ignore = Path Projects/*/archive

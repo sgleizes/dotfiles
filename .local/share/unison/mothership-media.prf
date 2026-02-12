@@ -7,3 +7,9 @@ include _media
 
 # Label for this profile in the graphical UI.
 label = Synchronize media files with the Mothership HDD
+
+# Skip computing fingerprints for new files.
+# fastercheckUNSAFE = true
+
+# Do not sync Videos
+ignore = Path Videos

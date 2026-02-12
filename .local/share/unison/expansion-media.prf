@@ -7,3 +7,6 @@ include _media
 
 # Label for this profile in the graphical UI.
 label = Synchronize media files with the Expansion HDD
+
+# Skip computing fingerprints for new files.
+# fastercheckUNSAFE = true

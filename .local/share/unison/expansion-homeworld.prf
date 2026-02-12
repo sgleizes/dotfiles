@@ -24,9 +24,12 @@ fat = true
 # Do not delete anything from EXPANSION.
 nodeletion = /run/media/maker/EXPANSION
 
+# Always resolve conflicts in favor of EXPANSION.
+prefer = /run/media/maker/EXPANSION
+
 # Additional paths to backup.
 path = Archives
-path = Backups
+# path = Backups
 
 # Ignored paths.
 ignore = Path Videos

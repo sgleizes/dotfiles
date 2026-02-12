@@ -10,6 +10,14 @@ path = Resources
 path = Tracks
 path = Videos
 
+# Treat these symbolic links as 'invisible'.
+follow = Path Audios
+follow = Path Books
+follow = Path Pictures
+follow = Path Resources
+follow = Path Tracks
+follow = Path Videos
+
 # Paths to ignore.
 ignore = Path Audios/Inbox
 ignore = Path Pictures/Inbox
