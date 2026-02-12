@@ -129,10 +129,7 @@ autoload_dir ${0:h}/function
 # Misc aliases
 #
 
-# XDG compliant nvidia-settings
-if (( $+commands[nvidia-settings] )); then
-  alias nvidia-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
-fi
+true
 
 #
 # External core plugins
