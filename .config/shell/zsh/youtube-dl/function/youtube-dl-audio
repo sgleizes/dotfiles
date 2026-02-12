@@ -3,8 +3,8 @@
 #
 
 local target_dir="$HOME/Audios/Inbox"
-local artist='%(artist)s'
-local release='%(playlist)s'
+local artist='%(artist,channel,uploader,webpage_url_domain)s'
+local release='%(album,playlist)s'
 local args=()
 
 while (( $# > 0 )); do
