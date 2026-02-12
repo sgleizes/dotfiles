@@ -3,7 +3,7 @@ FullScreen=false
 
 [General]
 LockSidebar=true
-ShowSidebar=true
+ShowSidebar=false
 
 [Notification Messages]
 presentationInfo=false

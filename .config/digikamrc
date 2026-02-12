@@ -28,7 +28,7 @@ Icon Show Resolution=false
 Icon Show Size=false
 Icon Show Tags=true
 Icon Show Title=false
-IconView Font=Noto Sans,10,-1,5,50,0,0,0,0,0
+IconView Font=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 Image Group Mode=2
 Image Group Sort Order=0
 Image Sort Order=0
@@ -47,7 +47,7 @@ Show Thumbbar=true
 Show ToolTips=false
 Sidebar Title Style=2
 Theme=Default
-ToolTips Font=Noto Sans,10,-1,5,50,0,0,0,0,0
+ToolTips Font=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 ToolTips Show Album Caption=true
 ToolTips Show Album Category=true
 ToolTips Show Album Collection=true
@@ -80,14 +80,14 @@ ToolTips Show Video Aspect Ratio=true
 ToolTips Show Video Codec=true
 ToolTips Show Video Duration=true
 ToolTips Show Video Frame Rate=true
-TreeView Font=Noto Sans,10,-1,5,50,0,0,0,0,0
+TreeView Font=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 Update Type=0
 
 [AlbumFolderView Sidebar]
-CurrentIndex=39
-Expansion=0,1,4,5,6,23,436,359,9,12,29,28,39,473,14,20
+CurrentIndex=4
+Expansion=0,1,2,3,4,5,6,494,495,496,502,512,501,682,684,685,686,687,84,697,803,688,699,804,708,707,9
 RestoreChecked=false
-Selection=39
+Selection=4
 SortColumn=0
 SortOrder=0
 
@@ -95,10 +95,10 @@ SortOrder=0
 CaseSensitive=0
 
 [AlbumSelectWidget]
-AlbumTreeViewCurrentIndex=50
-AlbumTreeViewExpansion=57,1,6
+AlbumTreeViewCurrentIndex=
+AlbumTreeViewExpansion=1
 AlbumTreeViewRestoreChecked=false
-AlbumTreeViewSelection=50
+AlbumTreeViewSelection=
 AlbumTreeViewSortColumn=0
 AlbumTreeViewSortOrder=0
 CaseSensitive=0
@@ -111,8 +111,10 @@ Sync Digikam to Baloo=false
 2560x1440 screen: XPosition=0
 2560x1440 screen: YPosition=0
 BqmBottomSplitter=AAAA/wAAAAEAAAACAAAAkQAAAJEB/////wEAAAABAA==
-BqmTopSplitter=AAAA/wAAAAEAAAADAAAAkQAAAG0AAACXAf////8BAAAAAQA=
-BqmVerticalSplitter=AAAA/wAAAAEAAAACAAAAowAAAJsB/////wEAAAACAA==
+BqmTopSplitter=AAAA/wAAAAEAAAADAAAAkQAAAHwAAACZAf////8BAAAAAQA=
+BqmVerticalSplitter=AAAA/wAAAAEAAAACAAAApwAAAJ8B/////wEAAAACAA==
+DP-1=DP-1
+HDMI-0=HDMI-0
 HDMI-1=HDMI-1
 HDMI-1 HDMI-2 XPosition 1920x1080=0
 HDMI-1 HDMI-2 YPosition 1920x1080=0
@@ -122,6 +124,7 @@ HDMI-1 XPosition 2560x1440 HDMI-1=0
 HDMI-1 YPosition 1920x1080 HDMI-1=0
 HDMI-1 YPosition 2560x1440=0
 HDMI-1 YPosition 2560x1440 HDMI-1=0
+RestorePositionForNextInstance=false
 eDP-1 HDMI-1 XPosition 2560x1440=0
 eDP-1 HDMI-1 YPosition 2560x1440=0
 eDP-1 XPosition 1920x1080=0
@@ -216,6 +219,9 @@ ImagePropertiesMetaData Tab=0
 MAKERNOTE Level=0
 XMP Level=0
 
+[Collection Settings]
+LastAddedCollectionPath=/run/media/maker/EXPANSION
+
 [Color Management]
 BPCAlgorithm=true
 DefaultMismatchBehavior=2049
@@ -245,147 +251,117 @@ readingAllTags=false
 unifyReadWrite=true
 
 [DMetadata Settings][readCaptionNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.dc.description
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=2
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.exif.UserComment
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=1
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.tiff.ImageDescription
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=1
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0003]
-alternativeName=
-convertRatio=
 index=3
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.acdsee.notes
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=3
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0004]
-alternativeName=
-convertRatio=
 index=4
 isDefault=true
 isDisabled=false
 namespaceName=JPEG/TIFF Comments
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=4
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0005]
 alternativeName=Exif.Photo.UserComment
-convertRatio=
 index=5
 isDefault=true
 isDisabled=false
 namespaceName=Exif.Image.ImageDescription
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][readCaptionNamespaces][#0006]
-alternativeName=
-convertRatio=
 index=6
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.Caption
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][readColor labelNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.digiKam.ColorLabel
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readColor labelNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.xmp.Label
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readColor labelNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.photoshop.Urgency
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0000]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=0
 isDefault=true
@@ -393,13 +369,11 @@ isDisabled=false
 namespaceName=Xmp.xmp.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0001]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=1
 isDefault=true
@@ -407,13 +381,11 @@ isDisabled=false
 namespaceName=Xmp.acdsee.rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0002]
-alternativeName=
 convertRatio=0,1,25,50,75,99
 index=2
 isDefault=true
@@ -421,13 +393,11 @@ isDisabled=false
 namespaceName=Xmp.MicrosoftPhoto.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0003]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=3
 isDefault=true
@@ -435,13 +405,11 @@ isDisabled=false
 namespaceName=Exif.Image.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0004]
-alternativeName=
 convertRatio=0,1,25,50,75,99
 index=4
 isDefault=true
@@ -449,13 +417,11 @@ isDisabled=false
 namespaceName=Exif.Image.RatingPercent
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][readRatingNamespaces][#0005]
-alternativeName=
 convertRatio=8,6,5,4,2,1
 index=5
 isDefault=true
@@ -463,14 +429,11 @@ isDisabled=false
 namespaceName=Iptc.Application2.Urgency
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
@@ -483,8 +446,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
@@ -498,7 +459,6 @@ tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0002]
 alternativeName=Xmp.lr.HierarchicalSubject
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
@@ -511,8 +471,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0003]
-alternativeName=
-convertRatio=
 index=3
 isDefault=true
 isDisabled=false
@@ -525,8 +483,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0004]
-alternativeName=
-convertRatio=
 index=4
 isDefault=true
 isDisabled=false
@@ -539,8 +495,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0005]
-alternativeName=
-convertRatio=
 index=5
 isDefault=true
 isDisabled=false
@@ -553,22 +507,17 @@ subspace=2
 tagPaths=0
 
 [DMetadata Settings][readTagsNamespaces][#0006]
-alternativeName=
-convertRatio=
 index=6
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.Keywords
 nsType=0
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][readTagsNamespaces][#0007]
-alternativeName=
-convertRatio=
 index=7
 isDefault=true
 isDisabled=false
@@ -581,189 +530,150 @@ subspace=0
 tagPaths=1
 
 [DMetadata Settings][readTitleNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.dc.title
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=2
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTitleNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.acdsee.caption
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=3
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][readTitleNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.ObjectName
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.dc.description
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=2
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.exif.UserComment
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=1
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.tiff.ImageDescription
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=1
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0003]
-alternativeName=
-convertRatio=
 index=3
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.acdsee.notes
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=3
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0004]
-alternativeName=
-convertRatio=
 index=4
 isDefault=true
 isDisabled=false
 namespaceName=JPEG/TIFF Comments
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=4
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0005]
 alternativeName=Exif.Photo.UserComment
-convertRatio=
 index=5
 isDefault=true
 isDisabled=false
 namespaceName=Exif.Image.ImageDescription
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][writeCaptionNamespaces][#0006]
-alternativeName=
-convertRatio=
 index=6
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.Caption
 nsType=3
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][writeColor labelNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.digiKam.ColorLabel
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeColor labelNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.xmp.Label
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeColor labelNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.photoshop.Urgency
 nsType=5
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0000]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=0
 isDefault=true
@@ -771,13 +681,11 @@ isDisabled=false
 namespaceName=Xmp.xmp.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0001]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=1
 isDefault=true
@@ -785,13 +693,11 @@ isDisabled=false
 namespaceName=Xmp.acdsee.rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0002]
-alternativeName=
 convertRatio=0,1,25,50,75,99
 index=2
 isDefault=true
@@ -799,13 +705,11 @@ isDisabled=false
 namespaceName=Xmp.MicrosoftPhoto.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0003]
-alternativeName=
 convertRatio=0,1,2,3,4,5
 index=3
 isDefault=true
@@ -813,13 +717,11 @@ isDisabled=false
 namespaceName=Exif.Image.Rating
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0004]
-alternativeName=
 convertRatio=0,1,25,50,75,99
 index=4
 isDefault=true
@@ -827,13 +729,11 @@ isDisabled=false
 namespaceName=Exif.Image.RatingPercent
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=0
 tagPaths=1
 
 [DMetadata Settings][writeRatingNamespaces][#0005]
-alternativeName=
 convertRatio=8,6,5,4,2,1
 index=5
 isDefault=true
@@ -841,14 +741,11 @@ isDisabled=false
 namespaceName=Iptc.Application2.Urgency
 nsType=2
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
@@ -861,8 +758,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
@@ -876,7 +771,6 @@ tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0002]
 alternativeName=Xmp.lr.HierarchicalSubject
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
@@ -889,8 +783,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0003]
-alternativeName=
-convertRatio=
 index=3
 isDefault=true
 isDisabled=false
@@ -903,8 +795,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0004]
-alternativeName=
-convertRatio=
 index=4
 isDefault=true
 isDisabled=false
@@ -917,8 +807,6 @@ subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0005]
-alternativeName=
-convertRatio=
 index=5
 isDefault=true
 isDisabled=false
@@ -931,22 +819,17 @@ subspace=2
 tagPaths=0
 
 [DMetadata Settings][writeTagsNamespaces][#0006]
-alternativeName=
-convertRatio=
 index=6
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.Keywords
 nsType=0
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [DMetadata Settings][writeTagsNamespaces][#0007]
-alternativeName=
-convertRatio=
 index=7
 isDefault=true
 isDisabled=false
@@ -959,50 +842,41 @@ subspace=0
 tagPaths=1
 
 [DMetadata Settings][writeTitleNamespaces][#0000]
-alternativeName=
-convertRatio=
 index=0
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.dc.title
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=2
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTitleNamespaces][#0001]
-alternativeName=
-convertRatio=
 index=1
 isDefault=true
 isDisabled=false
 namespaceName=Xmp.acdsee.caption
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=3
 subspace=2
 tagPaths=1
 
 [DMetadata Settings][writeTitleNamespaces][#0002]
-alternativeName=
-convertRatio=
 index=2
 isDefault=true
 isDisabled=false
 namespaceName=Iptc.Application2.ObjectName
 nsType=1
 secondNameOpts=0
-separator=
 specialOpts=0
 subspace=1
 tagPaths=1
 
 [Database Settings]
 Database Connectoptions=UNIX_SOCKET=/home/maker/.local/share/digikam/db_misc/mysql.socket
-Database Encrypted Password=AwJWVlY=
+Database Encrypted Password=AwI0NDQ=
 Database Hostname=
 Database Name=digikam
 Database Name Face=digikam
@@ -1013,14 +887,15 @@ Database Type=QMYSQL
 Database Username=root
 Database WAL Mode=false
 Internal Database Server=true
-Internal Database Server Mysql Admin Command=mysqladmin
-Internal Database Server Mysql Init Command=mysql_install_db
-Internal Database Server Mysql Server Command=mysqld
+Internal Database Server Mysql Admin Command=mariadb-admin
+Internal Database Server Mysql Init Command=mariadb-install-db
+Internal Database Server Mysql Server Command=mariadbd
+Internal Database Server Mysql Upgrade Command=mariadb-upgrade
 Internal Database Server Path=/home/maker/Pictures
 
 [DateFolderView Sidebar]
 CurrentIndex=47
-Expansion=1,38,46
+Expansion=1,35,38,46
 Selection=47
 SortColumn=0
 SortOrder=0
@@ -1045,13 +920,13 @@ VideoProperties Expanded=true
 
 [Digikam Right Sidebar][Captions Tags Properties Tab]
 Contact Expanded=true
-ItemDescEdit Tab=1
+ItemDescEdit Tab=2
 ItemDescEditTab CaptionsLang=x-default
 ItemDescEditTab SearchBarCaseSensitive=0
-ItemDescEditTab TagCheckViewCurrentIndex=26
-ItemDescEditTab TagCheckViewExpansion=0,25
+ItemDescEditTab TagCheckViewCurrentIndex=
+ItemDescEditTab TagCheckViewExpansion=0
 ItemDescEditTab TagCheckViewRestoreChecked=false
-ItemDescEditTab TagCheckViewSelection=26
+ItemDescEditTab TagCheckViewSelection=
 ItemDescEditTab TagCheckViewSortColumn=0
 ItemDescEditTab TagCheckViewSortOrder=0
 ItemDescEditTab TagCheckViewToggle Auto Tags=0
@@ -1143,6 +1018,7 @@ org.kde.digikam.plugin.editor.InvertTool=true
 org.kde.digikam.plugin.editor.LensAutoFixTool=true
 org.kde.digikam.plugin.editor.LensDistortionTool=true
 org.kde.digikam.plugin.editor.LocalContrastTool=true
+org.kde.digikam.plugin.editor.NoiseReductionToolPlugin=true
 org.kde.digikam.plugin.editor.OilPaintTool=true
 org.kde.digikam.plugin.editor.PerspectiveTool=true
 org.kde.digikam.plugin.editor.PrintTool=true
@@ -1185,6 +1061,7 @@ org.kde.digikam.plugin.generic.Rajce=true
 org.kde.digikam.plugin.generic.SendByMail=true
 org.kde.digikam.plugin.generic.SlideShow=true
 org.kde.digikam.plugin.generic.SmugMug=true
+org.kde.digikam.plugin.generic.TextConverter=true
 org.kde.digikam.plugin.generic.TimeAdjust=true
 org.kde.digikam.plugin.generic.Twitter=false
 org.kde.digikam.plugin.generic.VKontakte=false
@@ -1205,20 +1082,20 @@ Use Yolo V3=false
 
 [Face Management Settings]
 AlbumComboBox-Checked=
-AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=57,1
+AlbumComboBox-CurrentIndex=104
+AlbumComboBox-Expansion=1,57
 AlbumComboBox-RestoreChecked=true
-AlbumComboBox-Selection=
+AlbumComboBox-Selection=104
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 AlbumTypeEntry=0
 Already Scanned Handling=0
 Face Scan Main Task=Detect
 TagComboBox-Checked=
-TagComboBox-CurrentIndex=
+TagComboBox-CurrentIndex=4
 TagComboBox-Expansion=
 TagComboBox-RestoreChecked=true
-TagComboBox-Selection=
+TagComboBox-Selection=25,4
 TagComboBox-SortColumn=0
 TagComboBox-SortOrder=0
 Use Full CPU=false
@@ -1227,10 +1104,10 @@ UseWholeTagsEntry=false
 
 [Find Duplicates View]
 AlbumComboBox-Checked=
-AlbumComboBox-CurrentIndex=
+AlbumComboBox-CurrentIndex=104
 AlbumComboBox-Expansion=
 AlbumComboBox-RestoreChecked=true
-AlbumComboBox-Selection=
+AlbumComboBox-Selection=104
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 AlbumTypeEntry=0
@@ -1241,10 +1118,10 @@ Last search album tag relation=0
 Last search results restriction=0
 Lower bound for minimum similarity=40
 TagComboBox-Checked=
-TagComboBox-CurrentIndex=
+TagComboBox-CurrentIndex=25
 TagComboBox-Expansion=
 TagComboBox-RestoreChecked=true
-TagComboBox-Selection=
+TagComboBox-Selection=25
 TagComboBox-SortColumn=0
 TagComboBox-SortOrder=0
 UseWholeAlbumsEntry=false
@@ -1268,10 +1145,10 @@ SortOrder=0
 
 [Fuzzy Search View]
 AlbumComboBox-Checked=
-AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=57,1
+AlbumComboBox-CurrentIndex=104
+AlbumComboBox-Expansion=1,57
 AlbumComboBox-RestoreChecked=true
-AlbumComboBox-Selection=
+AlbumComboBox-Selection=104
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 UseWholeAlbumsEntry=true
@@ -1287,7 +1164,7 @@ Selection=
 Sort Order=0
 SortColumn=0
 SortOrder=0
-SplitterState=AAAA/wAAAAEAAAACAAABnAAAAOYB/////wEAAAACAA==
+SplitterState=AAAA/wAAAAEAAAACAAABngAAAOYB/////wEAAAACAA==
 
 [GPS Search Sidebar][GPSSearch Map Widget]
 Backend=marble
@@ -1318,16 +1195,17 @@ CaseSensitive=0
 [General Settings]
 1920x1080 screen: Window-Maximized=true
 2 screens: Window-Maximized=true
-2560x1440 screen: Height=1368
-2560x1440 screen: Width=1276
+2560x1440 screen: Height=901
+2560x1440 screen: Width=1698
 2560x1440 screen: Window-Maximized=true
-2560x1440 screen: XPosition=1284
-2560x1440 screen: YPosition=24
+2560x1440 screen: XPosition=133
+2560x1440 screen: YPosition=32
 3 screens: Window-Maximized=true
-Application Font=Noto Sans,10,-1,5,50,0,0,0,0,0
+Application Font=Noto Sans,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 Application Style=breeze
 Apply Sidebar Changes Directly=true
 Clean core DB At Start=false
+DP-1=DP-1
 Detect faces in newly added images=false
 Draw Frames To Grouped Items=true
 Expand New Current Item On Click=true
@@ -1335,6 +1213,7 @@ FullScreen Hide SideBars=false
 FullScreen Hide StatusBar=false
 FullScreen Hide ThumbBar=true
 FullScreen Hide ToolBars=false
+HDMI-0=HDMI-0
 HDMI-1=HDMI-1
 HDMI-1 HDMI-2 Height 2560x1440=1440
 HDMI-1 HDMI-2 Width 2560x1440=2560
@@ -1358,8 +1237,10 @@ HDMI-1 eDP-1 Window-Maximized 2560x1440=true
 HDMI-2 Window-Maximized 1920x1080=true
 HDMI-2 Window-Maximized 1920x1080 HDMI-2=true
 Icon Theme=breeze-dark
+RestorePositionForNextInstance=false
 Scan At Start=true
 Scroll Current Item To Center=false
+Select First Album Item=true
 Show Only Face Tags For Assigning Name=true
 Show Permanent Delete Dialog=true
 Show Splash=true
@@ -1458,6 +1339,7 @@ EXIF Tags Filter=
 Accepted Threshold=60
 Blur Weight=100
 Compression Weight=100
+Detect Aesthetic=true
 Detect Blur=true
 Detect Compression=true
 Detect Exposure=true
@@ -1543,10 +1425,10 @@ CaseSensitive=0
 CaseSensitive=0
 
 [ItemIconViewTagFilterView]
-CurrentIndex=26
-Expansion=25
+CurrentIndex=
+Expansion=
 RestoreChecked=false
-Selection=26
+Selection=
 SortColumn=0
 SortOrder=0
 Toggle Auto Tags=0
@@ -1578,14 +1460,16 @@ PickSelection=
 RatingSelection=
 
 [LightTable Settings]
-2560x1440 screen: XPosition=0
-2560x1440 screen: YPosition=0
+2560x1440 screen: XPosition=189
+2560x1440 screen: YPosition=263
 Auto Load Right Panel=true
 Auto Sync Preview=true
 Clear On Close=false
+DP-1=DP-1
 FullScreen Hide SideBars=false
 FullScreen Hide StatusBar=false
 FullScreen Hide ToolBars=false
+HDMI-0=HDMI-0
 HDMI-1=HDMI-1
 HDMI-1 HDMI-2 XPosition 1920x1080=0
 HDMI-1 HDMI-2 YPosition 1920x1080=0
@@ -1597,7 +1481,9 @@ HDMI-1 YPosition 2560x1440=0
 HDMI-1 YPosition 2560x1440 HDMI-1=0
 Horizontal Splitter State=AAAA/wAAAAEAAAADAAABgwAAAG0AAAGDAf////8AAAAAAQE=
 Navigate By Pair=false
+RestorePositionForNextInstance=false
 Show Thumbbar=true
+ThumbbarState=AAAA/wAAAAD9AAAAAQAAAAIAAAAAAAAAAPwBAAAAAfsAAAAmAGwAaQBnAGgAdAB0AGEAYgBsAGUAXwB0AGgAdQBtAGIAYgBhAHIBAAAAAP////8AAABpAP///wAAAAAAAAAAAAAABAAAAAQAAAAIAAAACPwAAAAA
 eDP-1 HDMI-1 XPosition 2560x1440=0
 eDP-1 HDMI-1 YPosition 2560x1440=0
 eDP-1 XPosition 1920x1080=0
@@ -1767,6 +1653,8 @@ XMP Level=0
 Version Properties Tab=versions
 Version Properties View Mode=2
 
+[LightTable Thumbbar]
+
 [Media Player Settings]
 Volume=100
 
@@ -1799,7 +1687,7 @@ format=png
 quality=100
 
 [MediaPlayer Decoder Video]
-priority=FFmpeg,HW FFmpeg
+priority=FFmpeg
 zeroCopy=true
 
 [MediaPlayer General]
@@ -1837,6 +1725,7 @@ outline=true
 outline_color=0,0,255
 
 [Metadata Settings]
+Album Date Source=1
 Clear Metadata If Rescan=false
 Custom Sidecar Extensions=
 EXIF Rotate=true
@@ -1863,6 +1752,7 @@ Use Fast Scan At Startup=true
 Use Lazy Synchronization=false
 Use XMP Sidecar For Reading=false
 Write Metadata To DNG Files=false
+Write Metadata To Files With ExifTool=false
 Write Metadata To RAW Files=false
 
 [MetadataSelectorView Search Text Tool]
@@ -1887,10 +1777,10 @@ eDP-1 Height 1920x1080=750
 eDP-1 Width 1920x1080=800
 
 [Search Sidebar]
-CurrentIndex=1
+CurrentIndex=
 Expansion=1
 RestoreChecked=false
-Selection=1
+Selection=
 SortColumn=0
 SortOrder=0
 
@@ -1899,20 +1789,20 @@ CaseSensitive=0
 
 [Select Reference]
 AlbumComboBox-Checked=
-AlbumComboBox-CurrentIndex=
+AlbumComboBox-CurrentIndex=104
 AlbumComboBox-Expansion=
 AlbumComboBox-RestoreChecked=true
-AlbumComboBox-Selection=
+AlbumComboBox-Selection=104
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 UseWholeAlbumsEntry=false
 
 [Sketch Search View]
 AlbumComboBox-Checked=
-AlbumComboBox-CurrentIndex=
-AlbumComboBox-Expansion=57,1
+AlbumComboBox-CurrentIndex=104
+AlbumComboBox-Expansion=1,57
 AlbumComboBox-RestoreChecked=true
-AlbumComboBox-Selection=
+AlbumComboBox-Selection=104
 AlbumComboBox-SortColumn=0
 AlbumComboBox-SortOrder=0
 UseWholeAlbumsEntry=true
@@ -1920,6 +1810,14 @@ UseWholeAlbumsEntry=true
 [Slideshow Settings]
 eDP-1 Height 1920x1080=750
 eDP-1 Width 1920x1080=800
+
+[Spell Check Settings]
+AlternativeLang=x-default,de-DE,en-US,es-ES,fr-FR,it-IT,pt-PT
+DefaultLanguage=
+EnableSpellCheck=false
+IgnoredWords=digiKam,Showfoto,Apple,Nikon,Android,Canon,Sony,Samsung,Panasonic,Olympus,Exif,IPTC,Xmp
+TranslatorEngine=0
+TranslatorLang=de-DE,en-US,es-ES,fr-FR,it-IT,pt-PT
 
 [TagEditDlgTitleEdit Search Text Tool]
 CaseSensitive=0
@@ -1937,10 +1835,10 @@ TypeGeolocationFilter Expanded=true
 TypeMimeFilter Expanded=true
 
 [TagView Sidebar]
-CurrentIndex=26
-Expansion=0,23,5,24,25,26
+CurrentIndex=
+Expansion=0,5
 RestoreChecked=false
-Selection=26
+Selection=
 SortColumn=0
 SortOrder=0
 TagsSource=false
@@ -2033,14 +1931,14 @@ Show Thumbnails=true
 Show numbers on items=true
 Thumbnail Grouping Radius=30
 Thumbnail Size=60
-Zoom=marble:1740
+Zoom=marble:1108
 
 [mainwindow_tableview]
 Grouping mode=2
 
 [mainwindow_tableview][Current Profile]
 Column Count=6
-Header State=\x00\x00\x00\xff\x00\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x06\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x04:\x00\x00\x00\x06\x01\x01\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00d\xff\xff\xff\xff\x00\x00\x00\x81\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00d\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00d\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00d\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00d\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x00d\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x02F\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00\x03\xe8\x00\x00\x00\x00d
+Header State=AAAA/wAAAAAAAAABAAAAAQAAAAYBAAAAAAAAAAAAAAAAAAAAAAAAAlgAAAAGAQEAAQAAAAAAAAAAAAAAAGT/////AAAAgQAAAAAAAAAGAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAAZAAAAAEAAAAAAAAD6AAAAABkAAAAAA==
 Profile Name=
 
 [mainwindow_tableview][Current Profile][Column 0]

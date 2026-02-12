@@ -13,13 +13,16 @@ TranslatorEnabled=true
 appstreamEnabled=true
 baloosearchEnabled=true
 bookmarksEnabled=false
-browserhistoryEnabled=true
-browsertabsEnabled=false
+browserhistoryEnabled=false
+browsertabsEnabled=true
 calculatorEnabled=true
 desktopsessionsEnabled=true
 katesessionsEnabled=false
 konsoleprofilesEnabled=false
 krunner_appstreamEnabled=false
+krunner_bookmarksrunnerEnabled=false
+krunner_konsoleprofilesEnabled=false
+krunner_shellEnabled=false
 krunner_systemsettingsEnabled=true
 kwinEnabled=true
 locationsEnabled=true
@@ -36,3 +39,6 @@ shellEnabled=false
 unitconverterEnabled=true
 webshortcutsEnabled=true
 windowsEnabled=true
+
+[Plugins][Favorites]
+plugins=krunner_sessions,krunner_powerdevil,krunner_services,krunner_systemsettings

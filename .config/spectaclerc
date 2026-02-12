@@ -1,18 +1,22 @@
 [General]
 autoSaveImage=false
-printKeyActionRunning=0
-rememberLastRectangularRegion=2
+printKeyRunningAction=0
+rememberSelectionRect=2
 showMagnifier=false
 useLightMaskColour=false
 useReleaseToCapture=false
 
 [GuiConfig]
-captureMode=5
+captureMode=0
 includePointer=false
 quitAfterSaveCopyExport=true
 
-[Save]
-compressionQuality=90
+[ImageSave]
 copySaveLocation=false
-defaultSaveLocation=file:///home/maker/Pictures/Screenshots/
-saveFilenameFormat=Screenshot_%Y%M%D_%H%m%S
+imageCompressionQuality=90
+imageFilenameTemplate=Screenshot_<yyyy><MM><dd>_<HH><mm><ss>
+imageSaveLocation=file:///home/maker/Pictures/Screenshots/
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+translatedScreencastsFolder=Screencasts

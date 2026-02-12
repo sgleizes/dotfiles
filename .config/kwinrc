@@ -137,12 +137,10 @@ BorderAlternativeActivate=9
 DesktopLayout=org.kde.breeze.desktop
 DesktopListLayout=org.kde.breeze.desktop
 DesktopMode=1
-HighlightWindows=true
-LayoutName=thumbnail_grid
+LayoutName=compact
 MinimizedMode=1
 MultiScreenMode=1
 ShowDesktopMode=0
-ShowTabBox=false
 SwitchingMode=0
 TouchBorderActivate=9
 TouchBorderAlternativeActivate=9
@@ -180,7 +178,28 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 [Tiling][5b7a5ba4-43cc-5910-8e98-f358f9d54b43]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
+[Tiling][a2a7050e-2050-5f16-9346-3d5f994f9496]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
 [Tiling][add6754e-70dd-5aa9-9e3b-a9be4402e982]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][b7018334-d834-59e8-b99e-1984b38b5947]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][ccb3c133-4b24-5430-8429-6b5bd33f2070]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][d11d2c8f-dbb5-59cb-944a-3bef59f24c30]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][d2409a82-5466-5695-8c3f-e18fcf8bc8ac]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][e112ba4c-ec01-5620-a79e-b1b814ca05d6]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][f1bb55db-4b88-508c-8e9d-d1cdd2945c59]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [TouchEdges]
@@ -198,6 +217,9 @@ ElectricBorderTiling=true
 ElectricBorders=1
 Placement=Centered
 SeparateScreenFocus=true
+
+[Xwayland]
+Scale=1
 
 [org.kde.kdecoration2]
 library=org.kde.breeze

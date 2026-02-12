@@ -1,9 +1,12 @@
+[Common]
+OutlineCloseButton=true
+
 [Style]
 MenuOpacity=70
 
 [Windeco Exception 0]
 BorderSize=3
-Enabled=true
+Enabled=false
 ExceptionPattern=.*
 ExceptionType=0
 HideTitleBar=true

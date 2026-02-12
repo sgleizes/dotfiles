@@ -1,6 +1,13 @@
 [System]
-disableFaceEngine=true
 disableOpenCL=false
+enableAesthetic=false
+enableAutoTags=false
+enableFaceEngine=false
 enableLogging=false
+proxyAuth=false
+proxyPort=8080
+proxyType=0
+proxyUrl=
+softwareOpenGL=false
 useHighDpiPixmaps=false
 useHighDpiScaling=false

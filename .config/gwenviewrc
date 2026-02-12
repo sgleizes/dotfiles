@@ -11,7 +11,7 @@ AlphaBackgroundMode=AbstractImageView::AlphaBackgroundCheckBoard
 Gwenview_Volume=1
 
 [Print]
-PrintHeight=15
+PrintHeight=10.63
 
 [SideBar]
 IsVisible BrowseMode=false

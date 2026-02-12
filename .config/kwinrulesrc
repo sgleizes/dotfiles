@@ -1,10 +1,10 @@
 [1]
-Description=Firefox - Self
+Description=Firefox - Main
 activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^Self -
+title=^Main -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -12,12 +12,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [10]
-Description=Firefox - Phone
-activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+Description=Firefox - Retro Gaming
+activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^Phone -
+title=^Retro Gaming -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -25,93 +25,75 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [11]
-Description=Firefox - Nebulae
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+Description=Firefox - Scratch
+activity=5a73c567-eb7a-4a34-854a-11f9ecd9c22b
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
-desktopsrule=2
-title=^Nebulae -
+title=^Scratch -
 titlematch=3
+types=1
 wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
 [12]
-Description=Firefox - News
+Description=Strawberry
 activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
-activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
-desktopsrule=2
-title=^News -
-titlematch=3
-wmclass=navigator firefox
-wmclasscomplete=true
+activityrule=3
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=3
+wmclass=strawberry
 wmclassmatch=1
 
 [13]
-Description=Firefox - Permaculture
-activity=e1fb771e-29d1-4641-a442-b99b55616702
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^Permaculture -
-titlematch=3
+Description=Interdimensional Emacs
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
 types=1
-wmclass=navigator firefox
-wmclasscomplete=true
+wmclass=emacs
 wmclassmatch=1
 
 [14]
-Description=Firefox - Permadev
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
+Description=Interdimensional Dolphin
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
 title=^Permadev -
-titlematch=3
 types=1
-wmclass=navigator firefox
-wmclasscomplete=true
+wmclass=dolphin
 wmclassmatch=1
 
 [15]
-Description=Firefox - Saint-Pierreville
-activity=880691c7-fa6e-4255-a852-acde63acc631
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^Saint-Pierreville -
-titlematch=3
+Description=Interdimensional Enpass
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
+title=^Travaux -
 types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
+wmclass=enpass
+wmclassmatch=2
 
 [16]
-Description=Firefox - Oasis
-activity=e1fb771e-29d1-4641-a442-b99b55616702
-activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
-desktopsrule=2
-title=^Oasis -
-titlematch=3
+Description=Interdimensional Keepass
+activity=00000000-0000-0000-0000-000000000000
+activityrule=3
+desktops=
+desktopsrule=3
 types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
+wmclass=keepassxc
+wmclassmatch=2
 
 [17]
-Description=Firefox - Gaming
+Description=No Minimum Size
 activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
-activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
+minsize=1,1
+minsizerule=2
 title=^Gaming -
-titlematch=3
 types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
 
 [18]
 Description=Firefox - Retro Gaming
@@ -139,12 +121,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [2]
-Description=Firefox - Cuisine
-activity=880691c7-fa6e-4255-a852-acde63acc631
+Description=Firefox - Travaux
+activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^Cuisine -
+title=^Travaux -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -209,7 +191,7 @@ types=1
 
 [3]
 Description=Firefox - Percussions
-activity=880691c7-fa6e-4255-a852-acde63acc631
+activity=81d1e16f-f8d6-4aa7-91cb-1a7f97689632
 activityrule=2
 desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
@@ -221,12 +203,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [4]
-Description=Firefox - Jobs
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+Description=Firefox - System
+activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
 desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-title=^Jobs -
+title=^System -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -234,12 +216,12 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [5]
-Description=Firefox - Logiciel Libre
-activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+Description=Firefox - Phone
+activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
 activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktops=7746141e-3bd1-481d-ae62-4932117a498d
 desktopsrule=2
-title=^Logiciel Libre -
+title=^Phone -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -257,6 +239,32 @@ wmclass=keepassxc
 wmclassmatch=1
 
 [6]
+Description=Firefox - Jobs
+activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+activityrule=2
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=2
+title=^Jobs -
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[7]
+Description=Firefox - Permadev
+activity=b6d870af-2af7-49fe-bce4-606e462b99c6
+activityrule=2
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
+desktopsrule=2
+title=^Permadev -
+titlematch=3
+types=1
+wmclass=navigator firefox
+wmclasscomplete=true
+wmclassmatch=1
+
+[8]
 Description=Firefox - Dev
 activity=b6d870af-2af7-49fe-bce4-606e462b99c6
 activityrule=2
@@ -269,40 +277,13 @@ wmclass=navigator firefox
 wmclasscomplete=true
 wmclassmatch=1
 
-[7]
-Description=Firefox - System
-activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^System -
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
-[8]
-Description=Firefox - Setup PC/Gaming
-activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
-activityrule=2
-desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
-desktopsrule=2
-title=^Setup PC/Gaming -
-titlematch=3
-types=1
-wmclass=navigator firefox
-wmclasscomplete=true
-wmclassmatch=1
-
 [9]
-Description=Firefox - Xsh
-activity=a2f5ea5e-d207-44fa-b9df-25a6c4f8f8af
+Description=Firefox - Gaming
+activity=ac9500c2-8f31-46b5-b46c-7aa1d307e3a4
 activityrule=2
-desktops=7746141e-3bd1-481d-ae62-4932117a498d
+desktops=ceb95964-ac0a-451d-a9d9-696cf945f8f8
 desktopsrule=2
-minimize=true
-title=^Xsh -
+title=^Gaming -
 titlematch=3
 types=1
 wmclass=navigator firefox
@@ -310,8 +291,8 @@ wmclasscomplete=true
 wmclassmatch=1
 
 [General]
-count=25
-rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25
+count=17
+rules=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17
 
 [b7b4696f-1992-4e8e-b34d-930502288700]
 Description=Firefox - Setup PC/Gaming

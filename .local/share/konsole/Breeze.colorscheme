@@ -103,9 +103,10 @@ RandomSaturationRange=100
 [General]
 Anchor=0.5,0.5
 Blur=false
-ColorRandomization=true
+ColorRandomization=false
 Description=Breeze
 FillStyle=Tile
-Opacity=0.93
+Opacity=1
 Wallpaper=
+WallpaperFlipType=NoFlip
 WallpaperOpacity=1

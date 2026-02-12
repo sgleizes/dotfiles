@@ -18,6 +18,9 @@ ShowCopyMoveMenu=true
 Version=202
 ViewPropsTimestamp=2020,4,9,0,27,3
 
+[IconsMode]
+PreviewSize=112
+
 [Open-with settings]
 CompletionMode=1
 

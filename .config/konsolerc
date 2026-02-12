@@ -16,7 +16,6 @@ Favorites=Dark Unlimited.profile,Light Unlimited.profile
 ConfigVersion=1
 
 [KonsoleWindow]
-RemoveWindowTitleBarAndFrame=true
 ShowMenuBarByDefault=false
 
 [TabBar]

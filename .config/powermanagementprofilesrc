@@ -40,5 +40,8 @@ lidAction=1
 powerButtonAction=16
 triggerLidActionWhenExternalMonitorPresent=false
 
+[Migration]
+MigratedProfilesToPlasma6=powerdevilrc
+
 [migration]
 kdedShortcutMigration=true
