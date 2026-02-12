@@ -9,6 +9,7 @@
 /Code Industry/
 /Electron/
 /Element/
+/FreeCAD/
 /GIMP/
 /KDE/
 /Mailspring/
@@ -17,7 +18,9 @@
 /PlasmaUserFeedback
 /QtProject.conf
 /QtProject/
+/Raspberry Pi/
 /Signal/
+/akonadi/
 /android/
 /cef_user_data/
 /configstore/
@@ -25,6 +28,7 @@
 /discord/
 /emacs/
 /fontforge/
+/go/
 /kde.org/
 /kde4/
 /kdeconnect/
@@ -40,12 +44,14 @@
 /pulse/
 /rclone/
 /retroarch/
+/rpcs3/
 /session/
 /signond/
-/[Ss]imple[Ss]creen[Rr]ecorder*
 /sinew.in/
 /skypeforlinux/
+/sqlitebrowser/
 /subversion/
+/sunshine/
 /supertuxkart/
 /syncthing/
 /systemd/user/*.wants/
@@ -56,6 +62,9 @@
 /zi/
 
 # Exceptions for directories with uninteresting contents.
+/FreeFileSync/**
+!/FreeFileSync/Configs/
+!/FreeFileSync/Configs/**
 /beets/**
 !/beets/config.yaml
 /elinks/**
@@ -84,7 +93,9 @@
 /projectM/qprojectM-pulseaudio.conf
 
 # Uninteresting files.
+/akonadi*
 /bluedevilglobalrc
+/DB Browser for SQLiterc
 /device_automounter_kcmrc
 /discoverrc
 /discoverabstractnotifier.notifyrc
@@ -96,6 +107,7 @@
 /incidenceeditorrc
 /kactivitymanagerd-statsrc
 /kactivitymanagerd-switcher
+/kalendar*
 /kate*
 /kcalcrc
 /kcharselectrc
@@ -118,11 +130,13 @@
 /ksslcertificatemanager
 /kstarsrc
 /ksysguardrc
-/ktorrentrc
+/ktorrent*
 /ktrashrc
 /kwalletmanager5rc
 /kwalletrc
 /kwaverc
+/kwinoutputconfig.json
+/partitionmanagerrc
 /phishingurlrc
 /plasma-nm
 /plasma-welcomerc
@@ -134,6 +148,7 @@
 /plasmoidviewer*
 /print-manager
 /sddmthemeinstallerrc
+/showfoto*
 /skanliterc
 /soffice.binrc
 /specialmailcollectionsrc
@@ -147,3 +162,4 @@
 /xdg-desktop-portal-kderc
 /YACReaderrc
 /zoomus.conf
+.projectile-cache.eld
