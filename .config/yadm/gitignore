@@ -21,11 +21,16 @@
 # Toplevel dotfiles of applications not supporting XDG at all.
 /.dropbox*/
 /.mozilla/
+/.thunderbird/
 /.pki/
+/.eteks/
+/.cups/
+/.hplip/
 
-# XDG cache/lib directory.
+# XDG cache/lib directory. And flatpak's .var (see https://github.com/flatpak/flatpak/issues/1651).
 /.cache/
 /.local/lib/
+/.var/
 
 # Toplevel shell dotfiles, linked to xsh runcoms.
 /.profile

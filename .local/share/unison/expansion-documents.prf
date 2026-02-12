@@ -1,9 +1,0 @@
-#
-# Unison profile for synchonizing documents with the Expansion HDD.
-#
-
-include _expansion
-include _documents
-
-# Label for this profile in the graphical UI.
-label = Synchronize documents with the Expansion HDD

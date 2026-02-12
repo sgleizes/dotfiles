@@ -51,6 +51,7 @@ command -v sl >/dev/null && alias sl='sl -al'        # mystyping cure
 
 # Tree directory listing.
 alias tl='tree --dirsfirst --filelimit=50'
+alias tld='tl -d'
 alias tla='tl -a -I .git'
 
 # Making/Changing directories.

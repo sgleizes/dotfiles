@@ -42,7 +42,7 @@ emacsclient $EMACSCLIENT_OPTS --eval "
     ($EVAL))"
 
 # Check modified file for unresolved conflicts.
-if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
+if [[ $MODE == 'files' && $(grep -Ec '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
   MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
   cp "$MERGED" "$MERGEDSAVE"
   echo >&2 "Oops! Conflict markers detected in $MERGED"

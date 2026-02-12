@@ -68,6 +68,23 @@ AUR_PACKAGE_LIST=(
   tmux-xpanes
 )
 
+# List packages that are missing among provided arguments.
+function missing_packages {
+  pacman -Sl | awk '{print $2,$4}' | grep -E "^(${(j:|:)@}) $" || true
+}
+
+# List AUR packages that are missing among provided arguments.
+function missing_aur_packages {
+  local foreign_pkgs
+
+  foreign_pkgs=( $(pacman -Qqem) )
+  if [[ ! $foreign_pkgs ]]; then
+    print -l $@
+  fi
+
+  print -l $@ | grep -vE "^(${(j:|:)foreign_pkgs})" || true
+}
+
 # Prompt for installation of the given package group using pacman.
 # Usage: install_packages <group> <pkgs...>
 function install_packages {
@@ -101,23 +118,6 @@ function list_aur_packages {
 
   print -P "%F{yellow}::%f The following packages can be built manually from the AUR:"
   print -f '  %s\n' $pkgs[@]
-}
-
-# List packages that are missing among provided arguments.
-function missing_packages {
-  pacman -Sl | awk '{print $2,$4}' | grep -E "^(${(j:|:)@}) $" || true
-}
-
-# List AUR packages that are missing among provided arguments.
-function missing_aur_packages {
-  local foreign_pkgs
-
-  foreign_pkgs=( $(pacman -Qqem) )
-  if [[ ! $foreign_pkgs ]]; then
-    print -l $@
-  fi
-
-  print -l $@ | grep -vE "^(${(j:|:)foreign_pkgs})" || true
 }
 
 if ! install_packages 'basic' $PACMAN_PACKAGES_BASIC[@] \

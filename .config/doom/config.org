@@ -4,6 +4,8 @@
 #+property: header-args:elisp :tangle yes :cache yes :results silent :comments link
 #+property: header-args :tangle no :results silent
 
+-----
+
 * System setup
 ** Systemd daemons
 
@@ -18,6 +20,10 @@ one that ships with ~emacs~:
 Description=Emacs text editor (%i)
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 PartOf=emacs.target
+
+# This is required to make sure emacs starts after the DE is started.
+# Otherwise the server has no XAUTHORITY and clients fail to start (on wayland).
+After=plasma-plasmashell.service
 
 [Service]
 Type=notify
@@ -200,39 +206,40 @@ literate
 
 #+name: doom-completion
 #+begin_src elisp
-(company +childframe)                ; the ultimate code completion backend
+;;(company +childframe)              ; the ultimate code completion backend
+(corfu +icons +orderless)           ; complete with cap(f), cape and a flying feather!
 ;;helm                               ; the *other* search engine for love and life
 ;;ido                                ; the other *other* search engine...
-(ivy +prescient +icons +childframe)  ; a search engine for love and life
+;;(ivy +prescient +icons +childframe)  ; a search engine for love and life
+(vertico +icons)        ; the search engine of the future
 #+end_src
 
 ** Interface
 
 #+name: doom-ui
 #+begin_src elisp
-;;deft                        ; notational velocity for Emacs
-doom                          ; what makes DOOM look the way it does
-doom-dashboard                ; a nifty splash screen for Emacs
-;;doom-quit                   ; DOOM quit-message prompts when you quit Emacs
-;;fill-column                 ; a `fill-column' indicator
-hl-todo                       ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
-hydra
-;;indent-guides               ; highlighted indent columns
-;;(ligatures +fira)           ; ligatures and symbols to make your code pretty again
-;;minimap                     ; show a map of the code on the side
-modeline                      ; snazzy, Atom-inspired modeline, plus API
-;;nav-flash                   ; blink cursor line after big motions
-;;neotree                     ; a project drawer, like NERDTree for vim
-ophints                       ; highlight the region an operation acts on
-(popup +all +defaults)        ; tame sudden yet inevitable temporary windows
-tabs                          ; a tab bar for Emacs
-treemacs                      ; a project drawer, like neotree but cooler
-unicode                       ; extended unicode support for various languages
-vc-gutter                     ; vcs diff in the fringe
-vi-tilde-fringe               ; fringe tildes to mark beyond EOB
-window-select                 ; visually switch windows
-workspaces                    ; tab emulation, persistence & separate workspaces
-;;zen                         ; distraction-free coding or writing
+;;deft                            ; notational velocity for Emacs
+doom                              ; what makes DOOM look the way it does
+doom-dashboard                    ; a nifty splash screen for Emacs
+;;doom-quit                       ; DOOM quit-message prompts when you quit Emacs
+;;(emoji +ascii +github +unicode) ; adds emoji support to Emacs
+hl-todo                           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+;;indent-guides                   ; highlighted indent columns
+;;(ligatures +fira)               ; ligatures and symbols to make your code pretty again
+;;minimap                         ; show a map of the code on the side
+modeline                          ; snazzy, Atom-inspired modeline, plus API
+;;nav-flash                       ; blink cursor line after big motions
+;;neotree                         ; a project drawer, like NERDTree for vim
+ophints                           ; highlight the region an operation acts on
+(popup +all +defaults)            ; tame sudden yet inevitable temporary windows
+tabs                              ; a tab bar for Emacs
+treemacs                          ; a project drawer, like neotree but cooler
+unicode                           ; extended unicode support for various languages
+vc-gutter                         ; vcs diff in the fringe
+vi-tilde-fringe                   ; fringe tildes to mark beyond EOB
+window-select                     ; visually switch windows
+workspaces                        ; tab emulation, persistence & separate workspaces
+;;zen                             ; distraction-free coding or writing
 #+end_src
 
 ** Editor
@@ -325,7 +332,9 @@ associated file.
 
 #+name: doom-lang
 #+begin_src elisp
+;;ada                         ; in strong typing we (blindly) trust
 ;;agda                        ; types of types of types of types...
+;;beancount                   ; mind the GAAP
 (cc +lsp)                     ; C/C++/Obj-C madness
 ;;clojure                     ; java with a lisp
 ;;common-lisp                 ; if you've seen one lisp, you've seen them all
@@ -334,27 +343,32 @@ associated file.
 ;;csharp                      ; unity, .NET, and mono shenanigans
 data                          ; config/data formats
 ;;(dart +flutter)             ; paint ui and not much else
+;;dhall
+;;(dart +flutter)             ; paint ui and not much else
 ;;elixir                      ; erlang done right
 ;;elm                         ; care for a cup of TEA?
 emacs-lisp                    ; drown in parentheses
 ;;erlang                      ; an elegant language for a more civilized age
 ;;ess                         ; emacs speaks statistics
+;;factor                      ; for when scripts are stacked against you
 ;;faust                       ; dsp, but you get to keep your soul
+;;fortran                     ; in FORTRAN, GOD is REAL (unless declared INTEGER)
 ;;fsharp                      ; ML stands for Microsoft's Language
 ;;fstar                       ; (dependent) types and (monadic) effects and Z3
 ;;gdscript                    ; the language you waited for
 (go +lsp)                     ; the hipster dialect
+;;(graphql +lsp)              ; Give queries a REST
 ;;(haskell +dante)            ; a language that's lazier than I am
 ;;hy                          ; readability of scheme w/ speed of python
 ;;idris                       ; a language you can depend on
 json                          ; At least it ain't XML
+;;janet                       ; Fun fact: Janet is me!
 ;;(java +meghanada)           ; the poster child for carpal tunnel syndrome
 ;;javascript                  ; all(hope(abandon(ye(who(enter(here))))))
 ;;julia                       ; a better, faster MATLAB
 ;;kotlin                      ; a better, slicker Java(Script)
 ;;latex                       ; writing papers in Emacs has never been so fun
 ;;lean                        ; proof that mathematicians need help
-;;factor                      ; for when scripts are stacked against you
 ;;ledger                      ; an accounting system in Emacs
 ;;lua                         ; one-based indices? one-based indices
 markdown                      ; writing docs for people to ignore
@@ -364,6 +378,7 @@ markdown                      ; writing docs for people to ignore
 (org +pretty)                 ; organize your plain life in plain text
 ;;php                         ; perl's insecure younger brother
 ;;plantuml                    ; diagrams for confusing people more
+;;graphviz                    ; diagrams for confusing yourself even more
 ;;purescript                  ; javascript, but functional
 ;;python                      ; beautiful is better than ugly
 ;;qt                          ; the 'cutest' gui framework ever
@@ -372,7 +387,7 @@ markdown                      ; writing docs for people to ignore
 ;;rest                        ; Emacs as a REST client
 ;;rst                         ; ReST in peace
 ;;(ruby +rails)               ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-;;rust                        ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+;;(rust +lsp)                 ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
 ;;scala                       ; java, but good
 ;;scheme                      ; a fully conniving family of lisps
 (sh +lsp)                     ; she sells {ba,z,fi}sh shells on the C xor
@@ -382,6 +397,7 @@ markdown                      ; writing docs for people to ignore
 ;;terra                       ; Earth and Moon in alignment for performance.
 ;;web                         ; the tubes
 yaml                          ; JSON, but readable
+;;zig                         ; C, but simpler
 #+end_src
 
 ** Applications
@@ -395,9 +411,11 @@ yaml                          ; JSON, but readable
 
 #+name: doom-app
 #+begin_src elisp
-calendar
+;;calendar                   ; calendar integration
+;;emms                       ; music player
+;;everywhere                 ; *leave* Emacs!? You must be joking
 ;;irc                        ; how neckbeards socialize
-(rss +org)                 ; emacs as an RSS reader
+;;(rss +org)                 ; emacs as an RSS reader
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
@@ -420,12 +438,6 @@ This file shouldn't be byte compiled.
 (package! beacon)
 #+end_src
 
-** Centaur tabs
-
-#+begin_src elisp
-(package! centaur-tabs :pin "cde3469d77")
-#+end_src
-
 ** Command logging
 
 [[https://github.com/lewang/command-log-mode][This package]] allows logging of the commands executed by emacs for some or all buffers.
@@ -440,28 +452,11 @@ This file shouldn't be byte compiled.
 (package! doct)
 #+end_src
 
-** Elfeed dashboard
+** Drag-stuff
 
-[[https://github.com/Manoj321/elfeed-dashboard][This package]] is a frontend for elfeed, similar to mu4e landing page.
+This package was removed from doom in [[https://github.com/doomemacs/doomemacs/commit/816db4a62addf7ac5e658123ba081069d224d310][this commit]], but I disagree with the reason: I use evil and I need it.
 #+begin_src elisp
-(package! elfeed-dashboard
-  :recipe (:host github :repo "Manoj321/elfeed-dashboard"))
-#+end_src
-
-** Elfeed goodies
-
-[[https://github.com/algernon/elfeed-goodies][This package]] enhances the elfeed experience.
-#+begin_src elisp
-(package! ov) ; Required in elfeed for date-separators and entry previews
-(package! elfeed-goodies)
-#+end_src
-
-** Evil visual mark
-
-[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
-FIXME: Does not support ~evil-delete-marks~.
-#+begin_src elisp
-(package! evil-visual-mark-mode)
+(package! drag-stuff :pin "6d06d846cd37c052d79acd0f372c13006aa7e7c8")
 #+end_src
 
 ** Evil terminal cursor
@@ -474,19 +469,18 @@ FIXME: Does not support ~evil-delete-marks~.
   :recipe (:host github :repo "amosbird/evil-terminal-cursor-changer"))
 #+end_src
 
+** Evil visual mark
+
+[[https://github.com/roman/evil-visual-mark-mode][This package]] displays all the evil markers in the current buffer.
+#+begin_src elisp
+(package! evil-visual-mark-mode)
+#+end_src
+
 ** Fasd
 
 [[https://framagit.org/steckerhalter/emacs-fasd][This package]] provides integration with [[https://github.com/clvv/fasd][fasd]].
 #+begin_src elisp
 (package! fasd)
-#+end_src
-
-** Fast scroll
-
-[[https://github.com/ahungry/fast-scroll][This package]] temporarily disables font-lock and switches to a bare-bones
-modeline during intense scrolling operations.
-#+begin_src elisp
-(package! fast-scroll)
 #+end_src
 
 ** Hydra major mode
@@ -512,10 +506,10 @@ It also provides pretty-hydra which allows to create hydras with automatically f
 (package! info-colors :pin "47ee73cc19")
 #+end_src
 
-** TODO Kaolin themes
+** Kaolin themes
 
 #+begin_src elisp
-(package! kaolin-themes)
+;; (package! kaolin-themes)
 #+end_src
 
 #+begin_src elisp :tangle yes
@@ -546,28 +540,16 @@ To make VLF available without delaying startup, just load it in quiet moments.
 [[https://github.com/dandavison/delta/][Delta]] is a git diff syntax highlighter written in rust. The author also wrote a
 package to hook this into the magit diff view. This requires the ~delta~ binary.
 FIXME: Breaks log view for a particular file with patch (^L characters on commit line)
+FIXME: Too slow.
 #+begin_src elisp
-(package! magit-delta)
-#+end_src
-
-** Org fancy priorities
-
-Disable for now. I find it less clear than the default letters, and it also creates tag alignment issues.
-#+begin_src elisp
-(package! org-fancy-priorities :disable t)
-#+end_src
-
-#+begin_src elisp :tangle yes
-;; (after! org-fancy-priorities
-;;   (setq org-fancy-priorities-list '("‼" "⬆" "⬇" "━")  ; 🠵🠷 ⣿⣶⣤⣀
+;; (package! magit-delta)
 #+end_src
 
 ** Org QL
 
 [[https://github.com/alphapapa/org-ql][This package]] provides a query language for Org files.
 #+begin_src elisp
-(package! org-ql
-  :recipe (:host github :repo "sgleizes/org-ql"))
+(package! org-ql)
 #+end_src
 
 ** Org super agenda
@@ -644,8 +626,9 @@ Disable for now. I find it less clear than the default letters, and it also crea
 
 [[https://elpa.gnu.org/packages/xclip.html][This package]] enables clipboard integration in terminal emacs.
 #+begin_src elisp
-(package! xclip :pin "ef2ad92f31")
+(package! xclip :pin "9ab22517f3f2044e1c8c19be263da9803fbca26a")
 #+end_src
+
 * General configuration
 
 Make this file run (slightly) faster with lexical binding (see [[https://nullprogram.com/blog/2016/12/22/][this blog post]]
@@ -675,28 +658,27 @@ Doom exposes five (optional) variables for controlling fonts in Doom, they are:
 They all accept either a font-spec, font string (=”Input Mono-12”=), or [[https://wiki.archlinux.org/index.php/X_Logical_Font_Description][xlfd font string]].
 
 #+begin_src elisp
-(setq doom-font (font-spec :family "Fira Code" :size 12)
-      doom-variable-pitch-font (font-spec :family "Fira Sans")
-      doom-unicode-font (font-spec :family "Noto Sans Mono")
-      doom-big-font (font-spec :family "Fira Code" :size 18))
+(if (and (member "Fira Code" (font-family-list)) 
+         (member "Fira Sans" (font-family-list)))
+    (setq doom-font (font-spec :family "Fira Code" :size 12)
+          doom-variable-pitch-font (font-spec :family "Fira Sans")
+          doom-unicode-font (font-spec :family "Iosevka")
+          doom-big-font (font-spec :family "Fira Code" :size 18))
+  ;; Fallback to DejaVu if Fira fonts are not installed
+  (progn (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 12)
+               doom-variable-pitch-font (font-spec :family "DejaVu Sans")
+               doom-unicode-font (font-spec :family "Iosevka")
+               doom-big-font (font-spec :family "DejaVu Sans Mono" :size 18))
+         (setq-default line-spacing 0.1)))
 #+end_src
 
 Set preferred order for all-the-icons fonts, since some unicode characters override each other.
 #+begin_src elisp
-(after! all-the-icons
-  (defun maker/doom-init-all-the-icons-fonts-h ()
-    (when (fboundp 'set-fontset-font)
-      (dolist (font (list
-                     "all-the-icons"
-                     "FontAwesome"
-                     "Material Icons"
-                     "file-icons"
-                     "github-octicons"
-                     "Weather Icons"))
-        (set-fontset-font t 'unicode font nil 'append))
-      ;; Specific overrides for some icons
-      (set-fontset-font t (cons ? ?) "Weather Icons" nil 'prepend))))
-(advice-add #'doom-init-all-the-icons-fonts-h :override #'maker/doom-init-all-the-icons-fonts-h)
+(defun maker/font-settings ()
+  "Specific overrides for some icons"
+  (set-fontset-font t ? "Weather Icons" nil 'prepend)
+  (set-fontset-font t ? "Weather Icons" nil 'prepend))
+(add-hook 'after-setting-font-hook #'maker/font-settings)
 #+end_src
 
 Add a global hydra to change the font-size interactively.
@@ -748,31 +730,19 @@ Customize the splash image of the doom dashboard.
       +doom-dashboard-banner-file "black-hole.png")
 #+end_src
 
-Fix visually disturbing ~hl-line~ range in the dashboard.
-#+begin_src elisp
-(defun doom-dashboard-hl-button ()
-  (cons (- (point) 5) (line-end-position)))
-(add-hook! +doom-dashboard-mode
-           (setq-local hl-line-range-function #'doom-dashboard-hl-button))
-#+end_src
-
 *** Faces
 
 Customize some general faces.
 #+begin_src elisp
-(custom-set-faces!
-  ;; Use hl-line faces that are lighter instead of darker (in dark theme).
-  '(hl-line :background "#242628")
-  '(solaire-hl-line-face :background "#1d1f21")
-  ;; Use a slightly lighter region face.
-  '(region :background "#3d3e3f")
-  ;; Restore lazy-highlight face to be the same than highlight.
-  ;; This changed when upgrading to 28.1, not sure why precisely.
-  '(lazy-highlight :foreground unspecified
-                   :distant-foregound unspecified
-                   :background unspecified
-                   :weight unspecified
-                   :inherit highlight))
+(defun +maker/graphical-frame-tweaks (frame)
+  "Tweak some faces for graphical frames."
+  (interactive)
+  (when (display-graphic-p frame)
+    (custom-set-faces!
+      ;; Use hl-line faces that are lighter instead of darker (in dark theme).
+      '(hl-line :background "#242628")
+      '(solaire-hl-line-face :background "#1d1f21"))))
+(add-hook! 'after-make-frame-functions '+maker/graphical-frame-tweaks)
 #+end_src
 
 ** General settings
@@ -789,9 +759,15 @@ Tweak various general settings to more opinionated values.
       max-mini-window-height 0.25          ; Increase max-height of mini-windows
       auto-save-default t                  ; Nobody likes to loose work, I certainly don't
       truncate-string-ellipsis "…"         ; Unicode ellispis are nicer than "...", and also save precious space
-      uniquify-buffer-name-style 'forward) ; Use path to uniquify buffer names
+      uniquify-buffer-name-style 'forward  ; Use path to uniquify buffer names
+      bookmark-save-flag 1)                ; Save bookmarks every time they are modified
 
 (global-subword-mode 1)                    ; Iterate through CamelCase words
+
+;; Re-enable S-SPC in emacs-pgtk.
+;; See https://www.reddit.com/r/emacs/comments/osscfd/pgtk_emacswaylandgnome_no_shiftspace/
+(when 'pgtk-initialized
+  (setq pgtk-use-im-context-on-new-connection nil))
 #+end_src
 
 ** General bindings
@@ -799,9 +775,11 @@ Tweak various general settings to more opinionated values.
 Customize various general bindings.
 #+begin_src elisp
 (map! :leader
-      :prefix "h"
-      "I" #'Info-goto-emacs-key-command-node
-      "K" #'describe-keymap)
+      (:prefix "h"
+               "I" #'Info-goto-emacs-key-command-node
+               "K" #'describe-keymap)
+      (:prefix "f"
+               "n" #'+default/find-in-notes))
 #+end_src
 
 ** Indentation
@@ -868,6 +846,7 @@ Disable minor modes that are undesired in terminal frames.
 if in terminal."
   (interactive)
   (unless (display-graphic-p frame)
+    (remove-hook! server-after-make-frame #'centaur-tabs-mode)
     (remove-hook! doom-first-file #'centaur-tabs-mode)
     (remove-hook! doom-first-file #'beacon-mode)
     (remove-hook! doom-first-input #'evil-goggles-mode)
@@ -893,6 +872,10 @@ if in terminal."
 
 Automatically maximize and focus new graphical frames.
 #+begin_src elisp
+;; Avoid white screen on initial open
+;; See https://github.com/doomemacs/doomemacs/issues/2828
+(add-to-list 'window-system-default-frame-alist '(x . ((background-color . "#17191a"))))
+;; Maximize new frames
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (defun raise-frame-and-give-focus (&optional frame)
@@ -928,22 +911,32 @@ Focus the new window on vertical/horizontal splits.
       evil-split-window-below t)
 #+end_src
 
-Prompt for the workspace buffer to show on new window. Or not.
-#+begin_src elisp
-;; (defadvice! prompt-for-buffer (&rest _)
-;;   :after '(evil-window-split evil-window-vsplit)
-;;   (+ivy/switch-workspace-buffer))
-#+end_src
-
 *** Popups
 
 Customize general popup rules.
 #+begin_src elisp
 (after! popup
   (set-popup-rules!
-    ;; Do not quit buffers in `help-mode', `helpful-mode' from other windows.
+    ;; Do not quit buffers in `help-mode', `helpful-mode' from other windows (with ESC).
     '(("^\\*\\([Hh]elp\\|Apropos\\)"
        :slot 2 :vslot -8 :size 0.42 :select t :quit 'current))))
+#+end_src
+
+Fix restore of last popup after pressing 'q' from popup buffer.
+In +popup/quit-window, popup is not pushed to remember list since it only invokes quit-window (most of the time).
+#+begin_src elisp
+(defun +popup/quit-window (&optional arg)
+  "The regular `quit-window' sometimes kills the popup buffer and switches to a
+buffer that shouldn't be in a popup. We prevent that by remapping `quit-window'
+to this commmand."
+  (interactive "P")
+  (let ((orig-buffer (current-buffer)))
+    (when (and +popup--remember-last (+popup-buffer-p))
+      (+popup--remember (list (selected-window))))
+    (quit-window arg)
+    (when (and (eq orig-buffer (current-buffer))
+               (+popup-buffer-p))
+      (+popup/close nil 'force))))
 #+end_src
 
 *** Hydra
@@ -952,7 +945,7 @@ Add a global hydra for window management.
 #+begin_src elisp
 (after! pretty-hydra
   (pretty-hydra-define +hydra/window-management
-    (:separator "═" :title (+hydra/title-generator "Window Management" "windows" 47))
+    (:separator "═" :title (+hydra/title-generator "Window Management" "windows" 53))
     ("Switch"
      (("h" evil-window-left "left")
       ("j" evil-window-down "down")
@@ -993,8 +986,8 @@ Add a global hydra for window management.
      "Buffer"
      (("[" previous-buffer "prev")
       ("]" next-buffer "next")
-      ("," +ivy/switch-workspace-buffer "switch")
-      ("." counsel-find-file "find file")))))
+      ("," +vertico/switch-workspace-buffer "switch")
+      ("." find-file "find file")))))
 #+end_src
 
 *** Bindings
@@ -1057,7 +1050,7 @@ Customize window management bindings.
 
 Add a command to switch to the window's MRU unreal buffer (i.e. hidden buffer in doom).
 #+begin_src elisp
-(defun last-persp-buffer (&optional window count)
+(defun +maker/last-persp-buffer (&optional window count)
   "Get window's last COUNT-th perspective buffer."
   (let* ((buffer (window-buffer window))
          (prev-buffers
@@ -1069,30 +1062,31 @@ Add a command to switch to the window's MRU unreal buffer (i.e. hidden buffer in
             (window-prev-buffers))))
     (car (nthcdr (or (- count 1) 0) prev-buffers))))
 
-(defun switch-to-windows-last-persp-buffer (count)
+(defun +maker/switch-to-windows-last-persp-buffer (count)
   "Switch to current window's last COUNT-th perspective buffer."
   (interactive "p")
-  (let ((previous-place (last-persp-buffer nil count)))
+  (let ((previous-place (+maker/last-persp-buffer nil count)))
     (when previous-place
       (switch-to-buffer (car previous-place))
       (goto-char (car (last previous-place))))))
 
-(defun last-unreal-buffer (&optional window count)
+(defun +maker/last-unreal-buffer (&optional window count)
   "Get window's last COUNT-th unreal buffer."
   (let* ((buffer (window-buffer window))
          (prev-buffers
           (cl-remove-if-not (lambda (b) (and (or (doom-special-buffer-p b)
                                                  (doom-non-file-visiting-buffer-p b))
+                                             (not (+doom-dashboard-p b))
                                              (not (buffer-base-buffer b))
                                              (not (eq buffer b))))
                             (window-prev-buffers window)
                             :key #'car)))
     (car (nthcdr (or (- count 1) 0) prev-buffers))))
 
-(defun switch-to-windows-last-unreal-buffer (count)
-  "Switch to current window's last COUNT-th unrealective buffer."
+(defun +maker/switch-to-windows-last-unreal-buffer (count)
+  "Switch to current window's last COUNT-th unrealbuffer."
   (interactive "p")
-  (let ((previous-place (last-unreal-buffer nil count)))
+  (let ((previous-place (+maker/last-unreal-buffer nil count)))
     (when previous-place
       (switch-to-buffer (car previous-place))
       (goto-char (car (last previous-place))))))
@@ -1104,7 +1098,7 @@ Add a global hydra for buffer management.
 #+begin_src elisp
 (after! pretty-hydra
   (pretty-hydra-define +hydra/buffer-management
-    (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 34))
+    (:hint nil :separator "═" :title (+hydra/title-generator "Buffer Management" "files-o" 36))
     ("Tabs"
      (("h" +tabs:previous-or-goto "prev")
       ("l" +tabs:next-or-goto "next")
@@ -1112,13 +1106,13 @@ Add a global hydra for buffer management.
       ("L" centaur-tabs-move-current-tab-to-right "move right")
       ("j" centaur-tabs-forward-group "next group")
       ("k" centaur-tabs-backward-group "prev group")
-      ("g" centaur-tabs-counsel-switch-group "switch group"))
+      ("g" centaur-tabs-consult-switch-group "switch group"))
      "Switch"
-     (("b" +ivy/switch-workspace-buffer "switch")
-      ("B" +ivy/switch-buffer "switch all")
+     (("b" +vertico/switch-workspace-buffer "switch")
+      ("B" consult-buffer "switch all")
       ("n" evil-buffer-new "new")
       ("x" doom/open-scratch-buffer "scratch")
-      ("f" counsel-find-file "find file"))
+      ("f" find-file "find file"))
      "Narrowing"
      (("-" doom/toggle-narrow-buffer "toggle" :toggle (buffer-narrowed-p))
       ("w" doom/widen-indirectly-narrowed-buffer "widen indirect" :toggle doom--narrowed-base-buffer))
@@ -1129,7 +1123,7 @@ Add a global hydra for buffer management.
       ("r" revert-buffer "revert"))
      "Kill"
      (("z" bury-buffer "bury")
-      ("d" kill-current-buffer "kill")
+      ("d" doom/kill-this-buffer-in-all-windows "kill")
       ("D" doom/kill-other-buffers "kill other")
       ("C-d" doom/kill-all-buffers "kill all")))))
 #+end_src
@@ -1138,19 +1132,25 @@ Add a global hydra for buffer management.
 
 #+begin_src elisp
 (after! pretty-hydra
+  ;; Rebind buffer kill to ensure buffer is killed in all windows.
+  (map! :g [remap kill-current-buffer] #'doom/kill-this-buffer-in-all-windows)
+  ;; New buffer bindings
   ;; TODO: Override which-key descriptions...
   (map! :leader
-        "`"   #'switch-to-windows-last-persp-buffer
+        :desc "Switch to last buffer"
+        "`"   #'+maker/switch-to-windows-last-persp-buffer
         :desc "Switch to last unreal buffer"
-        "~"   #'switch-to-windows-last-unreal-buffer
+        "~"   #'+maker/switch-to-windows-last-unreal-buffer
 
         :prefix "b"
         :desc "Buffer management"
         "SPC" #'+hydra/buffer-management/body
         :desc "Widen buffer"
         "w"   #'doom/widen-indirectly-narrowed-buffer
-        "`"   #'switch-to-windows-last-persp-buffer
-        "~"   #'switch-to-windows-last-unreal-buffer))
+        :desc "Switch to last buffer"
+        "`"   #'+maker/switch-to-windows-last-persp-buffer
+        :desc "Switch to last unreal buffer"
+        "~"   #'+maker/switch-to-windows-last-unreal-buffer))
 #+end_src
 
 See [[*Centaur tabs][Centaur Tabs]].
@@ -1508,14 +1508,15 @@ and restrict buffer list to workspace buffers.
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons nil
         centaur-tabs-show-new-tab-button t
+        centaur-tabs-cycle-scope 'default
         x-underline-at-descent-line t)
   (centaur-tabs-headline-match)
 
-  ;; FIXME: Workaround https://github.com/ema2159/centaur-tabs/issues/181
-  (centaur-tabs-group-by-projectile-project)
+  ;; Magit buffers now start with a star, so centaur-tabs displays tabs in some buffers without this.
+  (add-to-list 'centaur-tabs-excluded-prefixes "*magit")
 
   ;; Override rules for grouping buffers.
-  (defun centaur-tabs-buffer-groups ()
+  (defun maker/centaur-tabs-buffer-groups ()
     "`centaur-tabs-buffer-groups' control buffers' group rules.
 
 Group centaur-tabs with mode if buffer is derived from `vterm-mode'
@@ -1524,42 +1525,51 @@ All buffer name start with * will group to \"Emacs\".
 Other buffer group by `centaur-tabs-get-group-name' with project name."
     (list
      (cond
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
+      ((when-let* ((project-name (centaur-tabs-project-name)))
+         project-name))
+      ((memq major-mode '(magit-process-mode
+                          magit-status-mode
+                          magit-log-mode
+                          magit-file-mode
+                          magit-blob-mode
+                          magit-blame-mode
+                          magit-diff-mode
+                          magit-revision-mode
+                          magit-stash-mode))
+       "Magit")
       ((derived-mode-p 'term-mode 'vterm-mode)
        "Term")
-      ;; ((derived-mode-p 'prog-mode)
-      ;;  "Coding")
       ((derived-mode-p 'dired-mode)
        "Dired")
-      ((memq major-mode '(org-mode org-agenda-mode diary-mode))
+      ((memq major-mode '(org-mode 
+                          org-src-mode 
+                          org-agenda-mode 
+                          org-agenda-log-mode 
+                          ;; diary-mode
+                          ))
        "Org")
+      ((and centaur-tabs-custom-buffer-groups
+          (funcall centaur-tabs-custom-buffer-groups)))
+      ((derived-mode-p 'emacs-lisp-mode) 
+       "Elisp")
+      ((string-equal "*" (substring (buffer-name) 0 1))
+       "Emacs")
       (t
        (centaur-tabs-get-group-name (current-buffer))))))
-  ;; Override centaur tabs to use workspace buffers as input list.
-  (defun centaur-tabs-buffer-list ()
-    "Return the list of buffers to show in tabs.
-Exclude buffers whose name starts with a space, when they are not
-visiting a file.  The current buffer is always included."
-    (centaur-tabs-filter-out
-     'centaur-tabs-hide-tab-cached
-     (delq nil
-           (cl-mapcar #'(lambda (b)
-                          (cond
-                           ;; Always include the current buffer.
-                           ((eq (current-buffer) b) b)
-                           ((buffer-file-name b) b)
-                           ((char-equal ?\  (aref (buffer-name b) 0)) nil)
-                           ((buffer-live-p b) b)))
-                      (doom-buffer-list))))))
+  (advice-add #'centaur-tabs-buffer-groups :override #'maker/centaur-tabs-buffer-groups))
+#+end_src
+
+Add a consult integration for switching tab groups.
+#+begin_src elisp
+(defun centaur-tabs-consult-switch-group ()
+  "Display a list of current buffer groups using consult."
+  (interactive)
+  (when (featurep 'consult)
+    (require 'consult)
+    (centaur-tabs-switch-group (consult--read
+     (centaur-tabs-get-groups)
+     :prompt "Centaur Tabs Groups:"
+     :sort nil))))
 #+end_src
 
 Provide additional bindings for centaur-tabs functions.
@@ -1614,7 +1624,7 @@ Provide additional bindings for centaur-tabs functions.
 
    :leader :prefix "b"
    ;; Buffer group navigation
-   :desc "Switch buffer group"   "g" #'centaur-tabs-counsel-switch-group
+   :desc "Switch buffer group"   "g" #'centaur-tabs-consult-switch-group
    :desc "Next buffer group"     "j" #'centaur-tabs-forward-group
    :desc "Previous buffer group" "k" #'centaur-tabs-backward-group
    ;; Tab movement
@@ -1667,11 +1677,6 @@ Customize general dired appearance.
         (add-to-invisibility-spec 'dired-hide-details-information))))
   ;; Disable evil-snipe as it shadows bindings for some reason.
   (add-hook! dired-mode #'turn-off-evil-snipe-override-mode))
-
-(use-package! fd-dired
-  :config
-  (setq find-ls-option '("-print0 | xargs -0 ls -ldhFN" . "-ldhF"))
-  (setq fd-dired-ls-option '("| xargs -0 ls -ldhFN" . "-ldhF")))
 #+end_src
 
 Omit some more files from being listed.
@@ -2108,7 +2113,7 @@ emacsclient $EMACSCLIENT_OPTS --eval "
     ($EVAL))"
 
 # Check modified file for unresolved conflicts.
-if [[ $MODE == 'files' && $(egrep -c '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
+if [[ $MODE == 'files' && $(grep -Ec '^(<<<<<<<|=======|>>>>>>>|####### Ancestor)' "$MERGED") != 0 ]]; then
   MERGEDSAVE=$(mktemp --tmpdir "$(basename "$MERGED").XXXXXXXX")
   cp "$MERGED" "$MERGEDSAVE"
   echo >&2 "Oops! Conflict markers detected in $MERGED"
@@ -2146,1427 +2151,6 @@ Add evil bindings for ~ediff-meta-mode~:
 (evil-collection-ediff-meta-buffer-setup)
 #+end_src
 
-** Elfeed
-
-Configure elfeed general settings.
-#+begin_src elisp
-(use-package! elfeed
-  :config
-  (setq elfeed-search-remain-on-entry 't
-        elfeed-search-sort-function #'maker/elfeed-search-entry<
-        elfeed-sort-order 'ascending)
-  (elfeed-set-max-connections 8) ; default is 16
-  (elfeed-set-timeout 60))       ; default is 30
-#+end_src
-
-*** Integration
-
-Fix elfeed-search-selected to avoid including the line below selection.
-This is properly not the right approach to this issue but is functional.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-selected (&optional ignore-region-p)
-    "Return a list of the currently selected feeds.
-
-If IGNORE-REGION-P is non-nil, only return the entry under point."
-    (let ((use-region (and (not ignore-region-p) (use-region-p))))
-      (let ((start (if use-region (region-beginning) (point)))
-            (end   (if use-region (- (region-end) 1) (point))))
-        (cl-loop for line from (line-number-at-pos start)
-                 to (line-number-at-pos end)
-                 for offset = (- line elfeed-search--offset)
-                 when (and (>= offset 0) (nth offset elfeed-search-entries))
-                 collect it into selected
-                 finally (return (if ignore-region-p
-                                     (car selected)
-                                   selected))))))
-  (advice-add #'elfeed-search-selected :override #'maker/elfeed-search-selected))
-#+end_src
-
-Override ~elfeed-db-compact~ to bypass the projectile cache.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-db-compact ()
-    "Minimize the Elfeed database storage size on the filesystem."
-    (interactive)
-    ;; `delete-file-projectile-remove-from-cache' slows down `elfeed-db-compact'
-    ;; tremendously, so we disable the projectile cache:
-    (let (projectile-enable-caching)
-      (elfeed-db-compact))))
-#+end_src
-
-*** Date Separators
-
-Add date separator overlay. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
-#+begin_src elisp
-(after! elfeed
-  (cl-defun maker/elfeed-search-add-separators (&key (min-group-size 2))
-    "Insert overlay spacers where the current date changes.
-If no group has at least MIN-GROUP-SIZE items, no spacers will be
-inserted. "
-    ;; TODO: Use column-specific functions so that, e.g. date column could be grouped by month/year
-    (cl-labels ((insert-date (date)
-                             (ov (line-beginning-position) (line-beginning-position)
-                                 'before-string (propertize (format "%s%s\n"
-                                                                    (if (= 1 (line-number-at-pos)) "" "\n")
-                                                                    date)
-                                                            'face 'elfeed-search-date-face)
-                                 'type 'date-separator))
-                (entry-date (offset)
-                            (when-let ((entry (nth offset elfeed-search-entries)))
-                              (elfeed-search-format-date (elfeed-entry-date entry)))))
-      (ov-clear)
-      (save-excursion
-        (goto-char (point-min))
-        (cl-loop with largest-group-size = 1
-                 with offset = (- 1 elfeed-search--offset) ; 1 is first line
-                 with prev-data = (entry-date offset)
-
-                 initially do (when prev-data
-                                (insert-date prev-data))
-
-                 while (not (eobp))
-                 do (progn
-                      (forward-line 1)
-                      (cl-incf offset))
-
-                 for current-data = (entry-date offset)
-                 if (not (equal current-data prev-data))
-                 do (when current-data
-                      (insert-date current-data)
-                      (setq prev-data current-data))
-                 else do (cl-incf largest-group-size)
-
-                 finally do (when (< largest-group-size min-group-size)
-                              (ov-clear))))))
-
-  (defun maker/elfeed-search-post-process ()
-    (maker/elfeed-search-add-separators :min-group-size 1))
-
-  (defun maker/elfeed-forward-day ()
-    "Move forward to the next day."
-    (interactive)
-    (let ((o (ov-in-next 'type 'date-separator)))
-      (if o (goto-char (ov-end o)))))
-  (defun maker/elfeed-backward-day ()
-    "Move backward to the previous day."
-    (interactive)
-    (let ((o (ov-in-prev 'type 'date-separator)))
-      (if o (goto-char (ov-end o)))))
-
-  (add-hook 'elfeed-search-update-hook #'maker/elfeed-search-post-process))
-#+end_src
-
-Add missing overlay commands.
-NOTE: Hopefully these overlay functions can be merged into ov.el.  See
-https://github.com/ShingoFukuyama/ov.el/issues/14
-#+begin_src elisp
-(after! ov
-  (cl-defun ov-in-prev (&optional point-or-prop prop-or-val (val 'any))
-    "Get the previous overlay satisfying a condition.
-
-If POINT-OR-PROP is a symbol, get the previous overlay with this
-property being non-nil.
-
-If PROP-OR-VAL is non-nil, the property should have this value.
-
-If POINT-OR-PROP is a number, get the previous overlay after this
-point.
-
-If PROP-OR-VAL and VAL are also specified, get the previous
-overlay after POINT-OR-PROP having property PROP-OR-VAL set to
-VAL (with VAL unspecified, only the presence of property is
-tested)."
-    (cl-labels ((any (pos)
-                     (car (overlays-in (previous-overlay-change pos) (previous-overlay-change pos))))
-                (property (pos property)
-                          (save-excursion
-                            (goto-char pos)
-                            (cl-loop while (and (not (bobp))
-                                                (goto-char (previous-overlay-change (point))))
-                                     when (cl-loop for ov in (overlays-in (point) (point))
-                                                   when (plist-get (ov-prop ov) property)
-                                                   return ov)
-                                     return it)))
-                (property-value (pos property value)
-                                (save-excursion
-                                  (goto-char pos)
-                                  (cl-loop while (and (not (bobp))
-                                                      (goto-char (previous-overlay-change (point))))
-                                           when (cl-loop for ov in (overlays-in (point) (point))
-                                                         for ov-value = (plist-get (ov-prop ov) property)
-                                                         when (equal ov-value value)
-                                                         return ov)
-                                           return it))))
-      (pcase point-or-prop
-        ((pred numberp) (pcase prop-or-val
-                          (`nil (any point-or-prop))
-                          (_ (pcase val
-                               ('any (property point-or-prop prop-or-val))
-                               (_ (property-value point-or-prop prop-or-val val))))))
-        (`nil (any (point)))
-        (_ (pcase prop-or-val
-             (`nil (property (point) point-or-prop))
-             (_ (pcase val
-                  ('any (property (point) point-or-prop))
-                  (_ (property-value point-or-prop prop-or-val val)))))))))
-
-  (cl-defun ov-in-next (&optional point-or-prop prop-or-val (val 'any))
-    "Get the next overlay satisfying a condition.
-
-If POINT-OR-PROP is a symbol, get the next overlay with this
-property being non-nil.
-
-If PROP-OR-VAL is non-nil, the property should have this value.
-
-If POINT-OR-PROP is a number, get the next overlay after this
-point.
-
-If PROP-OR-VAL and VAL are also specified, get the next overlay
-after POINT-OR-PROP having property PROP-OR-VAL set to VAL (with
-VAL unspecified, only the presence of property is tested)."
-    (cl-labels ((any (pos)
-                     (car (overlays-in (next-overlay-change pos) (next-overlay-change pos))))
-                (property (pos property)
-                          (save-excursion
-                            (goto-char pos)
-                            (cl-loop while (and (not (eobp))
-                                                (goto-char (next-overlay-change (point))))
-                                     when (cl-loop for ov in (overlays-in (point) (point))
-                                                   when (plist-get (ov-prop ov) property)
-                                                   return ov)
-                                     return it)))
-                (property-value (pos property value)
-                                (save-excursion
-                                  (goto-char pos)
-                                  (cl-loop while (and (not (eobp))
-                                                      (goto-char (next-overlay-change (point))))
-                                           when (cl-loop for ov in (overlays-in (point) (point))
-                                                         for ov-value = (plist-get (ov-prop ov) property)
-                                                         when (equal ov-value value)
-                                                         return ov)
-                                           return it))))
-      (pcase point-or-prop
-        ((pred numberp) (pcase prop-or-val
-                          (`nil (any point-or-prop))
-                          (_ (pcase val
-                               ('any (property point-or-prop prop-or-val))
-                               (_ (property-value point-or-prop prop-or-val val))))))
-        (`nil (any (point)))
-        (_ (pcase prop-or-val
-             (`nil (property (point) point-or-prop))
-             (_ (pcase val
-                  ('any (property (point) point-or-prop))
-                  (_ (property-value point-or-prop prop-or-val val))))))))))
-#+end_src
-
-*** Sorting
-
-Improved sort function. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-entry< (a b)
-    "Return non-nil if A should be sorted before B."
-    (with-no-warnings (defvar a-tags) (defvar b-tags)) ; NOTE Needed to fix void a-tags?
-    (cl-flet* ((tags (it) (elfeed-entry-tags it))
-               (day (it) (time-to-days (seconds-to-time (elfeed-entry-date it))))
-               (compare-days (a b)
-                             (let* ((a-day (day a))
-                                    (b-day (day b)))
-                               (if (= a-day b-day)
-                                   ;; Same day: compare unread, then tags, then domain, then timestamp
-                                   (cl-case (maker/elfeed-search-unread< a-tags b-tags)
-                                     (< nil)
-                                     (> 't)
-                                     (= ;; Same unread status; compare feed title
-                                      ;; Same day: compare tags, then domain, then timestamp
-                                      (cl-case (maker/elfeed-search-tags< a-tags b-tags)
-                                        (< nil)
-                                        (> 't)
-                                        (= ;; Same tags; compare feed title
-                                         (cl-case (maker/elfeed-search-feed< a b)
-                                           (< nil)
-                                           (> 't)
-                                           (= ;; Same site; compare timestamp
-                                            (< (elfeed-entry-date a) (elfeed-entry-date b))))))))
-                                 ;; Different day: compare day
-                                 (< a-day b-day)))))
-      (let* ((a-tags (tags a))
-             (b-tags (tags b))
-             (a-starred (member 'starred a-tags))
-             (b-starred (member 'starred b-tags)))
-        ;; Inverting the values because we usually use descending order
-        (cond ((and a-starred b-starred) (compare-days a b))
-              (a-starred nil)
-              (b-starred t)
-              (t (compare-days a b))))))
-
-  (defun maker/elfeed-search-unread< (a-tags b-tags)
-    "Return the relationship of A's unread tag to B's."
-    (cl-flet ((unread (it) (member 'unread it)))
-      (let ((a-unread (unread a-tags))
-            (b-unread (unread b-tags)))
-        (cond ((and a-unread b-unread) '=)
-              ((not b-unread) '<)
-              (t '>)))))
-
-  (defun maker/elfeed-search-tags< (a-tags b-tags)
-    "Return the relationship of A's tags to B's."
-    ;; Convert list of symbols to comma-separated string of tags
-    (if (not (or a-tags b-tags))
-        ;; No tags
-        '=
-      ;; Some tags
-      (if (not (and a-tags b-tags))
-          ;; One item has no tags
-          (if a-tags
-              '<
-            '>)
-        ;; Both items have tags
-        (let ((a-length (length a-tags))
-              (b-length (length b-tags)))
-          (if (/= a-length b-length)
-              ;; Different number of tags
-              (if (< a-length b-length)
-                  '<
-                '>)
-            ;; Same number of tags
-            (let ((a-string (s-join "" (mapcar #'symbol-name a-tags)))
-                  (b-string (s-join "" (mapcar #'symbol-name b-tags))))
-              (cond ((string= a-string b-string) '=)
-                    ((string< a-string b-string) '<)
-                    (t '>))))))))
-
-  (defun maker/elfeed-search-feed< (a b)
-    "Return the relationship of A's feed to B's.
-If alphabetically less or greater than, return `<' or `>',
-respectively.  If the same, return `='."
-    (cl-flet ((feed (it) (elfeed-feed-title (elfeed-entry-feed it))))
-      (let ((a-feed (feed a))
-            (b-feed (feed b)))
-        (cond ((string= a-feed b-feed) '=)
-              ((string< a-feed b-feed) '<)
-              (t '>))))))
-#+end_src
-
-Add commands to toggle custom sort (much slower).
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-toggle-sort ()
-    "Toggle the advanced sort function."
-    (interactive)
-    (if (not elfeed-search-sort-function)
-        (setq elfeed-search-sort-function #'maker/elfeed-search-entry<
-              elfeed-sort-order 'ascending)
-      (setq elfeed-search-sort-function nil
-            elfeed-sort-order 'descending))
-    (elfeed-search-update :force)))
-#+end_src
-
-*** Appearance
-
-See [[*Elfeed goodies][Elfeed goodies]].
-
-*** Commands
-**** Excerpt Display
-
-Add commands to show entry contents in the search buffer directly.
-#+begin_src elisp
-(after! elfeed
-  (defmacro maker/elfeed-search-at-entry (entry &rest body)
-    "Eval BODY with point at ENTRY."
-    (declare (indent defun))
-    `(when-let* ((n (cl-position ,entry elfeed-search-entries)))
-       (elfeed-goto-line (+ elfeed-search--offset n))
-       ,@body))
-
-  (defun maker/elfeed-search-excerpt-toggle-selected (&optional hide-all)
-    "Toggle excerpts on selected entries.
-With prefix, hide all excerpts."
-    (interactive (list current-prefix-arg))
-    (if hide-all
-        (ov-clear 'type 'excerpt)
-      (--each (elfeed-search-selected)
-        (maker/elfeed-search-at-entry it (maker/elfeed-excerpt-toggle)))))
-
-  (defun maker/elfeed-excerpt-toggle ()
-    (interactive)
-    (or (maker/elfeed-excerpt-hide)
-        (maker/elfeed-excerpt-insert)))
-
-  (defun maker/elfeed-excerpt-hide ()
-    (interactive)
-    (when-let ((pos (1+ (line-end-position)))
-               (overlay (car (ov-in 'type 'excerpt pos pos))))
-      (delete-overlay overlay)
-      t))
-
-  (defun maker/elfeed-wrap-string (string length)
-    "Wrap STRING to LENGTH."
-    (if (<= (length string) length)
-        string
-      (s-trim (with-temp-buffer
-                (insert string)
-                (let ((fill-column length))
-                  (fill-region (point-min) (point-max))
-                  (buffer-string))))))
-
-  (defun maker/elfeed-excerpt-insert ()
-    "Show excerpt of current entry."
-    (interactive)
-    (when-let* ((pos (1+ (line-end-position)))
-                (width (window-text-width))
-                (entry (elfeed-search-selected 'ignore-region))
-                (ref (elfeed-entry-content entry))
-                (content (elfeed-deref ref))
-                (excerpt (--> content
-                              (with-temp-buffer
-                                (elfeed-insert-html it)
-                                (buffer-string))
-                              (maker/elfeed-wrap-string it width)
-                              (concat it "\n")
-                              (propertize it 'face '(:inherit (variable-pitch default))))))
-      (ov pos pos
-          'type 'excerpt
-          'after-string (concat "\n" excerpt "\n"))
-      (elfeed-untag entry 'unread)
-      (elfeed-search-update-entry entry))))
-#+end_src
-
-**** Quick tag toggles
-
-Add commands to mark all items as read/unread (avoid having to select all entries).
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-mark-all-read ()
-    "Mark all entries as read in the current buffer."
-    (interactive)
-    (when (y-or-n-p "Really mark all items as read?")
-      (let* ((entries (--filter (not (member 'starred (elfeed-entry-tags it)))
-                                elfeed-search-entries)))
-        (elfeed-untag entries 'unread)
-        (elfeed-search-update :force))))
-
-  (defun maker/elfeed-search-mark-all-unread ()
-    "Mark all entries as unread in the current buffer."
-    (interactive)
-    (when (y-or-n-p "Really mark all items as unread?")
-      (let* ((entries (--filter (not (member 'starred (elfeed-entry-tags it)))
-                                elfeed-search-entries)))
-        (elfeed-tag entries 'unread)
-        (elfeed-search-update :force)))))
-#+end_src
-
-Add commands to mark more selective groups of items as read. Thanks, [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa!]]
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-toggle-tag-group (tag predicate)
-    "Mark all entries as read in the group at point, grouped by PREDICATE."
-    (let* ((offset (- (line-number-at-pos) elfeed-search--offset))
-           (current-entry (nth offset elfeed-search-entries))
-           (value (funcall predicate current-entry))
-           (starred (member 'starred (elfeed-entry-tags current-entry)))
-           (entries (--filter (and (equal value (funcall predicate it))
-                                   (equal starred (member 'starred (elfeed-entry-tags it))))
-                              elfeed-search-entries)))
-      (if (elfeed-tagged-p tag current-entry)
-          (elfeed-untag entries tag)
-        (elfeed-tag entries tag))
-      (mapc #'elfeed-search-update-entry entries)))
-
-  (defun maker/elfeed-search-toggle-day-site-as-read ()
-    "Mark all entries as read in the current site and day at point."
-    (interactive)
-    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
-                                                     (list (time-to-days (seconds-to-time (elfeed-entry-date entry)))
-                                                           (elfeed-entry-feed entry)))))
-  (defun maker/elfeed-search-toggle-site-as-read ()
-    "Mark all entries as read in the current site and day at point."
-    (interactive)
-    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
-                                                     (elfeed-entry-feed entry))))
-  (defun maker/elfeed-search-toggle-day-as-read ()
-    "Mark all entries as unread in the day at point."
-    (interactive)
-    (maker/elfeed-search-toggle-tag-group 'unread (lambda (entry)
-                                                     (time-to-days (seconds-to-time (elfeed-entry-date entry)))))))
-#+end_src
-
-Add a command to quickly toggle the =unread= tag.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-toggle-unread ()
-    "Toggle `unread' tag on selected entries."
-    (interactive)
-    (elfeed-search-toggle-all 'unread)))
-#+end_src
-
-Add a command to quickly toggle the =starred= tag.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-search-toggle-star ()
-    "Toggle `starred' tag on selected entries."
-    (interactive)
-    (elfeed-search-toggle-all 'starred)))
-#+end_src
-
-**** Other commands
-
-Add a command to delete entries from the database.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-delete-entries (pred)
-    "Delete entries from `elfeed-db-index' and `elfeed-db-entries' that PRED returns non-nil for.
-PRED is called with one argument, the entry."
-    (let ((size-before (ht-size elfeed-db-entries))
-          size-after )
-      (cl-loop for key being the hash-keys of elfeed-db-entries
-               using (hash-values entry)
-               when (funcall pred entry)
-               do (progn
-                    (avl-tree-delete elfeed-db-index (elfeed-entry-id entry))
-                    (ht-remove elfeed-db-entries key)))
-      (a-list 'before size-before
-              'after (ht-size elfeed-db-entries))))
-
-  (defun maker/elfeed-search-delete-selected ()
-    "Delete selected entries from database."
-    ;; TODO This could probably be much more efficient.
-    (interactive)
-    (when (y-or-n-p "Really delete entries from database?")
-      (--each (elfeed-search-selected)
-        (maker/elfeed-delete-entries
-         (lambda (entry)
-           (eq (elfeed-entry-id entry) (elfeed-entry-id it)))))
-      (elfeed-search-update :force))))
-#+end_src
-
-Add a command to delete old entries to keep decent performances.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-delete-old-entries (&optional before)
-    "Delete elfeed entries older than BEFORE, defaults to 2 weeks."
-    (interactive)
-    (let* ((before (or before "1 year ago"))
-           (before-time (elfeed-time-duration before))
-           (old-entries (make-hash-table :test 'equal)))
-      (maker/elfeed-delete-entries
-       (lambda (entry)
-         (let ((date (elfeed-entry-date entry)))
-           (and (< date (- (float-time) before-time))
-                (not (member 'unread (elfeed-entry-tags entry)))
-                (not (member 'starred (elfeed-entry-tags entry))))))))
-    (maker/elfeed-db-compact)
-    (elfeed-dashboard-update-links)))
-#+end_src
-
-Add a command to list dead feeds.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-dead-feeds (&optional years)
-    "List feeds that haven't posted anything in YEARS."
-    (interactive "p")
-    (with-current-buffer (get-buffer-create "*Elfeed Dead Feeds*")
-      (erase-buffer)
-      (--each (+rss-dead-feeds years) (insert it "\n"))
-      (pop-to-buffer (current-buffer)))))
-#+end_src
-
-*** Hydra
-
-Thanks again, [[https://github.com/alphapapa/unpackaged.el#filter-hydra][alphapapa!]]
-#+begin_src elisp
-(cl-defmacro unpackaged/elfeed-search-view-hydra-define (name body views)
-  "Define a pretty hydra named NAME with BODY and VIEWS.
-VIEWS is a plist: in it, each property is a string which becomes
-a column header in the hydra, and each value is a list of lists
-in this format: (KEY COMPONENT &optional LABEL).
-
-The KEY is a key sequence passed to `kbd', like \"s\" or \"S
-TAB\".  The COMPONENT is an Elfeed filter component, which may
-begin with \"+\" or \"=\", and in which spaces are automatically
-escaped as required by Elfeed.  The LABEL, if present, is a
-string displayed next to the KEY; if absent, COMPONENT is
-displayed.
-
-In the resulting hydra, when KEY is pressed, the COMPONENT is
-toggled in `elfeed-search-filter'.  It is toggled between three
-states: normal, inverse, and absent.  For example, the component
-\"+tag\" cycles between three states in the filter: \"+tag\",
-\"-tag\", and \"\".  The appropriate inverse prefix is used
-according to the component's prefix (i.e. for \"=\", the inverse
-is \"~\", and for \"\" (a plain regexp), \"!\" is used).
-
-These special components may be used to read choices from the
-Elfeed database with completion and toggle them:
-
-  :complete-age   Completes and sets the age token.
-  :complete-feed  Completes and toggles a feed token.
-  :selected-feed  Toggles the currently selected feed token.
-  :complete-tag   Completes and toggles a tag token.
-  nil             Sets default filter.
-
-A complete example:
-
-  (unpackaged/elfeed-search-view-hydra-define my/elfeed-search-view-hydra
-    (:foreign-keys warn)
-    (\"Views\"
-     ((\"@\" :complete-age \"Date\")
-      (\"d\" nil))
-     \"Status\"
-     ((\"su\" \"+unread\"))
-     \"Feed\"
-     ((\"f TAB\" :complete-feed \"Choose\")
-      (\"fE\" \"=Planet Emacslife\" \"Planet Emacslife\"))
-     \"Tags\"
-     ((\"t TAB\" :complete-tag \"Choose\")
-      (\"te\" \"+Emacs\"))
-     \"\"
-     ((\"tn\" \"+news\"))))"
-  (declare (indent defun))
-  (cl-labels ((escape-spaces (string)
-                             ;; Return STRING with spaces escaped with "\s-".  Necessary
-                             ;; because Elfeed treats all literal spaces as separating tokens.
-                             (replace-regexp-in-string (rx space) "\\s-" string t t)))
-    (let* ((completion-fns
-            (list (cons :complete-age
-                        (lambda ()
-                          (interactive)
-                          (save-match-data
-                            (let* ((date-regexp (rx (group (or bos blank) "@" (1+ digit) (1+ (not blank)))))
-                                   (date-tag (when (string-match date-regexp elfeed-search-filter)
-                                               (match-string 1 elfeed-search-filter)))
-                                   (date-new (read-string "Date: " date-tag)))
-                              (elfeed-search-set-filter
-                               (if date-tag
-                                   (replace-regexp-in-string date-regexp date-new elfeed-search-filter t t)
-                                 (concat date-new " " elfeed-search-filter)))))))
-                  (cons :complete-feed
-                        '(concat "=" (replace-regexp-in-string
-                                      (rx space) "\\s-"
-                                      (->> (hash-table-values elfeed-db-feeds)
-                                           (--map (elfeed-meta it :title))
-                                           (remove nil)
-                                           (completing-read "Feed: ")
-                                           regexp-quote) t t)))
-                  (cons :selected-feed
-                        '(concat "=" (replace-regexp-in-string
-                                      (rx space) "\\s-"
-                                      (--> (elfeed-search-selected 'ignore-region)
-                                           (elfeed-entry-feed it)
-                                           (elfeed-meta it :title)
-                                           (regexp-quote it)) t t)))
-                  (cons :complete-tag
-                        '(concat "+" (completing-read "Tag: " (elfeed-db-get-all-tags))))))
-           (body (append '(:title (concat (propertize "Filter: " 'face 'minibuffer-prompt)
-                                          (propertize elfeed-search-filter 'face 'elfeed-search-filter-face))
-                           :color amaranth :hint t :separator "═" :quit-key "<escape>")
-                         body))
-           (heads (cl-loop for (heading views) on views by #'cddr
-                           collect heading
-                           collect (cl-loop for (key component label) in views
-                                            collect
-                                            `(,key
-                                              ,(cl-typecase component
-                                                 ((and function (not null))
-                                                  ;; I don't understand why nil matches
-                                                  ;; (or lambda function), but it does,
-                                                  ;; so we have to account for it.  See
-                                                  ;; (info-lookup-symbol 'cl-typep).
-                                                  `(funcall-interactively ,component))
-                                                 (string
-                                                  `(elfeed-search-set-filter
-                                                    (unpackaged/elfeed-search-filter-toggle-component
-                                                     elfeed-search-filter ,(escape-spaces component))))
-                                                 (otherwise
-                                                  `(elfeed-search-set-filter
-                                                    ,(when component
-                                                       `(unpackaged/elfeed-search-filter-toggle-component
-                                                         elfeed-search-filter ,component)))))
-                                              ,(or label component "Default"))))))
-      ;; I am so glad I discovered `cl-sublis'.  I tried several variations of `cl-labels' and
-      ;; `cl-macrolet' and `cl-symbol-macrolet', but this is the only way that has worked.
-      (setf heads (cl-sublis completion-fns heads))
-      `(pretty-hydra-define ,name ,body
-         ,heads))))
-
-(cl-defun unpackaged/elfeed-search-filter-toggle-component (string component)
-  "Return STRING (which should be `elfeed-search-filter') having toggled COMPONENT.
-Tries to intelligently handle components based on their prefix:
-+tag, =feed, regexp."
-  (save-match-data
-    (cl-labels ((toggle (component +prefix -prefix string)
-                        (let ((+pat (rx-to-string `(seq (or bos blank)
-                                                        (group ,+prefix ,component)
-                                                        (or eos blank))))
-                              (-pat (rx-to-string `(seq (group (or bos (1+ blank)) ,-prefix ,component)
-                                                        (or eos blank)))))
-                          ;; TODO: In newer Emacs versions, the `rx' pattern `literal'
-                          ;; evaluates at runtime in `pcase' expressions.
-                          (pcase string
-                            ((pred (string-match +pat)) (rm (concat -prefix component) string))
-                            ((pred (string-match -pat)) (rm "" string))
-                            (_ (concat string " " +prefix component)))))
-                (rm (new string) (replace-match new t t string 1)))
-      (pcase component
-        ((rx bos "+" (group (1+ anything)))
-         (toggle (match-string 1 component) "+" "-" string))
-        ((rx bos "=" (group (1+ anything)))
-         (toggle (match-string 1 component) "=" "~" string))
-        ((pred string-empty-p)
-         (replace-regexp-in-string "[^\s]*\s*$" "" string))
-        (_ (toggle component "" "!" string))))))
-#+end_src
-
-The custom filter hydra.
-#+begin_src elisp
-(unpackaged/elfeed-search-view-hydra-define
-  maker/elfeed-search-filter-hydra
-  (:foreign-keys warn)
-  ("Filter"
-   (("<tab>" (lambda () (elfeed-search-live-filter)) "Set")
-    ;; FIXME: For some obscure reason, using cl-sublis to substitute with a lambda results in a
-    ;; stack overflow. The lambda is copied here to avoid the substitution as a workaround.
-    ;; ("@" :complete-age "Date")
-    ("@" (lambda ()
-           (interactive)
-           (save-match-data
-             (let* ((date-regexp (rx (group (or bos blank) "@" (1+ digit) (1+ (not blank)))))
-                    (date-tag (when (string-match date-regexp elfeed-search-filter)
-                                (match-string 1 elfeed-search-filter)))
-                    (date-new (read-string "Date: " date-tag)))
-               (elfeed-search-set-filter
-                (if date-tag
-                    (replace-regexp-in-string date-regexp date-new elfeed-search-filter t t)
-                  (concat date-new " " elfeed-search-filter))))))
-     "Date")
-    ("d" "" "Delete")
-    ("r" nil))
-   "Status"
-   (("u" "+unread")
-    ("m" "+starred"))
-   "Feed"
-   (("f <tab>" :complete-feed "Choose")
-    ("ff" :selected-feed "Selected"))
-   "Tags"
-   (("t <tab>" :complete-tag "Choose")
-    ("tn" "+news")
-    ("tl" "+list")
-    ("tf" "+fun"))))
-#+end_src
-
-*** Hooks
-
-Mark entries older than 2 weeks as read.
-#+begin_src elisp
-(after! elfeed
-  (defvar maker/elfeed-outdated-tagger
-    (elfeed-make-tagger :before "2 weeks ago"
-                        :remove 'unread))
-
-  (defvar maker/elfeed-odysee-marker
-    (elfeed-make-tagger :feed-url "lbryfeed\\.melroy\\.org"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "odysee"))))
-  (defvar maker/elfeed-bitchute-marker
-    (elfeed-make-tagger :feed-url "bitchute\\.com"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "bitchute"))))
-  (defvar maker/elfeed-youtube-marker
-    (elfeed-make-tagger :feed-url "youtube\\.com"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "youtube"))))
-  (defvar maker/elfeed-twitter-marker
-    (elfeed-make-tagger :feed-url "bridge=Twitter"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "twitter"))))
-  (defvar maker/elfeed-reddit-marker
-    (elfeed-make-tagger :feed-url "reddit\\.com"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "reddit"))))
-  (defvar maker/elfeed-github-marker
-    (elfeed-make-tagger :feed-url "github\\.com"
-                        :callback (lambda (entry) (setf (elfeed-meta (elfeed-entry-feed entry) :source) "github"))))
-
-  ;; Mark entries older than 2 weeks as read.
-  (add-hook! 'elfeed-new-entry-hook
-    (defun maker/elfeed-mark-outdated-as-read (entry)
-      (when (not (elfeed-tagged-p 'starred entry))
-        (funcall maker/elfeed-outdated-tagger entry))))
-
-  ;; Mark all video entries with an icon tag.
-  (add-hook! 'elfeed-new-entry-hook
-    (defun maker/elfeed-mark-entry-source (entry)
-      (cond
-       ((funcall maker/elfeed-odysee-marker entry))
-       ((funcall maker/elfeed-bitchute-marker entry))
-       ((funcall maker/elfeed-youtube-marker entry))
-       ((funcall maker/elfeed-twitter-marker entry))
-       ((funcall maker/elfeed-reddit-marker entry))
-       ((funcall maker/elfeed-github-marker entry))))))
-#+end_src
-
-*** Bindings
-
-Configure bindings.
-#+begin_src elisp
-(map! :after elfeed
-      :map elfeed-search-mode-map
-      :n  "C-j"        #'maker/elfeed-forward-day
-      :n  "C-k"        #'maker/elfeed-backward-day
-      :n  "<S-return>" #'maker/elfeed-search-excerpt-toggle-selected
-      :n  "R"          #'elfeed-search-fetch
-      :n  "H"          #'elfeed-apply-hooks-now
-      :n  "J"          #'elfeed-apply-autotags-now
-      :n  "t"          #'elfeed-search-set-entry-title
-      :n  "T"          #'elfeed-search-set-feed-title
-      :n  "="          #'elfeed-search-toggle-all
-      :n  "s"          #'maker/elfeed-toggle-sort
-      :n  "f"          #'elfeed-search-live-filter
-      :n  "F"          #'elfeed-search-clear-filter
-      :n  "M-f"        #'maker/elfeed-search-filter-hydra/body
-      :nv "m"          #'maker/elfeed-search-toggle-star
-      :nv "u"          #'maker/elfeed-search-toggle-unread
-      :n  "i"          #'maker/elfeed-search-toggle-day-site-as-read
-      :n  "I"          #'maker/elfeed-search-toggle-site-as-read
-      :n  "o"          #'maker/elfeed-search-toggle-day-as-read
-      :n  "a"          #'maker/elfeed-search-mark-all-read
-      :n  "A"          #'maker/elfeed-search-mark-all-unread
-      :nv "d"          #'maker/elfeed-search-delete-selected
-      :n  "L"          #'elfeed-goodies/toggle-logs
-      :n  "q"          #'elfeed-search-quit-window
-      :n  "Q"          #'elfeed-kill-buffer
-
-      :map elfeed-show-mode-map
-      :n "<M-return>" #'elfeed-show-visit
-      :n "C-j"        #'evil-forward-paragraph
-      :n "C-k"        #'evil-backward-paragraph)
-#+end_src
-
-** Elfeed org
-
-Configure elfeed-org.
-#+begin_src elisp
-(use-package! elfeed-org
-  :after elfeed
-  :config
-  (setq elfeed-search-filter "+unread +starred "
-        rmh-elfeed-org-files (list "~/Notes/elfeed/feed.org")
-        rmh-elfeed-org-tree-id "feed"
-        rmh-elfeed-org-ignore-tag "ignore"
-        rmh-elfeed-org-auto-ignore-invalid-feeds nil)
-  (elfeed-org))
-#+end_src
-
-Patch elfeed-org import function to support file-level tags.
-#+begin_src elisp
-(after! elfeed-org
-  (defun rmh-elfeed-org-import-trees (tree-id)
-    "Get trees with \":ID:\" property or tag of value TREE-ID.
-Return trees with TREE-ID as the value of the id property or
-with a tag of the same value.  Setting an \":ID:\" property is not
-recommended but I support it for backward compatibility of
-current users."
-    (org-element-map
-        (org-element-parse-buffer)
-        'headline
-      (lambda (h)
-        (when (or (member tree-id org-file-tags)
-                  (member tree-id (org-element-property :tags h))
-                  (equal tree-id (org-element-property :ID h))) h)))))
-#+end_src
-
-Prevent elfeed-org from opening source buffers unexpectedly.
-#+begin_src elisp
-(after! elfeed-org
-  (defadvice! +maker/consistent-elfeed-org-buffers (fn &rest args)
-    :around #'rmh-elfeed-org-import-headlines-from-files
-    (save-excursion (apply fn args))))
-#+end_src
-
-Add advice to elfeed-update to make sure the list of feed is up to date.
-#+begin_src elisp
-(after! elfeed-org
-  (defadvice elfeed-update (before configure-elfeed activate)
-    "Load all feed settings before elfeed updates."
-    (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
-#+end_src
-
-Prevent killing org-mode buffers from ~rmh-elfeed-org-files~.
-Also fix perspective issues: killing twice the elfeed-search buffers was messing up the persp.
-#+begin_src elisp
-(after! elfeed-org
-  (defun maker/+rss-cleanup-h ()
-    "Clean up after an elfeed session. Kills all elfeed buffers."
-    (interactive)
-    ;; FIXME This bit was added in an attempt to return to dashboard, but breaks the persp
-    ;; (if (persp-contain-buffer-p elfeed-dashboard--buf)
-    ;;     (switch-to-buffer elfeed-dashboard--buf))
-    ;; FIXME This seems to break the perspective as well, reason not understood
-    ;; (let ((buf (switch-to-prev-buffer)))
-    ;;   (when (or (null buf) (not (doom-real-buffer-p buf)))
-    ;;     (switch-to-buffer (doom-fallback-buffer))))
-    (let ((search-buffers (doom-buffers-in-mode 'elfeed-search-mode))
-          (show-buffers (doom-buffers-in-mode 'elfeed-show-mode))
-          kill-buffer-query-functions)
-      (dolist (b search-buffers)
-        (when (not (eq b (current-buffer)))
-          (with-current-buffer b
-            (remove-hook 'kill-buffer-hook #'+rss-cleanup-h :local)
-            (kill-buffer b))))
-      (mapc #'kill-buffer show-buffers))
-    ;; (+workspace/delete +rss-workspace-name)
-    )
-  (advice-add #'+rss-cleanup-h :override #'maker/+rss-cleanup-h))
-#+end_src
-
-** Elfeed dashboard
-
-Disable evil-snipe.
-#+begin_src elisp
-(after! evil-snipe
-  (add-to-list 'evil-snipe-disabled-modes 'elfeed-dashboard-mode))
-#+end_src
-
-Configure dashboard.
-#+begin_src elisp
-(use-package! elfeed-dashboard
-  :config
-  (setq elfeed-dashboard-file "~/Notes/elfeed/dashboard.org"
-        +rss-workspace-name "elfeed")
-  ;; Update feed counts on elfeed-quit
-  ;; FIXME: Too slow, fallback to manual update
-  ;; (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links)
-
-  (defun maker/elfeed-dashboard-all ()
-    "Open the full version of the elfeed dashboard"
-    (interactive)
-    (let ((elfeed-dashboard-file "~/Notes/elfeed/dashboard-all.org"))
-      (elfeed-dashboard))))
-#+end_src
-
-Add hooks to improve the usability and readability of the dashboard.
-#+begin_src elisp
-(after! elfeed-dashboard
-  ;; Remove ineffective code called on dashboard open, use hook instead.
-  ;; Also create a dedicated perspective for elfeed.
-  (defun maker/elfeed-dashboard ()
-    "Open the elfeed dasboard."
-    (interactive)
-    ;; NOTE: Dedicated workspace version.
-    ;; (+workspace-switch +rss-workspace-name t)
-    ;; (doom/switch-to-scratch-buffer)
-
-    (setq elfeed-dashboard--buf (find-file elfeed-dashboard-file))
-    (with-current-buffer elfeed-dashboard--buf
-      (elfeed-dashboard-mode))
-
-    ;; NOTE: Sidebar version (use find-file-noselect above).
-    ;; (pop-to-buffer elfeed-dashboard--buf
-    ;;                '(display-buffer-in-side-window
-    ;;                  ;; +popup-display-buffer-stacked-side-window-fn
-    ;;                  .
-    ;;                  ((side . right)
-    ;;                    (slot . 0)
-    ;;                    ;; (vslot . 0)
-    ;;                    (dedicated . t)
-    ;;                    (window-width . 60)
-    ;;                    (preserve-size . (t . nil))
-    ;;                    (window-parameters . '((no-delete-other-windows . nil))))
-    ;;                  ))
-
-    ;; (+workspace/display)
-    )
-  (advice-add #'elfeed-dashboard :override #'maker/elfeed-dashboard)
-
-  ;; Cleanup elfeed on dashboard exit.
-  (add-hook! elfeed-dashboard-mode
-    (add-hook 'kill-buffer-hook #'+rss-cleanup-h nil 'local))
-
-  ;; Really update links when opening the dashboard.
-  (add-hook! elfeed-dashboard-mode
-    (defun maker/elfeed-dashboard-setup ()
-      ;; FIXME: If dashboard is restored on startup, elfeed-dashboard--buf is nil (link refresh fails).
-      (setq elfeed-dashboard--buf (current-buffer))
-      ;; FIXME: Slow, fallback to manual update?
-      ;; (elfeed-dashboard-update-links)
-      ))
-
-  ;; Move point to the first selectable shortcut.
-  (add-hook! elfeed-dashboard-mode
-    (defun maker/elfeed-dashboard-top ()
-      (goto-line 3)))
-
-  ;; Disable evil-org-mode for now, I could not find a way to make elfeed-dashboard-mode-map
-  ;; override the evil-org-mode-map bindings, even using emulation-mode-map-alists.
-  (add-hook! elfeed-dashboard-mode
-    (defun maker/elfeed-dashboard-override-keymap ()
-      (evil-org-mode 0)))
-
-  ;; Take advantage of org-mode capabilities to improve prettiness.
-  (add-hook! elfeed-dashboard-mode
-    (defun maker/elfeed-dashboard-prettify ()
-      (rename-buffer (concat "elfeed/" (file-name-base elfeed-dashboard-file)))
-      (solaire-mode 1)
-      (centaur-tabs-local-mode 1)
-      (maker/elfeed-dashboard-emphasis)
-      (when (not org-link-descriptive)
-        (org-toggle-link-display))
-      (let ((org-image-actual-width 188))
-        (org-toggle-inline-images 'include-linked))
-      (setq-local tab-width 1) ; For whitespace-mode and alignment tabs
-      (setq-local fill-column 54)
-      (visual-fill-column-mode 1)
-      (+org-pretty-mode 1)))
-
-  ;; Remove emphasis that can appear in feed titles.
-  (defun maker/elfeed-dashboard-emphasis ()
-    (setq-local org-emphasis-alist
-                '(("*" bold)
-                  ("_" underline)
-                  ("=" org-verbatim verbatim)
-                  ("~" org-code verbatim))))
-
-  ;; Toggle additional customization on edit.
-  (defun maker/elfeed-dashboard-edit ()
-    "Edit dashboard."
-    (interactive)
-    (+org-pretty-mode 0)
-    (setq-local tab-width 2)
-    (org-toggle-inline-images)
-    (evil-org-mode 1)
-    (setq buffer-read-only nil)
-    (org-mode)
-    (org-toggle-link-display)
-    (maker/elfeed-dashboard-emphasis)
-    (centaur-tabs-local-mode -1)
-    (solaire-mode 0)
-    (visual-fill-column-mode -1)
-    (rename-buffer (file-name-nondirectory elfeed-dashboard-file)))
-  (advice-add #'elfeed-dashboard-edit :override #'maker/elfeed-dashboard-edit)
-
-  ;; Do not enable whitespace-mode in elfeed-dasboard (tabs used for icon alignment)
-  (defadvice! maker/elfeed-dashboard-prevent-whitespace-mode (fn &rest args)
-    :around #'doom-highlight-non-default-indentation-h
-    (unless (eq major-mode 'elfeed-dashboard-mode)
-      (apply fn args))))
-#+end_src
-
-Add custom command to open elfeed or the dashboard entry at point.
-#+begin_src elisp
-(after! elfeed-dashboard
-  (defun maker/elfeed-dashboard-open (&optional arg)
-    "Open the first elfeed link on the current line, or open elfeed if none are found.
-
-With a numeric prefix, opens the nth elfeed link on the current line."
-    (interactive "p") ;; FIXME Why is this not working?
-    (let ((nlink (or arg (prefix-numeric-value current-prefix-arg))))
-      (save-excursion
-        (org-beginning-of-line)
-        (if (re-search-forward org-link-any-re (line-end-position) t nlink)
-            (progn (forward-char -1) (org-open-at-point))
-          (elfeed))))))
-#+end_src
-
-Generalize status updates while elfeed is updating.
-#+begin_src elisp
-(after! elfeed-dashboard
-  (defun maker/elfeed-dashboard-update ()
-    "Fetch new feeds, if there are no updates already in progress."
-    (interactive)
-    (unless elfeed-dashboard--elfeed-update-timer
-      (elfeed-update)))
-  (advice-add #'elfeed-dashboard-update :override #'maker/elfeed-dashboard-update)
-
-  (add-hook! 'elfeed-update-init-hooks
-    (defun maker/elfeed-update-info ()
-      "Display status information while elfeed fetches feeds."
-      (unless elfeed-dashboard--elfeed-update-timer
-        (setq elfeed-dashboard--elfeed-update-timer
-              (run-with-timer 1 1 (lambda ()
-                                    (if (> (elfeed-queue-count-total) 0)
-                                        (message "elfeed: %d jobs pending..." (elfeed-queue-count-total))
-                                      (cancel-timer elfeed-dashboard--elfeed-update-timer)
-                                      (setq elfeed-dashboard--elfeed-update-timer nil)
-                                      (elfeed-dashboard-update-links)
-                                      (message "elfeed: Updated!")))))))))
-#+end_src
-
-Patch keymap function to support evil-mode and key combinations.
-#+begin_src elisp
-(after! elfeed-dashboard
-  (defun maker/elfeed-dashboard-parse-keymap ()
-    "Install key binding defined as KEYMAP:VALUE.
-
-VALUE is composed of \"keybinding | function-call\" with
-keybidning begin a string describing a key sequence and a call to
-an existing function. For example, to have 'q' to kill the
-current buffer, the syntax would be:
-
-,#+KEYMAP: q | kill-current-buffer
-
-This can be placed anywhere in the org file even though I advise
-to group keymaps at the same place."
-
-    (org-element-map (org-element-parse-buffer) 'keyword
-      (lambda (keyword)
-        (when (string= (org-element-property :key keyword) "KEYMAP")
-          (let* ((value (org-element-property :value keyword))
-                 (key   (string-trim (nth 0 (split-string value "|"))))
-                 (call  (string-trim (nth 1 (split-string value "|")))))
-            (evil-define-key* 'normal elfeed-dashboard-mode-map (kbd key)
-              (eval (car (read-from-string
-                          (format "(lambda () (interactive) (%s))" call))))))))))
-  (advice-add #'elfeed-dashboard-parse-keymap :override #'maker/elfeed-dashboard-parse-keymap))
-#+end_src
-
-Add top level binding.
-#+begin_src elisp
-(map! :after elfeed-dashboard
-      :leader
-      (:prefix-map ("o" . "open")
-       :desc "Elfeed" "n" #'elfeed-dashboard
-       :desc "Elfeed (all)" "N" #'maker/elfeed-dashboard-all))
-#+end_src
-
-** Elfeed goodies
-
-Configure basic settings and setup goodies.
-#+begin_src elisp
-(use-package! elfeed-goodies
-  :after elfeed
-  :config
-  ;; Disable font-lock-mode in elfeed buffers (prevents faces from being applied)
-  (setq font-lock-global-modes '(not elfeed-search-mode))
-
-  ;; Configure the header
-  (setq elfeed-goodies/powerline-default-separator 'slant
-        elfeed-goodies/feed-source-column-width 42
-        elfeed-goodies/tag-column-width 48
-        elfeed-goodies/wide-threshold 0.42
-        elfeed-goodies/entry-pane-size 0.5) ; Unused, using doom's popup (see popup rule)
-
-  ;; Use a special (hidden) tag for feeds with HTML entry titles.
-  (setq elfeed-goodies/html-decode-title-tags '(html))
-  ;; Declare the list of hidden tags.
-  (defvar maker/elfeed-hidden-tags '("unread" "starred" "html")
-    "Tags that are hidden from elfeed views.")
-
-  ;; Customized version of elfeed-goodies/setup
-  (defun maker/elfeed-goodies/setup ()
-    "Setup Elfeed with adaptive header bar and entries."
-    (interactive)
-    (add-hook 'elfeed-show-mode-hook #'elfeed-goodies/show-mode-setup)
-    (add-hook 'elfeed-show-mode-hook
-              (defun maker/elfeed-show-mode-fill-column ()
-                (setq visual-fill-column-width 85)))
-    (add-hook 'elfeed-new-entry-hook #'elfeed-goodies/html-decode-title)
-    (when (boundp 'elfeed-new-entry-parse-hook)
-      (add-hook 'elfeed-new-entry-parse-hook #'elfeed-goodies/parse-author))
-    (setq elfeed-search-header-function #'elfeed-goodies/search-header-draw
-          elfeed-search-print-entry-function #'maker/elfeed-goodies/entry-line-draw
-          ;; NOTE Prefer doom's horizontal popup
-          ;; elfeed-show-entry-switch #'elfeed-goodies/switch-pane
-          ;; elfeed-show-entry-delete #'elfeed-goodies/delete-pane
-          elfeed-show-entry-switch #'pop-to-buffer
-          elfeed-show-entry-delete #'+rss/delete-pane
-          elfeed-show-refresh-function #'elfeed-goodies/show-refresh--plain))
-  (advice-add #'elfeed-goodies/setup :override #'maker/elfeed-goodies/setup)
-
-  (maker/elfeed-goodies/setup))
-#+end_src
-
-*** Faces
-
-Define the color theme for header and entries.
-#+begin_src elisp
-(after! elfeed-goodies
-  ;; TODO Tricky to implement, try again if really needed
-  (defface maker/elfeed-search-shown-face '((t (:background "gray23")))
-    "Face used in search mode for the entry shown in elfeed-show-mode."
-    :group 'elfeed)
-
-  ;; Configure powerline theme and elfeed faces.
-  (custom-set-faces!
-    '(powerline-inactive0 :background "gray23")
-    '(powerline-inactive1 :background "gray37")
-    '(powerline-inactive2 :background "wheat2")
-    '(powerline-active0 :background "gray23" :foreground "wheat1")
-    '(powerline-active1 :background "gray37" :foreground "wheat1")
-    '(powerline-active2 :background "wheat2" :foreground "grey23")
-    '(elfeed-search-filter-face :foreground "#b294bb")
-    '(elfeed-search-unread-count-face :foreground "wheat1")
-    '(elfeed-search-last-update-face :foreground "grey23")
-    '(elfeed-search-date-face :foreground "wheat2")
-    '(elfeed-search-feed-face :foreground "skyblue2")
-    '(elfeed-search-tag-face :foreground "#f0c674")
-    '(elfeed-search-title-face :foreground "wheat2")
-    '(elfeed-search-unread-title-face :foreground unspecified :weight bold)))
-#+end_src
-
-*** Search Header
-
-Patch the header drawing function for ~elfeed-search-mode~.
-#+begin_src elisp
-(after! elfeed-goodies
-  ;; NOTE Updated attribution of powerline fonts
-  ;; NOTE Added face properties for filter, (unread-count and last-update
-  (defun maker/elfeed-goodies/search-header/rhs (separator-left separator-right search-filter stats update)
-    (list
-     (funcall separator-right 'mode-line 'powerline-active0)
-     (powerline-raw
-      (propertize (concat "  " search-filter (when (string-empty-p search-filter) "no filter"))
-                  'face 'elfeed-search-filter-face)
-      'powerline-active0 'r)
-     (funcall separator-right 'powerline-active0 'powerline-active1)
-     (cl-destructuring-bind (unread entry-count feed-count) stats
-       (let ((content (format "  %d/%d:%d " unread entry-count feed-count)))
-         (when url-queue
-           (cl-destructuring-bind (total-feeds queue-length in-progress) (-elfeed/queue-stats)
-             (setf content (concat content (format "(* %.0f%%%%) "
-                                                   (* (/ (- total-feeds (+ queue-length
-                                                                           in-progress))
-                                                         total-feeds 1.0) 100))))))
-         (propertize content 'face 'powerline-active1)))
-     (funcall separator-right 'powerline-active1 'powerline-active2)
-     (powerline-raw
-      (propertize (concat "  " update) 'face 'elfeed-search-last-update-face)
-      'powerline-active2 'r)))
-
-  ;; NOTE Changed Subject -> Title
-  ;; NOTE Updated attribution of powerline fonts and removed columns
-  (defun maker/elfeed-goodies/search-header/draw-wide (separator-left separator-right search-filter stats db-time)
-    (let* ((update (format-time-string "%Y-%m-%d %H:%M:%S" db-time)) ; NOTE Removed timezone
-           (lhs (list
-                 (powerline-raw
-                  (-pad-string-to " Feed" (- elfeed-goodies/feed-source-column-width 6))
-                  'powerline-active2 'l)
-                 (funcall separator-left 'powerline-active2 'mode-line)
-                 (powerline-raw
-                  (propertize " Title" 'face 'elfeed-search-title-face)
-                  'mode-line 'l)))
-           (rhs (search-header/rhs separator-left separator-right search-filter stats update)))
-      (concat (powerline-render lhs)
-              (powerline-fill 'mode-line (powerline-width rhs))
-              (powerline-render rhs))))
-
-  ;; NOTE Changed Subject -> Title
-  (defun maker/elfeed-goodies/search-header/draw-tight (separator-left separator-right search-filter stats db-time)
-    (let* ((update (format-time-string "%H:%M:%S" db-time))
-           (lhs (list
-                 (powerline-raw " Title" 'mode-line 'l)))
-           (rhs (search-header/rhs separator-left separator-right search-filter stats update)))
-      (concat (powerline-render lhs)
-              (powerline-fill 'mode-line (powerline-width rhs))
-              (powerline-render rhs))))
-
-  (advice-add #'search-header/rhs :override #'maker/elfeed-goodies/search-header/rhs)
-  (advice-add #'search-header/draw-wide :override #'maker/elfeed-goodies/search-header/draw-wide)
-  (advice-add #'search-header/draw-tight :override #'maker/elfeed-goodies/search-header/draw-tight))
-#+end_src
-
-Patch the header drawing function for ~elfeed-show-mode~.
-#+begin_src elisp
-(after! elfeed-goodies
-  (defun maker/elfeed-goodies/entry-header-line ()
-    "Print the header line for elfeed-show-mode."
-    (cl-flet ((tags (entry)
-                    (seq-difference (--map (substring-no-properties (symbol-name it))
-                                           (elfeed-entry-tags entry))
-                                    maker/elfeed-hidden-tags)))
-      (let* (;; (entry-face 'elfeed-search-feed-face)
-             ;; (entry-face (maker/elfeed-search--entry-face elfeed-show-entry))
-             (title-faces (elfeed-search--faces (elfeed-entry-tags elfeed-show-entry)))
-
-             (tags (mapconcat
-                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
-                    (tags elfeed-show-entry) ","))
-             ;; (tags (mapconcat #'symbol-name (tags elfeed-show-entry) ","))
-             (feed (elfeed-entry-feed elfeed-show-entry))
-             (entry-author (elfeed-meta elfeed-show-entry :author))
-             (feed-title (when feed (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-             (feed-title (if entry-author
-                             (concat entry-author " (" feed-title ")")
-                           feed-title))
-             (date (format-time-string "%Y-%m-%d %H:%M:%S "
-                                       (seconds-to-time (elfeed-entry-date elfeed-show-entry))))
-
-             (title (elfeed-entry-title elfeed-show-entry))
-             (title-width (- (window-width) (length tags) (length feed-title) (length date) 10))
-             (title (truncate-string-to-width title title-width nil nil 'ellipsis))
-
-             (separator-left (intern (format "powerline-%s-%s"
-                                             elfeed-goodies/powerline-default-separator
-                                             (car powerline-default-separator-dir))))
-             (separator-right (intern (format "powerline-%s-%s"
-                                              elfeed-goodies/powerline-default-separator
-                                              (cdr powerline-default-separator-dir))))
-             (lhs (list
-                   (powerline-raw (concat "  " feed-title ) 'powerline-active2 'r)
-                   (funcall separator-left 'powerline-active2 'powerline-active1)
-                   (powerline-raw (propertize (concat " " title " ") 'face title-faces) 'powerline-active1 'l)
-                   (funcall separator-left 'powerline-active1 'mode-line)))
-             (rhs (list
-                   (funcall separator-right 'mode-line 'powerline-active1)
-                   (powerline-raw (concat "  " tags " ") 'powerline-active1)
-                   (funcall separator-right 'powerline-active1 'powerline-active2)
-                   (powerline-raw (concat " " date) 'powerline-active2 'l))))
-        (concat
-         (powerline-render lhs)
-         (powerline-fill 'mode-line (powerline-width rhs))
-         (powerline-render rhs)))))
-  (advice-add #'elfeed-goodies/entry-header-line :override #'maker/elfeed-goodies/entry-header-line))
-#+end_src
-
-*** Search Entries
-
-Add a function to define how the face is selected for each entry.
-#+begin_src elisp
-(after! elfeed-goodies
-  (defun maker/elfeed-search--entry-face (entry)
-    "Return face for ENTRY."
-    (let ((rainbow-identifiers-cie-l*a*b*-color-count 256)
-          (rainbow-identifiers-cie-l*a*b*-lightness 60)
-          (rainbow-identifiers-cie-l*a*b*-saturation 27))
-      (or (--> entry
-               (elfeed-entry-feed it)
-               (elfeed-feed-meta it)
-               (-let (((&plist :background background :foreground foreground) it)
-                      (face nil))
-                 (when (or background foreground)
-                   (when background
-                     (setq face (plist-put face :background background)))
-                   (when foreground
-                     (setq face (plist-put face :foreground foreground)))
-                   face)))
-          (->> entry
-               elfeed-entry-feed
-               elfeed-feed-url
-               rainbow-identifiers--hash-function
-               rainbow-identifiers-cie-l*a*b*-choose-face)))))
-#+end_src
-
-Add functions to define how icons are selected for each entry.
-#+begin_src elisp
-(after! elfeed-goodies
-  (defun maker/elfeed-search--entry-status (entry)
-    "Return the status character for ENTRY."
-    (let* ((unread-p (member 'unread (elfeed-entry-tags entry)))
-           (starred-p (member 'starred (elfeed-entry-tags entry))))
-      (cond ((and unread-p starred-p) "") ;  
-            (starred-p "") ; ★
-            (unread-p "•")
-            (t " "))))
-
-  (defun maker/elfeed-search--entry-icon (entry)
-    "Return the feed icon for ENTRY."
-    (let* ((feed (elfeed-entry-feed entry))
-           (feed-source (elfeed-meta feed :source)))
-      (pcase feed-source
-        ("odysee"   (all-the-icons-faicon "renren"         :height 1.0  :v-adjust 0)) ; ""
-        ("bitchute" (all-the-icons-faicon "circle-o-notch" :height 0.85 :v-adjust 0)) ; ""
-        ("youtube"  (all-the-icons-faicon "youtube-play"   :height 0.9  :v-adjust 0)) ; ""
-        ("twitter"  (all-the-icons-faicon "twitter"        :height 1.0  :v-adjust 0)) ; ""
-        ("reddit"   (all-the-icons-faicon "reddit-alien"   :height 0.9  :v-adjust 0)) ; ""
-        ("github"   (all-the-icons-faicon "github"         :height 1.0  :v-adjust 0)) ; ""
-        (_ "  ")))))
-#+end_src
-
-Custom entry-draw function, mainly thanks to [[https://gist.github.com/alphapapa/80d2dba33fafcb50f558464a3a73af9a][alphapapa]].
-#+begin_src elisp
-(after! elfeed-goodies
-  (defun maker/elfeed-goodies/entry-line-draw (entry)
-    "Print ENTRY to the buffer."
-    (cl-flet ((add-faces (str &rest faces)
-                         (dolist (face faces str)
-                           (add-face-text-property 0 (length str)
-                                                   face 'append str)))
-              (tags (entry)
-                    (seq-difference (--map (substring-no-properties (symbol-name it))
-                                           (elfeed-entry-tags entry))
-                                    maker/elfeed-hidden-tags)))
-      (let* (;; Choose color and faces first
-             ;; See https://www.reddit.com/r/emacs/comments/7a976a/face_applied_to_result_of_symbolname_becomes/
-             (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-             (entry-face (maker/elfeed-search--entry-face entry))
-             (entry-status (maker/elfeed-search--entry-status entry))
-             (entry-icon (maker/elfeed-search--entry-icon entry))
-
-             ;; Feed
-             (feed (elfeed-entry-feed entry))
-             (feed-title (when feed (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-             (feed-width elfeed-goodies/feed-source-column-width)
-             (feed-column (elfeed-format-column feed-title (- feed-width 4) :left))
-             (feed-column (apply #'add-faces feed-column entry-face title-faces))
-
-             ;; Tags
-             (tags (mapconcat
-                    (lambda (e) (propertize e 'face 'elfeed-search-tag-face))
-                    (tags entry) ","))
-             ;; (tags-width elfeed-goodies/tag-column-width)                     ; Fixed alignment
-             (tags-width (min (length tags) elfeed-goodies/tag-column-width)) ; Dynamic Alignment
-             (tags-column (elfeed-format-column tags tags-width :right))
-             (tags-column (apply #'add-faces tags-column title-faces))
-
-             ;; Title
-             (title (substring-no-properties (or (elfeed-meta entry :title) (elfeed-entry-title entry) "")))
-             (title-width (- (window-width) feed-width tags-width 3))
-             (title-column (elfeed-format-column
-                            (truncate-string-to-width title title-width nil nil 'ellipsis)
-                            title-width :left))
-             (title-column (apply #'add-faces title-column title-faces))
-
-             (line (propertize
-                    (concat entry-status " "
-                            (if (>= (window-width) (* (frame-width) elfeed-goodies/wide-threshold))
-                                (concat feed-column " " entry-icon " " title-column " " tags-column)
-                              (apply #'add-faces title entry-face title-faces)))
-                    'kbd-help title)))
-        (insert line))))
-
-  (advice-add #'elfeed-goodies/entry-line-draw :override #'maker/elfeed-goodies/entry-line-draw))
-#+end_src
-
-Replace "End of entries." string by empty-list placeholder.
-#+begin_src elisp
-(after! elfeed
-  (defun elfeed-search-update (&optional force)
-    "Update the elfeed-search buffer listing to match the database.
-When FORCE is non-nil, redraw even when the database hasn't changed."
-    (interactive)
-    (with-current-buffer (elfeed-search-buffer)
-      (when (or force (and (not elfeed-search-filter-active)
-                           (< elfeed-search-last-update (elfeed-db-last-update))))
-        (elfeed-save-excursion
-          (let ((inhibit-read-only t)
-                (standard-output (current-buffer)))
-            (erase-buffer)
-            (elfeed-search--update-list)
-            (dolist (entry elfeed-search-entries)
-              (funcall elfeed-search-print-entry-function entry)
-              (insert "\n"))
-            (when (not elfeed-search-entries) (insert "No entries.\n")) ; NOTE Changed to placeholder
-            (setf elfeed-search-last-update (float-time))))
-        (run-hooks 'elfeed-search-update-hook)))))
-#+end_src
-
-Remove string sort on tags to keep original order by tag-inheritance from org file.
-#+begin_src elisp
-(after! elfeed
-  (defun maker/elfeed-normalize-tags (tags &rest more-tags)
-    "Return the normalized tag list for TAGS."
-    (let ((all (apply #'append tags (nconc more-tags (list ())))))
-      (cl-delete-duplicates all)))
-  (advice-add #'elfeed-normalize-tags :override #'maker/elfeed-normalize-tags))
-#+end_src
-
-*** Bindings
-
-Add goodies-specific bindings.
-#+begin_src elisp
-(map! :after elfeed-goodies
-      :map elfeed-show-mode-map
-      :n "C-S-j" #'elfeed-goodies/split-show-next
-      :n "C-S-k" #'elfeed-goodies/split-show-prev
-      :n "n" #'elfeed-goodies/split-show-next
-      :n "p" #'elfeed-goodies/split-show-prev)
-#+end_src
-
 ** Evil
 *** Settings
 
@@ -3577,6 +2161,12 @@ Customize general evil options.
       evil-cross-lines t             ; Allow horizontal ops to move to the next line (or not)
       evil-move-beyond-eol t         ; Allow cusor to move one character past the end of the line
       evil-kill-on-visual-paste nil) ; Do not kill replaced text in visual mode
+#+end_src
+
+Use drag-stuff.
+#+begin_src elisp
+  (use-package! drag-stuff
+    :defer t)
 #+end_src
 
 Enable evil-mode in the minibuffer. Or not.
@@ -3812,7 +2402,6 @@ Add the missing arrow-key variants of the window navigation commands.
  ;; Bind undo in visual mode (undo in region)
  :v "u"               #'evil-undo
  ;; Customize RET behavior for normal/insert modes
- :i "<return>"        #'+default/newline
  :i "S-<return>"      #'newline-and-indent ;; NOTE: Difference with default-indent-new-line is not clear
  :n "S-<return>"      #'newline-and-indent
  ;; Rebind fold commands
@@ -3831,6 +2420,8 @@ Add the missing arrow-key variants of the window navigation commands.
  :nv "gA"             #'evil-lion-right
  :nv "gl"             nil
  :nv "gL"             nil
+ ;; Rebind the most useful, and my only, avy command
+ :nv "M-s"            #'evil-avy-goto-char-timer
  ;; Rearrange some narrow/indirect buffer commands
  :nv "zn"             #'+evil:narrow-buffer
  :nv "zN"             #'+evil:narrow-buffer-indirect
@@ -3842,6 +2433,12 @@ Add the missing arrow-key variants of the window navigation commands.
  (:map evil-mc-key-map
   :nv "C-p" nil
   :nv "C-n" nil)
+ ;; Fix inconsistent bindings in eval minibuffer
+ (:map read--expression-map
+  :g "C-j" #'next-history-element
+  :g "C-k" #'previous-history-element
+  :g "M-j" #'next-history-element
+  :g "M-k" #'previous-history-element)
  ;; Rebind multiple-cursors hydra
  (:when (modulep! :editor multiple-cursors)
   :nv "M-z"             #'evil-mc-hydra/body)
@@ -3882,12 +2479,18 @@ Customize evil-goggles visual hints.
 (use-package! evil-goggles
   :config
   (custom-set-faces!
+    ;; Just inherit from region, do not override background
+    '(evil-goggles-default-face  :background nil)
+    ;; Specialize faces
+    '(evil-goggles-yank-face  :inherit evil-goggles-default-face)
     '(evil-goggles-paste-face  :inherit custom-state)
     '(evil-goggles-indent-face :inherit custom-modified)
+    '(evil-goggles-surround-face :inherit custom-modified)
     '(evil-goggles-change-face :inherit custom-invalid)
     '(evil-goggles-delete-face :inherit custom-invalid))
-  (setq evil-goggles-enable-delete nil
-        evil-goggles-enable-change nil
+  ;; Might be annoying for change/delete, keept this here for easy turnoff.
+  (setq evil-goggles-enable-delete 't
+        evil-goggles-enable-change 't
         evil-goggles-duration 0.15)
 
   ;; Add custom delete command to the list of commands
@@ -3896,18 +2499,6 @@ Customize evil-goggles visual hints.
               :face evil-goggles-delete-face
               :switch evil-goggles-enable-delete
               :advice evil-goggles--generic-blocking-advice)))
-#+end_src
-
-** Evil visual mark
-
-Customize, disabled by default for now as I often mistype and set marks unwillingly. Enable as needed.
-#+begin_src elisp
-(use-package! evil-visual-mark-mode
-  :config
-  (custom-set-faces!
-    '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
-  ;; (evil-visual-mark-mode)
-)
 #+end_src
 
 ** Evil terminal cursor
@@ -3924,6 +2515,18 @@ Override tmux check function as it doesn't seem to work with tmux escape sequenc
       (defun etcc--in-tmux? () nil))))
 #+end_src
 
+** Evil visual mark
+
+Customize, disabled by default for now as I often mistype and set marks unwillingly. Enable as needed.
+#+begin_src elisp
+;; (use-package! evil-visual-mark-mode
+;;   :config
+;;   (custom-set-faces!
+;;     '(evil-visual-mark-face :weight bold :foreground "#0d0d0d" :background "#de935f"))
+;;   (evil-visual-mark-mode)
+;; )
+#+end_src
+
 ** Fasd
 
 #+begin_src elisp
@@ -3932,47 +2535,6 @@ Override tmux check function as it doesn't seem to work with tmux escape sequenc
   (map! :leader
         :desc "Find frecent file" ">" #'fasd-find-file)
   (global-fasd-mode))
-#+end_src
-
-** Fast scroll
-
-#+begin_src elisp
-(use-package! fast-scroll
-  :config
-  (setq fast-scroll-throttle 0.1)
-  ;; Add scroll-up/down commands for mouse wheel.
-  (defun fast-scroll-advice-scroll-functions ()
-    "Wrap as many scrolling functions that we know of in this advice."
-    (interactive)
-    (advice-add #'scroll-up-command :around #'fast-scroll-run-fn-minimally)
-    (advice-add #'scroll-down-command :around #'fast-scroll-run-fn-minimally)
-    (advice-add #'evil-scroll-up :around #'fast-scroll-run-fn-minimally)
-    (advice-add #'evil-scroll-down :around #'fast-scroll-run-fn-minimally)
-    (advice-add #'scroll-up :around #'fast-scroll-run-fn-minimally)
-    (advice-add #'scroll-down :around #'fast-scroll-run-fn-minimally))
-  (defun fast-scroll-unload-function ()
-    "Remove advice added by `fast-scroll-advice-scroll-functions'.
-Note this function's name implies compatibility with `unload-feature'."
-    (interactive)
-    (advice-remove #'scroll-up-command #'fast-scroll-run-fn-minimally)
-    (advice-remove #'scroll-down-command #'fast-scroll-run-fn-minimally)
-    (advice-remove #'evil-scroll-up #'fast-scroll-run-fn-minimally)
-    (advice-remove #'evil-scroll-down #'fast-scroll-run-fn-minimally)
-    (advice-remove #'scroll-up #'fast-scroll-run-fn-minimally)
-    (advice-remove #'scroll-down #'fast-scroll-run-fn-minimally)
-    nil)
-  ;; Remove modes from default modeline.
-  (defun fast-scroll-default-mode-line ()
-    "An Emacs default/bare bones mode-line."
-    (list "%e" mode-line-front-space
-          mode-line-client
-          mode-line-modified
-          mode-line-frame-identification
-          mode-line-buffer-identification "   "
-          mode-line-position
-          "  " mode-line-misc-info mode-line-end-spaces))
-  ;; Bind mouse button to toggle mode.
-  (map! :g "<mouse-8>" #'fast-scroll-mode))
 #+end_src
 
 ** Flyspell
@@ -4018,7 +2580,10 @@ Customize flycheck bindings.
         (:map flycheck-error-list-mode-map
          :n "r" #'flycheck-error-list-check-source
          :n "f" #'flycheck-error-list-set-filter
-         :n "F" #'flycheck-error-list-reset-filter)))
+         :n "F" #'flycheck-error-list-reset-filter))
+
+  ;; Fix golangci-lint not working...
+  (setq flycheck-golangci-lint-executable "golangci-lint"))
 #+end_src
 
 ** Format
@@ -4028,9 +2593,7 @@ Override format-on-save default enabled modes to add emacs-lisp-mode.
 (setq +format-on-save-enabled-modes
       '(not sql-mode         ; sqlformat is currently broken
             tex-mode         ; latexindent is broken
-            latex-mode
-            elfeed-search-mode
-            elfeed-show-mode))
+            latex-mode))
 #+end_src
 
 *** Go
@@ -4084,12 +2647,20 @@ Map format all global toogle binding and remap flycheck toggle.
 #+begin_src elisp
 (map! :leader :prefix "t"
       :desc "Format"
-      "f" #'format-all-mode
+      "f" #'apheleia-global-mode
       :desc "Flycheck"
       "v" #'flycheck-mode)
 #+end_src
 
 ** Go
+*** Flycheck
+
+Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
+#+begin_src elisp
+(after! flycheck
+  (set-next-checker! 'go-mode 'lsp 'golangci-lint))
+#+end_src
+
 *** Bindings
 
 Customize go-mode specific bindings.
@@ -4219,147 +2790,6 @@ Configure ~go-gen-test~ integration.
   :hook (Info-selection . info-colors-fontify-node))
 #+end_src
 
-** Ivy
-
-Configure ivy / counsel.
-#+begin_src elisp
-(after! ivy
-  (setq counsel-yank-pop-preselect-last t
-        counsel-yank-pop-truncate-radius 2
-        counsel-yank-pop-separator "\n---\n"))
-#+end_src
-
-Disable Ivy buffer previews. It seems that previewing buffers from other workspaces adds them to the
-current workspace, which is totally unwanted behavior.
-Also, this setting creates really unwanted behavior when selecting other ivy actions than the default.
-The action is executed on every selected item, as well as during some other ivy commands.
-Finally, when switching workspace buffer and cycling though actions in hydra with w/s,
-when reaching the 'find-file' action, the ivy buffer changes to find-file.
-#+begin_src elisp
-(after! ivy
-  (setq +ivy-buffer-preview nil))
-#+end_src
-
-Override doom's ~+ivy-format-function-line-or-arrow~ and use the line highlight,
-even in terminal mode.
-#+begin_src elisp
-(after! ivy
-  (setf (alist-get 't ivy-format-functions-alist)
-        #'ivy-format-function-line))
-#+end_src
-
-Use a cache for ivy-rich transformations on ~switch-buffer~.
-See the [[https://github.com/Yevgnen/ivy-rich/issues/87][related issue]].
-#+begin_src elisp
-(after! ivy-rich
-  (defvar ivy-rich--ivy-switch-buffer-cache
-    (make-hash-table :test 'equal))
-
-  (define-advice ivy-rich--ivy-switch-buffer-transformer
-      (:around (old-fn x) cache)
-    (let ((ret (gethash x ivy-rich--ivy-switch-buffer-cache)))
-      (unless ret
-        (setq ret (funcall old-fn x))
-        (puthash x ret ivy-rich--ivy-switch-buffer-cache))
-      ret))
-
-  (define-advice +ivy/switch-buffer
-      (:before (&rest _) ivy-rich-reset-cache)
-    (clrhash ivy-rich--ivy-switch-buffer-cache)))
-#+end_src
-
-Customize ivy-posframe.
-#+begin_src elisp
-(after! ivy-posframe
-  (setq ivy-posframe-min-height ivy-height
-        ivy-posframe-min-width 90
-        ivy-posframe-size-function #'maker/ivy-posframe-get-size
-        ivy-posframe-border-width 8
-        ivy-posframe-parameters `((left-fringe . 2)
-                                  (right-fringe . 2)))
-
-  ;; posframe doesn't work well with async sources (the posframe will
-  ;; occasionally stop responding/redrawing), and causes violent resizing of the
-  ;; posframe.
-  (dolist (fn '(swiper-isearch))
-    (setf (alist-get fn ivy-posframe-display-functions-alist)
-          #'ivy-display-function-fallback))
-
-  (defun maker/ivy-posframe-get-size ()
-    "Dynamic, fixed size function used by `ivy-posframe-size-function'."
-    (setq ivy-posframe-width (round (* (frame-width) 0.618))) ; NOTE EDIT
-    (list
-     :height ivy-posframe-height
-     :width ivy-posframe-width
-     :min-height (or ivy-posframe-min-height
-                     (let ((height (+ ivy-height 1)))
-                       (min height (or ivy-posframe-height height))))
-     :min-width (or ivy-posframe-min-width
-                    (let ((width (round (* (frame-width) 0.618))))
-                      (min width (or ivy-posframe-width width))))))
-
-  (setf (alist-get t ivy-posframe-display-functions-alist)
-        #'+ivy-display-at-frame-center-near-bottom-fn))
-#+end_src
-
-Extend the default hydra for ivy.
-#+begin_src elisp
-;; Fix regression in emacs 29.1: error Eager macro-expansion failure: (void-variable hydra-ivy/heads)
-(eval-when-compile (require 'ivy-hydra))
-
-(after! ivy-hydra
-  (defhydra+ hydra-ivy (:hint nil :color pink)
-    "
-
-                                 🔎 Ivy
-
-Action _w_/_s_/_a_: %s(ivy-action-name)
-
- Move     ^^^^^^^^^^   Call      ^^^^   Mark  ^^   Options^^
-══════════^^^^^^^^^^═════════════^^^^═══════^^══════════^^══════════════════════════════
- _g_ ^ ^ _k_ ^ ^ _u_   _o_ccur _e_dit   _m_ark     _c_alling: %-7s(if ivy-calling \"on\" \"off\")  _C_ase-fold: %-10`ivy-case-fold-search
- ^↕^ _h_ ^+^ _l_ ^🡙^   _RET_   done^^   _t_oggle   _M_atcher: %-7s(ivy--matcher-desc)^^^^^^^^^^^^  _T_runcate: %-11`truncate-lines
- _G_ ^ ^ _j_ ^ ^ _d_   _M-RET_ call^^   _U_nmark   _<_/_>_: shrink/grow^^^^^^^^^^^^^^^^^^^^^^^^^^  _?_: help
-
-"
-    ;; Movement
-    ("l" ivy-alt-done)
-    ("h" ivy-backward-kill-word)
-    ;; Restore mark bindings
-    ("m"            ivy-mark)
-    ("U"            ivy-unmark)
-    ("<deletechar>" ivy-unmark-backward)
-    ("t"            ivy-toggle-marks)
-    ;; Miscellaneous
-    ("<escape>" nil)
-    ("M-o"      nil)
-    ("C-j"      #'ivy-next-line) ; Forced to rebind, no way to restore as foreign-key?
-    ("M-RET"    #'ivy-call)
-    ("e"        #'+ivy/woccur :color blue)
-    ("?"        ivy-help)))
-#+end_src
-
-Customize bindings.
-#+begin_src elisp
-(after! ivy
-  (map! :map ivy-minibuffer-map
-        "C-h"        #'ivy-backward-kill-word
-        "C-<return>" #'ivy-immediate-done
-        "M-a"        #'ivy-read-action
-        "M-t"        #'ivy-toggle-marks
-        "M-m"        #'ivy-mark
-        "M-u"        #'ivy-unmark
-        "M-j"        #'ivy-next-history-element
-        "M-k"        #'ivy-previous-history-element
-
-        :map (ivy-occur-mode-map ivy-occur-grep-mode-map)
-        :n "M-RET"   #'ivy-occur-press
-        :n "a"       #'ivy-occur-read-action
-        :n "c"       #'ivy-occur-toggle-calling
-        :n "d"       #'ivy-occur-delete-candidate
-        :n "C-o"     #'ivy-occur-dispatch))
-#+end_src
-
 ** Ligatures
 
 Remove annoying programming ligatures.
@@ -4420,12 +2850,6 @@ Enable LSP in go.mod files.
 #+begin_src elisp
 (after! lsp-mode
   (add-hook 'go-dot-mod-mode-hook #'lsp-deferred))
-#+end_src
-
-Chain flycheck ~lsp~ checker with ~golangci-lint~ checker.
-#+begin_src elisp
-(after! lsp-mode
-  (set-next-checker! 'go-mode 'lsp 'golangci-lint))
 #+end_src
 
 *** Bindings
@@ -4514,16 +2938,17 @@ Customize bindings.
 
 ** Magit delta
 
+Disabled, too slow.
 #+begin_src elisp
-(use-package! magit-delta
-  :after magit
-  :config
-  (setq magit-delta-delta-args
-        '("--features" "truecolor"
-          "--max-line-distance" "0.6"
-          "--24-bit-color" "always"
-          "--color-only"))
-  (magit-delta-mode))
+;; (use-package! magit-delta
+;;   :after magit
+;;   :config
+;;   (setq magit-delta-delta-args
+;;         '("--features" "truecolor"
+;;           "--max-line-distance" "0.6"
+;;           "--24-bit-color" "always"
+;;           "--color-only"))
+;;   (magit-delta-mode))
 #+end_src
 
 ** Man/Woman
@@ -4549,7 +2974,8 @@ Configure region behavior for org commands.
 #+begin_src elisp
 (after! org
   (setq org-loop-over-headlines-in-active-region 'start-level
-        org-agenda-loop-over-headlines-in-active-region 't))
+        org-agenda-loop-over-headlines-in-active-region 't
+        org-id-link-to-org-use-id 'create-if-interactive-and-no-custom-id))
 #+end_src
 
 Configure the context shown when revealing an org heading.
@@ -4925,17 +3351,6 @@ Configure default tags behavior and appearance.
     '(org-tag-group :foreground unspecified :weight unspecified)))
 #+end_src
 
-Configure tags alignment.
-#+begin_src elisp
-(after! org
-  (setq org-tags-column -132)
-  ;; Workaround incorrect tag alignments on headings containing links with a title
-  (add-hook 'org-cycle-hook
-            (defun maker/org-cycle-align-tags (state)
-              (setq org-tags-column (- 3 (window-body-width)))
-              (when (not (memq state '(overview folded))) (org-align-tags 't)))))
-#+end_src
-
 *** Dates & Times
 
 Configure org-habit.
@@ -5064,9 +3479,6 @@ Configure org-capture settings.
         org-capture-bookmark t
         org-capture-use-agenda-date t)
 
-  (defvar +org-capture-feed-file (expand-file-name "elfeed/feed.org" org-directory)
-    "Org capture target for RSS feed entries.")
-
   ;; Override default frame parameters for the external capture frame.
   (add-to-list '+org-capture-frame-parameters '(fullscreen . nil))
   (add-to-list '+org-capture-frame-parameters '(width . 180)) ; To match org-tags-column
@@ -5084,10 +3496,20 @@ Configure org-capture settings.
 
 #+begin_src elisp
 (after! org-capture
+  (defun +org--get-clipboard ()
+    "Return clipboard contents in a portable way."
+    (cond
+     ((display-graphic-p)
+      (gui-get-selection 'CLIPBOARD 'UTF8_STRING))
+     ((fboundp 'interprogram-paste-function)
+      (funcall interprogram-paste-function))
+     (t nil)))
+
   (defun +org-capture-cliplink-url ()
     "Return org link with clipped title if X clipboard contains an HTTP(S) URL."
-    (let ((content (org-get-x-clipboard 'CLIPBOARD)))
-      (when (string-match "^https?://" content)
+    (let ((content (+org--get-clipboard)))
+      (when (and (stringp content) 
+                 (string-match "^https?://" content))
         (org-cliplink-capture))))
 
   (defun +org-capture-annotation ()
@@ -5121,29 +3543,29 @@ Define the default capture templates.
                    :template ("* %?"
                               "\n%(+org-capture-annotation)"
                               "\n%i"))
+                  ("Recipe" :keys "r"
+                   :file "~/Notes/cheph.org"
+                   :template ("* %?"
+                              "\n%(+org-capture-annotation)"
+                              "\n%i"))
                   ;; Event/Appointment for agenda
-                  ("Event" :keys "e"
-                   :olp ("Calendrier" "Activités")
-                   :template ("* %? %(org-set-tags \"event\")"
-                              "\n%^{Event}t"
-                              "\n%(+org-capture-annotation)"
-                              "\n%i"))
-                  ("Appointment" :keys "a"
-                   :olp ("Calendrier" "Activités")
-                   :template ("* %? %(org-set-tags \"appointment\")"
-                              "\n%^{Appointment}t"
-                              "\n%(+org-capture-annotation)"
-                              "\n%i"))
+                  ;; ("Event" :keys "e"
+                  ;;  :olp ("Calendrier" "Activités")
+                  ;;  :template ("* %? %(org-set-tags \"event\")"
+                  ;;             "\n%^{Event}t"
+                  ;;             "\n%(+org-capture-annotation)"
+                  ;;             "\n%i"))
+                  ;; ("Appointment" :keys "a"
+                  ;;  :olp ("Calendrier" "Activités")
+                  ;;  :template ("* %? %(org-set-tags \"appointment\")"
+                  ;;             "\n%^{Appointment}t"
+                  ;;             "\n%(+org-capture-annotation)"
+                  ;;             "\n%i"))
                   ;; Journal entry
                   ("Journal" :keys "j"
                    :datetree t :olp ("Développement" "Journal")
                    :template ("* %?"
                               "\n%i"))
-                  ;; RSS feed source for elfeed
-                  ("Feed" :keys "f"
-                   :file +org-capture-feed-file :olp ("Inbox")
-                   :template "* %?%(+org-capture-cliplink-url)"
-                   :empty-lines 0)
 
                   ;; Common task templates
                   ("Task" :keys "t"
@@ -5160,10 +3582,7 @@ Define the default capture templates.
                       ("Listen" :keys "l" :olp ("Divertissement" "Musique") :activity-tag "listen")
                       ("Watch"  :keys "w" :olp ("Divertissement" "Cinéma")  :activity-tag "watch")))
                     )))
-                 ))))
-
-  ;; Unset counsel-projectile templates which would duplicate the advice on 'counsel-org-capture.'
-  (setq counsel-projectile-org-capture-templates nil))
+                 )))))
 #+end_src
 
 Define generic capture templates used in other contexts.
@@ -5214,14 +3633,14 @@ Advise existing capture commands and add project capture commands.
     "Get the org capture target file based on current or selected context."
     (let* ((project-root (or project-root (projectile-project-root))))
       (cond
-       ;; Use the current buffer only if in org-mode
-       ((and (eq +maker/org-view-scope 'buffer)
-             (eq major-mode 'org-mode))
-        (buffer-file-name))
        ;; Use the current project notes file if available
        ((and (eq +maker/org-view-scope 'buffer)
              project-root)
         (+maker/projectile-get-project-notes-file project-root))
+       ;; Use the current buffer only if in org-mode
+       ((and (eq +maker/org-view-scope 'buffer)
+             (eq major-mode 'org-mode))
+        (buffer-file-name))
        ;; Use the selected org file if set
        ((and (stringp +maker/org-view-scope)
              (file-name-absolute-p +maker/org-view-scope))
@@ -5233,7 +3652,7 @@ Advise existing capture commands and add project capture commands.
 
   (defadvice! maker/org-context-capture-ad (fn &rest args)
     "Add additional capture templates based on current or selected context."
-    :around (list #'org-capture #'counsel-org-capture)
+    :around #'org-capture
     (let* ((project-root (projectile-project-root))
            (target-file (maker/org-capture-target project-root))
            (parent-name (format "%s [%s]"
@@ -5264,11 +3683,7 @@ Advise existing capture commands and add project capture commands.
   (defun maker/org-project-capture (&optional goto keys)
     "Capture something into a project."
     (interactive "P")
-    (maker/org-project-capture-ad #'org-capture goto keys))
-  (defun maker/counsel-org-project-capture ()
-    "Capture something into a project."
-    (interactive)
-    (maker/org-project-capture-ad #'counsel-org-capture)))
+    (maker/org-project-capture-ad #'org-capture goto keys)))
 #+end_src
 
 **** External command
@@ -5315,15 +3730,11 @@ Customize bindings.
 
          (:prefix "n"
          :desc "Org capture"
-         "x" #'org-capture
-         :desc "Counsel capture"
-         "X" #'counsel-org-capture)
+         "x" #'org-capture)
 
          (:prefix "p"
           :desc "Org project capture"
-          "x" #'maker/org-project-capture
-          :desc "Counsel project capture"
-          "X" #'maker/counsel-org-project-capture))
+          "x" #'maker/org-project-capture))
 
         ;; Bind all evil variants explicitly to force hint to display these
         :map org-capture-mode-map
@@ -6103,56 +4514,16 @@ Fix ~evil-save-modified-and-close~ for org-mode temporary buffers.
       (evil-quit))))
 #+end_src
 
-*** TODO Chef
-
-I *need* this in my life. It take a URL to a recipe from a common site, and
-inserts an org-ified version at point. Isn't that just great.
-#+begin_src elisp
-;; (package! org-chef :pin "5b461ed7d458cdcbff0af5013fbdbe88cbfb13a4")
-#+end_src
-
 *** Appearance
 
 Customize org appearance.
 #+begin_src elisp
 (after! org
   ;; Change the ellipsis to something prettier
-  (setq org-ellipsis " ▾"))
-#+end_src
-
-Customize org-superstar.
-#+begin_src elisp
-(after! org-superstar
-  ;; Make leading stars truly invisible, by rendering them as spaces.
-  (setq org-superstar-leading-bullet ?\s
-        org-superstar-leading-fallback ?\s
-        org-hide-leading-stars nil
-        ;; With org-indent this is also needed, otherwise the
-        ;; above has no effect while indent is enabled.
-        org-indent-mode-turns-on-hiding-stars nil)
-  ;; Stop cycling bullets to emphasize hierarchy of headlines.
-  (setq org-superstar-cycle-headline-bullets nil)
-  ;; Define custom bullets.
-  (setq org-superstar-headline-bullets-list
-        '(?◉ ?○ ?● ?○ ?● ?○ ?●)
-        ;; '(?◉ ?○ ?◈ ?✸ ?✿ ?✣ ?▷)
-        org-superstar-item-bullet-alist
-        '((42 . ?•)
-          (43 . ?➤)
-          (45 . ?–)))
-
-  ;; Disable list syntax checking for files with lots of list items.
-  (defun org-superstar-auto-lightweight-mode ()
-    "Start org-superstar differently depending on the number of lists items."
-    (let ((list-items
-           (count-matches "^[ \t]*?\\([+-]\\|[ \t]\\*\\)"
-                          (point-min) (point-max))))
-      (unless (< list-items 200)
-        (org-superstar-toggle-lightweight-lists)))
-    (org-superstar-mode))
-
-  (remove-hook! org-mode #'org-superstar-mode)
-  (add-hook! org-mode #'org-superstar-auto-lightweight-mode))
+  (setq org-ellipsis " ▾"
+        org-tags-column 0
+        org-agenda-tags-column 0
+        org-catch-invisible-edits 'show-and-error))
 #+end_src
 
 Customize priorities faces.
@@ -6164,6 +4535,32 @@ Customize priorities faces.
           (67 . success)
           (68 . dired-directory)
           (69 . shadow))))
+#+end_src
+
+Customize org-modern.
+#+begin_src elisp
+(after! org-modern
+  (setq org-modern-star 'replace
+        ;; Some others: ◉ ○ ◈ ✸ ✿ ✣ ▷
+        org-modern-replace-stars "◉○●○●○●○"
+        org-modern-block-name '("»" . "»"))
+
+  ;; Fix modern face for DONEPROJ
+  (add-to-list 'org-modern-todo-faces `("DONEPROJ" :inverse-video t :inherit org-done))
+  ;; Add ultra-bold weight to priorities
+  (setq org-modern-priority-faces
+        (mapcar (lambda (elt)
+                  (let ((prio (car elt))
+                        (face-props (cdr elt)))
+                    (cons prio (plist-put face-props :weight 'bold))))
+                org-modern-priority-faces))
+  ;; Fix foreground for tags
+  (setq org-modern-tag-faces
+        (mapcar (lambda (elt)
+                  (let ((tag (car elt))
+                        (face-props (cdr elt)))
+                    (cons tag (plist-put face-props :background "#212121"))))
+                org-modern-tag-faces)))
 #+end_src
 
 *** Integration
@@ -6351,14 +4748,18 @@ Customize bindings.
          "-"                 #'org-ctrl-c-minus
          "+"                 nil
          (:prefix ("s" . "Tree/Subtree")
-          "A"                #'org-archive-to-archive-sibling
-          "o"                #'org-toggle-ordered-property
-          "r"                nil)
+                  "A"                #'org-archive-to-archive-sibling
+                  "o"                #'org-toggle-ordered-property
+                  "r"                nil)
          (:prefix ("c" . "Clock")
-          "s"                #'org-clock-display
-          "G"                #'+org-clock-goto-select)
+                  "s"                #'org-clock-display
+                  "G"                #'+org-clock-goto-select)
          (:prefix ("g" . "Goto")
-          "C"                #'+org-clock-goto-select)
+                  "C"                #'+org-clock-goto-select)
+         (:prefix ("l" . "Links")
+                  ;; Remove org-id-store-link since it doesn't work anyway...
+                  ;; See https://github.com/doomemacs/doomemacs/issues/3085
+                  "i"                nil)
          ))
 
   ;; TODO: which-key description overrides...
@@ -6400,7 +4801,9 @@ See [[https://github.com/hlissner/doom-emacs/blob/develop/docs/faq.org#why-is-em
 #+begin_src elisp
 (after! org
   (setq org-fontify-whole-heading-line nil
-        org-fontify-quote-and-verse-blocks nil))
+        org-fontify-quote-and-verse-blocks nil
+        ;; THIS is the main thing that improves performance when expanding trees.
+        org-highlight-latex-and-related nil))
 #+end_src
 
 ** Org QL
@@ -6425,14 +4828,6 @@ Configuration and integration with doom.
           (dedicated . t)
           (inhibit-same-window . t)
           (window-parameters (no-other-window . t)))))
-#+end_src
-
-Compile agenda prefix format when displaying an org-ql-view.
-#+begin_src elisp
-(after! org-ql
-  (defadvice! maker/org-ql-view-prefix-format (&rest _)
-    :before #'org-ql-search
-    (org-compile-prefix-format 'todo)))
 #+end_src
 
 Customize bindings and integrate with doom/evil.
@@ -6677,7 +5072,88 @@ it.  Otherwise, show it for current buffer."
                                           (window-at-side-list nil org-sidebar-side)))
         ;; Sidebar is for a different buffer: show sidebar for current buffer.
         (with-current-buffer source-buffer ; NOTE: EDIT
-          (org-sidebar fns))))))
+          (org-sidebar fns)))))
+
+  (defun +maker/org-sidebar-close ()
+    "Close the org-sidebar window"
+    (interactive)
+    (mapc #'delete-window (--select (window-parameter it 'org-sidebar-window)
+                                    (window-at-side-list nil org-sidebar-side)))))
+#+end_src
+
+Attempt to prevent narrowed org files (directly or indirectly) from being widened when selecting entries from org views.
+#+begin_src elisp
+(after! org-sidebar
+  (defun maker/org-agenda-switch-to (&optional delete-other-windows)
+    "Go to the Org mode file which contains the item at point.
+When optional argument DELETE-OTHER-WINDOWS is non-nil, the
+displayed Org file fills the frame."
+    (interactive)
+    (if (and org-return-follows-link
+             (not (org-get-at-bol 'org-marker))
+             (org-in-regexp org-link-bracket-re))
+        (org-link-open-from-string (match-string 0))
+      (let* ((marker (or (org-get-at-bol 'org-marker)
+                         (org-agenda-error)))
+             (buffer (marker-buffer marker))
+             (pos (marker-position marker))
+             ;; NOTE: EDIT
+             (in-sidebar-window (eq (selected-window) (--first (window-parameter it 'org-sidebar-window)
+                                                               (window-at-side-list nil org-sidebar-side)))))
+        (unless buffer (user-error "Trying to switch to non-existent buffer"))
+        (pop-to-buffer-same-window buffer)
+        (when delete-other-windows
+          (display-buffer (current-buffer) '(org-display-buffer-full-frame)))
+        ;; NOTE: EDIT
+        (unless in-sidebar-window
+          (widen))
+        (goto-char pos)
+        (when (derived-mode-p 'org-mode)
+          (org-fold-show-context 'agenda)
+          (run-hooks 'org-agenda-after-show-hook)))))
+  (advice-add #'org-agenda-switch-to :override #'maker/org-agenda-switch-to)
+
+  (defun maker/org-agenda-goto (&optional highlight)
+    "Go to the entry at point in the corresponding Org file."
+    (interactive)
+    (let* ((marker (or (org-get-at-bol 'org-marker)
+		       (org-agenda-error)))
+	   (buffer (marker-buffer marker))
+	   (pos (marker-position marker))
+           ;; NOTE: EDIT
+           (in-sidebar-window (eq (selected-window) (--first (window-parameter it 'org-sidebar-window)
+                                                             (window-at-side-list nil org-sidebar-side)))))
+      
+      (switch-to-buffer-other-window buffer)
+      ;; NOTE: EDIT
+      (unless in-sidebar-window
+        (widen))
+      (push-mark)
+      (goto-char pos)
+      (when (derived-mode-p 'org-mode)
+        (org-fold-show-context 'agenda)
+        (recenter (/ (window-height) 2))
+        (org-back-to-heading t)
+        (let ((case-fold-search nil))
+	  (when (re-search-forward org-complex-heading-regexp nil t)
+	    (goto-char (match-beginning 4)))))
+      (run-hooks 'org-agenda-after-show-hook)
+      (and highlight (org-highlight (line-beginning-position)
+                                    (line-end-position)))))
+  (advice-add #'org-agenda-goto :override #'maker/org-agenda-goto))
+#+end_src
+
+Restore ~org-sidebar-window~ window parameter when switching workspaces, otherwise sidebar commands are failing to find the existing window.
+It is unclear why the parameter is not saved/restored automatically.
+#+begin_src elisp
+(after! org-sidebar
+  (defun +maker/org-sidebar--persp-restore-window-param (_)
+    "Restore window-parameter `org-sidebar-window' on persp change."
+    (mapc (lambda (win)
+        (set-window-parameter win 'org-sidebar-window t))
+      (--select (eq (window-parameter it 'window-side) org-sidebar-side)
+                (window-at-side-list nil org-sidebar-side))))
+  (add-hook! 'persp-activated-functions #'+maker/org-sidebar--persp-restore-window-param))
 #+end_src
 
 *** Bindings
@@ -6687,8 +5163,12 @@ Integrate with doom/evil bindings.
 (after! org-sidebar
   ;; Leader bindings
   (map! :leader :prefix "n"
-    :desc "Org task sidebar"  "o" #'org-sidebar-toggle
-    :desc "Org tree sidebar"  "O" #'+maker/org-sidebar-tree-toggle)
+        :desc "Org task sidebar"  "o" #'org-sidebar-toggle
+        :desc "Org tree sidebar"  "O" #'+maker/org-sidebar-tree-toggle)
+
+  ;; q must delete ALL open sidebar windows...
+  (map! :map org-sidebar-map
+        "q" #'+maker/org-sidebar-close)
 
   ;; Configure bindings to override default org/evil bindings
   (evil-make-overriding-map org-sidebar-tree-map 'normal)
@@ -6852,49 +5332,11 @@ Customize general projectile options.
         compilation-save-buffers-predicate #'projectile-current-project-buffer-p))
 #+end_src
 
-Add project name and type in the modeline.
+Add project name in the modeline.
 #+begin_src elisp
-(defcustom projectile-mode-line-info nil
-  "Format for displaying the project in the mode line."
-  :type 'sexp)
-;; Ensure we can display text properties on this value in the mode line.
-;; See (info "(elisp) Mode Line Data") or (info "(elisp) Properties in Mode").
-(put 'projectile-mode-line-info 'risky-local-variable t)
-
 (after! projectile
   :config
-  ;; Custom projectile modeline format.
-  (defun projectile-custom-mode-line ()
-    "Report project name and type in the modeline."
-    (let ((project-name (projectile-project-name))
-          (project-type (projectile-project-type)))
-      (format "%s%s"
-              (if (not (equal project-name "-"))
-                  project-name
-                "")
-              (if project-type
-                  (format ":%s" project-type)
-                ""))))
-  (setq-default projectile--mode-line nil)
-  (setq projectile-mode-line-function 'projectile-custom-mode-line)
-  (setq projectile-dynamic-mode-line t)
-
-  ;; Propertize projectile modeline.
-  (defun projectile-mode-line-info ()
-    "Return the mode line construct for variable `projectile--mode-line'."
-    (let ((map (make-sparse-keymap)))
-      (define-key map (kbd "<mode-line> <down-mouse-1>")
-        `(menu-item "" nil
-                    :filter ,(lambda (_cmd) (projectile-commander))))
-      `(projectile--mode-line
-        ("" (:eval (propertize projectile--mode-line
-                               'face 'doom-modeline-persp-name
-                               'mouse-face 'mode-line-highlight
-                               'keymap ',map
-                               'help-echo "Projectile project:type, mouse-1: Run projectile-commander"))
-         ))))
-  (setq projectile-mode-line-info (projectile-mode-line-info))
-  (nconc mode-line-misc-info '((projectile-mode ("" projectile-mode-line-info " ")))))
+  (setq doom-modeline-project-name 't))
 #+end_src
 
 Add helper function to retrieve the notes file for a project.
@@ -6928,9 +5370,8 @@ Customize bindings.
         ;; Adapt default bindings
         :desc "List project todos"           "l"   #'magit-todos-list
         :desc "Find test file"               "t"   #'projectile-find-test-file
-        :desc "Search project with git grep" "g"   #'counsel-projectile-git-grep
         :desc "Discover projects in folder"  "A"   #'+default/discover-projects
-        :desc "Compile in project"           "B"   #'+ivy/project-compile
+        :desc "Compile in project"           "B"   #'project-compile
         :desc "Configure project"            "C"   #'projectile-configure-project
         :desc "Install project"              "I"   #'projectile-install-project
         :desc "Run GDB in project"           "D"   #'projectile-run-gdb
@@ -7056,7 +5497,7 @@ Customize bindings.
     (kbd "L")          #'treemacs-toggle-node-nested
     (kbd "C")          #'treemacs-copy-file
     (kbd "M")          #'treemacs-move-file
-    (kbd "x")          #'treemacs-delete
+    (kbd "x")          #'treemacs-delete-file
     (kbd "<S-return>") #'treemacs-visit-node-nofocus)
   (map! :map treemacs-mode-map "d" nil "m" nil))
 #+end_src
@@ -7092,7 +5533,7 @@ See https://github.com/hlissner/doom-emacs/issues/1407
   (setq visual-fill-column-adjust-for-text-scale t
         visual-fill-column-fringes-outside-margins t
         visual-fill-column-enable-sensible-window-split nil)
-  (add-hook! (helpful-mode elfeed-show-mode Man-mode woman-mode)
+  (add-hook! (helpful-mode Man-mode woman-mode)
              #'visual-fill-column-mode))
 #+end_src
 
@@ -7103,6 +5544,25 @@ Configure vterm buffer naming scheme.
 (use-package! vterm
   :config
   (setq vterm-buffer-name-string "vterm %s"))
+#+end_src
+
+** Vertico
+
+Customize vertico bindings to simplify usage of embark.
+#+begin_src elisp
+(after! vertico
+  (map! :map vertico-map
+        "M-k" #'previous-history-element
+        "M-j" #'next-history-element
+        "C-r" #'minibuffer-complete-history
+        "M-a" #'embark-act
+        "M-o" #'embark-collect
+        "M-e" #'embark-export
+        "C-M-SPC" #'embark-select
+        "M-E" #'+vertico/embark-export-write
+        "M-d" #'consult-dir
+        "M-f" #'consult-dir-jump-file
+        ))
 #+end_src
 
 ** Which-key
@@ -7127,6 +5587,7 @@ Replace =evil-= like prefixes by a unicode symbol to reduce verbosity.
 ** Xclip
 
 #+begin_src elisp
+;; NOTE: For this to work under wayland, wl-clipboard must be installed.
 (add-hook! 'tty-setup-hook
   (defun doom-init-clipboard-in-tty-emacs-h ()
     ;; Fix the clipboard in tty Emacs by piping clipboard I/O through xclip,

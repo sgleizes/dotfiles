@@ -1,9 +1,0 @@
-#
-# Unison profile for synchonizing media files with the Mothership HDD.
-#
-
-include _mothership
-include _media
-
-# Label for this profile in the graphical UI.
-label = Synchronize media files with the Mothership HDD

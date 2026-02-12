@@ -36,6 +36,7 @@ xsh module docker     interactive
 xsh module eza        interactive
 xsh module ssh        interactive
 xsh module gpg        interactive:login
+xsh module nvm        interactive
 xsh module pager      interactive:env
 xsh module rclone     interactive
 xsh module restic     interactive
@@ -58,6 +59,7 @@ xsh module fasd           interactive
 xsh module git            interactive
 xsh module jq             interactive
 xsh module nnn            interactive
+xsh module aptitude       interactive
 xsh module pacman         interactive
 xsh module you-should-use interactive # load after git
 

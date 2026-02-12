@@ -1,9 +1,0 @@
-#
-# Unison profile for synchonizing projects with the Homeworld HDD.
-#
-
-include _homeworld
-include _projects
-
-# Label for this profile in the graphical UI.
-label = Synchronize projects with the Homeworld HDD

@@ -1,6 +1,0 @@
-#
-# Unison profile for synchonizing projects.
-#
-
-# Paths to synchronize.
-path = Projects

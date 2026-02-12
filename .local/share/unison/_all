@@ -1,7 +1,0 @@
-#
-# Unison profile for synchonizing all files.
-#
-
-include _documents
-include _projects
-include _media

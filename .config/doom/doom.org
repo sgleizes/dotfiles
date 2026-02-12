@@ -1,0 +1,2351 @@
+#+title: Emacs
+#+category: Emacs
+#+author: Stéphane Gleizes
+#+archive: archive/%s_archive::datetree/
+#+startup: overview indent hidestars nonum oddeven
+#+startup: noalign shrink noinlineimages nohideblocks
+#+startup: logdrawer logstatesreversed nologdone logrepeat nologreschedule nologredeadline nologrefile
+#+todo: TODO(t) ACTV(a!) WAIT(w@/!) HOLD(h@/!) | DONE(d!/!)
+#+todo: IDEA(i) SMDY(s) PROJ(p) | DONEPROJ(d)
+#+todo: | CANCELED(c@/!)
+#+tags: { date(1) : event(e) appointment(t) }
+#+tags: { activity(2) : read(r) listen(l) watch(v) }
+#+tags: { task(3) : bug(b) improvement(m) feature(f) }
+#+tags: { context(4) : @self(s) @home(h) @work(w) @people(p) {@.+}(@) }
+#+priorities: A E D
+#+property: COOKIE_DATA recursive
+
+-----
+
+* Inbox
+:PROPERTIES:
+:CATEGORY: Inbox
+:END:
+
+* References
+
+- [[elisp:(info-emacs-manual)][Emacs Manual]] (SPC h RET)
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/index.html][Emacs Manual (web)]]
+- Mailing list: https://lists.gnu.org/archive/html/help-gnu-emacs/
+- Stack exchange: https://emacs.stackexchange.com/
+
+- Notable / Inspiring configurations:
++ https://tecosaur.github.io/emacs-config/config.html#some-helper-macros / https://github.com/tecosaur/emacs-config
++ https://github.com/Brettm12345/doom-emacs-literate-config/blob/master/config.org#completionivy
++ https://luca.cambiaghi.me/vanilla-emacs/readme.html
++ https://github.com/sunnyhasija/Academic-Doom-Emacs-Config
++ https://dotdoom.rgoswami.me/config.html
++ https://www.gtrun.org/post/config/
++ https://github.com/alphapapa/unpackaged.el
+
+* Doom [0/7]
+** References
+
+- [[https://github.com/hlissner/doom-emacs][GitHub - hlissner/doom-emacs: An Emacs framework for the stubborn martian hacker]]
+- [[https://github.com/hlissner/doom-emacs/blob/master/docs/index.org][Doom Emacs Documentation]]
+
+** Bindings
+
+|---------+-------------------------|
+| Key     | Description             |
+|---------+-------------------------|
+| =SPC :=   | Run command             |
+| =SPC ;=   | Eval expression         |
+| =SPC RET= | Bookmark                |
+| =SPC h r= | Reload                  |
+| =SPC -=   | Adjust font size        |
+| =SPC ?=   | List active keybindings |
+|---------+-------------------------|
+
+*** Help
+
+|-----------+-------------------------------------------------------|
+| Key       | Description                                           |
+|-----------+-------------------------------------------------------|
+| =SPC h e=   | View echo-area messages                               |
+| =SPC h h=   | Woman                                                 |
+| =SPC h H=   | Man                                                   |
+| =SPC h l=   | TLDR                                                  |
+| =SPC h i=   | Info                                                  |
+| =SPC h ?=   | Help for help                                         |
+| =SPC h ...= | More                                                  |
+| =<=         | Previous help buffer (in elisp helpful buffer popups) |
+|-----------+-------------------------------------------------------|
+
+*** Debug
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Debugger.html][Elisp Debugger Manual]]
+
+To debug packages / elisp:
+- toggle-debug-on-error
+- edebug / repl
+- SPC u SPC m b d to debug a function
+  - n/c/i/... to debug
+  - See edebug-* commands
+
+*** Workspaces
+
+|-------------+---------------------|
+| Key         | Description         |
+|-------------+---------------------|
+| =]/[ TAB=     | Next/Prev workspace |
+| =SPC TAB ...= | More                |
+|-------------+---------------------|
+
+*** Windows
+
+|-----------+-------------------------|
+| Key       | Description             |
+|-----------+-------------------------|
+| =]/[ w=     | Next/Prev window        |
+| =SPC w SPC= | Window management Hydra |
+| =SPC w ...= | More                    |
+|-----------+-------------------------|
+
+It's all in the hydra (almost).
+
+*** Buffers
+
+|-----------+-------------------------------------------|
+| Key       | Description                               |
+|-----------+-------------------------------------------|
+| =M-]/[=     | Next/Prev buffer                          |
+| =]/[ b=     | Next/Prev buffer                          |
+| =SPC `=     | Switch to last (N) persp buffer           |
+| =SPC ~=     | Switch to last (N) unreal (hidden) buffer |
+| =SPC ,=     | Switch to workspace buffer                |
+| =SPC <=     | Switch to buffer                          |
+|-----------+-------------------------------------------|
+| =z n/N=     | Narrow buffer (see evil bindings)         |
+| =SPC b w=   | Widen/Kill indirect buffer                |
+| =SPC b -=   | Toggle narrowing (line/region)            |
+|-----------+-------------------------------------------|
+| =SPC b SPC= | Buffer management Hydra                   |
+| =SPC b ...= | More                                      |
+|-----------+-------------------------------------------|
+
+*** Files
+
+|-----------+--------------------------|
+| Key       | Description              |
+|-----------+--------------------------|
+| =SPC SPC=   | Find file in project     |
+| =SPC .=     | Find file                |
+| =SPC >=     | Find frecent file        |
+| =SPC n f=   | Open notes file          |
+| =SPC f p=   | Open private config file |
+| =SPC f ...= | More                     |
+|-----------+--------------------------|
+
+*** Search
+
+|-----------+------------------------------------------|
+| Key       | Description                              |
+|-----------+------------------------------------------|
+| =SPC s s=   | Search current buffer                    |
+| =SPC s S=   | Search current buffer for thing at point |
+| =SPC s d=   | Search current directory                 |
+| =SPC s D=   | Search other directory                   |
+| =SPC s p=   | Search current project                   |
+| =SPC s P=   | Search another project                   |
+| =SPC s i=   | Search symbol in current buffer          |
+| =SPC s ...= | More                                     |
+|-----------+------------------------------------------|
+For directory/project search, prefixing these keys with the universal argument
+([[kbd:][SPC u]]) changes the behavior of these commands, instructing the underlying
+search engine to include ignored files.
+
+**** Async search commands
+
+Consult async commands (e.g. ~consult-ripgrep~) will have a preceding separator
+character (usually ~#~) before the search input. This is known as the =perl=
+splitting style. Input typed after the separator will be fed to the async
+command until you type a second seperator, afterwhich the candidate list will be
+filtered with Emacs instead (and can be filtered using [[doom-package:orderless]],
+for example).  The specific seperator character can be changed by editing it,
+and might be different if the initial input already contains =#=.
+
+Note that grep-like async commands translate the input (between the first and
+second =#=) to an Orderless-light expression: space separated inputs are all
+matched in any order. If the grep backend does not support PCRE lookahead, it'll
+only accept 3 space separated inputs to prevent long lookup times, and further
+filtering should be done after a second =#=.
+
+For more information [[https://github.com/minad/consult#asynchronous-search][see here]].
+
+**** Orderless filtering
+
+When using orderless to filter through candidates, the default behaviour is for
+each space separated input to match the candidate as a regular expression or
+literally.
+
+Note that due to this style of matching, pressing tab does not expand the input
+to the longest matching prefix (like shell completion), but rather uses the
+first matched candidate as input. Filtering further is instead achieved by
+pressing space and entering another input. In essence, when trying to match
+=foobar.org=, instead of option 1., use option 2.:
+
+1. (BAD) Enter ~foo TAB~, completes to =foobar.=, enter ~org RET~
+2. (GOOD) Enter ~foo SPC org RET~
+
+Doom has some builtin [[https://github.com/oantolin/orderless#style-dispatchers][style dispatchers]] for more fine-grained filtering, which
+you can use to further specify each space separated input in the following ways:
+| Input        | Description                              |
+|--------------+------------------------------------------|
+| ~!foo~         | match without literal input =foo=          |
+| ~%foo~ or ~foo%~ | perform ~char-fold-to-regexp~ on input =foo= |
+| ~`foo~ or ~foo`~ | match input =foo= as an initialism         |
+| ~=foo~ or ~foo=~ | match only with literal input =foo=        |
+| ~~foo~ or ~foo~~ | match input =foo= with fuzzy/flex matching |
+
+**** Marginalia
+
+Marginalia annotations for symbols (e.g. [[kbd:][SPC h f]] and [[kbd:][SPC h v]]) come with extra
+information the nature of the symbol. For the meaning of the annotations see
+function doc ~marginalia--symbol-class~.
+
+*** Eval/REPL
+
+See the [[file:~/.config/emacs/modules/tools/eval/README.org::*Table of Contents][eval module]] and the [[https://github.com/emacsorphanage/quickrun][quickrun package]].
+
+|--------------+---------------------------|
+| Key          | Description               |
+|--------------+---------------------------|
+| =SPC c e=      | Eval buffer or region     |
+| =g r <object>= | Eval object               |
+|--------------+---------------------------|
+| =SPC o r=      | Open REPL in popup window |
+| =SPC o R=      | Open REPL in same window  |
+|--------------+---------------------------|
+| =SPC c s=      | Send region to REPL       |
+|--------------+---------------------------|
+
+*** Utility
+
+|----------------------------+-------------------------------|
+| Key                        | Description                   |
+|----------------------------+-------------------------------|
+| =SPC := counsel-colors-emacs | List available default colors |
+|----------------------------+-------------------------------|
+
+** TODO [#B] Improve scrolling behavior :improvement:
+
+Should not accelerate like it does currently
+
+Try pixel-scroll-precision-mode from 29.1
+[[https://www.reddit.com/r/emacs/comments/tv022a/smooth_scrolling_on_emacs_29_is_a_dream_come_true/][Smooth scrolling on Emacs 29 is a dream come true with pixel-scroll-precision...]]
+
+** TODO [#C] Which-key replacements :improvement:
+
+- Explore functions 'which-key repl' (search)
+- See also lsp-enable-which-key-integration
+
+** TODO [#D] yq integration or yamlfmt :feature:
+
+https://github.com/mikefarah/yq
+https://pypi.org/project/yamlfmt/
+
+** TODO [#D] Try out restclient integration :feature:
+
+Enabled via doom ~:lang rest~ module
+https://github.com/pashky/restclient.el
+
+** SMDY Improve help bindings :improvement:
+
+- Rebind Info-goto-emacs-command-node (instead of keybind on SPC h I)
+- Explore other bindings and document them in binding table
+
+* Theme [0/1]
+** SMDY Kaolin themes have nice parts, especially the treemacs theme
+
+https://github.com/ogdenwebb/emacs-kaolin-themes/wiki/Kaolin-galaxy-theme
+https://protesilaos.com/modus-themes/
+https://protesilaos.com/modus-themes-pictures/
+
+* Terminal [1/1]
+** CANCELED [#D] Non systematic issues when editing from terminal: breaks the terminal :bug:
+:LOGBOOK:
+- State "CANCELED"   from "TODO"       [2022-07-27 mer. 21:35] \\
+  Can't reproduce
+:END:
+
+e.g. Edit a commit message and abort with ZQ: term is systematically broken
+
+* Hydra [0/2]
+** References
+
+- [[https://github.com/abo-abo/hydra][GitHub - abo-abo/hydra: make Emacs bindings that stick around]]
+- [[https://github.com/jerrypnz/major-mode-hydra.el][GitHub - jerrypnz/major-mode-hydra.el: Spacemacs-esque major mode leader key ...]]
+- [[https://github.com/Ladicle/hydra-posframe][GitHub - Ladicle/hydra-posframe: hydra-posframe is a hydra extension which sh...]]
+- [[https://github.com/abo-abo/hydra/wiki/Hydras-by-Topic][Hydras by Topic · abo-abo/hydra Wiki · GitHub]]
+
+** Bindings
+
+|-----------+-------------------------|
+| Key       | Description             |
+|-----------+-------------------------|
+| =SPC -=     | Font size Hydra         |
+| =SPC m SPC= | Major mode Hydra        |
+| =SPC w SPC= | Window management Hydra |
+| =SPC b SPC= | Buffer management Hydra |
+|-----------+-------------------------|
+
+Available major-mode-hydras:
+- dired-mode
+- org-agenda-mode
+
+** TODO [#D] Add pretty hydra for file management
+** SMDY More hydras
+
+- ediff: https://github.com/abo-abo/hydra/wiki/Emacs#ediff=
+- Info: https://github.com/abo-abo/hydra/wiki/Info
+
+* Editing (evil) [0/2]
+** References
+
+- [[https://evil.readthedocs.io/en/latest/settings.html][Evil documentation]]
+- [[https://github.com/emacs-evil/evil-collection][GitHub - emacs-evil/evil-collection: A set of keybindings for evil-mode]]
+- [[https://github.com/hlissner/doom-emacs/tree/develop/modules/editor/evil][GitHub - doom-emacs/modules/editor/evil at develop]]
+- [[https://github.com/hlissner/doom-emacs/blob/develop/modules/config/default/%2Bevil-bindings.el][GitHub - doom-emacs/+evil-bindings.el at develop]]
+- [[https://github.com/noctuid/evil-guide][GitHub - noctuid/evil-guide: Draft of a guide for using emacs with evil]]
+- [[https://blog.carbonfive.com/vim-text-objects-the-definitive-guide/][Vim Text Objects: The Definitive Guide]]
+- [[https://quickref.me/vim][Vim Cheat Sheet & Quick Reference]]
+
+** Bindings
+
+Regular vim keybindings are effective, see [[https://github.com/emacs-evil/evil-collection#guidelines=][evil-collection]].
+Here are documented the bindings I don't use often and might forget, or bindings I have customized.
+
+*** Motion
+
+|----------+-------------------+------------------------------------------------------------------------------|
+| Mode     | Key               | Description                                                                  |
+|----------+-------------------+------------------------------------------------------------------------------|
+| normal   | =C-         <hjkl>= | Small motions (word/paragraph)                                               |
+| normal   | =C-S-       <hjkl>= | Big motions (WORD/section)                                                   |
+| normal   | =M-/M-S-    <hjkl>= | Reserved for dragging (overridden in org-mode)                               |
+| normal   | =C-M-/C-M-S-<hjkl>= | Reserved for specific modes                                                  |
+|----------+-------------------+------------------------------------------------------------------------------|
+| insert   | =C-         <hjkl>= | Smallest motions (char/line)                                                 |
+| insert   | =C-S-       <hjkl>= | Small motions (word/paragraph)                                               |
+| insert   | =jk=                | Exit insert-mode (evil-escape, a small time window)                          |
+|----------+-------------------+------------------------------------------------------------------------------|
+| motion   | =_/0=               | Beginning of text/line                                                       |
+| motion   | =-/+=               | Beginning of prev/next line                                                  |
+| motion   | =g_/$=              | End of text/line                                                             |
+| global   | =M-m=               | Back to indentation                                                          |
+|----------+-------------------+------------------------------------------------------------------------------|
+| motion   | =f/F <char>=        | Snipe: Jump to next/prev 1-char match (inclusive)                            |
+| motion   | =t/T <char>=        | Snipe: Jump to next/prev 1-char match (exclusive)                            |
+| motion   | =s/S <chars>=       | Snipe: Jump to next/prev 2-char match (inclusive)                            |
+| operator | =x/X <chars>=       | Snipe: Jump to next/prev 2-char match (exclusive)                            |
+| motion   | =;/,=               | Snipe: Repeat/Reverse last motion (or reuse initiating key)                  |
+| motion   | =C-;=               | Snipe: Switch to easymotion with current snipe                               |
+| motion   | =g s <motion>=      | Easymotion                                                                   |
+| motion   | =g s s <chars>=     | Avy: Easymotion on 2-char matches                                            |
+| motion   | =g s / <chars>=     | Avy: Easymotion on char sequence (timer based)                               |
+|----------+-------------------+------------------------------------------------------------------------------|
+| motion   | =g ;/,=             | Jump to last position in current buffer (C-u C-SPC for emacs marks)          |
+| motion   | =g ]/[=             | Jump to last position across perspective buffers (C-x C-SPC for emacs marks) |
+| motion   | =SPC s j/r=         | Choose from jumplist in ivy (evil jumplist/emacs marks)                      |
+|----------+-------------------+------------------------------------------------------------------------------|
+| motion   | =m <key>=           | Set mark                                                                     |
+| motion   | =' <key>=           | Jump to mark line                                                            |
+| motion   | =` <key>=           | Jump to mark char                                                            |
+| visual   | =o=                 | Exchange point and mark                                                      |
+|----------+-------------------+------------------------------------------------------------------------------|
+
+*** Objects
+
+A command using a motion, e.g. ~cw~, operates from the current cursor position.
+A command using a text-object, e.g. ~ciw~ operates on the whole object regardless of the cursor position.
+
+|---------+--------------------------------------------------------------|
+| Key     | Description                                                  |
+|---------+--------------------------------------------------------------|
+| =i=       | Inner text object (prefix)                                   |
+| =a=       | Around text object (prefix): includes spaces/delimiters      |
+|---------+--------------------------------------------------------------|
+| =w/W=     | word/WORD                                                    |
+| =s=       | Sentence                                                     |
+| =p=       | Paragraph                                                    |
+| =g=       | Whole buffer                                                 |
+|---------+--------------------------------------------------------------|
+| =q=       | Any quoted block/string [*]                                  |
+| =<delim>= | Block/string surrounded by <delim>: () [] {} "" '' `` <> ... |
+| =t=       | HTML-style tag                                               |
+| =b=       | Any block [*]                                                |
+| =f=       | Function                                                     |
+| =a=       | Argument                                                     |
+| =o=       | Symbol [*]                                                   |
+| =c=       | Comment                                                      |
+| =u=       | URL                                                          |
+|---------+--------------------------------------------------------------|
+| =ii=      | Block with the same indentation                              |
+| =ik=      | Block with the same indentation including line above         |
+| =ij=      | Block with the same indentation including surrounding lines  |
+|---------+--------------------------------------------------------------|
+| =e=       | Org object                                                   |
+| =E=       | Org element                                                  |
+| =r=       | Org greater element                                          |
+| =R=       | Org inner subtree                                            |
+|---------+--------------------------------------------------------------|
+
+*** Editing
+
+|---------------+------------------------+-------------------------------------------------------------------|
+| Mode          | Key                    | Description                                                       |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =z n <object>=           | Narrow buffer to region/object (znz shortcut for line)            |
+| motion        | =z N <object>=           | Narrow buffer to region/object indirectly                         |
+| motion        | =z w=                    | Widen narrowed buffer (or kill indirect buffer, prefix kills all) |
+|---------------+------------------------+-------------------------------------------------------------------|
+| normal        | =TAB/za=                 | Toggle fold                                                       |
+| normal        | =S-TAB/zm=               | Close all folds                                                   |
+| normal        | =C-S-TAB/zr=             | Open all folds                                                    |
+| normal        | =z o/c=                  | Open/Close fold                                                   |
+| normal        | =z j/k=                  | Next/Prev fold                                                    |
+|---------------+------------------------+-------------------------------------------------------------------|
+| insert        | =RET=                    | Break line                                                        |
+| normal/insert | =S-RET=                  | Break line and indent                                             |
+| motion        | =g w/q <object>=         | Fill lines (q: move point)                                        |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =M-/M-S-<jk>=            | Drag line/region down/up                                          |
+| motion        | =M-     <hl>=            | Shift line left/right (not in org-mode)                           |
+| motion        | =M-S-   <hl>=            | Drag word/region left/right (not in org-mode)                     |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =<backspace>=            | Delete text without killing it                                    |
+| motion        | =M-p=                    | Cycle kill-ring after paste                                       |
+| normal        | =C-p/SPC i y=            | Select interactively from kill-ring                               |
+| normal        | =M-y=                    | Duplicate line/region                                             |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =g c <object>=           | Toggle comment for region/object                                  |
+| motion        | =M-/=                    | Toggle comment for region/line                                    |
+| motion        | =M-;=                    | Toggle comment at end of line                                     |
+|---------------+------------------------+-------------------------------------------------------------------|
+| normal        | =M-%/C-M-%=              | Query replace string/regexp (y: accept, n: skip, !: accept all)   |
+| normal        | =z q <key>=              | Record macro                                                      |
+| normal        | =@ <key>=                | Execute Macro                                                     |
+| normal        | =! <object>=             | Insert output of shell command in object/region                   |
+|---------------+------------------------+-------------------------------------------------------------------|
+| visual        | =u/U=                    | Down/Up case                                                      |
+| normal        | =g u/U=                  | Down/Up case                                                      |
+| normal        | =M-c=                    | Capitalize word                                                   |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =g x <object>=           | Exchange two regions/objects                                      |
+| motion        | =g X=                    | Cancel exchange                                                   |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =g a/A <object> <char>=  | Align text left/right in region/object using char                 |
+|---------------+------------------------+-------------------------------------------------------------------|
+| motion        | =g z=                    | Multiple cursors                                                  |
+| motion        | =M-z=                    | Multiple cursors hydra                                            |
+| motion        | =M-d=                    | Multiedit (simpler alternative)                                   |
+|---------------+------------------------+-------------------------------------------------------------------|
+| visual        | =S <delim>=              | Add surrounding delimiter around region                           |
+| normal        | =y s/S <object> <delim>= | Add surrounding delimiter around object (S: newlines)             |
+| normal        | =d s <delim>=            | Delete surrounding delimiter                                      |
+| normal        | =c s <old> <new>=        | Change surrounding delimiter                                      |
+|---------------+------------------------+-------------------------------------------------------------------|
+| normal        | =.=                      | Repeat last editing command                                       |
+|---------------+------------------------+-------------------------------------------------------------------|
+
+- Additional notes about evil surround/embrace:
+  + Use opening delimiter to insert a space
+  + enable embrace-show-help-p to see available objects (if forgotten, or when a mode has custom embrace keys)
+  + f allows to add/remove functions (magical when working in elisp)
+  + t for HTML-style tags
+  + l for org blocks, ...
+
+*** Avy
+
+I only need to use avy-goto-char-timer (M-s or g s /).
+
+** TODO [#C] Avy integration improvements :improvement:
+
+For better actions (other than jump), see also:
+- https://karthinks.com/software/avy-can-do-anything/
+- https://ag91.github.io/blog/2022/04/20/repeat-with-me-avy-actions-are-awesome/
+
+Also explore embark:
+- https://karthinks.com/software/fifteen-ways-to-use-embark/
+
+** SMDY Bind more avy commands
+
+- avy-word-1 / avy-word-0 / ...
+
+* Dired [0/0]
+** References
+
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][Dired Manual]]
+- [[https://github.com/hlissner/doom-emacs/tree/develop/modules/emacs/dired][doom-emacs/modules/emacs/dired at develop]]
+
+** Bindings
+*** Initiating
+
+|------------------+---------------------------------------|
+| Command          | Description                           |
+|------------------+---------------------------------------|
+| =SPC o -=        | Open dired (current dir)              |
+| =SPC p -=        | Open dired at project root            |
+| =SPC f d=        | Select a directory to open with dired |
+| =find[-*]-dired= | Use the ~find~ program                |
+| =locate=         | Use the ~locate~ program              |
+| =find-lisp-*=    | Use the builtin version               |
+|------------------+---------------------------------------|
+
+*** Major mode
+
+|-------------+-----------------------------|
+| Key         | Description                 |
+|-------------+-----------------------------|
+| =SPC m SPC= | Dired Hydra                 |
+| =% ...=     | Regexp Operations           |
+| =* ...=     | Batch Marks                 |
+| =; ...=     | Encrypt/Decrypt/Sign/Verify |
+| =M-c=       | Rsync                       |
+|-------------+-----------------------------|
+
+It's all in the hydra (almost).
+
+* Treemacs [0/1]
+** References
+
+- [[https://github.com/Alexander-Miller/treemacs][GitHub - Alexander-Miller/treemacs]]
+- [[https://github.com/hlissner/doom-emacs/tree/develop/modules/ui/treemacs][doom-emacs/modules/ui/treemacs at develop]]
+
+** Bindings
+
+|-------+------------------------------------|
+| Key   | Description                        |
+|-------+------------------------------------|
+| =?=     | Helpful Hydra                      |
+|-------+------------------------------------|
+| =C-j/k= | Move to next/prev project          |
+| =M-j/k= | Move to next/prev siblings         |
+| =L=     | Open all nodes in subtree          |
+|-------+------------------------------------|
+| =S-RET= | View file (keep focus)             |
+| =P=     | Toggle peek mode                   |
+|-------+------------------------------------|
+| =!/M-!= | Run shell command on file/toplevel |
+|-------+------------------------------------|
+
+** TODO [#A] Explore treemacs further
+* Centaur Tabs [0/1]
+** SMDY Move tab is not persistent :bug:
+
+- Need to save tabsets when switching perspectives...
+- Store tabsets in another obarray (per pespective?)
+- Avoid using tabs at all?
+  + GET RID OF CENTAUR TABS? INTEGRATE WITH NATIVE TABBAR?
+
+* Search (vertico) [0/0]
+** References
+
+- [[https://github.com/minad/vertico][GitHub - minad/vertico: :dizzy: vertico.el - VERTical Interactive COmpletion]]
+- [[https://github.com/minad/consult][GitHub - minad/consult: :mag: consult.el - Consulting completing-read]]
+- [[https://github.com/oantolin/embark][GitHub - oantolin/embark: Emacs Mini-Buffer Actions Rooted in Keymaps]]
+- [[https://github.com/oantolin/orderless][GitHub - oantolin/orderless: Emacs completion style that matches multiple reg...]]
+
+- [[https://github.com/oantolin/embark/wiki/Default-Actions][Default Actions · oantolin/embark Wiki · GitHub]]
+
+** Bindings
+
+See [[*Search][Search]].
+
+*** Vertico
+
+|---------+----------------------------------------------------------------------------------------------|
+| Key     | Description                                                                                  |
+|---------+----------------------------------------------------------------------------------------------|
+| =SPC '=   | Repeat last search                                                                           |
+|---------+----------------------------------------------------------------------------------------------|
+| =C-j/k=   | Navigate results                                                                             |
+| =C-h/l=   | Navigate directories (or open file)                                                          |
+| =C-S=j/k= | Page down/up                                                                                 |
+| =C-M=j/k= | Next/Prev group                                                                              |
+| =M-j/k=   | Next/Prev history element                                                                    |
+| =C-r=     | Complete from history                                                                        |
+|---------+----------------------------------------------------------------------------------------------|
+| =TAB=     | Select entry as input                                                                        |
+| =C-SPC=   | Preview current candidate, which seems equivalent to running default action without exiting. |
+| =C-M-SPC= | Select candidate.                                                                            |
+|---------+----------------------------------------------------------------------------------------------|
+| =M-d=     | Select another directory (inserts the selected dir in minibuffer).                           |
+| =M-f=     | Search for a file recursively.                                                               |
+|---------+----------------------------------------------------------------------------------------------|
+| =M-a=     | Choose an action (embark-act).                                                               |
+| =M-o=     | Collect candidates in an embark buffer (embark-collect).                                     |
+| =M-e=     | Export candidates in a type-specific buffer (embark-export).                                 |
+| =M-E=     | Export candidates in a type-specific buffer (embark-export in write mode).                   |
+|---------+----------------------------------------------------------------------------------------------|
+*** Embark
+
+|-------+----------------------------------------------------------------------------------------------------------------|
+| =SPC a= | In a buffer, choose an action for a target (embark-act). Repeat the binding to cycle between available targets |
+| =M-a=   | In a vertico buffer, choose an action (embark-act).                                                            |
+|-------+----------------------------------------------------------------------------------------------------------------|
+| =C-h=   | Embark act: List all available actions with descriptions in a buffer.                                          |
+| =SPC=   | Select candidate.                                                                                              |
+| =A=     | Embark act: act on selected candidates (or all candidates)                                                     |
+| =q=     | Do not exit after running next action                                                                          |
+| =...=   | Many actions depending on candidate type... See https://github.com/oantolin/embark/wiki/Default-Actions        |
+|-------+----------------------------------------------------------------------------------------------------------------|
+| =m=     | Embark collect buffer: select candidate                                                                        |
+| =a=     | Embark collect buffer: act on current candidate                                                                |
+| =A=     | Embark collect buffer: act on selected candidates (or all candidates)                                          |
+| =E=     | Embark collect buffer: export selected candidates (or all candidates)                                          |
+| =q=     | Embark collect buffer: return to minibuffer session                                                            |
+|-------+----------------------------------------------------------------------------------------------------------------|
+
+* Workspaces (persp-mode) [1/4]
+** TODO [#C] Indirect buffers are not saved properly :bug:
+
+See the [[file:~/.config/doom/config.org::*Perspective][Perspective configuration]].
+
+** TODO [#D] Closing the last buffer from a persp brings a buffer from another persp into the current one... :bug:
+
+Cannot reproduce in 2026?
+
+** TODO [#D] Files are strangely migrating workspaces :bug:
+
+- Is there an advice to visit a file from another workspace? persp-temporarily-display-buffer
++ it seems to work for pop-global-mark (C-x C-SPC), could be applied to problematic functions, not sure how it works though
+- List here commands that seem affected:
++ quitting a dired buffer when no other buffer is opened displays a random buffer from another persp (and changes default dir)
+  => Need to rewrite dired/quit-all to switch to doom-fallback-buffer if no buffers remain
+
+** CANCELED [#D] Winner configuration save error :bug:
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2026-02-07 sam. 09:19]
+:END:
+
+Occurs on every session save:
+
+Due to doom trying to save winner config, but in a way that is not elisp-readable
+Cf persp-parameters-to-savelist in pesp-mode.el
+
+#+begin_quote
+[persp-mode] Info: The parameter (winner-ring ((#<frame emacs.org – Doom Emacs 0x55fde4484728> #<window-configuration> ((0 0 183 87) . #<buffer life.org>) ((183 0 366 87) . #<buffer cooking.org>))) ((#<frame emacs.org – Doom Emacs 0x55fde4484728> 0 2 . [(#<window-configuration> ((0 0 183 87) . #<killed buffer>) ((183 0 366 87) . #<buffer cooking.org>)) (#<window-configuration> ((0 0 183 87) . #<buffer life.org>) ((183 0 366 87) . #<buffer cooking.org>)) nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil]) (#<frame F1 0x55fdde314198> 0 1 . [(#<window-configuration> ((0 0 80 24) . #<buffer *doom*>)) nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil nil])) nil) of the perspective notes can’t be saved.
+#+end_quote
+
+* Projects (projectile) [0/4]
+** References
+
+- [[https://docs.projectile.mx/projectile/index.html][Projectile Documentation]]
+- Custom project types / tweaks: [[https://docs.projectile.mx/projectile/projects.html][Projectile - Projects]]
+- [[https://github.com/ericdanan/counsel-projectile][GitHub - ericdanan/counsel-projectile: Ivy UI for Projectile]]
+
+** Bindings
+
+|-------------------+----------------------------------------------------------|
+| Key               | Description                                              |
+|-------------------+----------------------------------------------------------|
+| =SPC SPC=         | Find file in project                                     |
+| =SPC p -=         | Open dired at project root                               |
+| =SPC /=           | Search in project                                        |
+| =SPC p %/M-%=     | Replace in project                                       |
+| =SPC p o=         | Switch to matching file (same name, diff ext)            |
+| =SPC p t=         | Switch between impl/test                                 |
+| =SPC p z=         | Select project task with taskrunner                      |
+| =SPC p C/B/T/R/I= | Configure/Build/Test/Run/Install project                 |
+| =SPC p i=         | Invalidate cache (happens when moving/deleting files...) |
+| =SPC p ;=         | Repeat last projectile command                           |
+|-------------------+----------------------------------------------------------|
+
+** TODO [#B] Improve consistency of configure/build/run/test/... bindings :improvement:
+
+- [ ] =SPC m b/t ...= (golang) are maybe redundant with project build/test commands
+  - SPC p c/B to build in project directory
+  - SPC c c to build in current directory
+  - SPC c C to rerun last command
+  - SPC p T to test in project directory
+  - SPC p R to run project
+  - SPC m ... for for language specific commands (clean, run, coverage...)
+
+- [ ] Build commands should be consistent (c vs B)
+- [ ] recompile command (SPC c C) is affected by all commands (it seems, even test/run) and could be more accessible
+
+* LSP [0/7]
+** References
+
+- [[https://emacs-lsp.github.io/lsp-mode/][LSP Mode - Language Server Protocol support for Emacs]]
+- [[https://github.com/emacs-lsp/lsp-ui][GitHub - emacs-lsp/lsp-ui: UI integrations for lsp-mode]]
+
+- [[https://github.com/golang/tools/blob/master/gopls/doc/emacs.md#configuring-gopls-via-lsp-mode=][Configuring gopls via LSP Mode]]
+  - [[https://github.com/emacs-lsp/lsp-mode/blob/master/clients/lsp-go.el][lsp-mode/lsp-go.el at master · emacs-lsp/lsp-mode · GitHub]]
+  - [[https://github.com/golang/tools/blob/master/gopls/doc/settings.md][tools/settings.md at master · golang/tools · GitHub]]
+  - [[https://github.com/golang/tools/blob/master/gopls/doc/analyzers.md][tools/analyzers.md at master · golang/tools · GitHub]]
+
+** Bindings
+
+|-----------------+-----------------------------------------|
+| Key             | Description                             |
+|-----------------+-----------------------------------------|
+| =SPC c k=       | Jump to documentation                   |
+| =SPC c d=       | Jump to definition                      |
+| =SPC c D=       | Jump to references                      |
+| =SPC c i=       | Jump to implementation                  |
+| =SPC c t=       | Jump to type definition                 |
+| =SPC c j/J=     | Jump to symbol in current/any workspace |
+|-----------------+-----------------------------------------|
+| =SPC c f=       | Format buffer/region                    |
+| =SPC c w/W=     | Delete trailing whitespaces/newlines    |
+| =SPC c o=       | Refresh/Organize imports                |
+| =SPC c r=       | Rename symbol                           |
+|-----------------+-----------------------------------------|
+| =SPC c x=       | List errors                             |
+| =SPC c a=       | Execute code action                     |
+| =SPC c L=       | Execute codelens action                 |
+|-----------------+-----------------------------------------|
+| =SPC c s=       | Send to REPL                            |
+|-----------------+-----------------------------------------|
+| =SPC c l T ...= | Toggle LSP features                     |
+| =SPC c l g ...= | Direct LSP jump functions               |
+| =SPC c l G ...= | Direct LSP peek functions               |
+|-----------------+-----------------------------------------|
+| =SPC c l w r=   | Restart LSP server                      |
+| =SPC c l F ...= | LSP workspace folders commands          |
+| =SPC c l w ...= | LSP server/session commands             |
+|-----------------+-----------------------------------------|
+
+** TODO [#C] Configure headerline breadcrumb :feature:
+
+- [ ] lsp-headerline-breadcrumb-enable is interesting
+  - Disabled by doom, claims it is redundant with imenu and modeline, but not the ability to browse to a specific part
+    - Which makes me realize that imenu is interesting (SPC s i)
+  - lsp-headerline-breadcrumb-segments
+  - https://emacs-lsp.github.io/lsp-mode/page/main-features/#breadcrumb-on-headerline
+
+** TODO [#D] Integrate lsp-ui-peek-* :feature:
+
+current SPC c l G ...
+
+- Uppercase variants of SPC c ... bindings?
+- [ ] Customize lsp-ui-peek-* faces to make it more usable
+
+** TODO [#D] Add LSP hydra :feature:
+
+- https://github.com/abo-abo/hydra/wiki/lsp-mode
+
+** SMDY Improve lsp-modeline-code-actions-face :improvement:
+
+Trigger: err = err in a go file
+
+Pick a softer blue
+
+** SMDY Explore lsp-treemacs
+
+- https://github.com/emacs-lsp/lsp-treemacs
+
+** SMDY lsp-ui-imenu & imenu vs treemacs & lsp-treemacs
+
+https://github.com/emacs-lsp/lsp-ui#lsp-ui-imenu
+
+** SMDY Explore DAP-mode (debug server)
+
+- https://emacs-lsp.github.io/dap-mode/
+
+* Checkers (flycheck) [0/0]
+** References
+
+- [[https://www.flycheck.org/en/latest/][Flycheck — Syntax checking for GNU Emacs — Flycheck 33-cvs documentation]]
+- [[https://golangci-lint.run/usage/linters/][Linters | golangci-lint]]
+
+** Bindings
+
+| Key       | Description            |
+|-----------+------------------------|
+| =SPC c x=   | List errors            |
+|-----------+------------------------|
+| =SPC c v v= | Verify checkers        |
+| =SPC c v d= | Describe checker       |
+| =SPC c v c= | Clear errors           |
+| =SPC c v h= | Display error at point |
+| =SPC c v e= | Explain error at point |
+| =SPC c v s= | Select checker         |
+| =SPC c v y= | Copy errors            |
+|-----------+------------------------|
+
+In flycheck error list:
+| Key | Description                           |
+|-----+---------------------------------------|
+| =r=   | Run checkers on source-file (refresh) |
+| =f=   | Set error level filter                |
+| =F=   | Clear error level filter              |
+|-----+---------------------------------------|
+
+* Flyspell [0/0]
+** Bindings
+
+| Key   | Description                   |
+|-------+-------------------------------|
+| =z ==   | Correct word at point         |
+| =z w/W= | Add/Remove word to dictionary |
+| =z SPC= | Cycle languages               |
+|-------+-------------------------------|
+| =]/[ s= | Next/Previous spell error     |
+
+* Snippets (YASnippet) [0/0]
+** References
+
+- Manual: [[https://joaotavora.github.io/yasnippet/][Yet another snippet extension]]
+- [[https://github.com/joaotavora/yasnippet][GitHub - joaotavora/yasnippet: A template system for Emacs]]
+- [[https://github.com/abo-abo/auto-yasnippet#usage=][GitHub - abo-abo/auto-yasnippet: quickly create disposable yasnippets]]
+- List of snippets: https://github.com/doomemacs/snippets
+
+** Bindings
+
+|-----------+-----------------------|
+| Key       | Description           |
+|-----------+-----------------------|
+| =TAB=     | Expand snippet abbrev |
+| =SPC i s= | Insert snippet        |
+|-----------+-----------------------|
+| =SPC c Y= | Create auto-snippet   |
+| =SPC c y= | Expand auto-snippet   |
+|-----------+-----------------------|
+
+Auto snippets are created using ~ (next symbol) or `' (arbitrary text) to delimit the placeholders.
+Use aya-create then aya-expand to create the snippet and expand it as many times as needed.
+
+When expanding a snippet, while editing fields:
+|--------------------+---------------------------|
+| Key                | Description               |
+|--------------------+---------------------------|
+| =TAB/S-TAB=        | Goto next/prev field      |
+| =M-RET=            | Delete to start of field  |
+| =<delete>=         | Skip field or delete char |
+|--------------------+---------------------------|
+
+Use ~M-x +snippets/...~ to search/edit snippets
+
+* Ediff [0/1]
+** References
+
+- [[https://www.gnu.org/software/emacs/manual/html_mono/ediff.html][Ediff Manual]]
+
+** Bindings
+
+|-------------+---------------------------------------------|
+| Key         | Description                                 |
+|-------------+---------------------------------------------|
+| =j/k=       | Go to next/prev difference                  |
+| =C-u/d=     | Scroll all windows                          |
+| =z h/l=     | Scroll all windows horizontally             |
+|-------------+---------------------------------------------|
+| =~=         | Swap variants                               |
+| =H=         | Switch between different highlighting modes |
+| =@=         | Toggle diff refinement                      |
+| =s=         | Toggle shrink windows for C/D               |
+| =/=         | Show/Hide Ancestor buffer (D)               |
+| =¦=         | Switch between vert/horizontal splits       |
+|-------------+---------------------------------------------|
+| =h/l=       | Copy region between buffers A/B             |
+| =a/b=       | Copy region from buffer A/B to C (or B/A)   |
+| =r=         | Reset buffer C to original diff             |
+| =w a/b/c/d= | Save buffer A/B/C/D                         |
+|-------------+---------------------------------------------|
+| =?=         | Show help for more bindings                 |
+|-------------+---------------------------------------------|
+
+** SMDY Starting a nested diff session messes up the workspace strategy :bug:
+
+On exiting the diff session, we do not return to the original.
+To try it, use = from a merge session.
+
+* Magit [0/6]
+** References
+
+- [[https://emacsair.me/2017/09/01/magit-walk-through/][Emacsair! A walk through the Magit interface]]
+- [[https://magit.vc/manual/magit-refcard.pdf][Reference Card]]
+- [[https://magit.vc/manual/magit/][Manual]]
+- [[https://magit.vc/manual/forge/Usage.html][Forge Manual]]
+
+** Bindings
+
+| Key     | Description                               |
+|---------+-------------------------------------------|
+| =SPC g .= | Hydra to interactively stage/revert hunks |
+| =SPC g g= | Magit entrypoint                          |
+
+*** Navigation
+
+| Key       | Description                   |
+|-----------+-------------------------------|
+| =TAB=     | Toggle section                |
+| =C-TAB=   | Toggle children               |
+| =S-TAB=   | Toggle all                    |
+| =1/2/3/4= | Toggle visibility by level    |
+|-----------+-------------------------------|
+| =C-j/k=   | Next/Prev section             |
+| =]/[=     | Next/Prev sibling             |
+|-----------+-------------------------------|
+| =-/+=     | Split hunks further           |
+| =S-SPC=   | View commit/diff (keep focus) |
+
+- Use region to stage/unstage parts of a diff, or multiple files at once
+
+*** Forge
+
+| Key       | Description                                  |
+|-----------+----------------------------------------------|
+| =C-c C-n= | Create a new post when browsing a topic      |
+| =C-c C-e= | Edit various parts (title, post, state, ...) |
+
+*** Miscellaneous
+
+| Key       | Description                         |
+|-----------+-------------------------------------|
+| =D/L=     | Change arguments (in diff/log view) |
+| =C-x C-s= | Save default popup arguments        |
+
+** TODO [#A] Fix unability to stage/unstage files containing tabs, sometimes :bug:
+** TODO [#B] yadm buffer is not killed on 'q', and is displayed in all persp
+
+It needs to be explicitly killed with SPC b d.
+Regular magit buffers do not persis on 'q'
+
+** TODO [#C] Investigate the right setting for magit-display-buffer-function :improvement:
+
+Doom's overlay advertises nice things, but I do not want diffs to open in another window..
+(magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+
+** TODO [#C] Improve shell-command integration :improvement:
+
+Use async-shell-command for yadm commands and make it NOT enter insert-mode by default
+Seems to be due to display-buffer
+
+** SMDY magit-todos integration :feature:
+
+https://github.com/alphapapa/magit-todos
+
+** SMDY github-review integration :feature:
+
+https://github.com/charignon/github-review
+
+* Org [0/39]
+** References
+
+- [[elisp:(info "(org)")][Org Mode Manual]]
+- [[https://orgmode.org/manual/][Org Mode Manual (web)]]
+- [[http://orgmode.org/worg/][Hello Worg, the Org-Mode Community!]]
+- Mailing list: https://lists.gnu.org/archive/html/emacs-orgmode/
+- Stack overflow: https://stackoverflow.com/questions/tagged/org-mode?sort=newest
+
+- [[http://doc.norang.ca/org-mode.html][Org Mode - Organize Your Life In Plain Text!]]
+- [[https://www.reddit.com/r/emacs/comments/8d42wu/how_do_you_use_orgmode/][How do you use org-mode? : emacs]]
+- [[https://karl-voit.at/2019/10/26/all-things-org/][All Things Org Mode: PIM, Scientific Writing, Presentation, Programming]]
+
+** Document structure [0/1]
+*** Rules & Style
+**** Files
+
+https://sachachua.com/blog/2013/08/emacs-how-i-organize-my-org-files/
+https://karl-voit.at/2020/05/03/current-org-files/
+
+- [X] *life.org*: personal notes and tasks, default location.
+  + Structure by categories of "topics"
+    - Match Documents/Resources/... structure
+    - Match bookmark structure
+
+- [X] *software.org*: notes about software architecture, development, applications, systems guide, notes and tasks.
+  + Structure by categories of software "topics"
+    - Get inspiration from [[https://wiki.archlinux.org/index.php/List_of_applications][arch wiki]]
+    - Match bookmark structure
+
+- [X] *emacs.org*: notes and tasks about emacs
+  + Structure by major feature area / package
+
+- [ ] *permadev.org*: notes and tasks about my own company
+  - Structure by client, to be determined as I go
+
+- [-] *cooking.org*: cooking tasks and recipes
+  - Structure by "Type of dishes" to investigate by browsing existing cooking websites
+
+- [ ] *inventory.org*: inventory of all these products I own... (could also be licenses, virtual stuff etc.)
+  + Scope
+    - car, house, bike, electronics, furniture, gardening tools? and other belongings included
+    - Notes and tasks related to them
+    - Product reference, original price, date, etc.
+    - Maybe only add as needed and do a retroactive migration for important things only
+  + Could be part of life.org
+  + How does that integrate with existing notes in life/software?
+    - Think of integration with "Devices" section in software.org
+    - Use links to start a search with inventory tags for each device?
+    - DO NOT use it for tasks then? Only notes/reference/history etc.
+
+- Additional files can be created for:
+  - Workplaces (e.g. etix, nebulae)
+  - Specific projects (e.g. ganjaboom, xsh)
+  - Specific topics (e.g. software, permaculture, house)
+- Signs that a new file might be required:
+  + A significant amount of tasks and notes
+  + A need for specific todo-workflows, tags, columns, archive file, startup options...
+  + Frequent switching from the same places in the same file
+  + Frequent agenda filtering based on subtree
+- Identified future candidates:
+  + Work projects: *nebulae.org* *ganjaboom.org*
+  + Basically every topic that is substantial enough (like software.org): *house.org* *garden.org*
+
+**** Topic-based structure
+
+- The structure of the notes SHOULD match the topic structure of documents/resources/... and bookmarks
+  + Although each can have its own specific sections, keep it as consistent as possible
+- Embed events, projects and tasks within their related topics (do not use a dedicated section by "type")
+  + Use custom sparse-tree queries to show only events/tasks/projets/issues/etc, keeping the category structure
+- Use category + recursive stats cookie for topic headings for upward visibility
+  + "recursive" behavior for stats cookie has been set to the default
+
+- Topic rules:
+  + Rule: Use _toplevel_ topics for *frequent* subjects about the self or its direct environment
+    - In more general terms: for *frequent* subjects about the file's topic.
+    - In the context of the main file, toplevel topics should be the *most frequent life topics*.
+  + Rule: Use _Divertissement_ topics for entertainment and multimedia subjects
+    - This topic is the topmost as it is the most generic topic, things go here ONLY if they don't belong anywhere else
+  + Rule: Use _Développement_ topics for subjects about *self development*
+    - Since in the larger sense, everything is self development, this is the default place for new topics when unsure if they should be toplevel
+    - Topics
+      + Life objectives and plans, visions
+      + Behavioral and lifestyle experiments
+      + Internal work: emotions / situations / dreams:  journal
+      + Consciousness work, deeper things about self, ...
+  + Rule: Use _Monde_ topics for subjects about the *external environment*.
+
+- [-] List of the types of headings that can be present at topic level (i.e. for a given theme):
+  - Projects (container for tasks? other purpose?)
+  - Tasks (issue/bug, feature, improvement) -> Prefer to put them in projects, but allowed toplevel as "Misc"
+  - More topic-specific categories
+  - Events (conference, appointments, meetings...)
+  - References (Bookmarks?)
+
+- Use a manual sort order for most headings,
+  + For topics: sort from most generic to most specific
+  + For tasks and projects: sort by priority
+    - Topics / other headings > Projects / Tasks
+    - Tasks that appear before topics/headings are tasks about this org document, this subtree specifically
+
+**** GTD
+
+The goal of Getting Things Done is to clarify your thinking on what you need to get done, clarify the desired outcome, identify the next actions to achieve these outcomes, then manage these reminders in a trusted system. You review your system daily to make intuitive choices on what to do next, as well as reviewing weekly to keep everything up to date.
+
++ [[https://gettingthingsdone.com/what-is-gtd/][What is GTD - Getting Things Done®]]
++ [[http://members.optusnet.com.au/~charles57/GTD/orgmode.html][Original intro article]]
++ [[http://members.optusnet.com.au/~charles57/GTD/gtd_workflow.html][Updated article]]
++ [[http://members.optusnet.com.au/~charles57/GTD/Natural_Project_Planning.html][Natural Project Planning]]
++ [[https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html][Orgmode for GTD]]
+
+***** Tasks / Next Actions
+
+- Tasks / Next actions are simply TODO/ACTV/WAIT/HOLD tasks, in priority order
+- [ ] Use explicitly in the workflow: NEXT keyword?
+  + Useful only if desiring to show ONLY next actions, hiding the full project backlog
+  + For now don't, will see later with usage
+  + For now SMDY is used to hide tasks from dashboards, so we could say that TODO is NEXT and SMDY is TODO.
+
+- Conventions:
+  + Use a TODO keyword only when the task is ready
+  + Use a stats cookie if the task has subtasks/checkboxes
+  + Use context tags if appropriate
+
+- SMART Projects & Tasks
+  + Spécifique: simple, clair et précis
+  + Mesurable: définir le niveau à atteindre
+  + Actionable: action claires et définies pour atteindre cet objectif
+  + Réaliste: objectif raisonnable et atteignable (ce qui n'empêche pas d'être ambitieux)
+  + Temporellement défini: deadlines
+
+***** Projects
+
+- A project is an outcome that requires more than one next action to complete.
+- Projects are centered around OUTCOMES, whereas headings are centered around TOPICS
+  + Very important distinction: "Learning org mode" is an OUTCOME, "Org" is a TOPIC
+- Projects can be ways to group together tasks from multiple TOPICS centered around common OUTCOME(s)
+  - No matter how good the grouping is, this will ALWAYS happen (rule of life)
+  - Intersection strategy:
+    + Ideally, the structure of topics would be nice enough to put projects at the "intersection" of related headings
+    + In case of toplevel "topic conflicts", use a toplevel project...
+    + But it is probably a sign that category should be reworked (keep it dynamic!)
+    + If there is no fitting intersection, projects can be placed under a "dominant" topic (which should be generic enough)
+  - Regardless of the topic for a given task, it should reside under the associated project, if any
+- Projects can be nested arbitrarily
+
+- Conventions:
+  + Use a PROJ keyword at beginning of heading
+  + Use a [0/0] recursive stats cookie at end of heading
+  + Use context tags if appropriate, knowing that all project tasks will inherit them
+  + DO NOT use a ~project~ tag (even if non-inherited, use the PROJ keyword instead)
+  + DO NOT use categories for projects.
+    Projects (outcomes) are parts of existing categories (topics).
+
+  + When possible, add an "Outcome/Goals" and "Why" sections for each project.
+    + Use the IDEA state for projects that have not yet gone through that phase
+
+- See [[https://karl-voit.at/2019/11/03/org-projects/][how to define projects in org-mode]].
+  + It was decided to use a specific TODO-set for managing projects, in part to explicitly differentiate projects/headings (outcome/topics). Also, projects represent outcomes just like regular tasks and so should be represented in the same manner.
+
+***** Natural Project Planning
+
+http://members.optusnet.com.au/~charles57/GTD/Natural_Project_Planning.html
+
+Thinking in more effective ways about projects and situations can make things happen sooner, better and more successfully.
+
+When you think about doing something that requires several steps, your mind goes through five steps:
+
+    1. Defining *purpose* and *principles*. Purpose is your intention to do something, for example, "Let's go out to dinner". Your principles create the boundaries of your plan, for example, "I want to eat at a quality restaurant with good service and located in a convenient part of town".
+
+    2. *Outcome visioning*. In the previous step, you identified why you want to do something. In this step you create an image of what you want to achieve or get out of completing the activity. For example, "I want to host an unforgettable dining experience for my overseas visitors".
+
+    3. *Brainstorming*. This is when you start to think about many aspects of the project. Who, what, when, where, why and how? How much time and money are available? Who needs to be involved? What needs to be done? This thinking process can be quite chaotic and it may not be possible to complete this thinking in one session. What you are trying to do in this step is identifying what needs to happen to take you from your present situation to achieving the desired purpose and outcome.
+
+    4. *Organizing*. Once you have generated a sufficient number of ideas and details, you need to organise them into some sort of structure or sequence. One way is to organise the project into a hierarchical structure called a "Work Breakdown structure" (WBS). You identify the resources, costs, people and skills needed, as well as determining a rough sequence of events and dependencies.
+
+    5. *Identifying Next Actions*. Now that you have completed the previous four steps, decide if you are committed to go ahead with the project. What is the next action that you need to take to move closer to completion?
+
+**** Style
+
+- File Header
+  + Reference: https://orgmode.org/manual/In_002dbuffer-Settings.html#index-STARTUP_002c-keyword-2
+  + See also org-startup-options
+  + Always specify: title, category, author
+  + Language settings
+    - English by default, each document should have specific language and not mix too much
+    - Use ~#+language:~ to explicitly set a different language
+    - Use the property line to set ispell-dictionary if needed
+  + Specify explicitly to facilitate local changes: archive, startup, todo, priorities, tags
+  + Specify explicitly for... explicitness only: COOKIE_DATA
+
+- Blank lines
+  - before heading: only if the heading above has content
+  - after heading: below planning and drawer information
+  - use +org/fix-blank-lines (SPC m SPC) to format
+
+- Usage of categories:
+  + Should be less than 15 char
+  + Explicit ~category~ property at toplevel
+  + Sublevels are allowed to define their own category property if relevant,
+    - Avoid at first level (redundant with f^ filter), but allowed if needed for agenda display
+    - Use top-level heading filter to synergize with categories
+
+*** Motion
+
+- C-hjkl behave as usual, with the notion of org-paragraphs
+- C-S-j/k (or ]] / [[) Move to next/prev visible heading
+- C-S-h/l (or g h/l) Move to parent/child heading
+- C-M-j/k (S-UP/DOWN) to move to prev/next list-item same level
+- ]/[ h (or g j/k) Move to next/prev heading same level
+- ]/[ c/l Move to next/prev source/link
+
+- [[https://github.com/Somelauw/evil-org-mode/blob/master/doc/keythemes.org#text-objects][Textobjects from evil-org-mode]]
+  + e: inner-object: link, markup, table cell
+  + E: inner-element: paragraph, code block, table row
+  + r: inner-greater-element: item list, table
+  + R: inner-subtree: subtree starting with a header
+
+- z RET to org-reveal context around point
+  - This is VERY useful when I lose context, or after jumping from agenda, etc.
+- z p to close all folds except the current heading
+- z r/R (o/O) m/M (c/C) for advanced folding control
+
+- SPC m . To go to a heading directly
+- SPC m / to search for a heading in all org files
+- SPM m , to switch to another org file/buffer
+- C-, to switch to next agenda file
+
+*** Structure Editing
+
+- RET: DWIM at point / S-SPC: DWIRM at point
+- C-RET/C-S-RET to insert a new heading, table cell or item below/above the current one.
+- M-RET to split the current line into a new heading at point
+  In insert-mode, M-RET will also split the line into list-items at point
+  Use prefix to insert heading below current subtree (like C-RET, but always creates heading)
+  Use double prefix to insert heading at the end of the tree above current heading
+- M-S-RET to create a new subheading
+- C-M-RET to create a new TODO heading or checkbox item
+- C-M-S-RET to create a new TODO sub-heading or checkbox sub-item
+- SPC m h to toggle heading on current line
+- SPC m i to toggle items on current line
+- SPC m H to convert list to subtree
+
+- M-h/l (LEFT/RIGHT) to promote/demote current heading or item
+- M-k/j (UP/DOWN) to move current subtree or item (with subitems) up/down
+- M-S-h/l (LEFT/RIGHT) to promote/demote SUBTREE
+- M-S-k/j (UP/DOWN) to move current LINE up/down
+- SPC m s h/l/k/j to promote/demote or move up/down current heading without moving to it
+- SPC m s S to sort same-level headings/items/table
+- SPC m s o to toggle ordered property
+
+- SPC m f to fix blank lines in current subtree
+  Use prefix to format buffer
+
+- zn to narrow buffer to current subtree
+- zN to narrow buffer indirectly to current subtree
+- SPC b w or zw to widen buffer (or kill indirect)
+
+*** Sparse Trees
+
+- SPC m s s for automatic sparse-tree creating commands
+- ??? to jump to next/prev sparse-tree match
+
+*** SMDY Support region for org-shift(meta)up/down/right/left commands :improvement:
+
+- It either ignores region completely (up/down) or region is not kep active which makes it a pain to use.
+- This is quite annoying since in other modes this binding is used to drag stuff around.
+- [ ] Not sure how to deal with this, report it upstream as a potential improvement?
+
+** Tables [0/1]
+*** Bindings
+
+|---------------+--------------------------------------------------------|
+| Key           | Description                                            |
+|---------------+--------------------------------------------------------|
+| =SPC m b c=     | Create or convert active region to table               |
+| =SPC m b s=     | Sort table                                             |
+| =SPC m b ...=   | More                                                   |
+|---------------+--------------------------------------------------------|
+| =TAB/S-TAB=     | Move to next/prev column (or row at last/first column) |
+| =C-M-<hjkl>=    | Move current cell                                      |
+| =M-<hjkl>=      | Move current row/column                                |
+| =M-S-<hjkl>=    | Add/remove a row/column                                |
+|---------------+--------------------------------------------------------|
+| =RET=           | Edit current cell                                      |
+| =S-RET=         | Copy current cell below                                |
+| =C-RET/C-S-RET= | Insert new row below/above                             |
+| =M-RET=         | Insert a new row with a separator line                 |
+|---------------+--------------------------------------------------------|
+
+*** SMDY Missing bindings :improvement:
+
+- https://orgmode.org/manual/Built_002din-Table-Editor.html#Built_002din-Table-Editor
+- org-tables-toggle-column-width
+- org-table-shrink / org-table-expand
+- org-startup-shrink-all-tables
+- https://orgmode.org/manual/Column-Width-and-Alignment.html
+
+- Use mouse hover or SPC h . to show content of a shrinked table column (on the three dots of column)
+
+** Links & Images [0/1]
+*** Rules & Style
+
+- Use links to point to common locations (resources, documents, projects, media...) related to a particular topic (dired)
+- Use a heading link for topic-related links to Documents, Resources, ...
+  + [[files:~][🖿 ~/<path>]] for file links
+  + If there's only one "main" web link, just paste that link as heading title.
+  + If there are multiple links, add a "Reference" heading with all links as list items.
+
+- Custom link types (gh, gh-issue?)
+  + Manual: https://orgmode.org/manual/Link-Abbreviations.html
+  + Doom: [[doom-modules:lang/org/README.org::*Built-in custom link types][Built-in custom link types]]
+
+*** Bindings
+
+|--------------+------------------------------------------------------------------|
+| Key          | Description                                                      |
+|--------------+------------------------------------------------------------------|
+| =SPC m l l=    | Insert/Edit link                                                 |
+| =SPC m l c=    | Auto-insert link with page title                                 |
+| =SPC m l d=    | Remove link                                                      |
+|--------------+------------------------------------------------------------------|
+| =SPC n l=      | Store link to current heading/buffer (insert with m l S / m l l) |
+|--------------+------------------------------------------------------------------|
+| =SPC m I / zi= | Toggle inline images                                             |
+| =SPC m l t=    | Show/Hide link text                                              |
+|--------------+------------------------------------------------------------------|
+
+** TODO-Items & Checkboxes [0/1]
+*** Rules & Style
+
+- Used for tasks, projects and captured ideas.
+- See [[file:~/.config/doom/config.org::*TODO-items & Checkboxes][the definition of todo states]]
+- Also [[*Tasks / Next Actions][Tasks / Next Actions]]
+
+*** Checkboxes
+
+- Use for quick lists of subtasks that don't need task searching/logging/archiving
+
+*** Bindings
+
+|-----------+----------------------------------------------------------------|
+| Key       | Description                                                    |
+|-----------+----------------------------------------------------------------|
+| =RET=       | DWIM: Toggle checkbox list items or TODO headings              |
+| =S-SPC=     | DWIM alt: Toggle checkbox list items                           |
+|-----------+----------------------------------------------------------------|
+| =C-M-j/k=   | Cycle heading priorities                                       |
+| =C-M-h/l=   | Cycle between heading/list states                              |
+| =C-M-S-h/l= | Cycle heading workflows                                        |
+|-----------+----------------------------------------------------------------|
+| =SPC m t=   | Assign state (SPC to remove)                                   |
+| =SPC m T=   | Assign state and prompt for the date/time to record the change |
+| =SPC m p=   | Assign priority                                                |
+| =SPC m x=   | Directly toggle checkbox                                       |
+|           | Use prefix to toggle the checkbox PRESENCE                     |
+|           | Use double prefix to set to [-]                                |
+| =SPC m X=   | Toggle checkbox as radio button                                |
+| =SPC m O=   | Toggle ordered property (TODO dependency based on order)       |
+| =SPX m #=   | Update stats cookies                                           |
+|-----------+----------------------------------------------------------------|
+
+*** TODO Avoid using the LAST_REPEAT property :improvement:
+
+Redundant with the LOGBOOK entries
+
+** Tags [0/1]
+*** Rules & Style [0/0]
+
++ Tags are normal words containing letters, numbers, ‘_’, and ‘@’.
+
++ Context Tags
+  - Main contexts
+    + @self: Things to do with myself, groups tasks related to specific activities/mindsets.
+      + This is the default, and a one of kind context. It's also the most generic/frequent context.
+      + Is mainly used as context for tasks that don't need a particular context, or can be done from most other contexts.
+      + For now this is used for decisions, reflections, etc.
+      + In the future, it could become a group tag if subtags for more specific "contexts" (moods?) emerge.
+    + @home: Things to do at home, groups tasks related to the place(s) I live in.
+    + @work: Things to do at work, groups tasks associated to specific work projects.
+    + @people: Things to do with other people, groups tasks associated to specific people.
+    + Ordered from the most "frequent/dynamic" (generic) to the most "rare/static" (specific)
+    + Always prefer specific to generic, just like topic rules
+      - Ask this question for each context from the top: can this task be done in this context?
+      - The first context for which the answer is yes should be the right context for the task
+      - The process can be continued to find a more specific context if too generic
+        + For instance, prefer @home to @self if the task can be done on both contexts
+    + If in doubt, maybe seing contexts as beneficiaries of the tasks can help
+      + For a given task, does doing that task benefit @people, @home, @work, @self?
+    + If still in doubt, think of the views corresponding to each tag and pick the best fit
+  - Context Tags are organized in a hierarchy: each tag above can be a group tag for more specific kind of tags
+    - Examples: ~@WorkProject~, ~@Place~, ~@Someone~, ...
+    - Use these tags only when the item is directly related to a particular people/place/etc
+    - Prefer the group tag otherwise, but I guess it dependes on...context huh huh uh um...
+  - Do not hesitate to add frequent places that I go to, or people I interact with
+    - But, don't forget to Keep it Simple, be driven by need!
+
++ Tags for Topics (NO TODO-state)
+  - Regular notes do not qualify for context tags, and must not be used as a way to "inherit" all tags.
+  - Topics SHOULD NOT have tags assigned to them.
+    - Exceptions are allowed if the topic is about the exact item described by the tag.
+    - More generally, allowed if I can assume that ALL things in this topic will ALWAYS have the tag.
+  - Events or other kinds of special items may have special rules (see below)
+
++ Tags for Events (NO TODO-state)
+  - Any heading with a date which is not a task is either an event or an appointment
+    - event = Things that happen without my intervention
+    - appointment = Things to which I must attend to, i.e. be present at the "event time"
+  - Use ~appointment~ tag for activities, meetings, ...
+  - Use ~event~ tag for other kinds of events: hday, bday, media release...
+  - Use context tags (see above)
+    - All events should have a context, except very generic events like hday, bday and astral events
+    - Assigning a context is also a way to engage with the task (when/how will I do this task?)
+
++ Tags for Tasks (TODO-state)
+  - A task can have file-specific tags or a regular type tag.
+  - File-specific tags
+    - For example, activity tags from life.org:
+      + ~read~ for all things to read, scattered in different topics
+      + ~listen~ for all things to listen to (music/podcasts), not scattered?
+      + ~watch~ for all things to watch (videos, series, films, documentaries...), not scattered?
+      + Describes tasks that are simply about reading/listening/watching stuff
+      + Could be at home, in car, at phone, at computer anywhere, ... context can be assigned if needed
+    - This allows to scatter my read/listen/watch lists across files and topics
+  - Type tags: ~issue~, ~bug~, ~improvement~, ~feature,~ ...
+  - Tasks that have no type tags are allowed and are considered a "plain task"
+  - Use context tags (see above)
+    - All tasks should have a context. the exception to this is idea tasks, which are not yet ready for action.
+    - Tasks that do not fit in any particular context should go into the @self group tag or a subtag.
+      + e.g. decisions, reflections, ...
+  - If needed in addition to priority system, use priority tags: ~urgent~ / ~important~
+    Eisenhower matrix :
+    https://ecopreneur.fr/wp-content/uploads/2021/02/outil-matrice-prioriser-ta%CC%82ches-768x545.jpg
+
++ Tags for projects (proj todo-state)
+  - Same context tags than for tasks, but only if applicable to all project tasks
+
+*** Bindings
+
+|---------+---------------------------------------------------|
+| Key     | Description                                       |
+|---------+---------------------------------------------------|
+| =SPC m q= | Set tags                                          |
+|         | Use prefix to align all tags to configured column |
+|         | Use double prefix to bypass fast-tag selection    |
+| =S-SPC=   | DWIM: Set tags (on heading line)                  |
+|---------+---------------------------------------------------|
+
+*** SMDY Make esc exit fast-tag-selection (like for todo) :improvement:
+
+Seems to use the same code than fast-todo-selection, yet behaves differently.
+Seems due to handling of default keys: any other key exits todo selection, whereas tag does not.
+Overriding function is overkill. Needs fix upstream, if it's even desired...
+It would make sense that any key exits tag selection if org-fast-tag-selection-single-key is set.
+
+** Properties & Columns [0/0]
+*** Rules & Style
+
+- Properties are tags with a value, not (necessarily) inherited. Global properties are inherited.
+- Special properties that must not be used
+  https://orgmode.org/manual/special-properties.html#special-properties
+- Special properties COLUMNS, CATEGORY, ARCHIVE & LOGGING are inherited
+  https://orgmode.org/manual/property-inheritance.html#property-inheritance
+- Use the ordered property to force dependencies based on task order locally
+- Export properties: https://orgmode.org/manual/export-settings.html#export-settings
+
+*** Bindings
+:PROPERTIES:
+:CATEGORY: asd
+:END:
+
+|---------+-------------------------------------------------|
+| Key     | Description                                     |
+|---------+-------------------------------------------------|
+| =C-M-h/l= | Cycle through allowed property values           |
+|---------+-------------------------------------------------|
+| =SPC m o= | Set properties                                  |
+| =SPC m O= | Execute other property commands                 |
+| =SPC m d= | Insert specific drawer (deadline/scheduled/...) |
+|---------+-------------------------------------------------|
+
+** Dates & Times [0/1]
+*** Rules & Style
+
+- Use plain heading and dates for appointments/events (no todo / scheduled)
+- Use todo headings for action items and schedule them to set a date when i want to start working on it (e.g. to plan the day)
+- Use deadlines for todo headings for which a hard date is set that i have no control over, and for which i must take action in advance.
+
+- Clocks
+  + Clock-in on tasks I am working on, allows to keep focus on what I am doing and jump back to clocked tasks easily.
+  + Also builds a nice history of what/where I spent my time, viewable in agenda with clockcheck/clockreport modes.
+  + There's also a nice subtree overlay with org-clock-display
+  + Also clock tables: https://orgmode.org/manual/The-clock-table.html
+
+*** Bindings
+
+|-------------------+---------------------------------------------------------------|
+| Key               | Description                                                   |
+|-------------------+---------------------------------------------------------------|
+| =C-M-h/l=           | Change date at point by one day                               |
+| =C-M-j/k=           | Change date part at point (year, month, day, time, ...)       |
+| =SPC m c t=         | Compute time range                                            |
+|-------------------+---------------------------------------------------------------|
+| =SPC m d t/T=       | Create/update active/inactive timestamp                       |
+| =SPC m d d/S=       | Create/update deadline/scheduled date                         |
+|-------------------+---------------------------------------------------------------|
+| =SPC m C=           | Start a countdown timer for the current task                  |
+| =SPC m I=           | Start a relative timer and insert list item with current time |
+|-------------------+---------------------------------------------------------------|
+| =SPC m c i/o=       | Clock in/out task (I/O in agenda)                             |
+| =SPC m c c=         | Cancel clock      (c c in agenda)                             |
+| =SPC m c l/SPC n t= | Toggle last clock                                             |
+|-------------------+---------------------------------------------------------------|
+| =SPC n c/C=         | Goto last/history clocked task (c g in agenda)                |
+|-------------------+---------------------------------------------------------------|
+| =SPC m c d=         | Set the default clock task                                    |
+| =SPC m c r=         | Resolve running clocks                                        |
+|-------------------+---------------------------------------------------------------|
+
+*** SMDY Explore org-agenda-clock-consistency-checks :improvement:
+
+Use in clockcheck mode of agenda.
+
+** Refiling & Archiving [0/1]
+*** Rules & Style
+
+- Refiling is to put headings in the right places.
+- Use on captured items or whenever I need to move a heading.
+
+- Each org file has a ~.org_archive~ sibling in the ~archive/~ subdirectory
+- The archive file are organized with datetree by default
+- Files can define their own archive layout using the ~archive~ property, or archive in the same file using a dedicated heading
+
+*** Bindings
+
+|-------------+-----------------------------------------------------------|
+| Key         | Description                                               |
+|-------------+-----------------------------------------------------------|
+| =SPC m r r/R= | Refile (append/prepend, w prefix: goto only, no refile)   |
+| =SPC m r n=   | Refile to targets matching current org-view scope/context |
+| =SPC m r .=   | Refile to current file                                    |
+| =SPC m r f=   | Refile to file                                            |
+| =SPC m r c=   | Refile to last clocked task                               |
+| =SPC m r l=   | Refile to last refile location                            |
+| =SPC m g r=   | Goto last refile location                                 |
+|-------------+-----------------------------------------------------------|
+| =SPC m A=     | Archive to archive file                                   |
+| =SPC m s A=   | Archive to sibling in the same file                       |
+|-------------+-----------------------------------------------------------|
+
+*** SMDY Keep hierarchy when archiving :improvement:
+
+https://github.com/zaeph/.emacs.d/blob/53048895a95348563a26e9b09e09dee1992a59d4/lisp/zp-org.el#L38=
+https://fuco1.github.io/2017-04-20-Archive-subtrees-under-the-same-hierarchy-as-original-in-the-archive-files.html
+
+** Capture & Attachments [0/0]
+*** Rules & Style
+**** General Workflow [0/1]
+
+1. Collect
+
+   + Use org-capture templates to collect ideas, tasks, or basically anything that enters the system.
+   + See also [[*Subscriptions][Elfeed Subscriptions]]
+
+   Concretely:
+   + By default, captures in life.org at the toplevel "Inbox" heading
+   + Specifc templates are provided for other frequent locations and types of entries
+   + Specific templates are provided when capturing from project or specific org-file
+
+2. Clarify & Organize
+
+   + From Wikipedia: Is it actionable?
+     - If so, decide the next action and project (if more than one action is required).
+     - If not, decide if it is trash, reference, or something to put on hold.
+     - See diagram below for details
+
+       [[file:~/Resources/Développement/Organisation/gtd_chart.png][file:~/Resources/Développement/Organisation/gtd_chart.png]]
+
+       In the end, items end up in one of the following:
+       a. In the trash
+       b. On the someday/maybe list
+       c. In a neat reference filing system
+       d. On a list of tasks, with the outcome and next action defined if the "incomplete" is a "project" (i.e., if it will require two or more steps to complete it)
+       e. Immediately completed and checked off if it can be completed in under two minutes
+       f. Delegated to someone else and, if you want a reminder to follow up, added to a "waiting for" list
+       g. On a context-based "next action" list if there is only one step to complete it
+       h. On your calendar
+
+   Concretely:
+   + Clarify what needs to be done, etc.
+   + Choose todo kwd + tag + schedule/deadline
+   + Use org-refile to put the task in the appropriate place
+
+3. Reflect / Plan
+
+   + Recently identified projects are assigned a desired outcome and a single "next action".
+   + Refine tasks priorities for each project (outcome) and each context
+   + From Wikipedia:
+     Allen emphasizes two key elements of GTD — control and perspective. The workflow is the center of the control aspect. The goal of the control processes in GTD is to get everything except the current task out of your head and into this trusted system external to your mind. He borrows a simile used in martial arts termed "mind like water". When a small object is thrown into a pool of water, the water responds appropriately with a small splash followed by quiescence. When a large object is thrown in the water again responds appropriately with a large splash followed by quiescence. The opposite of "mind like water" is a mind that never returns to quiescence but remains continually stressed by every input. With a trusted system and "mind like water" you can have a better perspective on your life. Allen recommends reflection from six levels, called "Horizons of Focus":
+
+     - Horizon 5: Life
+     - Horizon 4: Long-term visions
+     - Horizon 3: 1-2 year goals
+     - Horizon 2: Areas of focus and accountability
+     - Horizon 1: Current projects
+     - Ground: Current actions
+
+     Unlike some theories, which focus on top-down goal-setting, GTD works in the opposite direction. Allen argues that it is often difficult for individuals to focus on big picture goals if they cannot sufficiently control the day-to-day tasks that they frequently must face. By developing and using the trusted system that deals with day-to-day inputs, an individual can free up mental space to begin moving up to the next level.
+
+     Allen recommends scheduling a weekly review, reflecting on the different levels. The perspective gained from these reviews should drive one's priorities at the project level. Priorities at the project level in turn determine the priority of the individual tasks and commitments gathered during the workflow process. During a weekly review, determine the context for the tasks and put each task on its appropriate list. An example of grouping together similar tasks would be making a list of outstanding telephone calls, or the tasks/errands to perform while out shopping. Context lists can be defined by the set of tools available or by the presence of individuals or groups for whom one has items to discuss or present.
+
+   Concretely:
+   + Use Planning/Backlog views
+   + [ ] Make a Review checklist?
+
+4. Engage
+
+   + From Wikipedia:
+     Finally, a task from your task list is worked on unless the calendar dictates otherwise. You select which task to work on next by considering where you are (i.e., the "context", such as at home, at work, out shopping, by the phone, at your computer, with a particular person), time available, energy available, and priority.
+
+   Concretely:
+   + Use Dashboard views
+
+**** Capture Templates
+
+- Templates are defined for each major kind of entry: note / event / appointment / journal / feed / ...
+
+- Task templates are provided for each major task tag
+  + The default templates provide task templates for default tags: need / read / listen / watch
+  + Tasks read/listen/watch go by default in the dedicated section in "Divertissement"
+
+- Additional generic templates are provided when capture is called from specific contexts
+  + If called from an org-file, provide these templates for the current file
+  + If called from a project, provide these templates for the project notes file
+  + If a specific scope is selected via hydra/org-view (SPC n n), use that
+
+*** Bindings
+
+Use ~Meta-Return~ to capture from anywhere (outside emacs).
+
+|-------------+-------------------------------------------------------------------|
+| Key         | Description                                                       |
+|-------------+-------------------------------------------------------------------|
+| =SPC n x=   | Capture (prefix: goto location, double prefix: goto last capture) |
+| =SPC p x=   | Project capture (same prefix behavior)                            |
+| =SPC n X=   | Counsel capture                                                   |
+| =SPC p X=   | Counsel project capture                                           |
+| =SPC m g x= | Goto last capture location (or use double prefix on capture)      |
+|-------------+-------------------------------------------------------------------|
+
+|-------------+---------------------|
+| Key         | Description         |
+|-------------+---------------------|
+| =SPC m a a= | Attach (dispatcher) |
+|-------------+---------------------|
+
+** Calendar [0/0]
+*** Rules & Style
+
+- Calendar usage
+  + Alternate, wide and simpler view of holidays/astral events (+birthdays?)
+  + Useful to browse dates mainly, or count days in region, but very limited when compared to agenda
+  + Just use calendar to BROWSE for agenda, and use everything from agenda
+
+- Diary usage
+  + Do not use diary file, but rather use diary features from org-mode
+    + appointments are events in org
+    + holidays and lunar phases are migrated in org with specific categories
+    + birthdays are in org for now, but will see later with contacts integration
+  + Keep basic diary file to allow showing holidays/astral events in calendar
+
+- Calendar prompt format: https://orgmode.org/manual/The-date_002ftime-prompt.html
+- Manual: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Calendar_002fDiary.html]]
+
+*** Bindings
+**** General
+
+|---------------------+------------------------------------------------------------------------------|
+| Key                 | Description                                                                  |
+|---------------------+------------------------------------------------------------------------------|
+| =SPC o c=           | Open calendar                                                                |
+| =g d/c= from agenda | Popup calendar to select agenda date, with/without date prompt |
+| =RET=               | Open agenda from calendar                                                    |
+|---------------------+------------------------------------------------------------------------------|
+| =h/j/k/l=           | Move forward/backward days/weeks (plain calendar only)                       |
+|---------------------+------------------------------------------------------------------------------|
+| =C-h/l or 0/^/$=    | Move to beg/end of week (plain calendar only)                                |
+| =C-k/j or )/(=      | Move to beg/end of month                                                     |
+| =C-S-l/h or }/{=    | Move forward/backward months                                                 |
+| =C-S-j/k or ]]/[[=  | Move forward/backward years                                                  |
+| =.=                 | Goto today                                                                   |
+| =o=                 | Interactively select a year/month                                            |
+|---------------------+------------------------------------------------------------------------------|
+| =C-d/u </>=         | Scroll left/right                                                            |
+| =C-f/b=             | Scroll left/right 3 months                                                   |
+|---------------------+------------------------------------------------------------------------------|
+| =r=                 | Redraw                                                                       |
+| =v=                 | Set mark on current day                                                      |
+| =M-==               | Count days between mark and point (inclusive)                                |
+|---------------------+------------------------------------------------------------------------------|
+
+**** Diary
+
+|-----------+-------------------------------------------------------------------|
+| Key       | Description                                                       |
+|-----------+-------------------------------------------------------------------|
+| =d/D=     | View diary entries from default/custom file for the selected date |
+| =m=       | Highlight diary entries                                           |
+| =x=       | Highlight holidays                                                |
+| =u=       | Unhighlight holidays and diary entries                            |
+| =i ...=   | Insert diary file entry                                           |
+| =a=       | Display/open entire diary file                                    |
+|-----------+-------------------------------------------------------------------|
+| =s s (S)= | Sunrise/sunset                                                    |
+| =s m (M)= | Lunar phases                                                      |
+| =s H=     | Holidays                                                          |
+| =s h (H)= | Show holiday for current day only                                 |
+|-----------+-------------------------------------------------------------------|
+
+** Agenda [0/6]
+*** Rules & Style
+
+- The agenda is only used to show items which have an associated timestamp, scheduled date and/or deadline.
+- Org QL Views are used to plan and manage tasks (which can eventually be scheduled from there and end up in the agenda),
+  instead of the todo/tags/text search mechanism provided by the agenda. See [[*Views][Views]].
+- Mainly, use the agenda dispatcher to show the defined custom views, with an eventual buffer/subtree restriction (<)
+
+Manual:
+- [[https://orgmode.org/manual/Agenda-Dispatcher.html#Agenda-Dispatcher][Agenda Dispatcher (The Org Manual)]]
+- [[https://orgmode.org/manual/Matching-tags-and-properties.html][Matching tags and properties (The Org Manual)]]
+- [[https://orgmode.org/manual/Custom-Agenda-Views.html][Custom Agenda Views (The Org Manual)]]
+
+**** Custom Views
+
+- Defined custom views:
+  + Weekly Agenda
+    + Default, fast weekly view. Not meant for scheduling tasks or working on projects. Just look at the week.
+    + Should only display habits, events, scheduled tasks and deadlines.
+  + Event Weekly Agenda
+    + Look at the week and entries with an hour specification only.
+    + List events & appointments only.
+    + No scheduled tasks and deadlines.
+  + Daily Agenda
+    + Daily agenda view, like weekly agenda but for a single day.
+  + Weekly Log
+    + Review what has been done in the past. Includes archives and log-all mode by default.
+
+**** View options
+
++ Agenda
+  - org-agenda-span
+  - org-agenda-start-on-weekday
+  - org-agenda-start-day
+  - org-agenda-prefix-format (%l?)
+  - org-agenda-entry-types
+  - org-agenda-start-with-log/clockreport/follow-mode
++ All
+  - org-agenda-overriding-header
+  - org-agenda-sorting-strategy
+  - org-agenda-*-filter-preset
+  - org-agenda-skip-function
+  - org-agenda-skip-*
++ Text Search
+  - org-agenda-text-search-extra-files
+
+- If in need of more flexibility:
+  + Diary sexp can be greatly useful for more complex or specific scheduling cases
+    * https://www.gnu.org/software/emacs/manual/html_node/emacs/Special-Diary-Entries.html
+    * Org integration: https://www.gnu.org/software/emacs/manual/html_node/org/Timestamps.html
+      Limited integration for schedule/deadline: (no early/late warning) https://www.gnu.org/software/emacs/manual/html_node/org/Deadlines-and-Scheduling.html
+    * Agenda integration: https://www.gnu.org/software/emacs/manual/html_node/org/Weekly_002fdaily-agenda.html
+    * Infinite possibilities: https://www.gnu.org/software/emacs/manual/html_node/emacs/Sexp-Diary-Entries.html
+  + Control accessibility of some agenda commands: org-agenda-custom-commands-contexts
+  + Custom agenda bulk operations: org-agenda-bulk-custom-functions
+  + Agenda prefix format supports %(expression) in org-agenda-prefix-format, allowing creative uses
+
+*** Bindings
+
+Default evil bindings:
+- https://github.com/Somelauw/evil-org-mode#agenda
+
+Available keys:
+- C-M-RET and friends
+- +/-
+- w/b/e/W/B/E
+- p/T/D?/X?/P?
+
+**** General
+
+Opening the agenda
+|---------------------------+--------------------------------------|
+| Key                       | Description                          |
+|---------------------------+--------------------------------------|
+| =RET on an org date/time= | Open agenda for the given date/range |
+| =SPC n a=                 | Open agenda dispatcher               |
+| =SPC n a w=               | Open weekly agenda                   |
+| =SPC n a d=               | Open daily agenda                    |
+| =SPC n a e=               | Open weekly event agenda             |
+| =SPC n a l=               | Open weekly log                      |
+|---------------------------+--------------------------------------|
+
+Other commands which are mostly superseeded by org-ql and friends:
+- SPC n a t to open todo-list
+  https://orgmode.org/manual/Global-TODO-list.html#Global-TODO-list
+- SPC n a m to open tags-search
+  https://orgmode.org/manual/Matching-tags-and-properties.html#Matching-tags-and-properties
+- SPC n a s to open text-search
+  org-search-view
+  https://orgmode.org/manual/Search-view.html#Search-view
+- SPC n a / for multi-occur text search in org files
+  org-occur-in-agenda-files
+
+Motion in agenda
+|---------+-----------------------------|
+| Key     | Description                 |
+|---------+-----------------------------|
+| =]/[=   | Go forward/backward in time |
+| =.=     | Jump to today               |
+| =j/k=   | Move to next/prev item      |
+| =C-j/k= | Move to next/prev line      |
+| =M-j/k= | Drag line forward/backward  |
+|---------+-----------------------------|
+
+Cheat sheet
+|-------------+--------------|
+| Key         | Description  |
+|-------------+--------------|
+| =SPC m SPC= | Agenda Hydra |
+|-------------+--------------|
+
+**** View Commands
+
+|---------------+-----------------------------------------------------|
+| Key           | Description                                         |
+|---------------+-----------------------------------------------------|
+| =A=           | Append another agenda view                          |
+| =z d/w/t/m/y= | Change time span of agenda                          |
+| =z SPC=       | Reset                                               |
+| =z l/L=       | Toggle log/log-all mode                             |
+| =z a/A=       | Toggle archive/archive-files mode                   |
+| =z f=         | Toggle follow mode                                  |
+| =z D=         | Toggle diary (useless in my case)                   |
+| =z G=         | Toggle time-grid                                    |
+| =z c/R=       | Toggle clock-check/clock-report                     |
+| =z E=         | Show the first lines from the outline of each entry |
+| =z [=         | Show inactive timestamps (r to cancel)              |
+|---------------+-----------------------------------------------------|
+| =s h=         | Toggle habits, use prefix to toggle show-all-today  |
+| =s H=         | Show holidays                                       |
+| =s m=         | Show moon phases                                    |
+| =s s=         | Show sunrise/sunset                                 |
+| =s t=         | Show tags                                           |
+| =s d=         | Show date converter                                 |
+|---------------+-----------------------------------------------------|
+
+**** Filtering
+
+|------------+------------------------------------------------------------------------------------------------------------|
+| Key        | Description                                                                                                |
+|------------+------------------------------------------------------------------------------------------------------------|
+| =r=        | Refresh, use numeric prefix to filter by TODO-state in TODO-list                                           |
+| =g R=      | Refresh all agendas                                                                                        |
+|------------+------------------------------------------------------------------------------------------------------------|
+| =>=        | Remove original restriction lock (seems to work only for subtrees)                                         |
+| =f c or <= | Restrict/remove (w prefix) agenda to current category (use from dispatcher to select current file/subtree) |
+| =f ^=      | Filter by top heading                                                                                      |
+| =f q/r/e=  | Filter by tag/regexp/effort                                                                                |
+| =f q RET=  | Execute the custom predefined tag filter (exclude all events)                                              |
+| =f f=      | Combine filters using the query syntax                                                                     |
+| =F=        | Remove filters                                                                                             |
+| =f l=      | Set temporary limits (discard with r or prefix)                                                            |
+|------------+------------------------------------------------------------------------------------------------------------|
+
+- All filtering commands handle prefix arguments in the same way:
+  - Single prefix negates the filter, so it removes lines selected by the filter.
+  - Double prefix adds the new filter condition to the one(s) already in place, so filter elements are accumulated.
+
+**** Actions
+
+|--------------------------+------------------------------------------------------------------------------|
+| Key                      | Description                                                                  |
+|--------------------------+------------------------------------------------------------------------------|
+| =RET=                    | Switch to item at point                                                      |
+| =C-RET (or TAB)=         | Go to item at point in other window                                          |
+| =S-RET=                  | Display item in other window and center around item, without focus (preview) |
+| =M-RET=                  | Open a new window with the indirect buffer for the current entry             |
+| =M-S-RET=                | Switches the indirect buffer in the same window (SPC b w to go back).        |
+| =o=                      | Open the first link in the current entry                                     |
+|--------------------------+------------------------------------------------------------------------------|
+| =T (or SPC m q)=         | Change tags                                                                  |
+| =t (or SPC m t)=         | Assign TODO keyword                                                          |
+| =C-M-h/l=                | Cycle TODO keywords                                                          |
+| =C-S-h/l (or C-M-S-h/l)= | Cycle todo workflows                                                         |
+| =J/K (or C-M-j/k)=       | Cycle priorities                                                             |
+| =H/L=                    | Move date to earlier/later                                                   |
+| =d (or SPC m d t)=       | Select a new date/time                                                       |
+| =SPC m d d/s=            | Set deadline/schedule                                                        |
+| =SPC m C=                | Set timer                                                                    |
+| =a=                      | Add a note                                                                   |
+| =i j=                    | Jump to journal datetree for current day                                     |
+| =i ...=                  | Insert diary entry (prefer to use capture: =C j=)                            |
+| =c e=                    | Change effort                                                                |
+|--------------------------+------------------------------------------------------------------------------|
+| =d d=                    | Delete entry/subtree                                                         |
+| =d a/A (or D)=           | Archive with/without confirmation                                            |
+|--------------------------+------------------------------------------------------------------------------|
+| =SPC m r=                | Refile entry at point                                                        |
+| =C=                      | Capture using the date at point as the default capture template date.        |
+|                          | Using the regular capture shortcut will do the same (I enabled this option)  |
+|--------------------------+------------------------------------------------------------------------------|
+| =S=                      | Save all org buffers                                                         |
+|--------------------------+------------------------------------------------------------------------------|
+
+**** Mark & Bulk
+
+|----------+--------------------------|
+| Key      | Description              |
+|----------+--------------------------|
+| =m=      | Toggle mark              |
+| =M or ~= | Toggle all               |
+| =*=      | Mark all                 |
+| =U=      | Unmark all               |
+| =%=      | Mark regexp              |
+| =x=      | Execute actions on marks |
+|----------+--------------------------|
+
+*** TODO Diary buffer hanging around :improvement:
+*** TODO Refreshing the agenda makes it incrementally slower :bug:
+
+Sticky agenda views disabled because of this.
+
+*** SMDY More agenda explorations :feature:
+
+- org-gtd? check out GTD workflow
+- org-edna: Tasks triggers/blockers
+  + https://www.nongnu.org/org-edna-el/#planning
+
+** Views [0/6]
+*** Rules & Style
+
+- Views are used to present a relevant subset of tasks in predefined groups.
+- By default, view commands use the current buffer as source (if in org-mode). Use a narrowed buffer to restrict to a subtree.
+  - If the current buffer is not in org-mode, fallback to the project's notes file.
+  - If not in a project, fallback to org-agenda-files.
+- Using the org view hydra, a GTD context can be set so that future views only show items corresponding to that context.
+- The hydra also allows to select the scope manually, as well as file-specific tags (need, ...)
+- Views can also be accessed via a dedicated binding (instead of hydra) because it needs to be ACCESSIBLE
+- Views usually have a sidebar and a same-window variant, bound on the same binding (up-case version for sidebar)
+- View buffers use the same bindings and features as the agenda !
+
+*** Bindings
+
+|-----------+------------------------------|
+| Key       | Description                  |
+|-----------+------------------------------|
+| =SPC n n=   | Awesome hydra                |
+| =SPC n u/U= | Upcoming sidebar/view        |
+| =SPC n d/D= | Dashboard sidebar/view       |
+| =SPC n p/P= | Planning sidebar/view        |
+| =SPC n b/B= | Backlog sidebar/view         |
+| =SPC n o=   | Dashboard + planning sidebar |
+| =SPC n O=   | Tree sidebar                 |
+|-----------+------------------------------|
+
+  
+*** TODO [#B] Add a project scope value :improvement:
+
+Current behavior is nice, until I want to see dashboard from project while in an unrelated org file in project
+So, add a 'project value to +psydev/org-view-scope.
+Make the priorities straight: buffer should still fallback to project if not in org-mode, and project should fallback to org-agenda-files if not in a project
+
+*** TODO [#E] Subtags of @people are not included in org-ql-views :bug:
+
+See https://github.com/alphapapa/org-ql/pull/146
+Merge in my own fork?
+
+*** TODO [#E] Tree sidebar RET bindings :improvement:
+
+Am I even gonna use the tree sidebar?
+
+- Tree sidebar: Add C-RET/M-RET bindings to keep focus in sidebar (or open in new window)
+  - Customize org-sidebar-tree-jump-indirect to allow injection of display-buffer action
+
+*** IDEA Separate read/listen/watch from dashboard/planning
+
+Maybe present dashboards views without read/listen/watch and use the bottom view for that with org-sidebar
++ Allows to present read/listen/watch items grouped by outline-path without mixing up with actual tasks
++ This means I need a variant including ONLY read/listen/watch for EACH dashboard...
++ And that I setup a system so select a sideboard view just like an org-view
+
+** Publishing [0/1]
+*** TODO Bindings
+
+- [ ] SPC m P ...
+
+** Block & Source [0/1]
+*** Bindings
+
+Source blocks can be inserted using org-structure-template-alist.
+Type '<s', then tab to insert a source block.
+
+See `org-structure-template-alist` and https://orgmode.org/manual/Structure-Templates.html
+
+|---------+-------------------------------------------|
+| Key     | Description                               |
+|---------+-------------------------------------------|
+| =SPC m e= | Edit the source or example block at point |
+|---------+-------------------------------------------|
+
+*** TODO [#A] PlantUML integration
+
+https://plantuml.com/en/guide
+
+#+begin_src plantuml :file diagram/my-diagram.png
+title Authentication Sequence
+
+/'
+ ' ' hide the spot
+ ' hide circle
+ ' ' avoid problems with angled crows feet
+ ' skinparam linetype ortho
+ ' entity "Entity01" as e01 {
+ ' *e1_id : number <<generated>>
+ ' --
+ ' *name : text
+ ' description : text
+ ' }
+ ' entity "Entity02" as e02 {
+ ' *e2_id : number <<generated>>
+ ' --
+ ' *e1_id : number <<FK>>
+ ' other_details : text
+ ' }
+ ' entity "Entity03" as e03 {
+ ' *e3_id : number <<generated>>
+ ' --
+ ' e1_id : number <<FK>>
+ ' other_details : text
+ ' }
+ ' e01 ||..o{ e02
+ ' e01 |o..o{ e03
+ '/
+Alice->Bob: Authentication Request
+note right of Bob: Bob thinks about it
+Bob->Alice: Authentication Response
+#+end_src
+
+#+RESULTS:
+[[file:diagram/my-diagram.png]]
+
+** PROJ [#A] Learning Org [0/20]
+*** Why
+
+To understand org-mode's features and extensions,
+So that I can improve my personal organization and mental relief.
+
+To allow me to use this very system I am using right now, in a better way.
+To continue the emacs ramp, falling deep into that black hole, until I can see light.
+Knowingly ignoring that light must come from within...
+
+*** Outcome
+
+- I have found a decent and consistent system to organize my existing notes.
+- I am now comfortable capturing ideas with org-capture, and processing, organizing, etc.
+- I have found a decent workflow to process ideas and manage tasks into projects (outcomes).
+- I have a clear view of my current projects (outcomes), and a quick way to decide what to do for each of them.
+- I have integrated all of my notes, events and tasks together and work fluidly with the agenda.
+- I have a simple way to look at archived notes, events and tasks from the agenda.
+- I have a simple way to find tasks related to a given topic/context/outcome.
+
+*** TODO [#B] Improve project integration :improvement:
+
+- Link between org projects and projectile projects
+- Make sure each projectile project has an associated org entry?
+- Add more projectile projects?
+- https://github.com/IvanMalison/org-projectile
+- https://www.philnewton.net/blog/per-project-todo-files/
+
+- [ ] How to open "project" perspective from agenda / org-file ?
+  - Not sure this is a need..
+  - counsel-projectile-org-agenda could be useful? Set aside for now
+
+*** TODO [#B] Improve backup strategy :improvement:
+
+- currently only relying on unison/restic? manual backups
+- more versioning in syncthing?
+- Use gitwatch https://github.com/gitwatch/gitwatch
+  See related section (non-org comments) in https://karl-voit.at/2020/05/03/current-org-files/
+
+*** ACTV [#C] Read the org manual [10/18]
+:LOGBOOK:
+- State "ACTV"       from "HOLD"       [2022-04-18 lun. 14:32]
+- State "HOLD"       from "ACTV"       [2022-04-11 lun. 22:28] \\
+  Busy processing the agenda black hole
+- State "ACTV"    from "TODO"    [2021-02-25 jeu. 22:15]
+:END:
+
+1. [X] Introduction
+2. [X] Document Structure
+3. [X] Tables
+4. [X] Hyperlinks
+5. [X] TODO Items
+6. [X] Tags
+7. [X] Properties and Columns
+8. [X] Dates and Times
+9. [X] Refiling and Archiving
+10. [-] Capture and Attachments
+11. [X] Agenda Views
+12. [ ] Markup for Rich Contents
+13. [ ] Exporting
+14. [ ] Publishing
+15. [ ] Citation handling
+16. [ ] Working with Source Code
+17. [ ] Miscellaneous
+18. [ ] Appendixes
+
+*** ACTV [#C] Explore doom lang/org module and flags [1/6] :feature:
+:LOGBOOK:
+- State "ACTV"    from "TODO"    [2021-02-25 jeu. 22:15]
+:END:
+
+- [X] Go through defaut modules
+- [ ] Explore custom doom functions related to org
+  + +org-pretty-mode (performance?)
+
+- [ ] toc-org (default org pkg) & markdown-toc to replace xsh README table? try & configure this
+  https://github.com/snosov1/toc-org
+
+- [ ] Explore org modules (see doom org/config.el)
+  + org-depend for advanced todo dependencies?
+
+- [ ] Lots of flags to try out here
+  + [ ] noter: related to org-pdftools? https://github.com/fuxialexander/org-pdftools
+
+*** ACTV [#C] Explore attachments :feature:
+:LOGBOOK:
+- State "ACTV"       from "TODO"       [2022-05-07 sam. 13:19]
+:END:
+
+- [ ] Configure options
+  - [ ] org-attach-id-dir: centralized vs decentralized attachment dir
+  - [ ] org-attach-id-to-path-function-list to change folder structure
+  - [ ] org-attach-commands
+
+- [ ] org-attach-git package for auto-versioning.
+  - How to enable only on some headings?
+
+- [ ] Attach from dired with org-attach-dired-to-subtree
+
+- [ ] Configure bindings
+  - Lots of "duplicate" bindings between SPC m a ... and SPC m a a ..
+  - But, probably extended ones in SPC m a ...
+    - Just configure org-attach-commands then
+
+  - [ ] Bind org toggle id property (prev unset IIRC)
+  - [ ] Nice idea https://emacs-orgmode.gnu.narkive.com/78flWKOj/o-capture-attach-link-files-from-web
+
+*** TODO [#C] Use a single "Resources" heading in each topic :improvement:
+
+- Contains:
+  - Link to related documents/resources/...
+  - Link to elfeed-search for that topic
+  - Subheading for bookmarks (replaces 'References' heading)
+  - Pending read/listen/watch TODOs
+  - Pending need TODOs for books/content to buy/find
+
+- Create an org-ql view to easily browse resources of specific types
+  + Allows to easily browse content for a subtree (need to narrow for org-ql to work on subtree)
+  + Relevant for 1. Bookmarks and 2. Read/Listen/Watch list
+
+*** TODO Integrate GTD weekly/monthly reviews in my workflow :improvement:
+
+- Add a review checklist (see [[*General Workflow][General Workflow]])
+  - Review of my life objectives
+    + Updating them, or add more as needed
+    + Adding more concrete tasks for each objective, as ideas come
+    + Making sure I am still aligned with them!
+  - Review of all projects, updating status and reasking fundamental questions:
+    + What are the next actionnable steps towards that outcome?
+
+- Gradually improve Backlogs for that purpose
+
+*** TODO Integration with org-lint? :feature:
+
+https://orgmode.org/manual/Org-Syntax.html#Org-Syntax
+
+*** TODO Setup deft :feature:
+
+- Investigate deft doom module: https://jblevins.org/projects/deft/
+- Deft setup https://jingsi.space/post/2017/04/05/organizing-a-complex-directory-for-emacs-org-mode-and-deft/
+  + Or org-roam
+    Checkout emacsconf talks & related voit articles
+  + org-tree-slide for presentations (+present org flag)
+
+*** TODO Explore source code manual and config :feature:
+
+async tag doom pkg https://github.com/astahlman/ob-async
+
+*** TODO Explore and configure export features and packages :feature:
+
+- Bind htmlize & ox-clip-formatted-copy? html export of region mainly, wait & see export manual section
+- Use export tag (org-export-select-tag & org-export-exclude-tag), can be customized per buffer
+
+- See also: http://doc.norang.ca/org-mode.html#Publishing
+
+*** SMDY Explore Presentation & Slides :feature:
+
+- https://github.com/yjwen/org-reveal
+- https://github.com/hexmode/ox-reveal
+- https://www.reddit.com/r/orgmode/comments/ueti10/oxreveal_trying_to_get_nice_transitions_between/
+
+*** SMDY Add org-checklist :feature:
+
+http://doc.norang.ca/org-mode.html#ChecklistHandling
+
+*** SMDY Explore emacs-calfw (doom calendar app) :feature:
+
+https://github.com/kiwanami/emacs-calfw
+[[doom-modules:app/calendar/README.org]]
+
+- Start with M-x =calendar (and bind it)
+- doom helper functions need to be reworked? (has auto worspace integration)
+- Some events seem to be picked twice? (Multiple-day events shows multiple times)
+- Appearance needs dom tweaks (alignment, task colors, ...)
+
+*** SMDY Explore org-protocol :feature:
+
+- lazy loaded by doom, possibilities for better desktop integration?
+- https://orgmode.org/worg/org-contrib/org-protocol.html
+
+- Capture HTML to org: https://github.com/alphapapa/org-protocol-capture-html
+  - I don't have a need for that right now, but might be good to know.
+
+*** SMDY Consider org-roam :feature:
+
+To migrate out of hierarchical structure. Lots of work...
+
+https://github.com/org-roam/org-roam
+[[https://github.com/org-roam/org-roam-ui]]
+
+*** SMDY Explore column view :feature:
+
+- https://orgmode.org/manual/Column-View.html#Column-View
+- https://orgmode.org/manual/Agenda-Column-View.html#Agenda-Column-View
+- Bind org-columns (and test bindings in "using column view")
+
+*** SMDY Explore Memacs :feature:
+
+Use a memacs/ subdir
+- https://en.wikipedia.org/wiki/Quantified_self
+- https://github.com/novoid/Memacs
+Or not.
+
+*** SMDY Blogging :feature:
+
+- https://luca.cambiaghi.me/posts/new-website.html
+- https://emacs.love/weblorg/
+- https://github.com/org2blog/org2blog/tree/master
+
+*** SMDY Spreadsheets :feature:
+
+  https://orgmode.org/manual/The-Spreadsheet.html#The-Spreadsheet
+  https://orgmode.org/manual/Org-Plot.html#Org-Plot
+
+** TODO [#C] org-capture to anywhere
+
+https://github.com/lepisma/oca
+
+** TODO [#C] Add major-mode hydra for org-mode
+** SMDY Switching to an org mode buffer sometimes expands nodes randomly :bug:
+* Elisp [0/2]
+** References
+
+- [[elisp:(info "(elisp)")][Elisp Manual]]
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/index.html][Elisp Manual (web)]]
+- [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Debugger.html][Elisp Debugger Manual (web)]]
+- https://www.emacswiki.org/emacs/ElispCookbook#toc2
+
+- [[file:~/.config/emacs/modules/lang/emacs-lisp/README.org::*Description][Doom Module]]
+
+** Bindings
+
+|---------------+---------------------------------------|
+| Key           | Description                           |
+|---------------+---------------------------------------|
+| =SPC m e ...= | Eval (prefer SPC c e for general use) |
+| =SPC m d f/F= | Debug on/off for the current function |
+|---------------+---------------------------------------|
+| =SPC m g f=   | Goto function definition (using ivy)  |
+| =SPC m g l=   | Goto library definition (using ivy)   |
+| =SPC m g v=   | Goto variable definition (using ivy)  |
+|---------------+---------------------------------------|
+
+** TODO [#D] Add major-mode hydra for elisp-mode
+* Shell [0/0]
+** References
+
+- [[file:~/.config/emacs/modules/lang/sh/README.org::*Description][Doom Module]]
+- Utilities
+  + [[https://github.com/koalaman/shellcheck][shellcheck]]
+  + [[https://github.com/mads-hartmann/bash-language-server][bash-language-server]]
+
+** Bindings
+
+No mode-specific bindings...yet.
+Use the usual =SPC p/c ...= bindings.
+
+* Golang [0/4]
+** References
+
+- [[file:~/.config/emacs/modules/lang/go/README.org::*Description][Doom Module]]
+- Emacs packages
+  + https://github.com/dominikh/go-mode.el
+  + https://github.com/weijiangan/flycheck-golangci-lint
+  + https://github.com/s-kostyaev/go-gen-test
+  + https://github.com/emacsorphanage/go-eldoc
+- Utilities
+  + https://github.com/cweill/gotests
+  + https://github.com/x-motemen/gore
+
+** Dir local variables
+
+- Golangci-lint: https://github.com/weijiangan/flycheck-golangci-lint#available-options=
+- Struct tags style: https://github.com/fatih/gomodifytags#transformations=
+  (setq go-tag-args (list "-transform" "camelcase"))
+
+- LSP: https://emacs-lsp.github.io/lsp-mode/page/file-watchers
+  + lsp-file-watch-ignored-directories
+  + lsp-file-watch-ignored-files
+  + lsp-enable-file-watchers
+- Gopls settings:
+  - [[https://github.com/emacs-lsp/lsp-mode/blob/master/clients/lsp-go.el][lsp-mode/lsp-go.el at master · emacs-lsp/lsp-mode · GitHub]]
+  - lsp-go-directory-filters
+  - lsp-go-goimports-local
+  - lsp-go-use-gofumpt
+  - lsp-go-analyses
+- Golangci-lint settings:
+  - [[https://github.com/weijiangan/flycheck-golangci-lint][GitHub - weijiangan/flycheck-golangci-lint: Flycheck checker for golangci-lint]]
+  - flycheck-golangci-lint-*
+  - BUT PREFER CONFIG FILE
+
+** Bindings
+
+|---------------+----------------------------------------------------------------------|
+| Key           | Description                                                          |
+|---------------+----------------------------------------------------------------------|
+| =SPC m b=     | Build package                                                        |
+| =SPC m c=     | Clean package                                                        |
+| =SPC m r=     | Run package                                                          |
+|---------------+----------------------------------------------------------------------|
+| =SPC m t n=   | Run all nested packages tests                                        |
+| =SPC m t a=   | Run all package tests                                                |
+| =SPC m t s=   | Run the first test before point only                                 |
+| =SPC m t t=   | Rerun last test command                                              |
+|---------------+----------------------------------------------------------------------|
+| =SPC m t b a= | Run all package benchmarks                                           |
+| =SPC m t b s= | Run the first benchmark before point only                            |
+|---------------+----------------------------------------------------------------------|
+| =SPC m t g g= | Generate table-tests for exported functions in current buffer/region |
+| =SPC m t g a= | Generate table-tests for all functions in current buffer             |
+|---------------+----------------------------------------------------------------------|
+| =SPC m g ...= | Goto specific parts of functions, use prefix to skip anonymous       |
+| =SPC m f=     | Strict formatting                                                    |
+| =SPC m T a/d= | Add/Remove struct tags                                               |
+| =SPC m u=     | Send to online Go Playground                                         |
+|---------------+----------------------------------------------------------------------|
+| =SPC m h h=   | Godoc                                                                |
+| =SPC m h .=   | Godoc at point                                                       |
+| =SPC m h ...= | Guru commands                                                        |
+|---------------+----------------------------------------------------------------------|
+
+** TODO godoc integration
+
+- Add colors to godoc-mode (like help-mode of LSP??)
+  - lsp--render-on-hover-content
+  - How is it that I can't find anyone asking for this ???????
+
+** TODO Test coverage integration :feature:
+
+- go-coverage needs the coverage file for the current file to display in current buffer
+- Need a command to run ~go test -coverprofile=COVERAGE-FILE~
+  - Use (+go--run-tests "-coverprofile=coverage.xxx")
+
+** SMDY Major mode hydra
+** SMDY Improve gore (REPL) integration :improvement:
+
+- Currently not usable at all with evil bindings.
+https://github.com/manute/gorepl-mode
+
+- Also not enabled by default, would need to add:
+(add-hook 'go-mode-hook #'gorepl-mode)
+
+- Also integrate with doom's +eval module:
+[[file:~/.config/emacs/modules/tools/eval/README.org::*Table of Contents][Eval module documentation]]
+* Desktop integration [0/6]
+** PROJ [#B] Desktop & Workflow integration [0/5]
+*** Why
+
+To integrate emacs in the most fluid way possible, so that it can be used to:
+- Capture notes, ideas, tasks, music, videos, bookmarks, links... from anywhere (desktop and mobile)
+- Perform an exclusive set of tasks that are preferred in emacs over the terminal. This needs a clearly defined relationship between emacs and the terminal. Using both the terminal in emacs and an external terminal? Using emacs in terminal much in the same way? The two are sooo intricated that this makes me wonder when to use which...
+  Bindings between the two should be harmonized so that going from one to the other feels like one.
+
+*** TODO [#C] Improve script with ideas from https://gitlab.com/zackallison/e-emacs/ :improvement:
+*** SMDY [#D] Clear up: treemacs vs dired vs nnn :improvement:
+
+- treemacs is for quick project browsing and simple operations, also via tags
+- dired is for general browsing and complex operations or operations on multiple files
+- Replace nnn by dired in my workflow? What about plugins?
+- nnn can also run from emacs quite nicely via terminal
+
+*** SMDY Emacs anywhere setup on Super+E :feature:
+
+- https://github.com/zachcurry/emacs-anywhere
+- Or https://addons.mozilla.org/en-US/firefox/addon/edit-with-emacs1
+- Add global shortcut to spawn an emacs frame with a new buffer?
+- Now integrated as a doom module! But it's likely that wayland/pgtk support is an issue...
+
+*** SMDY Define emacs role in KDE activities and integration with my workflows :feature:
+
+- Allow multiple frames? (Main: calendar, feed, term, ... + Work: the rest)
+- How to manage multiple sessions? (feature provided IIRC: name them!)
+  + Or just use the same emacs session (visible on all activities)
+  + Do the same thing for terminal and use tmux "sessions" just like emacs "perspectives"
+
