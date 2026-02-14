@@ -1,1 +1,4 @@
+#!/bin/bash
+set -e
+
 systemctl reboot --boot-loader-entry=auto-windows
