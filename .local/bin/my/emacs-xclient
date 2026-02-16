@@ -8,7 +8,7 @@ EMACSCLIENT="emacsclient --socket-name graphical"
 
 # Elisp query to find the most recently opened graphical non-child frame.
 FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
-  (and (eq (framep f) 'x) \
+  (and (eq (framep f) 'pgtk) \
   (not (frame-parent f)))))"
 
 if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
