@@ -18,6 +18,8 @@
         <Exclude>
             <Item>*/.Trash-*/</Item>
             <Item>*/.recycle/</Item>
+            <Item/>
+            <Item>*/steam.pipe</Item>
         </Exclude>
         <SizeMin Unit="None">0</SizeMin>
         <SizeMax Unit="None">0</SizeMax>
