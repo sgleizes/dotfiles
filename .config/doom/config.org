@@ -81,7 +81,7 @@ EMACSCLIENT="emacsclient --socket-name graphical"
 
 # Elisp query to find the most recently opened graphical non-child frame.
 FRAME_QUERY="car (filtered-frame-list #'(lambda (f) \
-  (and (eq (framep f) 'x) \
+  (and (eq (framep f) 'pgtk) \
   (not (frame-parent f)))))"
 
 if [[ ! $* || "$($EMACSCLIENT --eval "($FRAME_QUERY)")" == 'nil' ]]; then
@@ -925,18 +925,18 @@ Customize general popup rules.
 Fix restore of last popup after pressing 'q' from popup buffer.
 In +popup/quit-window, popup is not pushed to remember list since it only invokes quit-window (most of the time).
 #+begin_src elisp
-(defun +popup/quit-window (&optional arg)
+;; https://github.com/doomemacs/doomemacs/issues/8650
+(defun +popup/force-close ()
   "The regular `quit-window' sometimes kills the popup buffer and switches to a
 buffer that shouldn't be in a popup. We prevent that by remapping `quit-window'
 to this commmand."
-  (interactive "P")
-  (let ((orig-buffer (current-buffer)))
-    (when (and +popup--remember-last (+popup-buffer-p))
-      (+popup--remember (list (selected-window))))
-    (quit-window arg)
-    (when (and (eq orig-buffer (current-buffer))
-               (+popup-buffer-p))
-      (+popup/close nil 'force))))
+  (interactive)
+  (+popup/close nil 'force))
+
+;; The regular `quit-window' sometimes kills the popup buffer and switches to a
+;; buffer that shouldn't be in a popup; this is prevented by remapping the
+;; command in popups:
+(define-key +popup-buffer-mode-map [remap quit-window] #'+popup/force-close)
 #+end_src
 
 *** Hydra
