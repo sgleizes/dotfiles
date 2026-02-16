@@ -166,6 +166,7 @@ widgetStyle=Breeze
 ScreenScaleFactors=eDP-1=1;DP-1=1;HDMI-1=1;DP-2=1;HDMI-2=1;DP-3=1;HDMI-3=1;
 
 [PreviewSettings]
+EnableRemoteFolderThumbnail=false
 MaximumRemoteSize=0
 
 [WM]

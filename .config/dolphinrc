@@ -14,7 +14,10 @@ Favorites=
 HiddenFilesShown=true
 
 [General]
+FilterBar=true
+OpenExternallyCalledFolderInNewTab=true
 ShowCopyMoveMenu=true
+ShowFullPathInTitlebar=true
 Version=202
 ViewPropsTimestamp=2020,4,9,0,27,3
 

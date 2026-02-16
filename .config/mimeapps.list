@@ -1,7 +1,9 @@
 [Added Associations]
+application/vnd.comicbook+zip=com.yacreader.YACReader.desktop;
 audio/x-opus+ogg=vlc.desktop;
 
 [Default Applications]
+application/vnd.comicbook+zip=com.yacreader.YACReader.desktop;
 audio/x-opus+ogg=vlc.desktop;
 x-scheme-handler/element=element-desktop.desktop
 x-scheme-handler/io.element.desktop=element-desktop.desktop
